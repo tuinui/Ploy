@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/background_splash"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:paddingBottom="80dp"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin">
+
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_logo_p_alphabet_110dp" />
+
+    <android.support.v7.widget.AppCompatButton
+        android:id="@+id/button_first_screen_search_services"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="36dp"
+        android:text="@string/Search_Services"
+        android:textColor="@android:color/black"
+        app:backgroundTint="@android:color/white" />
+
+    <android.support.v7.widget.AppCompatButton
+        android:id="@+id/button_first_screen_search_jobs"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="@string/Search_Jobs"
+        android:textColor="@android:color/black"
+        app:backgroundTint="@android:color/white" />
+
+
+</LinearLayout>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/textview_list_item"
+    style="?attr/spinnerDropDownItemStyle"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="8dp"
+    android:layout_marginStart="8dp"
+    android:background="?attr/selectableItemBackground"
+    android:ellipsize="marquee"
+    android:maxLines="1"
+    android:minHeight="?attr/listPreferredItemHeightSmall"
+    android:text="list item" />

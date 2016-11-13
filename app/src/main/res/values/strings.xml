@@ -1,0 +1,26 @@
+<resources>
+    <string name="app_name">Ploy</string>
+    <string name="facebook_app_id">1809330109343316</string>
+
+    <string name="title_activity_main2">Main2Activity</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
+    <string name="Search_Services">Search Services</string>
+    <string name="Search_Jobs">Search Jobs</string>
+    <string name="Log_in">Log in</string>
+    <string name="Sign_up">Sign up</string>
+    <string name="Forgot_password">Forgot password ?</string>
+    <string name="Email_Address">Email Address</string>
+    <string name="Password">Password</string>
+    <string name="Search">Search</string>
+    <string name="Ployer">Ployer</string>
+    <string name="First_Name">First Name</string>
+    <string name="Last_Name">Last Name</string>
+    <string name="Birthday">Birthday</string>
+    <string name="Create_Account">Create Account</string>
+    <string name="Ployee">Ployee</string>
+    <string name="Ploy">Ploy</string>
+</resources>

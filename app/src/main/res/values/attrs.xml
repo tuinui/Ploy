@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="TextViewDrawableSize">
+        <attr name="compoundDrawableWidth" format="dimension" />
+        <attr name="compoundDrawableHeight" format="dimension" />
+    </declare-styleable>
+
+
+    <declare-styleable name="ImageViewWithRatio">
+        <attr name="ratioHeight" format="integer" />
+        <attr name="ratioWidth" format="integer" />
+    </declare-styleable>
+
+</resources>

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.AppBarLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/appbarlayout_main"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:fitsSystemWindows="true"
+    android:focusableInTouchMode="true"
+    android:minHeight="?attr/actionBarSize"
+    android:orientation="vertical"
+    app:theme="@style/AppTheme.AppBarOverlay">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar_main"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimary"
+        android:minHeight="?attr/actionBarSize"
+        android:padding="0dp"
+        app:contentInsetLeft="0dp"
+        app:contentInsetStart="0dp"
+        app:contentInsetStartWithNavigation="0dp"
+        app:layout_scrollFlags="snap|enterAlways"
+        app:paddingStart="0dp"
+        app:subtitleTextColor="@android:color/white"
+        app:titleTextColor="@android:color/white" />
+
+    <ViewStub
+        android:id="@+id/viewstub_main_appbar_searchview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:inflatedId="@+id/panel_import_tablayout_main"
+        android:layout="@layout/view_main_searchview"
+        android:minHeight="?attr/actionBarSize"
+        android:paddingBottom="4dp" />
+    <!--<include layout="@layout/view_main_searchview" />-->
+
+</android.support.design.widget.AppBarLayout>
