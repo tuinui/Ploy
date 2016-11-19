@@ -23,4 +23,19 @@
     <string name="Create_Account">Create Account</string>
     <string name="Ployee">Ployee</string>
     <string name="Ploy">Ploy</string>
+    <string name="Reset">Reset</string>
+    <string name="Say_something_about_experience_you_have_in_this_service_category">Say something abbout experience you have in this service category</string>
+    <string name="Description">Description</string>
+    <string name="Describe_certificate_or_diploma_related_to_the_service_you_want_to_provide">Describe certificate or diploma related to the service you want to provide</string>
+    <string name="Certificate">Certificate</string>
+    <string name="Equipment_needed">Equipment needed</string>
+    <string name="Describe_equipment_and_tools_that_you_can_provide_to_ployer">Describe equipment and tools that you can provide to Ployer</string>
+    <string name="Name_of_service_you_offer">Name of service you offer</string>
+    <string name="Services">Services</string>
+    <string name="Start">Start</string>
+    <string name="From">From($)</string>
+    <string name="To">To($)</string>
+    <string name="Aide_au_senior">Aide au senior</string>
+    <string name="Service">Service</string>
+    <string name="Done">Done</string>
 </resources>

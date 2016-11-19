@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:custom="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <include layout="@layout/view_main_appbar" />
+
+    <android.support.v4.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <android.support.v7.widget.AppCompatButton
+                    android:id="@+id/button_ployee_service_reset"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/Reset"
+                    app:backgroundTint="@android:color/white" />
+
+                <com.rengwuxian.materialedittext.MaterialEditText
+                    android:id="@+id/edittext_ployee_service_others"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:hint="@string/Name_of_service_you_offer"
+                    android:inputType="text|textMultiLine"
+                    app:met_floatingLabel="normal"
+                    app:met_floatingLabelAlwaysShown="true"
+                    app:met_floatingLabelText="@string/Services" />
+
+
+                <com.rengwuxian.materialedittext.MaterialEditText
+                    android:id="@+id/edittext_ployee_service_description"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:hint="@string/Say_something_about_experience_you_have_in_this_service_category"
+                    android:inputType="text|textMultiLine"
+                    android:lines="3"
+                    app:met_floatingLabel="normal"
+                    app:met_floatingLabelAlwaysShown="true"
+                    app:met_floatingLabelText="@string/Description" />
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <com.rengwuxian.materialedittext.MaterialEditText
+                            android:id="@+id/edittext_ployee_service_price_from"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0"
+                            android:maxWidth="80dp"
+                            android:paddingRight="8dp"
+                            android:minWidth="60dp"
+                            android:text="80"
+                            app:met_floatingLabel="normal"
+                            app:met_floatingLabelAlwaysShown="true"
+                            app:met_floatingLabelText="@string/From" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:padding="8dp"
+                            android:text="Price/Hour" />
+
+                        <com.rengwuxian.materialedittext.MaterialEditText
+                            android:id="@+id/edittext_ployee_service_price_to"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0"
+                            android:maxWidth="80dp"
+                            android:minWidth="60dp"
+                            android:paddingRight="8dp"
+                            android:text="5000"
+                            app:met_floatingLabel="normal"
+                            app:met_floatingLabelAlwaysShown="true"
+                            app:met_floatingLabelText="@string/To" />
+
+
+                    </LinearLayout>
+
+                    <com.appyvet.rangebar.RangeBar
+                        android:id="@+id/rangebar_ployee_service_rate"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:pinPadding="16dp"
+                        app:rangeBarPaddingBottom="8dp"
+                        app:tickEnd="5000"
+                        app:tickInterval="10"
+                        app:tickStart="10" />
+
+                </LinearLayout>
+
+
+                <com.rengwuxian.materialedittext.MaterialEditText
+                    android:id="@+id/edittext_ployee_service_certificate"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:hint="@string/Describe_certificate_or_diploma_related_to_the_service_you_want_to_provide"
+                    android:inputType="text|textMultiLine"
+                    android:lines="3"
+                    app:met_floatingLabel="normal"
+                    app:met_floatingLabelAlwaysShown="true"
+                    app:met_floatingLabelText="@string/Certificate" />
+
+                <com.rengwuxian.materialedittext.MaterialEditText
+                    android:id="@+id/edittext_ployee_service_equipment_needed"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:hint="@string/Describe_equipment_and_tools_that_you_can_provide_to_ployer"
+                    android:inputType="text|textMultiLine"
+                    android:lines="3"
+                    app:met_floatingLabel="normal"
+                    app:met_floatingLabelAlwaysShown="true"
+                    app:met_floatingLabelText="@string/Equipment_needed" />
+
+
+            </LinearLayout>
+
+
+        </LinearLayout>
+
+
+    </android.support.v4.widget.NestedScrollView>
+
+</LinearLayout>
