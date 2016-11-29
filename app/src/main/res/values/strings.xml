@@ -13,13 +13,14 @@
     <string name="Log_in">Log in</string>
     <string name="Sign_up">Sign up</string>
     <string name="Forgot_password">Forgot password ?</string>
-    <string name="Email_Address">Email Address</string>
-    <string name="Password">Password</string>
+    <string name="Email_Address_asterisk">Email Address*</string>
+    <string name="Password_asterisk">Password*</string>
+    <string name="Re_password_asterisk">Re-Password*</string>
     <string name="Search">Search</string>
     <string name="Ployer">Ployer</string>
-    <string name="First_Name">First Name</string>
-    <string name="Last_Name">Last Name</string>
-    <string name="Birthday">Birthday</string>
+    <string name="First_Name_asterisk">First Name*</string>
+    <string name="Last_Name_asterisk">Last Name*</string>
+    <string name="Birthday_asterisk">Birthday*</string>
     <string name="Create_Account">Create Account</string>
     <string name="Ployee">Ployee</string>
     <string name="Ploy">Ploy</string>
@@ -38,4 +39,11 @@
     <string name="Aide_au_senior">Aide au senior</string>
     <string name="Service">Service</string>
     <string name="Done">Done</string>
+    <string name="No_preferences">No preferences</string>
+    <string name="Holiday_mode">Holiday mode</string>
+    <string name="Temporary_remove_Ployee_offline">Temporary remove Ployee offline</string>
+    <string name="This_field_is_required">This field is required</string>
+    <string name="Password_does_not_match_the_confirm_password">Password does not match the confirm password.</string>
+    <string name="Loading">Loading</string>
+
 </resources>

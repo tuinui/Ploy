@@ -12,11 +12,12 @@ import android.widget.ImageView;
 import com.nos.ploy.R;
 import com.nos.ploy.base.BaseActivity;
 import com.nos.ploy.flow.ployee.home.content.PloyeeHomeListFragment;
+import com.nos.ploy.flow.ployee.home.content.availability.PloyeeAvailabilityFragment;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class PloyeeHomeActivity extends BaseActivity {
+public class PloyeeHomeActivity extends BaseActivity implements View.OnClickListener {
     @BindView(R.id.imageview_main_footer_more)
     ImageView mImageViewMore;
     @BindView(R.id.toolbar_main)
@@ -36,6 +37,7 @@ public class PloyeeHomeActivity extends BaseActivity {
     private SearchView mSearchView;
 
     private PloyeeHomeListFragment mListFragment = PloyeeHomeListFragment.newInstance();
+    private PloyeeAvailabilityFragment mAvailabilityFragment = PloyeeAvailabilityFragment.newInstance();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -45,7 +47,7 @@ public class PloyeeHomeActivity extends BaseActivity {
 
         mSearchView = (SearchView) mViewStubSearchView.inflate().findViewById(R.id.searchview_main);
 
-        initDrawer(mDrawerLayout, mRecyclerViewDrawer, mToolbar,mImageViewMore);
+        initDrawer(mDrawerLayout, mRecyclerViewDrawer, mToolbar, mImageViewMore);
         initFooter();
         initToolbar(mToolbar);
         addFragmentToActivity(mListFragment, R.id.framelayout_ployee_home_content_container);
@@ -58,6 +60,8 @@ public class PloyeeHomeActivity extends BaseActivity {
 
         mImageViewFooterLogo1.setImageResource(R.drawable.ic_business_gray_50dp);
         mImageViewFooterLogo2.setImageResource(R.drawable.ic_calendar_gray_50dp);
+
+        mImageViewFooterLogo2.setOnClickListener(this);
     }
 
     private void initToolbar(Toolbar toolbar) {
@@ -65,4 +69,13 @@ public class PloyeeHomeActivity extends BaseActivity {
         toolbar.setTitle(R.string.Ployee);
     }
 
+    @Override
+    public void onClick(View view) {
+        int id = view.getId();
+        if (id == mImageViewFooterLogo1.getId()) {
+            addFragmentToActivity(mListFragment, R.id.framelayout_ployee_home_content_container);
+        } else if (id == mImageViewFooterLogo2.getId()) {
+            addFragmentToActivity(mAvailabilityFragment, R.id.framelayout_ployee_home_content_container);
+        }
+    }
 }

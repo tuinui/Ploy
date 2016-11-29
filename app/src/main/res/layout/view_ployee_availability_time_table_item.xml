@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.internal.ForegroundLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/linearlayout_ployee_availability_time_table_item"
+    android:layout_width="48dp"
+    android:layout_height="48dp"
+    android:background="@android:color/darker_gray"
+    android:clickable="true"
+    android:foreground="?attr/selectableItemBackground" />

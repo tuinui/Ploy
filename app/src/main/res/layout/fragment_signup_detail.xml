@@ -19,6 +19,7 @@
             android:padding="16dp">
 
             <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/imageview_signup_detail_profile_picture"
                 android:layout_width="160dp"
                 android:layout_height="160dp"
                 android:layout_gravity="center_horizontal"
@@ -38,42 +39,45 @@
                 android:textColor="@android:color/white" />
 
             <com.rengwuxian.materialedittext.MaterialEditText
+                android:id="@+id/edittext_signup_detail_firstname"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:hint="@string/First_Name"
+                android:hint="@string/First_Name_asterisk"
                 android:inputType="textPersonName"
                 app:met_baseColor="@android:color/white"
                 app:met_floatingLabel="normal"
-                app:met_floatingLabelText="@string/Email_Address"
+                app:met_floatingLabelText="@string/First_Name_asterisk"
                 app:met_floatingLabelTextColor="@android:color/white"
                 app:met_primaryColor="@android:color/white"
                 app:met_textColorHint="@android:color/white"
                 app:met_underlineColor="@android:color/white" />
 
             <com.rengwuxian.materialedittext.MaterialEditText
+                android:id="@+id/edittext_signup_detail_lastname"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:hint="@string/Last_Name"
+                android:hint="@string/Last_Name_asterisk"
                 android:inputType="textPersonName"
                 app:met_baseColor="@android:color/white"
                 app:met_floatingLabel="normal"
-                app:met_floatingLabelText="@string/Email_Address"
+                app:met_floatingLabelText="@string/Last_Name_asterisk"
                 app:met_floatingLabelTextColor="@android:color/white"
                 app:met_primaryColor="@android:color/white"
                 app:met_textColorHint="@android:color/white"
                 app:met_underlineColor="@android:color/white" />
 
             <com.rengwuxian.materialedittext.MaterialEditText
+                android:id="@+id/edittext_signup_detail_birthday"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:hint="@string/Birthday"
+                android:hint="@string/Birthday_asterisk"
                 android:inputType="date"
                 app:met_baseColor="@android:color/white"
                 app:met_floatingLabel="normal"
-                app:met_floatingLabelText="@string/Email_Address"
+                app:met_floatingLabelText="@string/Birthday_asterisk"
                 app:met_floatingLabelTextColor="@android:color/white"
                 app:met_helperText="10/08/16"
                 app:met_helperTextAlwaysShown="true"
@@ -84,14 +88,15 @@
 
 
             <com.rengwuxian.materialedittext.MaterialEditText
+                android:id="@+id/edittext_signup_detail_email"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:hint="@string/Email_Address"
+                android:hint="@string/Email_Address_asterisk"
                 android:inputType="textEmailAddress"
                 app:met_baseColor="@android:color/white"
                 app:met_floatingLabel="normal"
-                app:met_floatingLabelText="@string/Email_Address"
+                app:met_floatingLabelText="@string/Email_Address_asterisk"
                 app:met_floatingLabelTextColor="@android:color/white"
                 app:met_primaryColor="@android:color/white"
                 app:met_textColorHint="@android:color/white"
@@ -99,19 +104,37 @@
 
 
             <com.rengwuxian.materialedittext.MaterialEditText
-                android:id="@+id/materialEditText"
+                android:id="@+id/edittext_signup_detail_password"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:hint="@string/Password"
+                android:hint="@string/Password_asterisk"
                 android:inputType="textPassword"
                 app:met_baseColor="@android:color/white"
                 app:met_floatingLabel="normal"
-                app:met_floatingLabelText="@string/Email_Address"
+                app:met_floatingLabelText="@string/Password_asterisk"
                 app:met_floatingLabelTextColor="@android:color/white"
-                app:met_helperText="at least 6 characters"
-                app:met_helperTextAlwaysShown="true"
-                app:met_helperTextColor="@android:color/white"
+                app:met_minCharacters="6"
+                app:met_primaryColor="@android:color/white"
+                app:met_textColorHint="@android:color/white"
+                app:met_underlineColor="@android:color/white" />
+
+            <!--app:met_helperText="at least 6 characters"-->
+            <!--app:met_helperTextAlwaysShown="true"-->
+            <!--app:met_helperTextColor="@android:color/white"-->
+
+            <com.rengwuxian.materialedittext.MaterialEditText
+                android:id="@+id/edittext_signup_detail_re_password"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:hint="@string/Re_password_asterisk"
+                android:inputType="textPassword"
+                app:met_baseColor="@android:color/white"
+                app:met_floatingLabel="normal"
+                app:met_floatingLabelText="@string/Re_password_asterisk"
+                app:met_floatingLabelTextColor="@android:color/white"
+                app:met_minCharacters="6"
                 app:met_primaryColor="@android:color/white"
                 app:met_textColorHint="@android:color/white"
                 app:met_underlineColor="@android:color/white" />
@@ -126,6 +149,7 @@
                 app:backgroundTint="@android:color/white" />
 
             <TextView
+                android:id="@+id/textview_signup_detail_privacy"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
