@@ -4,22 +4,28 @@ import android.text.TextUtils;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.util.List;
+
 /**
- * Created by Saran on 29/11/2559.
+ * Created by Saran on 30/11/2559.
  */
 
-public class BaseResponse<T> {
+public class BaseResponseArray<E> {
     @SerializedName("responseMsg")
     private ResponseMessage responseMessage;
 
     @SerializedName("data")
-    private T data;
+    private List<E> data;
 
 
-    public BaseResponse() {
+
+    public BaseResponseArray() {
     }
 
-    public boolean isSuccess() {
+
+
+
+    public boolean isSuccess(){
         return null != responseMessage && responseMessage.isSuccess();
     }
 
@@ -27,8 +33,7 @@ public class BaseResponse<T> {
         return responseMessage;
     }
 
-    public T getData() {
+    public List<E> getData() {
         return data;
     }
-
 }

@@ -14,6 +14,7 @@
     <string name="Sign_up">Sign up</string>
     <string name="Forgot_password">Forgot password ?</string>
     <string name="Email_Address_asterisk">Email Address*</string>
+    <string name="Email_Address">Email Address</string>
     <string name="Password_asterisk">Password*</string>
     <string name="Re_password_asterisk">Re-Password*</string>
     <string name="Search">Search</string>
@@ -45,5 +46,8 @@
     <string name="This_field_is_required">This field is required</string>
     <string name="Password_does_not_match_the_confirm_password">Password does not match the confirm password.</string>
     <string name="Loading">Loading</string>
+    <string name="Because_we_encrypt_your_password">Because we encrypt your password we can’t send it to you but we can reset it allowing you to change it.</string>
+    <string name="New_password">New Password</string>
+    <string name="re_confirm_Password">re-confirm Password</string>
 
 </resources>

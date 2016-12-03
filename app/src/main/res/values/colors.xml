@@ -4,6 +4,7 @@
     <color name="colorPrimaryDark">#0D2144</color>
     <color name="colorAccent">#1B2C48</color>
 
+    <color name="gray_background_light">#EBECEC</color>
     <color name="gray_splash_screen">#3B464A</color>
 
     <color name="black_bb_transparent">#BB000000</color>

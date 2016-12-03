@@ -1,0 +1,234 @@
+package com.nos.ploy.flow.ployee.home.content.service.detail;
+
+import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+
+import com.appyvet.rangebar.RangeBar;
+import com.nos.ploy.R;
+import com.nos.ploy.api.ployee.PloyeeApi;
+import com.nos.ploy.api.ployee.model.PloyeeServiceDetailGson;
+import com.nos.ploy.base.BaseFragment;
+import com.nos.ploy.flow.ployee.home.content.service.detail.contract.PloyeeServiceDetailContract;
+import com.nos.ploy.flow.ployee.home.content.service.detail.contract.PloyeeServiceDetailPresenter;
+import com.nos.ploy.flow.ployee.home.content.service.detail.contract.PloyeeServiceDetailVM;
+import com.nos.ploy.flow.ployee.home.content.service.detail.contract.subservice.PloyeeServiceDetailSubServiceRecyclerAdapter;
+import com.nos.ploy.utils.PopupMenuUtils;
+import com.rengwuxian.materialedittext.MaterialEditText;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import rx.functions.Action1;
+
+/**
+ * Created by Saran on 19/11/2559.
+ */
+
+public class PloyeeServiceDetailFragment extends BaseFragment implements PloyeeServiceDetailContract.View, View.OnClickListener {
+    @BindView(R.id.rangebar_ployee_service_rate)
+    RangeBar mRangeBar;
+    @BindView(R.id.edittext_ployee_service_price_from)
+    MaterialEditText mEditTextPriceFrom;
+    @BindView(R.id.edittext_ployee_service_price_to)
+    MaterialEditText mEditTextPriceTo;
+    @BindView(R.id.edittext_ployee_service_others)
+    MaterialEditText mEditTextOthers;
+    @BindView(R.id.edittext_ployee_service_description)
+    MaterialEditText mEditTextDescription;
+    @BindView(R.id.edittext_ployee_service_certificate)
+    MaterialEditText mEditTextCertificate;
+    @BindView(R.id.edittext_ployee_service_equipment_needed)
+    MaterialEditText mEditTextEquipmentNeeded;
+    @BindView(R.id.toolbar_main)
+    Toolbar mToolbar;
+    @BindView(R.id.swiprefreshlayout_ployee_service_detail)
+    SwipeRefreshLayout mSwipeRefreshLayout;
+    @BindView(R.id.recyclerview_ployee_service_sub_service)
+    RecyclerView mRecyclerSubService;
+
+    private RangeBar.OnRangeBarChangeListener mRangeBarListener = new RangeBar.OnRangeBarChangeListener() {
+        @Override
+        public void onRangeChangeListener(RangeBar rangeBar, int leftPinIndex, int rightPinIndex, String leftPinValue, String rightPinValue) {
+            setPriceText(mEditTextPriceFrom, leftPinValue);
+            setPriceText(mEditTextPriceTo, rightPinValue);
+        }
+    };
+    private SwipeRefreshLayout.OnRefreshListener mOnRefreshListener = new SwipeRefreshLayout.OnRefreshListener() {
+        @Override
+        public void onRefresh() {
+            refreshData();
+        }
+    };
+    private PloyeeApi mService;
+    private PloyeeServiceDetailContract.Presenter mPresenter;
+    private PloyeeServiceDetailContract.ViewModel mData;
+    private PloyeeServiceDetailSubServiceRecyclerAdapter mAdapter = new PloyeeServiceDetailSubServiceRecyclerAdapter();
+
+
+    public static PloyeeServiceDetailFragment newInstance(long userId, long serviceId) {
+        Bundle args = new Bundle();
+        PloyeeServiceDetailFragment fragment = new PloyeeServiceDetailFragment();
+        fragment.setArguments(args);
+        PloyeeApi service = fragment.getRetrofit().create(PloyeeApi.class);
+        PloyeeServiceDetailPresenter.inject(service, userId, "en", serviceId, fragment);
+        return fragment;
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (null != getArguments()) {
+            mService = getRetrofit().create(PloyeeApi.class);
+        }
+    }
+
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View v = inflater.inflate(R.layout.fragment_ployee_service, container, false);
+        ButterKnife.bind(this, v);
+        return v;
+    }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        initToolbar();
+        initRangeBar();
+        initRecyclerView();
+        initView();
+    }
+
+    private void initRecyclerView() {
+        mRecyclerSubService.setLayoutManager(new LinearLayoutManager(getContext()) {
+            @Override
+            public boolean canScrollVertically() {
+                return false;
+            }
+        });
+        mRecyclerSubService.setAdapter(mAdapter);
+    }
+
+    private void initView() {
+        disableEditable(mEditTextPriceFrom);
+        disableEditable(mEditTextPriceTo);
+
+        mEditTextPriceFrom.setOnClickListener(this);
+        mEditTextPriceTo.setOnClickListener(this);
+
+        mSwipeRefreshLayout.setOnRefreshListener(mOnRefreshListener);
+
+
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        mPresenter.start();
+    }
+
+    private void initToolbar() {
+        enableBackButton(mToolbar);
+        mToolbar.setTitle(R.string.Aide_au_senior);
+        mToolbar.setSubtitle(R.string.Service);
+        mToolbar.inflateMenu(R.menu.menu_done);
+        mToolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                int id = item.getItemId();
+                if (id == R.id.menu_done_item_done) {
+                    showToast("Done");
+                    dismiss();
+                    return true;
+                }
+                return false;
+            }
+        });
+    }
+
+    private void setPriceText(MaterialEditText et, String price) {
+        et.setText(price);
+    }
+
+    private void initRangeBar() {
+        setPriceText(mEditTextPriceFrom, mRangeBar.getLeftPinValue());
+        setPriceText(mEditTextPriceTo, mRangeBar.getRightPinValue());
+        mRangeBar.setOnRangeBarChangeListener(mRangeBarListener);
+    }
+
+    @Override
+    public void onClick(View view) {
+        int id = view.getId();
+        if (id == mEditTextPriceFrom.getId()) {
+            PopupMenuUtils.showPopupAlertEditTextFromEditTextMenu(mEditTextPriceFrom, new Action1<String>() {
+                @Override
+                public void call(String s) {
+                    mRangeBar.setRangePinsByIndices(Integer.valueOf(s), mRangeBar.getRightIndex());
+                }
+            });
+        } else if (id == mEditTextPriceTo.getId()) {
+            PopupMenuUtils.showPopupAlertEditTextFromEditTextMenu(mEditTextPriceTo, new Action1<String>() {
+                @Override
+                public void call(String s) {
+                    mRangeBar.setRangePinsByIndices(mRangeBar.getLeftIndex(), Integer.valueOf(s));
+                }
+            });
+        }
+    }
+
+    private void refreshData() {
+        mPresenter.refreshData();
+    }
+
+    @Override
+    public void setPresenter(PloyeeServiceDetailContract.Presenter presenter) {
+        mPresenter = presenter;
+    }
+
+    @Override
+    public void setRefreshing(boolean active) {
+        mSwipeRefreshLayout.setRefreshing(active);
+    }
+
+
+    @Override
+    public void toast(String s) {
+        showToast(s);
+    }
+
+    @Override
+    public void showLoadingDialog(boolean active) {
+        if (active) {
+            showLoading();
+        } else {
+            dismissLoading();
+        }
+    }
+
+    @Override
+    public void bindData(PloyeeServiceDetailGson data) {
+        showToast(data.toString());
+        mData = new PloyeeServiceDetailVM(data);
+        bindDataToView(mData);
+    }
+
+    private void bindDataToView(PloyeeServiceDetailContract.ViewModel data) {
+        if (null != data) {
+            mEditTextDescription.setText(data.getDescription());
+            mEditTextCertificate.setText(data.getCertificate());
+            mEditTextEquipmentNeeded.setText(data.getEquipmentNeeded());
+            mRangeBar.setTickEnd(data.getPriceMax());
+            mRangeBar.setTickStart(data.getPriceMin());
+            mAdapter.replaceData(data.getData().getSubServices());
+        }
+    }
+
+
+}

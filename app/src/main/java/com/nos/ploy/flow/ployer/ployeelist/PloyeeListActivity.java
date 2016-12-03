@@ -6,7 +6,6 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
-import android.view.View;
 import android.view.ViewStub;
 import android.widget.ImageView;
 
@@ -24,7 +23,7 @@ import butterknife.ButterKnife;
 public class PloyeeListActivity extends BaseActivity {
     @BindView(R.id.toolbar_main)
     Toolbar mToolbar;
-    @BindView(R.id.recyclerview_ployee_list)
+    @BindView(R.id.recyclerview_ployee_service_list)
     RecyclerView mRecyclerView;
     @BindView(R.id.imageview_main_footer_more)
     ImageView mImageViewMore;

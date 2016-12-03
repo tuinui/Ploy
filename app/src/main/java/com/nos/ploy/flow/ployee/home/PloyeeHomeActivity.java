@@ -11,13 +11,13 @@ import android.widget.ImageView;
 
 import com.nos.ploy.R;
 import com.nos.ploy.base.BaseActivity;
-import com.nos.ploy.flow.ployee.home.content.PloyeeHomeListFragment;
+import com.nos.ploy.flow.ployee.home.content.service.list.PloyeeServiceListFragment;
 import com.nos.ploy.flow.ployee.home.content.availability.PloyeeAvailabilityFragment;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class PloyeeHomeActivity extends BaseActivity implements View.OnClickListener {
+public class PloyeeHomeActivity extends BaseActivity implements View.OnClickListener, SearchView.OnQueryTextListener {
     @BindView(R.id.imageview_main_footer_more)
     ImageView mImageViewMore;
     @BindView(R.id.toolbar_main)
@@ -34,9 +34,13 @@ public class PloyeeHomeActivity extends BaseActivity implements View.OnClickList
     DrawerLayout mDrawerLayout;
     @BindView(R.id.recyclerview_main_drawer_menu)
     RecyclerView mRecyclerViewDrawer;
+    private static final int MENU_SERVICE_LIST = 0;
+    private static final int MENU_AVAILABLITY = 1;
     private SearchView mSearchView;
+    private int mCurrentMenu = MENU_SERVICE_LIST;
 
-    private PloyeeHomeListFragment mListFragment = PloyeeHomeListFragment.newInstance();
+private Long DUMMY_USER_ID = 1L;
+    private PloyeeServiceListFragment mListFragment = PloyeeServiceListFragment.newInstance(DUMMY_USER_ID);
     private PloyeeAvailabilityFragment mAvailabilityFragment = PloyeeAvailabilityFragment.newInstance();
 
     @Override
@@ -46,7 +50,7 @@ public class PloyeeHomeActivity extends BaseActivity implements View.OnClickList
         ButterKnife.bind(this);
 
         mSearchView = (SearchView) mViewStubSearchView.inflate().findViewById(R.id.searchview_main);
-
+        mSearchView.setOnQueryTextListener(this);
         initDrawer(mDrawerLayout, mRecyclerViewDrawer, mToolbar, mImageViewMore);
         initFooter();
         initToolbar(mToolbar);
@@ -77,5 +81,21 @@ public class PloyeeHomeActivity extends BaseActivity implements View.OnClickList
         } else if (id == mImageViewFooterLogo2.getId()) {
             addFragmentToActivity(mAvailabilityFragment, R.id.framelayout_ployee_home_content_container);
         }
+    }
+
+    @Override
+    public boolean onQueryTextSubmit(String query) {
+        if (null != mListFragment && mCurrentMenu == MENU_SERVICE_LIST) {
+            return mListFragment.onQueryTextSubmit(query);
+        }
+        return false;
+    }
+
+    @Override
+    public boolean onQueryTextChange(String newText) {
+        if (null != mListFragment && mCurrentMenu == MENU_SERVICE_LIST) {
+            return mListFragment.onQueryTextChange(newText);
+        }
+        return false;
     }
 }

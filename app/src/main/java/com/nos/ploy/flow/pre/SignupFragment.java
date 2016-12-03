@@ -1,4 +1,4 @@
-package com.nos.ploy.flow.pre.signinsignup;
+package com.nos.ploy.flow.pre;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -12,10 +12,9 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.nos.ploy.R;
-import com.nos.ploy.api.authentication.AuthenticationService;
+import com.nos.ploy.api.authentication.AuthenticationApi;
 import com.nos.ploy.api.authentication.model.AccountGson;
 import com.nos.ploy.api.authentication.model.PostSignupGson;
-import com.nos.ploy.api.base.RetrofitManager;
 import com.nos.ploy.base.BaseFragment;
 import com.nos.ploy.cache.SharePreferenceUtils;
 import com.nos.ploy.flow.ployee.home.PloyeeHomeActivity;
@@ -28,7 +27,6 @@ import butterknife.ButterKnife;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
 
 /**
  * Created by User on 11/11/2559.
@@ -98,12 +96,7 @@ public class SignupFragment extends BaseFragment implements View.OnClickListener
         toolbar.setTitle(R.string.Sign_up);
     }
 
-    private void hello() {
-        String birthDay = extractString(mEditTextBirthDay);
-        if (TextUtils.isEmpty(birthDay)) {
 
-        }
-    }
 
     private String extractAndCheckError(EditText editText) {
         String result = extractString(editText);
@@ -147,7 +140,7 @@ public class SignupFragment extends BaseFragment implements View.OnClickListener
 
     private void requestPostSignup(PostSignupGson data, final Context context) {
         showLoading();
-        getRetrofit().create(AuthenticationService.class).getAccountData(data).enqueue(new Callback<AccountGson>() {
+        getRetrofit().create(AuthenticationApi.class).postSignup(data).enqueue(new Callback<AccountGson>() {
             @Override
             public void onResponse(Call<AccountGson> call, Response<AccountGson> response) {
                 dismissLoading();

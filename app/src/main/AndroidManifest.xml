@@ -14,9 +14,6 @@
             android:value="@string/facebook_app_id" />
 
         <activity
-            android:name=".flow.pre.SignInActivity"
-            android:screenOrientation="portrait" />
-        <activity
             android:name=".flow.pre.FirstScreenActivity"
             android:screenOrientation="portrait">
             <intent-filter>
@@ -29,7 +26,7 @@
 
 
         <activity
-            android:name=".flow.pre.signinsignup.SigninSignupActivity"
+            android:name=".flow.pre.SigninSignupActivity"
             android:screenOrientation="portrait" />
 
         <activity

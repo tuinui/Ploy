@@ -1,7 +1,6 @@
-package com.nos.ploy.flow.pre.signinsignup;
+package com.nos.ploy.flow.pre;
 
 import android.os.Bundle;
-import android.os.PersistableBundle;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
@@ -11,7 +10,6 @@ import com.nos.ploy.base.BaseActivity;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 
 /**
  * Created by User on 10/11/2559.
@@ -49,9 +47,9 @@ public class SigninSignupActivity extends BaseActivity implements View.OnClickLi
     public void onClick(View view) {
         int id = view.getId();
         if (id == mButtonSignin.getId()) {
-
+            showFragment(SignInFragment.newInstance());
         } else if (id == mButtonSignup.getId()) {
-            SignupFragment.newInstance().show(getSupportFragmentManager(), null);
+            showFragment(SignupFragment.newInstance());
         }
     }
 }

@@ -33,6 +33,7 @@ import retrofit2.Retrofit;
 public abstract class BaseFragment extends AppCompatDialogFragment {
 
     private ProgressDialog mProgressDialog;
+    protected static final String KEY_USER_ID = "USER_ID";
 
     protected boolean isDialog() {
         return false;

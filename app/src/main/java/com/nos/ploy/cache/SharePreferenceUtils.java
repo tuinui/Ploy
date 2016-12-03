@@ -8,6 +8,7 @@ import android.text.TextUtils;
 
 import com.google.gson.Gson;
 import com.nos.ploy.api.authentication.model.AccountGson;
+import com.nos.ploy.api.authentication.model.UserTokenGson;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -28,9 +29,30 @@ public class SharePreferenceUtils {
     public static final String SHAREPREF_FILE_USER = "SHAREPREF_FILE_USER";
 
     private static final String KEY_ACCOUNT_GSON = "ACCOUNT_GSON";
+    private static final String KEY_USER_TOKEN_GSON = "USER_TOKEN_GSON";
 
     public static SharedPreferences with(Context context, @FileType int fileType) {
         return context.getSharedPreferences(convertToFileName(fileType), Context.MODE_PRIVATE);
+    }
+
+    public static void saveUserTokenGson(Context context, UserTokenGson userTokenGson) {
+        if (null == context) {
+            return;
+        }
+        String userTokenGsonString = new Gson().toJson(userTokenGson, UserTokenGson.class);
+        with(context, USER).edit().putString(KEY_USER_TOKEN_GSON, userTokenGsonString).apply();
+    }
+
+    public static UserTokenGson getUserTokenGson(Context context) {
+        if (null == context) {
+            return null;
+        }
+        String accountGsonString = with(context, USER).getString(KEY_USER_TOKEN_GSON, "");
+        if (TextUtils.isEmpty(accountGsonString)) {
+            return null;
+        }
+
+        return new Gson().fromJson(accountGsonString, UserTokenGson.class);
     }
 
     public static void saveAccountGson(Context context, AccountGson accountInfo) {
