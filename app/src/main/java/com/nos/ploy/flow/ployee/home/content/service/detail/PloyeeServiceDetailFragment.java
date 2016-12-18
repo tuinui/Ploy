@@ -213,7 +213,7 @@ public class PloyeeServiceDetailFragment extends BaseFragment implements PloyeeS
     }
 
     @Override
-    public void bindData(PloyeeServiceDetailGson data) {
+    public void bindData(PloyeeServiceDetailGson.Data data) {
         showToast(data.toString());
         mData = new PloyeeServiceDetailVM(data);
         bindDataToView(mData);

@@ -9,21 +9,24 @@ import okhttp3.Response;
  * Created by Saran on 29/11/2559.
  */
 
-public class UserTokenGson extends BaseResponse<UserTokenGson> {
+public class UserTokenGson extends BaseResponse<UserTokenGson.Data> {
 
-    @SerializedName("userId")
-    private Long userId;
-    @SerializedName("token")
-    private String token;
 
-    public UserTokenGson() {
-    }
+    public static class Data {
+        @SerializedName("userId")
+        private Long userId;
+        @SerializedName("token")
+        private String token;
 
-    public String getToken() {
-        return token;
-    }
+        public Data() {
+        }
 
-    public Long getUserId() {
-        return userId;
+        public String getToken() {
+            return token;
+        }
+
+        public Long getUserId() {
+            return userId;
+        }
     }
 }

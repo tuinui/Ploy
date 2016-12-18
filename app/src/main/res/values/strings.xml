@@ -6,6 +6,7 @@
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="lorem_ipsum">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</string>
 
     <string name="action_settings">Settings</string>
     <string name="Search_Services">Search Services</string>
@@ -49,5 +50,26 @@
     <string name="Because_we_encrypt_your_password">Because we encrypt your password we can’t send it to you but we can reset it allowing you to change it.</string>
     <string name="New_password">New Password</string>
     <string name="re_confirm_Password">re-confirm Password</string>
+    <string name="Birthday">Birthday</string>
+    <string name="If_you_are_offering_a_service_your_email_and_or_phone_number_will_be_available_to_other_members_as_means_to_contact_you">*If you are oﬀering a service. Your email and/or phone number will be available to other members as means to contact you</string>
+    <string name="Phone_asterisk">Phone*</string>
+    <string name="Change_password">Change password</string>
+    <string name="Please_select_your_country_and_enter_your_phone_number">Please select your country and enter your phone number</string>
+    <string name="Phone_number">Phone number</string>
+    <string name="Account">Account</string>
+    <string name="Phone">Phone</string>
+    <string name="About_me">About me</string>
+    <string name="Education">Education</string>
+    <string name="Work">Work</string>
+    <string name="Interest">Interest</string>
+    <string name="Language">Language</string>
+    <string name="Contact_method">Contact method</string>
+    <string name="Show_Phone_No">Show Phone No.</string>
+    <string name="Show_Email">Show Email</string>
+    <string name="Transport">Transport</string>
+    <string name="Let_others_see_who_they_are_talking_to_you_can_upload_up_to_3_photos">Let others see who they are talking to. You can upload up to 3 photos</string>
+    <string name="By_signing_up_i_agree_to_ploy_s_term_of_service_and_privacy_policy">By signing up,I agree to PLOY\'s term of service, and Privacy Policy</string>
+    <string name="Invalid_email_address">Invalid email address</string>
+    <string name="Password_reset">Password reset</string>
 
 </resources>

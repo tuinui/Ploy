@@ -2,7 +2,7 @@ apply plugin: 'com.android.application'
 apply plugin: 'android-apt'
 android {
     compileSdkVersion 25
-    buildToolsVersion '25.0.0'
+    buildToolsVersion '25.0.1'
     defaultConfig {
         applicationId "com.nos.ploy"
         minSdkVersion 15
@@ -11,12 +11,29 @@ android {
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
+
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    signingConfigs {
+        release {
+            keyAlias "noskeystore"
+            keyPassword "nos1234"
+            storeFile file('../key/noskeystore.jks')
+            storePassword "nos1234"
+        }
+    }
+
+}
+
+repositories {
+    maven {
+        url "https://s3.amazonaws.com/repo.commonsware.com"
+    }
+    mavenCentral()
 }
 
 dependencies {
@@ -26,11 +43,11 @@ dependencies {
     })
     testCompile 'junit:junit:4.12'
     //    support library
-    compile 'com.android.support:appcompat-v7:25.0.1'
-    compile 'com.android.support:design:25.0.1'
-    compile 'com.android.support:recyclerview-v7:25.0.1'
-    compile 'com.android.support:cardview-v7:25.0.1'
-    compile 'com.android.support:support-annotations:25.0.1'
+    compile 'com.android.support:appcompat-v7:25.1.0'
+    compile 'com.android.support:design:25.1.0'
+    compile 'com.android.support:recyclerview-v7:25.1.0'
+    compile 'com.android.support:cardview-v7:25.1.0'
+    compile 'com.android.support:support-annotations:25.1.0'
     //    support library
     //ui//
     compile 'com.rengwuxian.materialedittext:library:2.1.4'
@@ -41,7 +58,10 @@ dependencies {
     //code helper//
     compile 'com.jakewharton:butterknife:8.4.0'
     apt 'com.jakewharton:butterknife-compiler:8.4.0'
+    compile('net.yazeed44.imagepicker:imagepicker:1.3.0')
     //code helper//
+    compile 'com.hbb20:ccp:1.7.1'
+    //https://github.com/hbb20/CountryCodePickerProject
     compile 'com.akexorcist:localizationactivity:1.1.1'
     compile 'com.facebook.android:facebook-android-sdk:4.17.0'
     compile 'com.github.bumptech.glide:glide:3.7.0'
@@ -49,9 +69,11 @@ dependencies {
     compile 'com.squareup.retrofit2:converter-gson:2.1.0'
     compile 'com.squareup.okhttp3:okhttp:3.4.1'
     compile 'com.squareup.okhttp3:logging-interceptor:3.4.1'
-
     compile 'io.reactivex:rxjava:1.1.6'
     compile 'io.reactivex:rxandroid:1.2.1'
     compile 'com.android.support.constraint:constraint-layout:1.0.0-beta4'
     compile 'com.google.code.gson:gson:2.8.0'
+
+    compile 'com.google.android.gms:play-services-maps:10.0.1'
+    compile 'com.google.android.gms:play-services-location:10.0.1'
 }

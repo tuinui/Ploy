@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_gravity="center"
+    android:layout_height="wrap_content">
+
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/imageview_generic_profile_image_160dp"
+        android:layout_width="160dp"
+        android:layout_height="160dp"
+        android:layout_gravity="center_horizontal"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:clickable="true"
+        android:src="@drawable/ic_circle_profile_120dp"
+        app:civ_border_color="#AAA"
+        app:civ_border_width="2dp"
+        app:civ_fill_color="#FFF" />
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab_detail_profile_image_cancel"
+        android:layout_width="wrap_content"
+        android:visibility="visible"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_close_black_24dp"
+        app:fabSize="mini"
+        app:backgroundTint="@android:color/darker_gray"
+        app:layout_anchor="@+id/imageview_generic_profile_image_160dp"
+        app:layout_anchorGravity="top|right"
+        android:layout_gravity="center_vertical|center_horizontal" />
+</android.support.design.widget.CoordinatorLayout>

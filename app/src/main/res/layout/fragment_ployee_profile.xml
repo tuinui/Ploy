@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <include layout="@layout/view_main_appbar" />
+
+    <android.support.v4.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+
+            <android.support.v4.view.ViewPager
+                android:id="@+id/viewpager_ployee_profile_image"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:fitsSystemWindows="true" />
+
+
+            <com.nos.ploy.custom.view.RatioFrameLayout
+                android:id="@+id/framelayout_ployee_profile_maps_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:ratioHeight="9"
+                app:ratioWidth="16"/>
+
+            <android.support.v7.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardBackgroundColor="@android:color/white">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="?attr/actionBarSize"
+                    android:orientation="horizontal">
+
+                    <com.nos.ploy.custom.view.RatioImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_weight="0"
+                        android:background="@color/colorPrimary"
+                        android:padding="16dp"
+                        android:src="@drawable/ic_ployee_location_30dp"
+                        app:ratioHeight="9"
+                        app:ratioWidth="16" />
+
+                    <TextView
+                        android:id="@+id/textview_ployee_profile_address"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="75116 Paris, lle-de-Frence" />
+
+
+                </LinearLayout>
+
+            </android.support.v7.widget.CardView>
+
+            <com.rengwuxian.materialedittext.MaterialEditText
+                android:id="@+id/edittext_ployee_profile_about_me"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="16dp"
+                android:hint="@string/About_me"
+                android:inputType="text|textMultiLine"
+                android:lines="3"
+                android:maxLines="3"
+                app:met_baseColor="@android:color/white"
+                app:met_textColorHint="@android:color/darker_gray"
+                app:met_underlineColor="@android:color/darker_gray" />
+
+            <com.rengwuxian.materialedittext.MaterialEditText
+                android:id="@+id/edittext_ployee_profile_education"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="16dp"
+                android:hint="@string/Education"
+                android:inputType="text|textMultiLine"
+                android:lines="3"
+                android:maxLines="3"
+                app:met_baseColor="@android:color/white"
+                app:met_textColorHint="@android:color/darker_gray"
+                app:met_underlineColor="@android:color/darker_gray" />
+
+            <com.rengwuxian.materialedittext.MaterialEditText
+                android:id="@+id/edittext_ployee_profile_work"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="16dp"
+                android:hint="@string/Work"
+                android:inputType="text|textMultiLine"
+                android:lines="3"
+                android:maxLines="3"
+                app:met_baseColor="@android:color/white"
+                app:met_textColorHint="@android:color/darker_gray"
+                app:met_underlineColor="@android:color/darker_gray" />
+
+            <com.rengwuxian.materialedittext.MaterialEditText
+                android:id="@+id/edittext_ployee_profile_interest"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="16dp"
+                android:hint="@string/Interest"
+                android:inputType="text|textMultiLine"
+                android:lines="3"
+                android:maxLines="3"
+                app:met_baseColor="@android:color/white"
+                app:met_textColorHint="@android:color/darker_gray"
+                app:met_underlineColor="@android:color/darker_gray" />
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="16dp"
+                android:minHeight="?attr/actionBarSize">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0"
+                    android:gravity="center"
+                    android:padding="8dp"
+                    android:text="@string/Language"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:drawablePadding="16dp"
+                    android:drawableRight="@drawable/ic_chevron_right_gray_32dp"
+                    android:ellipsize="end"
+                    android:gravity="center_vertical|right"
+                    android:maxLines="1"
+                    android:padding="8dp"
+                    android:text="@string/lorem_ipsum"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+
+
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="16dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="8dp"
+                    android:text="@string/Contact_method" />
+
+                <android.support.v7.widget.ButtonBarLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center">
+
+                    <android.support.v7.widget.AppCompatButton
+                        android:id="@+id/button_ployee_profile_show_phone_no"
+                        style="@style/Widget.AppCompat.Button.Colored"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:drawableLeft="@drawable/selector_drawable_phone_gray_blue"
+                        android:text="@string/Show_Phone_No"
+                        android:textColor="@drawable/selector_color_gray_white"
+                        app:backgroundTint="@drawable/selector_color_gray_blue" />
+
+                    <android.support.v7.widget.AppCompatButton
+                        android:id="@+id/button_ployee_profile_show_email"
+                        style="@style/Widget.AppCompat.Button.Colored"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:drawableLeft="@drawable/selector_drawable_email_gray_blue"
+                        android:text="@string/Show_Email"
+                        android:textColor="@drawable/selector_color_gray_white"
+                        app:backgroundTint="@drawable/selector_color_gray_blue" />
+
+                </android.support.v7.widget.ButtonBarLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="8dp"
+                    android:text="@string/Transport" />
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/recyclerview_ployee_profile_tranportation"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+
+        </LinearLayout>
+
+
+    </android.support.v4.widget.NestedScrollView>
+
+
+</LinearLayout>

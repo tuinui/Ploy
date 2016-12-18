@@ -12,33 +12,33 @@ import com.nos.ploy.R;
  * Created by softbaked on 9/26/2016 AD.
  */
 
-public class ImageViewWithRatio extends AppCompatImageView {
+public class RatioImageView extends AppCompatImageView {
 
     private float mWidthRatio = 16f;
     private float mHeightRatio = 9f;
 
 
-    public ImageViewWithRatio(Context context) {
+    public RatioImageView(Context context) {
         super(context);
         init(context, null, 0, 0);
     }
 
-    public ImageViewWithRatio(Context context, AttributeSet attrs) {
+    public RatioImageView(Context context, AttributeSet attrs) {
         super(context, attrs);
         init(context, attrs, 0, 0);
     }
 
-    public ImageViewWithRatio(Context context, AttributeSet attrs, int defStyleAttr) {
+    public RatioImageView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init(context, attrs, defStyleAttr, 0);
     }
 
     private void init(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
-        TypedArray array = context.obtainStyledAttributes(attrs, R.styleable.ImageViewWithRatio, defStyleAttr, defStyleRes);
+        TypedArray array = context.obtainStyledAttributes(attrs, R.styleable.RatioImageView, defStyleAttr, defStyleRes);
 
         try {
-            mWidthRatio = array.getInteger(R.styleable.ImageViewWithRatio_ratioWidth, -1);
-            mHeightRatio = array.getInteger(R.styleable.ImageViewWithRatio_ratioHeight, -1);
+            mWidthRatio = array.getInteger(R.styleable.RatioImageView_ratioWidth, -1);
+            mHeightRatio = array.getInteger(R.styleable.RatioImageView_ratioHeight, -1);
         } finally {
             array.recycle();
         }

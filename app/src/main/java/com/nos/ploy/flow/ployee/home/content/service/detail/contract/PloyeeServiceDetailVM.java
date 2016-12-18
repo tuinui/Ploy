@@ -10,7 +10,7 @@ import com.nos.ploy.api.ployee.model.PloyeeServiceDetailGson;
  */
 
 public class PloyeeServiceDetailVM implements PloyeeServiceDetailContract.ViewModel {
-    private PloyeeServiceDetailGson data;
+    private PloyeeServiceDetailGson.Data data;
     private String description;
     private String certificate;
     private String equipmentNeeded;
@@ -18,7 +18,7 @@ public class PloyeeServiceDetailVM implements PloyeeServiceDetailContract.ViewMo
     private Long priceMax;
 
 
-    public PloyeeServiceDetailVM(PloyeeServiceDetailGson data) {
+    public PloyeeServiceDetailVM(PloyeeServiceDetailGson.Data data) {
         this.data = data;
         description = data.getDescription();
         certificate = data.getCertificate();
@@ -53,7 +53,7 @@ public class PloyeeServiceDetailVM implements PloyeeServiceDetailContract.ViewMo
     }
 
     @Override
-    public PloyeeServiceDetailGson getData() {
+    public PloyeeServiceDetailGson.Data getData() {
         return data;
     }
 }

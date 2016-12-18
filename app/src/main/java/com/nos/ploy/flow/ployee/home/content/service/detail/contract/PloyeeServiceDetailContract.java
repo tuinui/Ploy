@@ -11,7 +11,7 @@ import com.nos.ploy.base.contract.BaseView;
 public class PloyeeServiceDetailContract {
     public interface View extends BaseView<Presenter> {
 
-        void bindData(PloyeeServiceDetailGson data);
+        void bindData(PloyeeServiceDetailGson.Data data);
     }
 
     public interface Presenter extends BasePresenter {
@@ -24,6 +24,6 @@ public class PloyeeServiceDetailContract {
         String getEquipmentNeeded();
         Long getPriceMin();
         Long getPriceMax();
-        PloyeeServiceDetailGson getData();
+        PloyeeServiceDetailGson.Data getData();
     }
 }

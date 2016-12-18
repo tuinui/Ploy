@@ -9,13 +9,18 @@ import android.view.View;
 import android.view.ViewStub;
 import android.widget.ImageView;
 
+import com.nos.ploy.DrawerController;
 import com.nos.ploy.R;
+import com.nos.ploy.api.authentication.model.AccountGson;
+import com.nos.ploy.api.utils.loader.AccountGsonLoader;
 import com.nos.ploy.base.BaseActivity;
+import com.nos.ploy.flow.ployee.account.main.PloyeeAccountFragment;
 import com.nos.ploy.flow.ployee.home.content.service.list.PloyeeServiceListFragment;
 import com.nos.ploy.flow.ployee.home.content.availability.PloyeeAvailabilityFragment;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import rx.functions.Action1;
 
 public class PloyeeHomeActivity extends BaseActivity implements View.OnClickListener, SearchView.OnQueryTextListener {
     @BindView(R.id.imageview_main_footer_more)
@@ -39,7 +44,7 @@ public class PloyeeHomeActivity extends BaseActivity implements View.OnClickList
     private SearchView mSearchView;
     private int mCurrentMenu = MENU_SERVICE_LIST;
 
-private Long DUMMY_USER_ID = 1L;
+    private Long DUMMY_USER_ID = 1L;
     private PloyeeServiceListFragment mListFragment = PloyeeServiceListFragment.newInstance(DUMMY_USER_ID);
     private PloyeeAvailabilityFragment mAvailabilityFragment = PloyeeAvailabilityFragment.newInstance();
 
@@ -51,7 +56,25 @@ private Long DUMMY_USER_ID = 1L;
 
         mSearchView = (SearchView) mViewStubSearchView.inflate().findViewById(R.id.searchview_main);
         mSearchView.setOnQueryTextListener(this);
-        initDrawer(mDrawerLayout, mRecyclerViewDrawer, mToolbar, mImageViewMore);
+        DrawerController.initDrawer(this, mDrawerLayout, mRecyclerViewDrawer, mToolbar, mImageViewMore, new DrawerController.OnMenuItemSelectedListener() {
+            @Override
+            public void onMenuItemSelected(@DrawerController.Menu int menu) {
+                switch (menu) {
+                    case DrawerController.NONE:
+                        break;
+                    case DrawerController.SETTINGS:
+                        AccountGsonLoader.getAccountGson(PloyeeHomeActivity.this, String.valueOf(DUMMY_USER_ID), new Action1<AccountGson.Data>() {
+                            @Override
+                            public void call(AccountGson.Data accountData) {
+                                if (null != accountData) {
+                                    showFragment(PloyeeAccountFragment.newInstance(accountData));
+                                }
+                            }
+                        });
+                        break;
+                }
+            }
+        });
         initFooter();
         initToolbar(mToolbar);
         addFragmentToActivity(mListFragment, R.id.framelayout_ployee_home_content_container);

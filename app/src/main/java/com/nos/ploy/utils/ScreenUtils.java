@@ -6,7 +6,7 @@ package com.nos.ploy.utils;
 /* Copyright 2012 Charles Harley
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
+ * you may not use this file except in compliance enqueue the License.
  * You may obtain a copy of the License at
  *
  *     http://www.apache.org/licenses/LICENSE-2.0
@@ -28,7 +28,7 @@ import android.view.Display;
 import android.view.WindowManager;
 
 /**
- * Provides utility methods for working with the device screen.
+ * Provides utility methods for working enqueue the device screen.
  */
 public class ScreenUtils {
 

@@ -18,7 +18,7 @@ public class PloyeeServiceDetailPresenter implements PloyeeServiceDetailContract
     private String languageCode;
     private Long mServiceId;
     private PloyeeServiceDetailContract.View mView;
-    private PloyeeServiceDetailGson mData;
+    private PloyeeServiceDetailGson.Data mData;
     private Callback<PloyeeServiceDetailGson> mCallbackPloyeeServiceDetailGson = new Callback<PloyeeServiceDetailGson>() {
         @Override
         public void onResponse(Call<PloyeeServiceDetailGson> call, Response<PloyeeServiceDetailGson> response) {

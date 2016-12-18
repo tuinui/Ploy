@@ -2,6 +2,7 @@ package com.nos.ploy.flow.pre;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +13,7 @@ import com.nos.ploy.R;
 import com.nos.ploy.base.BaseFragment;
 import com.rengwuxian.materialedittext.MaterialEditText;
 
+import butterknife.BindString;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -31,6 +33,10 @@ public class ForgotPasswordFragment extends BaseFragment {
     MaterialEditText mEditTextRePassword;
     @BindView(R.id.textview_forgot_password_description)
     TextView mTextViewDescription;
+    @BindView(R.id.toolbar_main)
+    Toolbar mToolbar;
+    @BindString(R.string.Password_reset)
+    String LPassword_reset;
 
     public static ForgotPasswordFragment newInstance() {
         Bundle args = new Bundle();
@@ -40,7 +46,7 @@ public class ForgotPasswordFragment extends BaseFragment {
     }
 
 
-    private void attempSubmit(){
+    private void attempSubmit() {
 
     }
 
@@ -49,7 +55,13 @@ public class ForgotPasswordFragment extends BaseFragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_forgot_password, container, false);
         ButterKnife.bind(this, v);
+        initToolbar();
         return v;
+    }
+
+    private void initToolbar() {
+        mToolbar.setTitle(LPassword_reset);
+        enableBackButton(mToolbar);
     }
 
     @Override

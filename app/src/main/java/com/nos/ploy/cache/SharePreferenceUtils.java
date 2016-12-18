@@ -35,12 +35,17 @@ public class SharePreferenceUtils {
         return context.getSharedPreferences(convertToFileName(fileType), Context.MODE_PRIVATE);
     }
 
-    public static void saveUserTokenGson(Context context, UserTokenGson userTokenGson) {
+    public static void saveUserTokenGson(Context context, UserTokenGson.Data userTokenGson) {
         if (null == context) {
             return;
         }
-        String userTokenGsonString = new Gson().toJson(userTokenGson, UserTokenGson.class);
-        with(context, USER).edit().putString(KEY_USER_TOKEN_GSON, userTokenGsonString).apply();
+        String userTokenGsonString = "";
+        try {
+            userTokenGsonString = new Gson().toJson(userTokenGson, UserTokenGson.Data.class);
+            with(context, USER).edit().putString(KEY_USER_TOKEN_GSON, userTokenGsonString).apply();
+        } catch (Exception e) {
+            with(context, USER).edit().putString(KEY_USER_TOKEN_GSON, "").apply();
+        }
     }
 
     public static UserTokenGson getUserTokenGson(Context context) {
@@ -55,15 +60,15 @@ public class SharePreferenceUtils {
         return new Gson().fromJson(accountGsonString, UserTokenGson.class);
     }
 
-    public static void saveAccountGson(Context context, AccountGson accountInfo) {
+    public static void saveAccountGson(Context context, AccountGson.Data data) {
         if (null == context) {
             return;
         }
-        String accountGsonString = new Gson().toJson(accountInfo, AccountGson.class);
+        String accountGsonString = new Gson().toJson(data, AccountGson.Data.class);
         with(context, USER).edit().putString(KEY_ACCOUNT_GSON, accountGsonString).apply();
     }
 
-    public static AccountGson getAccountGson(Context context) {
+    public static AccountGson.Data getAccountGson(Context context) {
         if (null == context) {
             return null;
         }
@@ -72,7 +77,7 @@ public class SharePreferenceUtils {
             return null;
         }
 
-        return new Gson().fromJson(accountGsonString, AccountGson.class);
+        return new Gson().fromJson(accountGsonString, AccountGson.Data.class);
     }
 
     private static String convertToFileName(@FileType int fileType) {

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -8,85 +8,90 @@
 
     <include layout="@layout/view_main_appbar" />
 
-    <LinearLayout
+    <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center"
-        android:orientation="vertical"
-        android:paddingBottom="32dp"
-        android:paddingLeft="@dimen/activity_horizontal_margin"
-        android:paddingRight="@dimen/activity_horizontal_margin"
-        android:paddingTop="@dimen/activity_vertical_margin">
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_logo_p_alphabet_110dp" />
-
-        <com.rengwuxian.materialedittext.MaterialEditText
-            android:id="@+id/edittext_signin_email_address"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:hint="@string/Email_Address_asterisk"
-            android:inputType="textEmailAddress"
-            app:met_baseColor="@android:color/white"
-            app:met_floatingLabel="normal"
-            app:met_floatingLabelText="@string/Email_Address_asterisk"
-            app:met_floatingLabelTextColor="@android:color/white"
-            app:met_primaryColor="@android:color/white"
-            app:met_textColorHint="@android:color/white"
-            app:met_underlineColor="@android:color/white" />
-
-
-        <com.rengwuxian.materialedittext.MaterialEditText
-            android:id="@+id/edittext_signin_password"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:hint="@string/Password_asterisk"
-            android:inputType="textPassword"
-            app:met_baseColor="@android:color/white"
-            app:met_floatingLabel="normal"
-            app:met_floatingLabelText="@string/Password_asterisk"
-            app:met_floatingLabelTextColor="@android:color/white"
-            app:met_primaryColor="@android:color/white"
-            app:met_textColorHint="@android:color/white"
-            app:met_underlineColor="@android:color/white" />
-
-
-        <android.support.v7.widget.AppCompatButton
-            android:id="@+id/button_signup_signin"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="36dp"
-            android:text="@string/Log_in"
-            android:textColor="@android:color/black"
-            app:backgroundTint="@android:color/white" />
-
-
-        <com.facebook.login.widget.LoginButton
-            android:id="@+id/loginbutton_signin"
+        android:layout_height="wrap_content">
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="16dp"
-            android:paddingBottom="12dp"
-            android:paddingTop="12dp" />
-
-        <TextView
-            android:id="@+id/textview_signin_forgot_password"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:background="?attr/selectableItemBackground"
-            android:clickable="true"
             android:gravity="center"
-            android:padding="8dp"
-            android:text="@string/Forgot_password"
-            android:textColor="@android:color/white" />
+            android:orientation="vertical"
+            android:paddingBottom="32dp"
+            android:paddingLeft="@dimen/activity_horizontal_margin"
+            android:paddingRight="@dimen/activity_horizontal_margin"
+            android:paddingTop="@dimen/activity_vertical_margin">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_geniz_logo_133dp" />
+
+            <com.rengwuxian.materialedittext.MaterialEditText
+                android:id="@+id/edittext_signin_email_address"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:hint="@string/Email_Address_asterisk"
+                android:inputType="textEmailAddress"
+                app:met_baseColor="@android:color/white"
+                app:met_floatingLabel="normal"
+                app:met_floatingLabelText="@string/Email_Address_asterisk"
+                app:met_floatingLabelTextColor="@android:color/white"
+                app:met_primaryColor="@android:color/white"
+                app:met_textColorHint="@android:color/white"
+                app:met_underlineColor="@android:color/white" />
 
 
-    </LinearLayout>
+            <com.rengwuxian.materialedittext.MaterialEditText
+                android:id="@+id/edittext_signin_password"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:hint="@string/Password_asterisk"
+                android:inputType="textPassword"
+                app:met_baseColor="@android:color/white"
+                app:met_floatingLabel="normal"
+                app:met_floatingLabelText="@string/Password_asterisk"
+                app:met_floatingLabelTextColor="@android:color/white"
+                app:met_primaryColor="@android:color/white"
+                app:met_textColorHint="@android:color/white"
+                app:met_underlineColor="@android:color/white" />
 
 
-</FrameLayout>
+            <android.support.v7.widget.AppCompatButton
+                android:id="@+id/button_signup_signin"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="36dp"
+                android:text="@string/Log_in"
+                android:textColor="@android:color/black"
+                app:backgroundTint="@android:color/white" />
+
+
+            <com.facebook.login.widget.LoginButton
+                android:id="@+id/loginbutton_signin"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="16dp"
+                android:paddingBottom="12dp"
+                android:paddingTop="12dp" />
+
+            <TextView
+                android:id="@+id/textview_signin_forgot_password"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:background="?attr/selectableItemBackground"
+                android:clickable="true"
+                android:gravity="center"
+                android:padding="8dp"
+                android:text="@string/Forgot_password"
+                android:textColor="@android:color/white" />
+
+
+        </LinearLayout>
+
+    </android.support.v4.widget.NestedScrollView>
+
+
+</LinearLayout>

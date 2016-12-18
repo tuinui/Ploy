@@ -10,9 +10,9 @@ public class HeaderSubServiceVM implements PloyeeServiceDetailSubServiceItemBase
 
 
     private String name;
-    private PloyeeServiceDetailGson.SubService.SubServiceLv1 data;
+    private PloyeeServiceDetailGson.Data.SubService.SubServiceLv1 data;
 
-    public HeaderSubServiceVM(PloyeeServiceDetailGson.SubService.SubServiceLv1 data) {
+    public HeaderSubServiceVM(PloyeeServiceDetailGson.Data.SubService.SubServiceLv1 data) {
         this.data = data;
         this.name = data.getName();
     }
@@ -26,7 +26,7 @@ public class HeaderSubServiceVM implements PloyeeServiceDetailSubServiceItemBase
         return HEADER;
     }
 
-    public PloyeeServiceDetailGson.SubService.SubServiceLv1 getData() {
+    public PloyeeServiceDetailGson.Data.SubService.SubServiceLv1 getData() {
         return data;
     }
 }

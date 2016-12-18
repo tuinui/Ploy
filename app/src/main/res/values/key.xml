@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--https://console.developers.google.com/apis/credentials/key/153?project=ploy-1481810626557&pli=1-->
+    <string name="ploy_api_key">"AIzaSyCrfa78JBaajJKY77XDGqOigViosgrZrEg"</string>
+</resources>

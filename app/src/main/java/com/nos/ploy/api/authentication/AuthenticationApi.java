@@ -1,6 +1,7 @@
 package com.nos.ploy.api.authentication;
 
 import com.nos.ploy.api.authentication.model.AccountGson;
+import com.nos.ploy.api.authentication.model.PostLoginFacebookGson;
 import com.nos.ploy.api.authentication.model.PostLoginGson;
 import com.nos.ploy.api.authentication.model.PostSignupGson;
 import com.nos.ploy.api.authentication.model.UserTokenGson;
@@ -19,6 +20,9 @@ public interface AuthenticationApi {
     Call<AccountGson> postSignup(@Body PostSignupGson data);
 
     @POST("/api/auth/login")
-    Call<UserTokenGson> getLogin(@Body PostLoginGson data);
+    Call<UserTokenGson> postLogin(@Body PostLoginGson data);
 
+    //    /api/auth/facebook
+    @POST("/api/auth/facebook")
+    Call<UserTokenGson> postLoginFacebook(@Body PostLoginFacebookGson data);
 }

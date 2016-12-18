@@ -7,17 +7,17 @@ import com.nos.ploy.api.ployee.model.PloyeeServiceDetailGson;
  */
 
 public class NormalSubServiceVM implements PloyeeServiceDetailSubServiceItemBaseViewModel {
-    private PloyeeServiceDetailGson.SubService.SubServiceLv2 data;
+    private PloyeeServiceDetailGson.Data.SubService.SubServiceLv2 data;
     private String name;
     private Boolean checked;
 
-    public NormalSubServiceVM(PloyeeServiceDetailGson.SubService.SubServiceLv2 data) {
+    public NormalSubServiceVM(PloyeeServiceDetailGson.Data.SubService.SubServiceLv2 data) {
         this.data = data;
         name = data.getName();
         checked = data.getChecked();
     }
 
-    public PloyeeServiceDetailGson.SubService.SubServiceLv2 getData() {
+    public PloyeeServiceDetailGson.Data.SubService.SubServiceLv2 getData() {
         return data;
     }
 

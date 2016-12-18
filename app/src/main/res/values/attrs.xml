@@ -6,7 +6,7 @@
     </declare-styleable>
 
 
-    <declare-styleable name="ImageViewWithRatio">
+    <declare-styleable name="RatioImageView">
         <attr name="ratioHeight" format="integer" />
         <attr name="ratioWidth" format="integer" />
     </declare-styleable>

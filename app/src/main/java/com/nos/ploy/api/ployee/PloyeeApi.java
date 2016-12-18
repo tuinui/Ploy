@@ -26,4 +26,6 @@ public interface PloyeeApi {
     //{{endpoint_ploy}}/api/ployee/service/mapping
     @POST("/api/ployee/service/mapping")
     Call<PloyeeServiceDetailGson> getPloyeeServiceDetail(@Body PostPloyeeServiceDetailGson data);
+
+
 }

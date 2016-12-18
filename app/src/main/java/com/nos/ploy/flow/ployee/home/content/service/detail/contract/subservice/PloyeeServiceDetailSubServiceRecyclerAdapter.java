@@ -32,21 +32,21 @@ public class PloyeeServiceDetailSubServiceRecyclerAdapter extends RecyclerView.A
     public PloyeeServiceDetailSubServiceRecyclerAdapter() {
     }
 
-    public void replaceData(List<PloyeeServiceDetailGson.SubService> datas) {
+    public void replaceData(List<PloyeeServiceDetailGson.Data.SubService> datas) {
         mDatas.clear();
         mDatas.addAll(toVM(datas));
         notifyDataSetChanged();
     }
 
-    private List<PloyeeServiceDetailSubServiceItemBaseViewModel> toVM(List<PloyeeServiceDetailGson.SubService> datas) {
+    private List<PloyeeServiceDetailSubServiceItemBaseViewModel> toVM(List<PloyeeServiceDetailGson.Data.SubService> datas) {
         List<PloyeeServiceDetailSubServiceItemBaseViewModel> results = new ArrayList<>();
-        for (PloyeeServiceDetailGson.SubService data : datas) {
-            PloyeeServiceDetailGson.SubService.SubServiceLv1 subServiceLv1 = data.getSubServiceLV1();
+        for (PloyeeServiceDetailGson.Data.SubService data : datas) {
+            PloyeeServiceDetailGson.Data.SubService.SubServiceLv1 subServiceLv1 = data.getSubServiceLV1();
             if (subServiceLv1 != null) {
                 results.add(new HeaderSubServiceVM(subServiceLv1));
             }
-            List<PloyeeServiceDetailGson.SubService.SubServiceLv2> subServicesLv2 = data.getSubServiceLV2();
-            for (PloyeeServiceDetailGson.SubService.SubServiceLv2 sub2 : subServicesLv2) {
+            List<PloyeeServiceDetailGson.Data.SubService.SubServiceLv2> subServicesLv2 = data.getSubServiceLV2();
+            for (PloyeeServiceDetailGson.Data.SubService.SubServiceLv2 sub2 : subServicesLv2) {
                 results.add(new NormalSubServiceVM(sub2));
             }
         }

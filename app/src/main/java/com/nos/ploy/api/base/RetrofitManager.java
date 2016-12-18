@@ -1,5 +1,7 @@
 package com.nos.ploy.api.base;
 
+import android.content.Context;
+
 import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -18,7 +20,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class RetrofitManager {
 
-    public static final String HTTP_HOST_PRODUCTION = "http://52.220.224.43:8080";
+    public static final String HTTP_HOST_PRODUCTION = "http://138.68.72.222:8080";
 
     public static Retrofit getRetrofit() {
         Retrofit.Builder builder = new Retrofit.Builder()
@@ -32,6 +34,31 @@ public class RetrofitManager {
     public static OkHttpClient getOkHttpClient() {
         return new OkHttpClient.Builder()
                 .addInterceptor(new HttpLoggingInterceptor())
+                .build();
+    }
+
+    private static OkHttpClient getOkHttpClient(final Context context, final boolean withAuthen) {
+        return new OkHttpClient.Builder()
+                .connectTimeout(5, TimeUnit.SECONDS)
+                .addInterceptor(new HttpLoggingInterceptor())
+                .addInterceptor(new Interceptor() {
+                    @Override
+                    public Response intercept(Chain chain) throws IOException {
+                        Request original = chain.request();
+                        Request.Builder builder = original.newBuilder()
+                                .header("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8")
+                                .method(original.method(), original.body());
+
+
+
+                        Response response = chain.proceed(builder.build());
+
+
+
+
+                        return response;
+                    }
+                })
                 .build();
     }
 }

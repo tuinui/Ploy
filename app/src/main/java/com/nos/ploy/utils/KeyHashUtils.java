@@ -19,7 +19,7 @@ public class KeyHashUtils {
     public static void logKeyHash(Context context) {
         try {
             PackageInfo info = context.getPackageManager().getPackageInfo(
-                    "com.facebook.samples.loginhowto",
+                    "com.nos.ploy",
                     PackageManager.GET_SIGNATURES);
             for (Signature signature : info.signatures) {
                 MessageDigest md = MessageDigest.getInstance("SHA");
