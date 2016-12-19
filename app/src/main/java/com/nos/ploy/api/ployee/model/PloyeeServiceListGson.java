@@ -1,7 +1,6 @@
 package com.nos.ploy.api.ployee.model;
 
 import com.google.gson.annotations.SerializedName;
-import com.nos.ploy.api.base.response.BaseResponse;
 import com.nos.ploy.api.base.response.BaseResponseArray;
 
 /**

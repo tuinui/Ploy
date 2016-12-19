@@ -1,8 +1,5 @@
 package com.nos.ploy.flow.ployee.home.content.service.detail.contract;
 
-import android.content.Context;
-import android.text.TextUtils;
-
 import com.nos.ploy.api.ployee.model.PloyeeServiceDetailGson;
 
 /**

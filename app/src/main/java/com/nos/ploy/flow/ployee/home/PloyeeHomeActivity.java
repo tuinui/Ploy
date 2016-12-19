@@ -16,8 +16,8 @@ import com.nos.ploy.api.utils.loader.AccountGsonLoader;
 import com.nos.ploy.base.BaseActivity;
 import com.nos.ploy.cache.UserTokenManager;
 import com.nos.ploy.flow.ployee.account.main.PloyeeAccountFragment;
-import com.nos.ploy.flow.ployee.home.content.service.list.PloyeeServiceListFragment;
 import com.nos.ploy.flow.ployee.home.content.availability.PloyeeAvailabilityFragment;
+import com.nos.ploy.flow.ployee.home.content.service.list.PloyeeServiceListFragment;
 import com.nos.ploy.flow.ployee.settings.PloyeeSettingsFragment;
 
 import butterknife.BindView;

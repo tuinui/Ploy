@@ -6,7 +6,6 @@ import com.nos.ploy.api.authentication.model.UserTokenGson;
 import com.nos.ploy.cache.UserTokenManager;
 
 import java.io.IOException;
-import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.Interceptor;

@@ -25,7 +25,6 @@ import com.nos.ploy.api.base.RetrofitCallUtils;
 import com.nos.ploy.base.BaseActivity;
 import com.nos.ploy.cache.UserTokenManager;
 import com.nos.ploy.flow.ployee.home.PloyeeHomeActivity;
-import com.nos.ploy.flow.ployee.profile.PloyeeProfileFragment;
 import com.nos.ploy.flow.pre.signin.SignInFragment;
 import com.nos.ploy.flow.pre.signup.SignUpFragment;
 import com.nos.ploy.utils.IntentUtils;

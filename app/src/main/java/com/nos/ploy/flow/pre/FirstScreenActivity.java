@@ -11,7 +11,6 @@ import com.nos.ploy.flow.ployee.home.PloyeeHomeActivity;
 import com.nos.ploy.flow.ployer.home.PloyerHomeActivity;
 import com.nos.ploy.flow.pre.register.SignInSignupActivity;
 import com.nos.ploy.utils.IntentUtils;
-import com.nos.ploy.utils.KeyHashUtils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

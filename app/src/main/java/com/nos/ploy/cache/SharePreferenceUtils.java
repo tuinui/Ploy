@@ -1,6 +1,5 @@
 package com.nos.ploy.cache;
 
-import android.accounts.Account;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.support.annotation.IntDef;

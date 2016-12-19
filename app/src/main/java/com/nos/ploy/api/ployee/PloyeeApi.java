@@ -4,8 +4,6 @@ import com.nos.ploy.api.ployee.model.PloyeeServiceDetailGson;
 import com.nos.ploy.api.ployee.model.PloyeeServiceListGson;
 import com.nos.ploy.api.ployee.model.PostPloyeeServiceDetailGson;
 
-import java.util.List;
-
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;

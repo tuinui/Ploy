@@ -7,10 +7,8 @@ import com.nos.ploy.R;
 import net.yazeed44.imagepicker.model.ImageEntry;
 import net.yazeed44.imagepicker.util.Picker;
 
-import java.io.File;
 import java.util.ArrayList;
 
-import okhttp3.MultipartBody;
 import rx.functions.Action1;
 
 /**

@@ -13,9 +13,6 @@ import com.nos.ploy.base.BaseFragment;
 import com.nos.ploy.flow.ployee.home.content.availability.contract.AvailabilityDummyData;
 import com.nos.ploy.flow.ployee.home.content.availability.view.PloyeeAvailabilityRecyclerAdapter;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 

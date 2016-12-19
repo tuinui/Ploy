@@ -5,7 +5,6 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.PersistableBundle;
 import android.support.annotation.IdRes;
 import android.support.annotation.StringRes;
 import android.support.v4.app.ActivityCompat;
@@ -17,7 +16,6 @@ import com.akexorcist.localizationactivity.LocalizationActivity;
 import com.nos.ploy.DrawerController;
 import com.nos.ploy.R;
 import com.nos.ploy.api.base.RetrofitManager;
-import com.nos.ploy.api.utils.loader.AccountGsonLoader;
 import com.nos.ploy.cache.UserTokenManager;
 import com.nos.ploy.utils.FragmentTransactionUtils;
 

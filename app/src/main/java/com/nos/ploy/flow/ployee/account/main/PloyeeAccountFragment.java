@@ -11,7 +11,6 @@ import android.view.ViewGroup;
 import com.facebook.login.widget.LoginButton;
 import com.nos.ploy.R;
 import com.nos.ploy.api.authentication.model.AccountGson;
-import com.nos.ploy.api.utils.loader.AccountGsonLoader;
 import com.nos.ploy.base.BaseFragment;
 import com.nos.ploy.flow.ployee.account.phone.PloyeeAccountPhoneFragment;
 import com.rengwuxian.materialedittext.MaterialEditText;

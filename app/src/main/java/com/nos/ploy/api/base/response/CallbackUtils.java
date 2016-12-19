@@ -1,7 +1,6 @@
 package com.nos.ploy.api.base.response;
 
 import android.content.Context;
-import android.view.View;
 import android.widget.Toast;
 
 import com.nos.ploy.base.BaseActivity;
@@ -9,8 +8,6 @@ import com.nos.ploy.base.BaseActivity;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-
-import static android.icu.lang.UCharacter.GraphemeClusterBreak.T;
 
 /**
  * Created by Saran on 18/12/2559.

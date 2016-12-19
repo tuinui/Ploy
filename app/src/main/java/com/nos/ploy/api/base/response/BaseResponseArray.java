@@ -1,7 +1,5 @@
 package com.nos.ploy.api.base.response;
 
-import android.text.TextUtils;
-
 import com.google.gson.annotations.SerializedName;
 
 import java.util.List;

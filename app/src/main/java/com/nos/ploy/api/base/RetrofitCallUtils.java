@@ -3,11 +3,8 @@ package com.nos.ploy.api.base;
 import android.content.Context;
 import android.widget.Toast;
 
-import com.nos.ploy.api.authentication.model.UserTokenGson;
 import com.nos.ploy.api.base.response.BaseResponse;
 import com.nos.ploy.base.BaseActivity;
-
-import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
