@@ -72,7 +72,7 @@ public abstract class BaseFragment extends AppCompatDialogFragment {
     }
 
     protected Retrofit getRetrofit() {
-        return RetrofitManager.getRetrofit();
+        return RetrofitManager.getRetrofit(getContext());
     }
 
     protected void enableBackButton(Toolbar toolbar) {
@@ -91,7 +91,11 @@ public abstract class BaseFragment extends AppCompatDialogFragment {
             activity.runOnUiThread(action);
         }
     }
-
+    protected void finishThisActivity() {
+        if (isActivityReady()) {
+            ActivityCompat.finishAfterTransition(getActivity());
+        }
+    }
     protected boolean isActivityReady() {
         return null != getActivity() && !getActivity().isFinishing() && !isActivityDestroyed();
     }

@@ -2,6 +2,9 @@ package com.nos.ploy.api.base;
 
 import android.content.Context;
 
+import com.nos.ploy.api.authentication.model.UserTokenGson;
+import com.nos.ploy.cache.UserTokenManager;
+
 import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -22,10 +25,10 @@ public class RetrofitManager {
 
     public static final String HTTP_HOST_PRODUCTION = "http://138.68.72.222:8080";
 
-    public static Retrofit getRetrofit() {
+    public static Retrofit getRetrofit(Context context) {
         Retrofit.Builder builder = new Retrofit.Builder()
                 .baseUrl(HTTP_HOST_PRODUCTION);
-        builder.client(getOkHttpClient());
+        builder.client(getOkHttpClient(context,true));
         builder.addConverterFactory(GsonConverterFactory.create());
 
         return builder.build();
@@ -46,9 +49,11 @@ public class RetrofitManager {
                     public Response intercept(Chain chain) throws IOException {
                         Request original = chain.request();
                         Request.Builder builder = original.newBuilder()
-                                .header("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8")
                                 .method(original.method(), original.body());
-
+                        UserTokenGson.Data data = UserTokenManager.getToken(context);
+                        if(null != data){
+                            builder.header("Authorization",data.getToken());
+                        }
 
 
                         Response response = chain.proceed(builder.build());

@@ -35,7 +35,7 @@ public class SharePreferenceUtils {
         return context.getSharedPreferences(convertToFileName(fileType), Context.MODE_PRIVATE);
     }
 
-    public static void saveUserTokenGson(Context context, UserTokenGson.Data userTokenGson) {
+    protected static void saveUserTokenGson(Context context, UserTokenGson.Data userTokenGson) {
         if (null == context) {
             return;
         }
@@ -48,7 +48,7 @@ public class SharePreferenceUtils {
         }
     }
 
-    public static UserTokenGson getUserTokenGson(Context context) {
+    protected static UserTokenGson.Data getUserTokenGson(Context context) {
         if (null == context) {
             return null;
         }
@@ -57,7 +57,7 @@ public class SharePreferenceUtils {
             return null;
         }
 
-        return new Gson().fromJson(accountGsonString, UserTokenGson.class);
+        return new Gson().fromJson(accountGsonString, UserTokenGson.Data.class);
     }
 
     public static void saveAccountGson(Context context, AccountGson.Data data) {

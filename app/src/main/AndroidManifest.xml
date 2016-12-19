@@ -23,19 +23,21 @@
 
 
         <activity
-            android:name=".flow.pre.FirstScreenActivity"
+            android:name=".flow.pre.SplashScreenActivity"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
         </activity>
+        <activity
+            android:name=".flow.pre.FirstScreenActivity"
+            android:screenOrientation="portrait"/>
 
 
         <activity
-            android:name=".flow.pre.SigninSignupActivity"
+            android:name=".flow.pre.register.SignInSignupActivity"
             android:screenOrientation="portrait" />
 
         <activity

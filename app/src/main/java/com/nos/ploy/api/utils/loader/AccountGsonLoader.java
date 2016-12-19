@@ -20,7 +20,7 @@ public class AccountGsonLoader {
 
     public static void getAccountGson(final Context context, String userId, final Action1<AccountGson.Data> onFinish) {
         AccountGson.Data data = SharePreferenceUtils.getAccountGson(context);
-        Call<AccountGson> call = RetrofitManager.getRetrofit().create(AccountApi.class).getAccountGson(userId);
+        Call<AccountGson> call = RetrofitManager.getRetrofit(context).create(AccountApi.class).getAccountGson(userId);
         final Callback<AccountGson> callbackSaveCache = new Callback<AccountGson>() {
             @Override
             public void onResponse(Call<AccountGson> call, Response<AccountGson> response) {

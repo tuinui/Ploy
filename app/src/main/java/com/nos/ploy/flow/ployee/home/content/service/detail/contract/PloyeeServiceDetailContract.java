@@ -22,8 +22,8 @@ public class PloyeeServiceDetailContract {
         String getDescription();
         String getCertificate();
         String getEquipmentNeeded();
-        Long getPriceMin();
-        Long getPriceMax();
+        long getPriceMin();
+        long getPriceMax();
         PloyeeServiceDetailGson.Data getData();
     }
 }

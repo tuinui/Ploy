@@ -14,17 +14,23 @@ public class PloyeeServiceDetailVM implements PloyeeServiceDetailContract.ViewMo
     private String description;
     private String certificate;
     private String equipmentNeeded;
-    private Long priceMin;
-    private Long priceMax;
+    private long priceMin;
+    private long priceMax = 2;
 
 
     public PloyeeServiceDetailVM(PloyeeServiceDetailGson.Data data) {
         this.data = data;
-        description = data.getDescription();
-        certificate = data.getCertificate();
-        equipmentNeeded = data.getEquipment();
-        priceMin = data.getPriceMin();
-        priceMax = data.getPriceMax();
+        if (null != data) {
+            description = data.getDescription();
+            certificate = data.getCertificate();
+            equipmentNeeded = data.getEquipment();
+            priceMin = data.getPriceMin();
+            if (data.getPriceMax() > 2) {
+                priceMax = data.getPriceMax();
+            }
+
+        }
+
     }
 
     @Override
@@ -43,12 +49,12 @@ public class PloyeeServiceDetailVM implements PloyeeServiceDetailContract.ViewMo
     }
 
     @Override
-    public Long getPriceMin() {
+    public long getPriceMin() {
         return priceMin;
     }
 
     @Override
-    public Long getPriceMax() {
+    public long getPriceMax() {
         return priceMax;
     }
 

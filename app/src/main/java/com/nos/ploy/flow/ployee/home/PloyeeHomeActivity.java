@@ -14,9 +14,11 @@ import com.nos.ploy.R;
 import com.nos.ploy.api.authentication.model.AccountGson;
 import com.nos.ploy.api.utils.loader.AccountGsonLoader;
 import com.nos.ploy.base.BaseActivity;
+import com.nos.ploy.cache.UserTokenManager;
 import com.nos.ploy.flow.ployee.account.main.PloyeeAccountFragment;
 import com.nos.ploy.flow.ployee.home.content.service.list.PloyeeServiceListFragment;
 import com.nos.ploy.flow.ployee.home.content.availability.PloyeeAvailabilityFragment;
+import com.nos.ploy.flow.ployee.settings.PloyeeSettingsFragment;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -44,8 +46,8 @@ public class PloyeeHomeActivity extends BaseActivity implements View.OnClickList
     private SearchView mSearchView;
     private int mCurrentMenu = MENU_SERVICE_LIST;
 
-    private Long DUMMY_USER_ID = 1L;
-    private PloyeeServiceListFragment mListFragment = PloyeeServiceListFragment.newInstance(DUMMY_USER_ID);
+    //    private Long DUMMY_USER_ID = 1L;
+    private PloyeeServiceListFragment mListFragment;
     private PloyeeAvailabilityFragment mAvailabilityFragment = PloyeeAvailabilityFragment.newInstance();
 
     @Override
@@ -53,7 +55,11 @@ public class PloyeeHomeActivity extends BaseActivity implements View.OnClickList
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ployee_home);
         ButterKnife.bind(this);
+        if (!UserTokenManager.isLogin(this)) {
+            finishThisActivity();
+        }
 
+        initFragment();
         mSearchView = (SearchView) mViewStubSearchView.inflate().findViewById(R.id.searchview_main);
         mSearchView.setOnQueryTextListener(this);
         DrawerController.initDrawer(this, mDrawerLayout, mRecyclerViewDrawer, mToolbar, mImageViewMore, new DrawerController.OnMenuItemSelectedListener() {
@@ -62,8 +68,8 @@ public class PloyeeHomeActivity extends BaseActivity implements View.OnClickList
                 switch (menu) {
                     case DrawerController.NONE:
                         break;
-                    case DrawerController.SETTINGS:
-                        AccountGsonLoader.getAccountGson(PloyeeHomeActivity.this, String.valueOf(DUMMY_USER_ID), new Action1<AccountGson.Data>() {
+                    case DrawerController.ACCOUNT:
+                        AccountGsonLoader.getAccountGson(PloyeeHomeActivity.this, String.valueOf(mUserId), new Action1<AccountGson.Data>() {
                             @Override
                             public void call(AccountGson.Data accountData) {
                                 if (null != accountData) {
@@ -72,6 +78,9 @@ public class PloyeeHomeActivity extends BaseActivity implements View.OnClickList
                             }
                         });
                         break;
+                    case DrawerController.SETTINGS:
+                        showFragment(PloyeeSettingsFragment.newInstance());
+                        break;
                 }
             }
         });
@@ -79,6 +88,11 @@ public class PloyeeHomeActivity extends BaseActivity implements View.OnClickList
         initToolbar(mToolbar);
         addFragmentToActivity(mListFragment, R.id.framelayout_ployee_home_content_container);
     }
+
+    private void initFragment() {
+        mListFragment = PloyeeServiceListFragment.newInstance(mUserId);
+    }
+
 
     private void initFooter() {
         mImageViewFooterLogo1.setVisibility(View.VISIBLE);
@@ -108,17 +122,11 @@ public class PloyeeHomeActivity extends BaseActivity implements View.OnClickList
 
     @Override
     public boolean onQueryTextSubmit(String query) {
-        if (null != mListFragment && mCurrentMenu == MENU_SERVICE_LIST) {
-            return mListFragment.onQueryTextSubmit(query);
-        }
-        return false;
+        return null != mListFragment && mCurrentMenu == MENU_SERVICE_LIST && mListFragment.onQueryTextSubmit(query);
     }
 
     @Override
     public boolean onQueryTextChange(String newText) {
-        if (null != mListFragment && mCurrentMenu == MENU_SERVICE_LIST) {
-            return mListFragment.onQueryTextChange(newText);
-        }
-        return false;
+        return null != mListFragment && mCurrentMenu == MENU_SERVICE_LIST && mListFragment.onQueryTextChange(newText);
     }
 }

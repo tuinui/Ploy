@@ -11,7 +11,6 @@ import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.View;
 
-import com.nos.ploy.api.utils.loader.AccountGsonLoader;
 import com.nos.ploy.base.BaseActivity;
 import com.nos.ploy.base.drawer.DrawerRecyclerAdapter;
 
@@ -25,12 +24,13 @@ import java.util.Map;
  */
 public class DrawerController {
     @Retention(RetentionPolicy.SOURCE)
-    @IntDef({NONE, SETTINGS})
+    @IntDef({NONE, ACCOUNT,SETTINGS})
     public @interface Menu {
     }
 
     public static final int NONE = -404;
-    public static final int SETTINGS = 1;
+    public static final int ACCOUNT = 1;
+    public static final int SETTINGS = 0;
 
     public static final int MENU_COUNT_PLOYEE = 5;
     public static final int MENU_SETTINGS = 0;
@@ -40,8 +40,8 @@ public class DrawerController {
     public static Map<Integer, String> MAP_MENU_NAMES = new LinkedHashMap<>();
 
     static {
-        MAP_MENU_NAMES.put(MENU_SETTINGS, "Settings");
-        MAP_MENU_NAMES.put(MENU_ACCOUNT, "Account");
+        MAP_MENU_NAMES.put(SETTINGS, "Settings");
+        MAP_MENU_NAMES.put(ACCOUNT, "Account");
         MAP_MENU_NAMES.put(MENU_WHAT_IS_PLOYER, "What is Ployer");
         MAP_MENU_NAMES.put(MENU_WHAT_IS_PLOYEE, "What is Ployee");
     }

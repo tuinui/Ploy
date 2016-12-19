@@ -1,4 +1,4 @@
-package com.nos.ploy.flow.pre;
+package com.nos.ploy.flow.pre.signin;
 
 import android.content.Context;
 import android.content.Intent;
@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,19 +16,24 @@ import android.widget.TextView;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
-import com.facebook.FacebookSdk;
-import com.facebook.login.LoginManager;
+import com.facebook.GraphRequest;
+import com.facebook.GraphResponse;
+import com.facebook.Profile;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 import com.nos.ploy.R;
 import com.nos.ploy.api.authentication.AuthenticationApi;
+import com.nos.ploy.api.authentication.model.PostLoginFacebookGson;
 import com.nos.ploy.api.authentication.model.PostLoginGson;
 import com.nos.ploy.api.authentication.model.UserTokenGson;
 import com.nos.ploy.api.base.RetrofitCallUtils;
 import com.nos.ploy.base.BaseFragment;
-import com.nos.ploy.cache.SharePreferenceUtils;
+import com.nos.ploy.cache.UserTokenManager;
 import com.nos.ploy.flow.ployee.home.PloyeeHomeActivity;
 import com.nos.ploy.utils.IntentUtils;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.Arrays;
 
@@ -61,35 +65,18 @@ public class SignInFragment extends BaseFragment implements View.OnClickListener
 
         @Override
         public void onSuccess(LoginResult loginResult) {
-            Log.i(TAG, loginResult.toString());
-//        Bundle parameters = new Bundle();
-//        parameters.putString("fields", "id,name,last_name,link,email,picture");
-//        GraphRequest request = GraphRequest.newMeRequest(loginResult.getAccessToken(), new GraphRequest.GraphJSONObjectCallback() {
-//                    @Override
-//                    public void onCompleted(JSONObject object, GraphResponse response) {
-//                        String id = null;
-//                        if (object != null) {
-//                            try {
-//                                id = object.getString("id");
-//                            } catch (JSONException e) {
-//                                e.printStackTrace();
-//                            }
-//                        }
-//                    }
-//                });
-//        request.executeAsync();
+            setFacebookData(loginResult);
         }
 
         @Override
         public void onCancel() {
-            Log.i(TAG, "onCancel");
+
         }
-//
 
 
         @Override
         public void onError(FacebookException error) {
-            Log.i(TAG, error.toString());
+
         }
     };
 
@@ -156,9 +143,52 @@ public class SignInFragment extends BaseFragment implements View.OnClickListener
     }
 
     private void requestSigninWithFacebook(final Context context, String email, String firstName, String lastName, String fUserId) {
-//        RetrofitCallUtils
-//                .with(mService.postLoginFacebook(new PostLoginFacebookGson()))
-//                .enqueue(context);
+        showLoading();
+        RetrofitCallUtils
+                .with(mService.postLoginFacebook(new PostLoginFacebookGson(email, firstName, lastName, fUserId)),
+                        new RetrofitCallUtils.RetrofitCallback<UserTokenGson>() {
+                            @Override
+                            public void onDataSuccess(UserTokenGson data) {
+                                dismissLoading();
+                                UserTokenManager.saveToken(context, data.getData());
+                                dismiss();
+                                goToPloyeeHome();
+                            }
+
+                            @Override
+                            public void onDataFailure(String failCause) {
+                                dismissLoading();
+                            }
+                        })
+                .enqueue(context);
+    }
+
+    private void setFacebookData(final LoginResult loginResult) {
+
+        GraphRequest request = GraphRequest.newMeRequest(
+                loginResult.getAccessToken(),
+                new GraphRequest.GraphJSONObjectCallback() {
+                    @Override
+                    public void onCompleted(JSONObject object, GraphResponse response) {
+                        try {
+                            String email = response.getJSONObject().getString("email");
+                            String firstName = response.getJSONObject().getString("first_name");
+                            String lastName = response.getJSONObject().getString("last_name");
+
+                            Profile profile = Profile.getCurrentProfile();
+                            String id = profile.getId();
+
+                            requestSigninWithFacebook(getActivity(), email, firstName, lastName, id);
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+        Bundle parameters = new Bundle();
+        parameters.putString("fields", "id,email,first_name,last_name");
+        request.setParameters(parameters);
+        request.executeAsync();
     }
 
     private void requestSignin(final Context context, String email, String password) {
@@ -167,7 +197,7 @@ public class SignInFragment extends BaseFragment implements View.OnClickListener
             @Override
             public void onDataSuccess(UserTokenGson data) {
                 dismissLoading();
-                SharePreferenceUtils.saveUserTokenGson(context, data.getData());
+                UserTokenManager.saveToken(context, data.getData());
                 goToPloyeeHome();
             }
 
@@ -191,6 +221,7 @@ public class SignInFragment extends BaseFragment implements View.OnClickListener
 
     private void goToPloyeeHome() {
         IntentUtils.startActivity(this, PloyeeHomeActivity.class);
+        finishThisActivity();
     }
 
     @Override

@@ -70,19 +70,19 @@ public class PloyeeServiceDetailGson extends BaseResponse<PloyeeServiceDetailGso
 
 
         @SerializedName("serviceId")
-        private Long serviceId;
+        private long serviceId;
         @SerializedName("userId")
-        private Long userId;
+        private long userId;
         @SerializedName("serviceMappingId")
-        private Long serviceMappingId;
+        private long serviceMappingId;
         @SerializedName("serviceNameOthers")
         private String serviceNameOthers;
         @SerializedName("description")
         private String description;
         @SerializedName("priceMin")
-        private Long priceMin;
+        private long priceMin;
         @SerializedName("priceMax")
-        private Long priceMax;
+        private long priceMax;
         @SerializedName("certificate")
         private String certificate;
         @SerializedName("equipment")
@@ -113,11 +113,11 @@ public class PloyeeServiceDetailGson extends BaseResponse<PloyeeServiceDetailGso
             this.description = description;
         }
 
-        public void setPriceMin(Long priceMin) {
+        public void setPriceMin(long priceMin) {
             this.priceMin = priceMin;
         }
 
-        public void setPriceMax(Long priceMax) {
+        public void setPriceMax(long priceMax) {
             this.priceMax = priceMax;
         }
 
@@ -133,15 +133,15 @@ public class PloyeeServiceDetailGson extends BaseResponse<PloyeeServiceDetailGso
             this.subServices = subServices;
         }
 
-        public Long getServiceId() {
+        public long getServiceId() {
             return serviceId;
         }
 
-        public Long getUserId() {
+        public long getUserId() {
             return userId;
         }
 
-        public Long getServiceMappingId() {
+        public long getServiceMappingId() {
             return serviceMappingId;
         }
 
@@ -153,11 +153,11 @@ public class PloyeeServiceDetailGson extends BaseResponse<PloyeeServiceDetailGso
             return description;
         }
 
-        public Long getPriceMin() {
+        public long getPriceMin() {
             return priceMin;
         }
 
-        public Long getPriceMax() {
+        public long getPriceMax() {
             return priceMax;
         }
 

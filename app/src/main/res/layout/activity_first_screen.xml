@@ -8,13 +8,12 @@
 
     <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_gravity="center"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_gravity="center">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/background_splash"
             android:gravity="center"
             android:orientation="vertical"
             android:paddingBottom="80dp"
@@ -23,10 +22,11 @@
             android:paddingTop="@dimen/activity_vertical_margin">
 
 
-            <ImageView
+            <android.support.v7.widget.AppCompatImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ic_geniz_logo_133dp" />
+                android:src="@drawable/ic_geniz_logo_133dp"
+                android:tint="@android:color/white" />
 
             <android.support.v7.widget.AppCompatButton
                 android:id="@+id/button_first_screen_search_services"

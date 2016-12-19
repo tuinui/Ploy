@@ -1,8 +1,13 @@
 package com.nos.ploy.base;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
+import android.content.Context;
 import android.os.Build;
+import android.os.Bundle;
+import android.os.PersistableBundle;
 import android.support.annotation.IdRes;
+import android.support.annotation.StringRes;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
@@ -11,10 +16,14 @@ import android.view.View;
 import com.akexorcist.localizationactivity.LocalizationActivity;
 import com.nos.ploy.DrawerController;
 import com.nos.ploy.R;
+import com.nos.ploy.api.base.RetrofitManager;
 import com.nos.ploy.api.utils.loader.AccountGsonLoader;
+import com.nos.ploy.cache.UserTokenManager;
 import com.nos.ploy.utils.FragmentTransactionUtils;
 
 import java.util.Map;
+
+import retrofit2.Retrofit;
 
 /**
  * Created by User on 1/10/2559.
@@ -23,12 +32,23 @@ import java.util.Map;
 public class BaseActivity extends LocalizationActivity {
 
     private boolean isActivityDestroyed = false;
+    private ProgressDialog mProgressDialog;
+    protected Long mUserId;
 
 
     @Override
     protected void onDestroy() {
         isActivityDestroyed = true;
         super.onDestroy();
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if(UserTokenManager.isLogin(this)){
+            mUserId = UserTokenManager.getToken(this).getUserId();
+        }
+
     }
 
     @Override
@@ -100,5 +120,51 @@ public class BaseActivity extends LocalizationActivity {
 
     public void showFragment(BaseFragment baseFragment, String tag) {
         FragmentTransactionUtils.showFragment(this, baseFragment, tag);
+    }
+
+    protected void showLoading() {
+        if (!isActivityReady()) {
+            return;
+        }
+        if (null == mProgressDialog) {
+            mProgressDialog = getLoadingProgressDialog(this);
+        }
+        if (!mProgressDialog.isShowing()) {
+            mProgressDialog.show();
+        }
+    }
+
+    protected void dismissLoading() {
+        if (!isActivityReady()) {
+            return;
+        }
+
+        if (null != mProgressDialog && mProgressDialog.isShowing()) {
+            mProgressDialog.dismiss();
+        }
+    }
+
+    private ProgressDialog getLoadingProgressDialog(Context context) {
+        ProgressDialog dialog = new ProgressDialog(context);
+
+        dialog.setTitle("");
+        dialog.setMessage(getStringCompat(R.string.Loading));
+        dialog.setCancelable(true);
+        return dialog;
+    }
+
+    protected String getStringCompat(@StringRes int id) {
+        if (isActivityReady() && getResources() != null) {
+            return super.getString(id);
+        } else {
+            return "";
+        }
+    }
+    protected Retrofit getRetrofit() {
+        return RetrofitManager.getRetrofit(this);
+    }
+
+    protected boolean isActivityReady() {
+        return !isFinishing() && !isActivityDestroyedCompat();
     }
 }
