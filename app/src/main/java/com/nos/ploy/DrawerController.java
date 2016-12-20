@@ -24,7 +24,7 @@ import java.util.Map;
  */
 public class DrawerController {
     @Retention(RetentionPolicy.SOURCE)
-    @IntDef({NONE, ACCOUNT,SETTINGS})
+    @IntDef({NONE, ACCOUNT, SETTINGS})
     public @interface Menu {
     }
 
@@ -79,8 +79,13 @@ public class DrawerController {
                 return DrawerController.MAP_MENU_NAMES.size();
             }
         };
-        recyclerViewMenu.setLayoutManager(new LinearLayoutManager(activity));
-        recyclerViewMenu.addItemDecoration(new DividerItemDecoration(activity, DividerItemDecoration.VERTICAL));
+        recyclerViewMenu.setLayoutManager(new LinearLayoutManager(activity) {
+            @Override
+            public boolean canScrollVertically() {
+                return false;
+            }
+        });
+        recyclerViewMenu.addItemDecoration(new DividerItemDecoration(recyclerViewMenu.getContext(), DividerItemDecoration.VERTICAL));
         toggleButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

@@ -46,7 +46,14 @@ public class PloyeeAvailabilityFragment extends BaseFragment {
     }
 
     private void initRecyclerView() {
-        mRecyclerViewTimeTable.setLayoutManager(new GridLayoutManager(mRecyclerViewTimeTable.getContext(), 8));
+        //TODO : this should be change from grid to LinearLayoutManager with จัน ถึง ศุกร์
+        mRecyclerViewTimeTable.setLayoutManager(new GridLayoutManager(mRecyclerViewTimeTable.getContext(), 8) {
+            @Override
+            public boolean canScrollVertically() {
+                return false;
+            }
+
+        });
         mRecyclerViewTimeTable.setAdapter(new PloyeeAvailabilityRecyclerAdapter(AvailabilityDummyData.getDummyData()));
     }
 
