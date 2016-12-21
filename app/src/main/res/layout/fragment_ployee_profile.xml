@@ -176,7 +176,7 @@
                         android:drawableLeft="@drawable/selector_drawable_phone_gray_blue"
                         android:text="@string/Show_Phone_No"
                         android:textColor="@drawable/selector_color_gray_white"
-                        app:backgroundTint="@drawable/selector_color_gray_blue" />
+                        app:backgroundTint="@drawable/selector_color_white_blue" />
 
                     <android.support.v7.widget.AppCompatButton
                         android:id="@+id/button_ployee_profile_show_email"
@@ -187,7 +187,7 @@
                         android:drawableLeft="@drawable/selector_drawable_email_gray_blue"
                         android:text="@string/Show_Email"
                         android:textColor="@drawable/selector_color_gray_white"
-                        app:backgroundTint="@drawable/selector_color_gray_blue" />
+                        app:backgroundTint="@drawable/selector_color_white_blue" />
 
                 </android.support.v7.widget.ButtonBarLayout>
             </LinearLayout>

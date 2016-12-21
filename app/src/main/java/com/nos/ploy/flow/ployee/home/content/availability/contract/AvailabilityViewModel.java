@@ -11,16 +11,15 @@ import java.lang.annotation.RetentionPolicy;
 
 public interface AvailabilityViewModel {
     @Retention(RetentionPolicy.SOURCE)
-    @IntDef({NONE,HEADER_TIME, HEADER_DAY,ITEM})
-    public @interface ViewType {
+    @IntDef({NONE, WEEK, NORMAL})
+    @interface ViewType {
     }
 
-    public static final int NONE = -404;
-    public static final int HEADER_TIME = 1;
-    public static final int HEADER_DAY = 2;
-    public static final int ITEM = 3;
+    int NONE = -404;
+    int WEEK = 1;
+    int NORMAL = 2;
 
     @ViewType
-    int getAvailibilityViewType();
+    int getViewType();
 
 }

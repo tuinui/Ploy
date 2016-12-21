@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/colorPrimary"
+    android:minHeight="?attr/listPreferredItemHeightSmall"
+    android:orientation="horizontal">
+
+    <TextView
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:layout_weight="1.3"
+        android:gravity="center"
+        android:textColor="@android:color/white" />
+
+    <TextView
+        android:id="@+id/textview_availability_day_sunday"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:text="S"
+        android:textColor="@android:color/white" />
+
+    <TextView
+        android:id="@+id/textview_availability_day_monday"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:text="M"
+        android:textColor="@android:color/white" />
+
+    <TextView
+        android:id="@+id/textview_availability_day_tuesday"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:text="T"
+        android:textColor="@android:color/white" />
+
+    <TextView
+        android:id="@+id/textview_availability_day_wednesday"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:text="W"
+        android:textColor="@android:color/white" />
+
+    <TextView
+        android:id="@+id/textview_availability_day_thursday"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:text="T"
+        android:textColor="@android:color/white" />
+
+    <TextView
+        android:id="@+id/textview_availability_day_friday"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:text="F"
+        android:textColor="@android:color/white" />
+
+    <TextView
+        android:id="@+id/textview_availability_day_saturday"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:text="S"
+        android:textColor="@android:color/white" />
+
+</LinearLayout>

@@ -158,7 +158,7 @@ public class PloyeeServiceListFragment extends BaseFragment implements SearchVie
 
     private void refreshData() {
         mSwipeRefreshLayout.setRefreshing(true);
-        mService.getPloyeeServiceList("en").enqueue(mCallbackPloyeeService);
+        mService.getServiceList("en").enqueue(mCallbackPloyeeService);
     }
 
     @Override

@@ -77,7 +77,7 @@ public class PloyeeHomeActivity extends BaseActivity implements View.OnClickList
     int mCurrentMenu = SERVICE_LIST;
 
     private PloyeeServiceListFragment mListFragment;
-    private PloyeeAvailabilityFragment mAvailabilityFragment = PloyeeAvailabilityFragment.newInstance();
+    private PloyeeAvailabilityFragment mAvailabilityFragment;
     private DrawerController.OnMenuItemSelectedListener mOnMenuItemSelectedListener = new DrawerController.OnMenuItemSelectedListener() {
         @Override
         public void onMenuItemSelected(@DrawerController.Menu int menu) {
@@ -122,6 +122,7 @@ public class PloyeeHomeActivity extends BaseActivity implements View.OnClickList
 
     private void initFragment() {
         mListFragment = PloyeeServiceListFragment.newInstance(mUserId);
+        mAvailabilityFragment = PloyeeAvailabilityFragment.newInstance(mUserId);
     }
 
 

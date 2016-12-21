@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:minHeight="?attr/listPreferredItemHeightSmall"
+    android:orientation="horizontal">
+
+    <TextView
+        android:id="@+id/textview_availability_item_duration"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:layout_weight="1.3"
+        android:gravity="center"
+        android:maxLines="3"
+        android:text="09:00 - 10:00" />
+
+    <TextView
+        android:id="@+id/textview_availability_item_sunday"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:layout_margin="1dp"
+        android:layout_weight="1"
+        android:background="@drawable/selector_color_gray_light_blue"
+        android:gravity="center" />
+
+    <TextView
+        android:id="@+id/textview_availability_item_monday"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:layout_margin="1dp"
+        android:layout_weight="1"
+        android:background="@drawable/selector_color_gray_light_blue"
+        android:gravity="center" />
+
+    <TextView
+        android:id="@+id/textview_availability_item_tuesday"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:layout_margin="1dp"
+        android:layout_weight="1"
+        android:background="@drawable/selector_color_gray_light_blue"
+        android:gravity="center" />
+
+    <TextView
+        android:id="@+id/textview_availability_item_wednesday"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:layout_margin="1dp"
+        android:layout_weight="1"
+        android:background="@drawable/selector_color_gray_light_blue"
+        android:gravity="center" />
+
+    <TextView
+        android:id="@+id/textview_availability_item_thursday"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:layout_margin="1dp"
+        android:layout_weight="1"
+        android:background="@drawable/selector_color_gray_light_blue"
+        android:gravity="center" />
+
+    <TextView
+        android:id="@+id/textview_availability_item_friday"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:layout_margin="1dp"
+        android:layout_weight="1"
+        android:background="@drawable/selector_color_gray_light_blue"
+        android:gravity="center" />
+
+    <TextView
+        android:id="@+id/textview_availability_item_saturday"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:layout_margin="1dp"
+        android:layout_weight="1"
+        android:background="@drawable/selector_color_gray_light_blue"
+        android:gravity="center" />
+
+</LinearLayout>

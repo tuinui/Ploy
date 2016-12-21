@@ -1,29 +1,26 @@
 package com.nos.ploy.flow.ployee.home.content.availability.contract;
 
+import com.nos.ploy.api.ployee.model.PloyeeAvailiabilityGson;
+
 /**
  * Created by Saran on 22/11/2559.
  */
 
 public class NormalItemAvailabilityVM implements AvailabilityViewModel {
 
-    private boolean isAvailable;
+    private PloyeeAvailiabilityGson.Data.AvailabilityItem data;
 
 
-    public NormalItemAvailabilityVM(boolean isAvailable) {
-        this.isAvailable = isAvailable;
+    public NormalItemAvailabilityVM(PloyeeAvailiabilityGson.Data.AvailabilityItem data) {
+        this.data = data;
     }
 
-    public boolean isChecked() {
-        return isAvailable;
+    public PloyeeAvailiabilityGson.Data.AvailabilityItem getData(){
+        return data;
     }
-
-    public void setChecked(boolean isAvailable){
-        this.isAvailable = isAvailable;
-    }
-
 
     @Override
-    public int getAvailibilityViewType() {
-        return ITEM;
+    public int getViewType() {
+        return NORMAL;
     }
 }

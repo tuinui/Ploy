@@ -61,7 +61,7 @@ public class PloyeeServiceDetailPresenter implements PloyeeServiceDetailContract
     @Override
     public void refreshData() {
         mView.setRefreshing(true);
-        mService.getPloyeeServiceDetail(new PostPloyeeServiceDetailGson(mServiceId, mUserId, languageCode))
+        mService.getServiceDetail(new PostPloyeeServiceDetailGson(mServiceId, mUserId, languageCode))
                 .enqueue(mCallbackPloyeeServiceDetailGson);
     }
 }
