@@ -114,7 +114,7 @@ public class PloyeeAvailabilityFragment extends BaseSupportFragment implements V
 
     private void refreshData() {
         showRefreshing();
-        RetrofitCallUtils.with(mApi.getAvailability(69), new RetrofitCallUtils.RetrofitCallback<PloyeeAvailiabilityGson>() {
+        RetrofitCallUtils.with(mApi.getAvailability(mUserId), new RetrofitCallUtils.RetrofitCallback<PloyeeAvailiabilityGson>() {
             @Override
             public void onDataSuccess(PloyeeAvailiabilityGson data) {
                 dismissRefreshing();
