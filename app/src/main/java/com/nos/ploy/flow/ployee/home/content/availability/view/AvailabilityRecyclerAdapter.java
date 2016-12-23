@@ -28,6 +28,7 @@ public class AvailabilityRecyclerAdapter extends RecyclerView.Adapter<RecyclerVi
 
     private List<AvailabilityViewModel> mDatas = new ArrayList<>();
 
+
     public AvailabilityRecyclerAdapter() {
     }
 
@@ -37,11 +38,11 @@ public class AvailabilityRecyclerAdapter extends RecyclerView.Adapter<RecyclerVi
         notifyDataSetChanged();
     }
 
-    public List<PloyeeAvailiabilityGson.Data.AvailabilityItem> gatheredData(){
+    public List<PloyeeAvailiabilityGson.Data.AvailabilityItem> gatheredData() {
         List<PloyeeAvailiabilityGson.Data.AvailabilityItem> results = new ArrayList<>();
-        if(RecyclerAdapterUtils.getSize(mDatas) > 0){
-            for(AvailabilityViewModel vm : mDatas){
-                if(vm instanceof NormalItemAvailabilityVM){
+        if (RecyclerAdapterUtils.getSize(mDatas) > 0) {
+            for (AvailabilityViewModel vm : mDatas) {
+                if (vm instanceof NormalItemAvailabilityVM) {
                     results.add(((NormalItemAvailabilityVM) vm).getData());
                 }
             }
@@ -88,9 +89,6 @@ public class AvailabilityRecyclerAdapter extends RecyclerView.Adapter<RecyclerVi
                 }
                 break;
             case AvailabilityViewModel.WEEK:
-//                if (holder instanceof WeekVH && vm instanceof WeekAvailabilityVM) {
-//
-//                }
                 break;
             case AvailabilityViewModel.NONE:
             default:
@@ -98,8 +96,8 @@ public class AvailabilityRecyclerAdapter extends RecyclerView.Adapter<RecyclerVi
         }
     }
 
-    private void bindNormal(NormalVH holder, NormalItemAvailabilityVM vm) {
-        PloyeeAvailiabilityGson.Data.AvailabilityItem data = vm.getData();
+    private void bindNormal(final NormalVH holder, NormalItemAvailabilityVM vm) {
+        final PloyeeAvailiabilityGson.Data.AvailabilityItem data = vm.getData();
         if (null != data) {
             holder.tvMon.setActivated(data.isMon());
             holder.tvTues.setActivated(data.isTues());
@@ -109,6 +107,63 @@ public class AvailabilityRecyclerAdapter extends RecyclerView.Adapter<RecyclerVi
             holder.tvSatur.setActivated(data.isSat());
             holder.tvSun.setActivated(data.isSun());
             holder.tvDuration.setText(data.getDurationValue());
+
+            holder.tvMon.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    data.setMon(!data.isMon());
+                    holder.tvMon.setActivated(data.isMon());
+                }
+            });
+
+            holder.tvTues.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    data.setTues(!data.isTues());
+                    holder.tvTues.setActivated(data.isTues());
+                }
+            });
+
+            holder.tvWednes.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    data.setWed(!data.isWed());
+                    holder.tvWednes.setActivated(data.isWed());
+                }
+            });
+
+            holder.tvThurs.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    data.setThurs(!data.isThurs());
+                    holder.tvThurs.setActivated(data.isThurs());
+                }
+            });
+
+            holder.tvFri.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    data.setFri(!data.isFri());
+                    holder.tvFri.setActivated(data.isFri());
+                }
+            });
+
+            holder.tvSatur.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    data.setSat(!data.isSat());
+                    holder.tvSatur.setActivated(data.isSat());
+                }
+            });
+
+            holder.tvSun.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    data.setSun(!data.isSun());
+                    holder.tvSun.setActivated(data.isSun());
+                }
+            });
+
         }
     }
 

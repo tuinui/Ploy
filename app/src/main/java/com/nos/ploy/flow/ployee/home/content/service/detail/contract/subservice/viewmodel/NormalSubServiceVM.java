@@ -14,7 +14,7 @@ public class NormalSubServiceVM implements PloyeeServiceDetailSubServiceItemBase
     public NormalSubServiceVM(PloyerServiceDetailGson.Data.SubService.SubServiceLv2 data) {
         this.data = data;
         name = data.getName();
-        checked = data.getChecked();
+        checked = data.isChecked();
     }
 
     public PloyerServiceDetailGson.Data.SubService.SubServiceLv2 getData() {
@@ -25,8 +25,8 @@ public class NormalSubServiceVM implements PloyeeServiceDetailSubServiceItemBase
         return name;
     }
 
-    public Boolean getChecked() {
-        return checked;
+    public Boolean isChecked() {
+        return null != checked &&checked;
     }
 
 

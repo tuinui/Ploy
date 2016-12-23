@@ -17,7 +17,7 @@ public class PloyeeAvailiabilityGson extends BaseResponse<PloyeeAvailiabilityGso
         private long userId;
         @SerializedName("holidayMode")
         private boolean holidayMode;
-        @SerializedName("avaItems")
+        @SerializedName("avaiItems")
         private List<AvailabilityItem> availabilityItems = new ArrayList<>();
 
         public Data() {

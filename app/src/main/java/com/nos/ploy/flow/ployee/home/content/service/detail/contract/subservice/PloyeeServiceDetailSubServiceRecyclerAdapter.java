@@ -4,6 +4,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CompoundButton;
 import android.widget.RadioButton;
 import android.widget.Space;
 import android.widget.TextView;
@@ -43,7 +44,10 @@ public class PloyeeServiceDetailSubServiceRecyclerAdapter extends RecyclerView.A
         if (RecyclerAdapterUtils.getSize(mDatas) > 0) {
             for (PloyeeServiceDetailSubServiceItemBaseViewModel vm : mDatas) {
                 if (vm instanceof NormalSubServiceVM) {
-                    results.add(((NormalSubServiceVM) vm).getData().getSubServiceLv2Id());
+                    NormalSubServiceVM data = ((NormalSubServiceVM) vm);
+                    if (data.isChecked()) {
+                        results.add(data.getData().getSubServiceLv2Id());
+                    }
                 }
             }
         }
@@ -112,8 +116,15 @@ public class PloyeeServiceDetailSubServiceRecyclerAdapter extends RecyclerView.A
         }
     }
 
-    private void bindNormal(NormalSubServiceVM data, NormalVH holder) {
-        holder.radioSubService.setChecked(data.getChecked());
+    private void bindNormal(final NormalSubServiceVM data, NormalVH holder) {
+        holder.radioSubService.setOnCheckedChangeListener(null);
+        holder.radioSubService.setChecked(data.isChecked());
+        holder.radioSubService.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                data.setChecked(isChecked);
+            }
+        });
         holder.radioSubService.setText(data.getName());
     }
 

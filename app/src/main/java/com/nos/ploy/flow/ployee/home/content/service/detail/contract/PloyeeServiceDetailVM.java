@@ -7,6 +7,7 @@ import com.nos.ploy.api.ployer.model.PloyerServiceDetailGson;
  */
 
 public class PloyeeServiceDetailVM implements PloyeeServiceDetailContract.ViewModel {
+    private String name;
     private PloyerServiceDetailGson.Data data;
     private String description;
     private String certificate;
@@ -30,6 +31,7 @@ public class PloyeeServiceDetailVM implements PloyeeServiceDetailContract.ViewMo
                 priceMax = data.getPriceMax();
             }
             serviceId = data.getServiceId();
+            name = data.getServiceNameOthers();
         }
 
     }
@@ -67,5 +69,10 @@ public class PloyeeServiceDetailVM implements PloyeeServiceDetailContract.ViewMo
     @Override
     public long getServiceId() {
         return serviceId;
+    }
+
+    @Override
+    public String getServiceOthersName() {
+        return name;
     }
 }

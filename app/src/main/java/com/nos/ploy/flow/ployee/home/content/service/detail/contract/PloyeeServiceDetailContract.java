@@ -30,5 +30,6 @@ public class PloyeeServiceDetailContract {
         long getPriceMax();
         PloyerServiceDetailGson.Data getData();
         long getServiceId();
+        String getServiceOthersName();
     }
 }

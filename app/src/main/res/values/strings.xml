@@ -73,5 +73,6 @@
     <string name="Password_reset">Password reset</string>
     <string name="Log_out">Log out</string>
     <string name="Availability">Availability</string>
+    <string name="Profile">Profile</string>
 
 </resources>

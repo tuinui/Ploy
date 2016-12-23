@@ -4,6 +4,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.ColorInt;
 import android.support.annotation.IntDef;
+import android.support.design.internal.ForegroundLinearLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
@@ -15,7 +16,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewStub;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -25,14 +25,14 @@ import com.nos.ploy.api.account.model.ProfileImageGson;
 import com.nos.ploy.api.authentication.model.AccountGson;
 import com.nos.ploy.api.utils.loader.AccountInfoLoader;
 import com.nos.ploy.base.BaseActivity;
-import com.nos.ploy.base.BaseFragment;
 import com.nos.ploy.cache.UserTokenManager;
 import com.nos.ploy.custom.view.CustomViewPager;
 import com.nos.ploy.flow.ployee.account.main.PloyeeAccountFragment;
 import com.nos.ploy.flow.ployee.home.content.availability.PloyeeAvailabilityFragment;
 import com.nos.ploy.flow.ployee.home.content.service.list.PloyeeServiceListFragment;
-import com.nos.ploy.flow.ployee.profile.PloyeeProfileFragment;
+import com.nos.ploy.flow.ployee.profile.PloyeeProfileActivity;
 import com.nos.ploy.flow.ployee.settings.PloyeeSettingsFragment;
+import com.nos.ploy.utils.IntentUtils;
 import com.nos.ploy.utils.PopupMenuUtils;
 
 import java.lang.annotation.Retention;
@@ -62,8 +62,8 @@ public class PloyeeHomeActivity extends BaseActivity implements View.OnClickList
     ViewStub mViewStubSearchView;
     @BindView(R.id.drawerlayout_ployee_home)
     DrawerLayout mDrawerLayout;
-    @BindView(R.id.linearlayout_main_drawer_header_container)
-    LinearLayout mLinearLayoutHeaderContainer;
+    @BindView(R.id.foregroundlinearlayout_main_drawer_header_container)
+    ForegroundLinearLayout mLinearLayoutHeaderContainer;
     @BindView(R.id.imageview_main_drawer_profile)
     ImageView mImageViewProfile;
     @BindView(R.id.textview_main_drawer_username)
@@ -86,7 +86,7 @@ public class PloyeeHomeActivity extends BaseActivity implements View.OnClickList
     @BindColor(android.R.color.darker_gray)
     @ColorInt
     int mColorGray;
-    private List<BaseFragment> mContentFragments = new ArrayList<>();
+    private List<Fragment> mContentFragments = new ArrayList<>();
     private PloyeeHomePagerAdapter mPagerAdapter;
 
 
@@ -105,6 +105,7 @@ public class PloyeeHomeActivity extends BaseActivity implements View.OnClickList
 
     private PloyeeServiceListFragment mListFragment;
     private PloyeeAvailabilityFragment mAvailabilityFragment;
+//    private PloyeeProfileActivity mProfileFragment = PloyeeProfileActivity.newInstance();
     private DrawerController.OnMenuItemSelectedListener mOnMenuItemSelectedListener = new DrawerController.OnMenuItemSelectedListener() {
         @Override
         public void onMenuItemSelected(@DrawerController.Menu int menu) {
@@ -147,6 +148,7 @@ public class PloyeeHomeActivity extends BaseActivity implements View.OnClickList
 
     private void initView() {
         mViewPager.setPagingEnabled(false);
+        mLinearLayoutHeaderContainer.setOnClickListener(this);
         AccountInfoLoader.getProfileImage(this, mUserId, new Action1<List<ProfileImageGson.Data>>() {
             @Override
             public void call(List<ProfileImageGson.Data> datas) {
@@ -203,7 +205,7 @@ public class PloyeeHomeActivity extends BaseActivity implements View.OnClickList
 
     @Override
     public void onBackPressed() {
-        showFragment(PloyeeProfileFragment.newInstance());
+//        super.onBackPressed();
     }
 
     private void initToolbar() {
@@ -218,6 +220,8 @@ public class PloyeeHomeActivity extends BaseActivity implements View.OnClickList
             onClickBottomMenu(SERVICE_LIST);
         } else if (id == mImageViewFooterAvailability.getId()) {
             onClickBottomMenu(AVAILABLITY);
+        }else if(id == mLinearLayoutHeaderContainer.getId()){
+            IntentUtils.startActivity(this,PloyeeProfileActivity.class);
         }
     }
 
@@ -270,9 +274,9 @@ public class PloyeeHomeActivity extends BaseActivity implements View.OnClickList
     public static class PloyeeHomePagerAdapter extends FragmentStatePagerAdapter {
 
 
-        private final List<BaseFragment> fragments = new ArrayList<>();
+        private final List<Fragment> fragments = new ArrayList<>();
 
-        public PloyeeHomePagerAdapter(FragmentManager fm, List<BaseFragment> fragments) {
+        public PloyeeHomePagerAdapter(FragmentManager fm, List<Fragment> fragments) {
             super(fm);
             this.fragments.clear();
             this.fragments.addAll(fragments);

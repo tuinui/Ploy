@@ -44,6 +44,9 @@
             android:name=".flow.ployee.home.PloyeeHomeActivity"
             android:screenOrientation="portrait" />
 
+        <activity android:name=".flow.ployee.profile.PloyeeProfileActivity"
+            android:screenOrientation="portrait"/>
+
         <activity
             android:name=".flow.ployer.ployeelist.PloyeeListActivity"
             android:screenOrientation="portrait" />

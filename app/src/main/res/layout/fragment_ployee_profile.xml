@@ -10,6 +10,7 @@
 
     <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
+        android:id="@+id/scrollview_ployee_profile"
         android:layout_height="wrap_content">
 
         <LinearLayout
@@ -25,12 +26,25 @@
                 android:fitsSystemWindows="true" />
 
 
-            <com.nos.ploy.custom.view.RatioFrameLayout
-                android:id="@+id/framelayout_ployee_profile_maps_container"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:ratioHeight="9"
-                app:ratioWidth="16"/>
+            <!--<com.nos.ploy.custom.view.RatioFrameLayout-->
+                <!--android:id="@+id/framelayout_ployee_profile_maps_container"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--app:ratioHeight="9"-->
+                <!--app:ratioWidth="16">-->
+                <fragment
+                    android:id="@+id/mapfragment_ployee_profile"
+                    class="com.nos.ploy.custom.view.WorkAroundMapFragment"
+                    android:layout_width="match_parent"
+                    android:layout_height="160dp" />
+
+
+                <!--<fragment-->
+                    <!--android:id="@+id/map"-->
+                    <!--class="com.nos.ploy.custom.view.WorkAroundMapFragment"-->
+                    <!--android:layout_width="fill_parent"-->
+                    <!--android:layout_height="300dp" />-->
+            <!--</com.nos.ploy.custom.view.RatioFrameLayout>-->
 
             <android.support.v7.widget.CardView
                 android:layout_width="match_parent"

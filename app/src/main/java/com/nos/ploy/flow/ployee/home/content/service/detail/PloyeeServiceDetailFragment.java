@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.appyvet.rangebar.RangeBar;
 import com.nos.ploy.R;
@@ -18,7 +19,7 @@ import com.nos.ploy.api.ployee.PloyeeApi;
 import com.nos.ploy.api.ployer.model.PloyerServiceDetailGson;
 import com.nos.ploy.api.ployer.PloyerApi;
 import com.nos.ploy.api.ployer.model.PostSavePloyerServiceDetailGson;
-import com.nos.ploy.base.BaseFragment;
+import com.nos.ploy.base.BaseSupportFragment;
 import com.nos.ploy.flow.ployee.home.content.service.detail.contract.PloyeeServiceDetailContract;
 import com.nos.ploy.flow.ployee.home.content.service.detail.contract.PloyeeServiceDetailPresenter;
 import com.nos.ploy.flow.ployee.home.content.service.detail.contract.PloyeeServiceDetailVM;
@@ -34,7 +35,7 @@ import rx.functions.Action1;
  * Created by Saran on 19/11/2559.
  */
 
-public class PloyeeServiceDetailFragment extends BaseFragment implements PloyeeServiceDetailContract.View, View.OnClickListener {
+public class PloyeeServiceDetailFragment extends BaseSupportFragment implements PloyeeServiceDetailContract.View, View.OnClickListener {
     @BindView(R.id.rangebar_ployee_service_rate)
     RangeBar mRangeBar;
     @BindView(R.id.edittext_ployee_service_price_from)
@@ -55,6 +56,8 @@ public class PloyeeServiceDetailFragment extends BaseFragment implements PloyeeS
     SwipeRefreshLayout mSwipeRefreshLayout;
     @BindView(R.id.recyclerview_ployee_service_sub_service)
     RecyclerView mRecyclerSubService;
+    @BindView(R.id.textview_sub_services_header)
+    TextView mTextViewSubServicesHeader;
 
     private RangeBar.OnRangeBarChangeListener mRangeBarListener = new RangeBar.OnRangeBarChangeListener() {
         @Override
@@ -73,10 +76,14 @@ public class PloyeeServiceDetailFragment extends BaseFragment implements PloyeeS
     private PloyeeServiceDetailContract.Presenter mPresenter;
     private PloyeeServiceDetailContract.ViewModel mData;
     private PloyeeServiceDetailSubServiceRecyclerAdapter mAdapter = new PloyeeServiceDetailSubServiceRecyclerAdapter();
-
+    private static final String KEY_SERVICE_ID = "SERVICE_ID";
+    private long mUserId;
+    private long mServiceId;
 
     public static PloyeeServiceDetailFragment newInstance(long userId, long serviceId) {
         Bundle args = new Bundle();
+        args.putLong(KEY_USER_ID, userId);
+        args.putLong(KEY_SERVICE_ID, serviceId);
         PloyeeServiceDetailFragment fragment = new PloyeeServiceDetailFragment();
         fragment.setArguments(args);
         PloyerApi service = fragment.getRetrofit().create(PloyerApi.class);
@@ -87,8 +94,10 @@ public class PloyeeServiceDetailFragment extends BaseFragment implements PloyeeS
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mService = getRetrofit().create(PloyeeApi.class);
         if (null != getArguments()) {
-            mService = getRetrofit().create(PloyeeApi.class);
+            mUserId = getArguments().getLong(KEY_USER_ID, 0);
+            mServiceId = getArguments().getLong(KEY_SERVICE_ID, 0);
         }
     }
 
@@ -232,9 +241,18 @@ public class PloyeeServiceDetailFragment extends BaseFragment implements PloyeeS
             mEditTextEquipmentNeeded.setText(data.getEquipmentNeeded());
             mRangeBar.setTickEnd(data.getPriceMax());
             mRangeBar.setTickStart(data.getPriceMin());
-            mAdapter.replaceData(data.getData().getSubServices());
-            if (data.getServiceId() == -1) {
+            if (null != data.getData() && null != data.getData().getSubServices() && !data.getData().getSubServices().isEmpty()) {
+                mAdapter.replaceData(data.getData().getSubServices());
+                mTextViewSubServicesHeader.setVisibility(View.VISIBLE);
+                mRecyclerSubService.setVisibility(View.VISIBLE);
+            } else {
+                mTextViewSubServicesHeader.setVisibility(View.GONE);
+                mRecyclerSubService.setVisibility(View.GONE);
+            }
+
+            if (mServiceId == -1) {
                 mEditTextOthers.setVisibility(View.VISIBLE);
+                mEditTextOthers.setText(data.getServiceOthersName());
             } else {
                 mEditTextOthers.setVisibility(View.GONE);
             }
@@ -245,11 +263,13 @@ public class PloyeeServiceDetailFragment extends BaseFragment implements PloyeeS
         PostSavePloyerServiceDetailGson data = null;
         if (null != mData && null != mData.getData() && null != mAdapter) {
             data = new PostSavePloyerServiceDetailGson(mData.getData().closeThis());
+            data.setUserId(mUserId);
+            data.setServiceId(mServiceId);
             data.setCertificate(extractString(mEditTextCertificate));
             data.setDescription(extractString(mEditTextDescription));
             data.setEquipment(extractString(mEditTextEquipmentNeeded));
             data.setPriceMax(extractLong(mEditTextPriceTo));
-            data.setPriceMax(extractLong(mEditTextPriceFrom));
+            data.setPriceMin(extractLong(mEditTextPriceFrom));
             data.setServiceNameOthers(extractString(mEditTextOthers));
         }
 

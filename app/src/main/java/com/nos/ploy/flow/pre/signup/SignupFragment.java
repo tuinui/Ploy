@@ -26,7 +26,7 @@ import com.nos.ploy.api.authentication.AuthenticationApi;
 import com.nos.ploy.api.authentication.model.AccountGson;
 import com.nos.ploy.api.authentication.model.PostSignupGson;
 import com.nos.ploy.api.base.RetrofitCallUtils;
-import com.nos.ploy.base.BaseFragment;
+import com.nos.ploy.base.BaseSupportFragment;
 import com.nos.ploy.utils.DatePickerUtils;
 import com.nos.ploy.utils.ImagePickerUtils;
 import com.nos.ploy.utils.MyFileUtils;
@@ -47,7 +47,7 @@ import rx.functions.Action1;
  * Created by User on 11/11/2559.
  */
 
-public class SignUpFragment extends BaseFragment implements View.OnClickListener {
+public class SignUpFragment extends BaseSupportFragment implements View.OnClickListener {
     @BindView(R.id.button_signup_detail_create_account)
     Button mButtonCreateAccount;
     @BindView(R.id.toolbar_main)

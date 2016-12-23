@@ -101,22 +101,26 @@ public class BaseActivity extends LocalizationActivity {
     }
 
 
-    protected void addFragmentToActivity(BaseFragment fragment, @IdRes int containerId) {
+    protected void addFragmentToActivity(BaseSupportFragment fragment, @IdRes int containerId) {
         addFragmentToActivity(fragment, containerId, null);
     }
 
 
-    protected void addFragmentToActivity(BaseFragment fragment, @IdRes int containerId, String tag) {
+    protected void addFragmentToActivity(BaseSupportFragment fragment, @IdRes int containerId, String tag) {
         if (isReady() && null != getSupportFragmentManager()) {
             FragmentTransactionUtils.addFragmentToActivity(getSupportFragmentManager(), fragment, containerId, tag);
         }
     }
 
-    public void showFragment(BaseFragment baseFragment) {
+    public void showFragment(BaseSupportFragment baseFragment) {
         FragmentTransactionUtils.showFragment(this, baseFragment);
     }
-
-    public void showFragment(BaseFragment baseFragment, String tag) {
+    protected void showFragment(BaseFragment fragment) {
+        if(!isFinishing() && !isActivityDestroyedCompat()){
+            fragment.show(getFragmentManager(),null);
+        }
+    }
+    public void showFragment(BaseSupportFragment baseFragment, String tag) {
         FragmentTransactionUtils.showFragment(this, baseFragment, tag);
     }
 

@@ -208,9 +208,9 @@ public class PloyerServiceDetailGson extends BaseResponse<PloyerServiceDetailGso
             }
 
             public static class SubServiceLv2 {
-                @SerializedName("subServiceLv2Id")
+                @SerializedName("subServiceLV2Id")
                 private Long subServiceLv2Id;
-                @SerializedName("subServiceLv1Id")
+                @SerializedName("subServiceLV1Id")
                 private Long subServiceLv1Id;
                 @SerializedName("name")
                 private String name;
@@ -232,8 +232,8 @@ public class PloyerServiceDetailGson extends BaseResponse<PloyerServiceDetailGso
                     return name;
                 }
 
-                public Boolean getChecked() {
-                    return checked;
+                public Boolean isChecked() {
+                    return null != checked && checked;
                 }
 
                 public void setSubServiceLv2Id(Long subServiceLv2Id) {

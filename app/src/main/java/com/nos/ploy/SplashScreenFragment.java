@@ -6,13 +6,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.nos.ploy.base.BaseFragment;
+import com.nos.ploy.base.BaseSupportFragment;
 
 /**
  * Created by User on 1/10/2559.
  */
 
-public class SplashScreenFragment extends BaseFragment {
+public class SplashScreenFragment extends BaseSupportFragment {
 
     public static SplashScreenFragment newInstance() {
         

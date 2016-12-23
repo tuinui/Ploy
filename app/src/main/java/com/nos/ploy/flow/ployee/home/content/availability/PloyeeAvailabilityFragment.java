@@ -3,7 +3,6 @@ package com.nos.ploy.flow.ployee.home.content.availability;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SwitchCompat;
@@ -16,7 +15,7 @@ import com.nos.ploy.R;
 import com.nos.ploy.api.base.RetrofitCallUtils;
 import com.nos.ploy.api.ployee.PloyeeApi;
 import com.nos.ploy.api.ployee.model.PloyeeAvailiabilityGson;
-import com.nos.ploy.base.BaseFragment;
+import com.nos.ploy.base.BaseSupportFragment;
 import com.nos.ploy.flow.ployee.home.content.availability.contract.AvailabilityViewModel;
 import com.nos.ploy.flow.ployee.home.content.availability.contract.NormalItemAvailabilityVM;
 import com.nos.ploy.flow.ployee.home.content.availability.contract.WeekAvailabilityVM;
@@ -24,7 +23,6 @@ import com.nos.ploy.flow.ployee.home.content.availability.view.AvailabilityRecyc
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.TimerTask;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -33,7 +31,7 @@ import butterknife.ButterKnife;
  * Created by Saran on 22/11/2559.
  */
 
-public class PloyeeAvailabilityFragment extends BaseFragment implements View.OnClickListener {
+public class PloyeeAvailabilityFragment extends BaseSupportFragment implements View.OnClickListener {
     @BindView(R.id.recyclerview_ployee_availability_time_table)
     RecyclerView mRecyclerViewTimeTable;
     @BindView(R.id.switchcompat_ployee_availablity_holiday)
@@ -50,9 +48,15 @@ public class PloyeeAvailabilityFragment extends BaseFragment implements View.OnC
         @Override
         public void run() {
             PloyeeAvailiabilityGson.Data data = mData.cloneThis();
-            data.setHolidayMode(mSwitchHoliday.isChecked());
-            data.setUserId(mUserId);
-            requestSaveData(data);
+            if(null != data){
+                data.setHolidayMode(mSwitchHoliday.isChecked());
+                data.setUserId(mUserId);
+                if(null != mAdapter){
+                    data.setAvailabilityItems(mAdapter.gatheredData());
+                }
+                requestSaveData(data);
+            }
+
         }
     };
 
