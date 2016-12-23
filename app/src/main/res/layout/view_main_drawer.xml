@@ -17,23 +17,32 @@
         android:orientation="vertical"
         app:theme="@style/AppTheme">
 
-        <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/imageview_main_drawer_profile"
-            android:layout_width="120dp"
-            android:layout_height="120dp"
-            android:layout_marginTop="24dp"
-            android:layout_weight="0"
-            android:src="@drawable/ic_circle_profile_120dp" />
-
-        <TextView
-            android:id="@+id/textview_main_drawer_username"
+        <LinearLayout
+            android:id="@+id/linearlayout_main_drawer_header_container"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="16dp"
-            android:layout_weight="0"
-            android:text="Adam Levine"
-            android:textAppearance="@style/TextAppearance.Widget.AppCompat.Toolbar.Title" />
+            android:orientation="vertical">
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/imageview_main_drawer_profile"
+                android:layout_width="120dp"
+                android:layout_height="120dp"
+                android:layout_marginTop="24dp"
+                android:layout_weight="0"
+                android:src="@drawable/ic_circle_profile_120dp" />
+
+            <TextView
+                android:id="@+id/textview_main_drawer_username"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:layout_marginTop="8dp"
+                android:layout_weight="0"
+                android:text="Adam Levine"
+                android:textAppearance="@style/TextAppearance.Widget.AppCompat.Toolbar.Title" />
+
+        </LinearLayout>
+
 
         <View
             android:layout_width="match_parent"

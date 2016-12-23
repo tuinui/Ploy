@@ -6,10 +6,7 @@ import android.support.annotation.ColorInt;
 import android.support.annotation.IntDef;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentStatePagerAdapter;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
@@ -18,11 +15,15 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewStub;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.nos.ploy.DrawerController;
 import com.nos.ploy.R;
+import com.nos.ploy.api.account.model.ProfileImageGson;
 import com.nos.ploy.api.authentication.model.AccountGson;
-import com.nos.ploy.api.utils.loader.AccountGsonLoader;
+import com.nos.ploy.api.utils.loader.AccountInfoLoader;
 import com.nos.ploy.base.BaseActivity;
 import com.nos.ploy.base.BaseFragment;
 import com.nos.ploy.cache.UserTokenManager;
@@ -32,7 +33,6 @@ import com.nos.ploy.flow.ployee.home.content.availability.PloyeeAvailabilityFrag
 import com.nos.ploy.flow.ployee.home.content.service.list.PloyeeServiceListFragment;
 import com.nos.ploy.flow.ployee.profile.PloyeeProfileFragment;
 import com.nos.ploy.flow.ployee.settings.PloyeeSettingsFragment;
-import com.nos.ploy.utils.DrawableUtils;
 import com.nos.ploy.utils.PopupMenuUtils;
 
 import java.lang.annotation.Retention;
@@ -62,6 +62,12 @@ public class PloyeeHomeActivity extends BaseActivity implements View.OnClickList
     ViewStub mViewStubSearchView;
     @BindView(R.id.drawerlayout_ployee_home)
     DrawerLayout mDrawerLayout;
+    @BindView(R.id.linearlayout_main_drawer_header_container)
+    LinearLayout mLinearLayoutHeaderContainer;
+    @BindView(R.id.imageview_main_drawer_profile)
+    ImageView mImageViewProfile;
+    @BindView(R.id.textview_main_drawer_username)
+    TextView mTextViewUsername;
     @BindView(R.id.recyclerview_main_drawer_menu)
     RecyclerView mRecyclerViewDrawer;
     @BindView(R.id.viewpager_ployee_home_content_container)
@@ -106,7 +112,7 @@ public class PloyeeHomeActivity extends BaseActivity implements View.OnClickList
                 case DrawerController.NONE:
                     break;
                 case DrawerController.ACCOUNT:
-                    AccountGsonLoader.getAccountGson(PloyeeHomeActivity.this, String.valueOf(mUserId), new Action1<AccountGson.Data>() {
+                    AccountInfoLoader.getAccountGson(PloyeeHomeActivity.this, mUserId, new Action1<AccountGson.Data>() {
                         @Override
                         public void call(AccountGson.Data accountData) {
                             if (null != accountData) {
@@ -141,6 +147,33 @@ public class PloyeeHomeActivity extends BaseActivity implements View.OnClickList
 
     private void initView() {
         mViewPager.setPagingEnabled(false);
+        AccountInfoLoader.getProfileImage(this, mUserId, new Action1<List<ProfileImageGson.Data>>() {
+            @Override
+            public void call(List<ProfileImageGson.Data> datas) {
+                if (null != datas && !datas.isEmpty()) {
+                    final ProfileImageGson.Data data = datas.get(0);
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Glide.with(PloyeeHomeActivity.this).load(data.getImagePath()).into(mImageViewProfile);
+                        }
+                    });
+                }
+            }
+        });
+        AccountInfoLoader.getAccountGson(this, mUserId, new Action1<AccountGson.Data>() {
+            @Override
+            public void call(final AccountGson.Data data) {
+                if (null != data) {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            mTextViewUsername.setText(data.getName());
+                        }
+                    });
+                }
+            }
+        });
     }
 
 

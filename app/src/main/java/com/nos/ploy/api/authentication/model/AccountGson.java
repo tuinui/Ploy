@@ -65,6 +65,10 @@ public class AccountGson extends BaseResponse<AccountGson.Data> {
             return lastName;
         }
 
+        public String getName() {
+            return firstName + " " + lastName;
+        }
+
         public String getPassword() {
             return password;
         }

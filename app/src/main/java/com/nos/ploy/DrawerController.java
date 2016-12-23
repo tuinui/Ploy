@@ -29,21 +29,18 @@ public class DrawerController {
     }
 
     public static final int NONE = -404;
-    public static final int ACCOUNT = 1;
     public static final int SETTINGS = 0;
+    public static final int ACCOUNT = 1;
+    public static final int WHAT_IS_PLOYER = 2;
+    public static final int WHAT_IS_PLOYEE = 3;
 
-    public static final int MENU_COUNT_PLOYEE = 5;
-    public static final int MENU_SETTINGS = 0;
-    public static final int MENU_ACCOUNT = 1;
-    public static final int MENU_WHAT_IS_PLOYER = 2;
-    public static final int MENU_WHAT_IS_PLOYEE = 3;
     public static Map<Integer, String> MAP_MENU_NAMES = new LinkedHashMap<>();
 
     static {
         MAP_MENU_NAMES.put(SETTINGS, "Settings");
         MAP_MENU_NAMES.put(ACCOUNT, "Account");
-        MAP_MENU_NAMES.put(MENU_WHAT_IS_PLOYER, "What is Ployer");
-        MAP_MENU_NAMES.put(MENU_WHAT_IS_PLOYEE, "What is Ployee");
+        MAP_MENU_NAMES.put(WHAT_IS_PLOYER, "What is Ployer");
+        MAP_MENU_NAMES.put(WHAT_IS_PLOYEE, "What is Ployee");
     }
 
     private static DrawerController INTSTANCE = new DrawerController();

@@ -16,8 +16,12 @@ import retrofit2.http.Query;
 
 public interface AccountApi {
     @GET("/api/user/account")
-    Call<AccountGson> getAccountGson(@Query("userId") String userId);
+    Call<AccountGson> getAccountGson(@Query("userId") long userId);
 
     @POST("/api/user/profileImg/upload")
     Call<ProfileImageGson> postUploadProfileImage(@Body PostUploadProfileImageGson data);
+
+    @GET("/api/user/profileImg")
+    Call<ProfileImageGson> getProfileImage(@Query("userId") long userId);
+
 }
