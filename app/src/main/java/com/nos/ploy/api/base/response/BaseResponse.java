@@ -6,7 +6,7 @@ import com.google.gson.annotations.SerializedName;
  * Created by Saran on 29/11/2559.
  */
 
-public abstract class BaseResponse<T> {
+public class BaseResponse<T> {
     @SerializedName("responseMsg")
     private ResponseMessage responseMessage;
 

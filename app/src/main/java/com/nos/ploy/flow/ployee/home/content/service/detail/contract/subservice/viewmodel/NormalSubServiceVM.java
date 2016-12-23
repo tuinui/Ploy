@@ -1,23 +1,23 @@
 package com.nos.ploy.flow.ployee.home.content.service.detail.contract.subservice.viewmodel;
 
-import com.nos.ploy.api.ployee.model.PloyeeServiceDetailGson;
+import com.nos.ploy.api.ployer.model.PloyerServiceDetailGson;
 
 /**
  * Created by Saran on 1/12/2559.
  */
 
 public class NormalSubServiceVM implements PloyeeServiceDetailSubServiceItemBaseViewModel {
-    private PloyeeServiceDetailGson.Data.SubService.SubServiceLv2 data;
+    private PloyerServiceDetailGson.Data.SubService.SubServiceLv2 data;
     private String name;
     private Boolean checked;
 
-    public NormalSubServiceVM(PloyeeServiceDetailGson.Data.SubService.SubServiceLv2 data) {
+    public NormalSubServiceVM(PloyerServiceDetailGson.Data.SubService.SubServiceLv2 data) {
         this.data = data;
         name = data.getName();
         checked = data.getChecked();
     }
 
-    public PloyeeServiceDetailGson.Data.SubService.SubServiceLv2 getData() {
+    public PloyerServiceDetailGson.Data.SubService.SubServiceLv2 getData() {
         return data;
     }
 
@@ -27,6 +27,11 @@ public class NormalSubServiceVM implements PloyeeServiceDetailSubServiceItemBase
 
     public Boolean getChecked() {
         return checked;
+    }
+
+
+    public void setChecked(Boolean checked) {
+        this.checked = checked;
     }
 
     @Override

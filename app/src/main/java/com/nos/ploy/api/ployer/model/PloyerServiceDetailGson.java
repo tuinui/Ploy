@@ -1,4 +1,4 @@
-package com.nos.ploy.api.ployee.model;
+package com.nos.ploy.api.ployer.model;
 
 import com.google.gson.annotations.SerializedName;
 import com.nos.ploy.api.base.response.BaseResponse;
@@ -10,7 +10,7 @@ import java.util.List;
  * Created by Saran on 1/12/2559.
  */
 
-public class PloyeeServiceDetailGson extends BaseResponse<PloyeeServiceDetailGson.Data> {
+public class PloyerServiceDetailGson extends BaseResponse<PloyerServiceDetailGson.Data> {
     /*
     {
         "data": {
@@ -93,6 +93,19 @@ public class PloyeeServiceDetailGson extends BaseResponse<PloyeeServiceDetailGso
         public Data() {
         }
 
+        private Data(long serviceId, long userId, long serviceMappingId, String serviceNameOthers, String description, long priceMin, long priceMax, String certificate, String equipment, List<SubService> subServices) {
+            this.serviceId = serviceId;
+            this.userId = userId;
+            this.serviceMappingId = serviceMappingId;
+            this.serviceNameOthers = serviceNameOthers;
+            this.description = description;
+            this.priceMin = priceMin;
+            this.priceMax = priceMax;
+            this.certificate = certificate;
+            this.equipment = equipment;
+            this.subServices = subServices;
+        }
+
         public void setServiceId(Long serviceId) {
             this.serviceId = serviceId;
         }
@@ -171,6 +184,10 @@ public class PloyeeServiceDetailGson extends BaseResponse<PloyeeServiceDetailGso
 
         public List<SubService> getSubServices() {
             return subServices;
+        }
+
+        public Data closeThis() {
+            return new Data(serviceId, userId, serviceMappingId, serviceNameOthers, description, priceMin, priceMax, certificate, equipment, subServices);
         }
 
         public static class SubService {

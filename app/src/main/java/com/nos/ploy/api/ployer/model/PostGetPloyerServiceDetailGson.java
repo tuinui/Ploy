@@ -1,4 +1,4 @@
-package com.nos.ploy.api.ployee.model;
+package com.nos.ploy.api.ployer.model;
 
 import com.google.gson.annotations.SerializedName;
 
@@ -6,7 +6,7 @@ import com.google.gson.annotations.SerializedName;
  * Created by Saran on 1/12/2559.
  */
 
-public class PostPloyeeServiceDetailGson {
+public class PostGetPloyerServiceDetailGson {
     /*
     {
 	"serviceId":1,
@@ -21,7 +21,7 @@ public class PostPloyeeServiceDetailGson {
     @SerializedName("lgCode")
     private String lgCode;
 
-    public PostPloyeeServiceDetailGson(Long serviceId, Long userId, String lgCode) {
+    public PostGetPloyerServiceDetailGson(Long serviceId, Long userId, String lgCode) {
         this.serviceId = serviceId;
         this.userId = userId;
         this.lgCode = lgCode;

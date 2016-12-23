@@ -1,9 +1,7 @@
 package com.nos.ploy.api.ployee;
 
 import com.nos.ploy.api.ployee.model.PloyeeAvailiabilityGson;
-import com.nos.ploy.api.ployee.model.PloyeeServiceDetailGson;
 import com.nos.ploy.api.ployee.model.PloyeeServiceListGson;
-import com.nos.ploy.api.ployee.model.PostPloyeeServiceDetailGson;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
@@ -22,9 +20,7 @@ public interface PloyeeApi {
     @GET("/api/ployee/service")
     Call<PloyeeServiceListGson> getServiceList(@Query("lgCode") String language);
 
-    //{{endpoint_ploy}}/api/ployee/service/mapping
-    @POST("/api/ployee/service/mapping")
-    Call<PloyeeServiceDetailGson> getServiceDetail(@Body PostPloyeeServiceDetailGson data);
+
 
     //{{endpoint_ploy}}/api/avai?userId=1
     @GET("api/avai")
@@ -33,6 +29,7 @@ public interface PloyeeApi {
 
     @POST("api/avai/save")
     Call<PloyeeAvailiabilityGson> postSaveAvailability(@Body PloyeeAvailiabilityGson.Data data);
+
 
 
 }

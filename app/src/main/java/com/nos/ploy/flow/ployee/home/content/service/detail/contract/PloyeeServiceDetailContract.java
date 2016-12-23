@@ -1,6 +1,7 @@
 package com.nos.ploy.flow.ployee.home.content.service.detail.contract;
 
-import com.nos.ploy.api.ployee.model.PloyeeServiceDetailGson;
+import com.nos.ploy.api.ployer.model.PloyerServiceDetailGson;
+import com.nos.ploy.api.ployer.model.PostSavePloyerServiceDetailGson;
 import com.nos.ploy.base.contract.BasePresenter;
 import com.nos.ploy.base.contract.BaseView;
 
@@ -11,11 +12,14 @@ import com.nos.ploy.base.contract.BaseView;
 public class PloyeeServiceDetailContract {
     public interface View extends BaseView<Presenter> {
 
-        void bindData(PloyeeServiceDetailGson.Data data);
+        void bindData(PloyerServiceDetailGson.Data data);
+
+
     }
 
     public interface Presenter extends BasePresenter {
 
+        void requestSaveServiceDetail(PostSavePloyerServiceDetailGson postSavePloyeeServiceDetailGson);
     }
 
     public interface ViewModel{
@@ -24,6 +28,7 @@ public class PloyeeServiceDetailContract {
         String getEquipmentNeeded();
         long getPriceMin();
         long getPriceMax();
-        PloyeeServiceDetailGson.Data getData();
+        PloyerServiceDetailGson.Data getData();
+        long getServiceId();
     }
 }

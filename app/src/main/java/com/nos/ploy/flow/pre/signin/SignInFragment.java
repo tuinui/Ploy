@@ -123,7 +123,7 @@ public class SignInFragment extends BaseFragment implements View.OnClickListener
     }
 
     private void dummyData() {
-        mEditTextEmail.setText("nuitest31@gmail.com");
+        mEditTextEmail.setText("nuitest@gmail.com");
         mEditTextPassword.setText("123456");
     }
 

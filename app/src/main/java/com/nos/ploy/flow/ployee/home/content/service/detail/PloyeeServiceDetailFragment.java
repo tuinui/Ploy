@@ -6,6 +6,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -14,7 +15,9 @@ import android.view.ViewGroup;
 import com.appyvet.rangebar.RangeBar;
 import com.nos.ploy.R;
 import com.nos.ploy.api.ployee.PloyeeApi;
-import com.nos.ploy.api.ployee.model.PloyeeServiceDetailGson;
+import com.nos.ploy.api.ployer.model.PloyerServiceDetailGson;
+import com.nos.ploy.api.ployer.PloyerApi;
+import com.nos.ploy.api.ployer.model.PostSavePloyerServiceDetailGson;
 import com.nos.ploy.base.BaseFragment;
 import com.nos.ploy.flow.ployee.home.content.service.detail.contract.PloyeeServiceDetailContract;
 import com.nos.ploy.flow.ployee.home.content.service.detail.contract.PloyeeServiceDetailPresenter;
@@ -76,7 +79,7 @@ public class PloyeeServiceDetailFragment extends BaseFragment implements PloyeeS
         Bundle args = new Bundle();
         PloyeeServiceDetailFragment fragment = new PloyeeServiceDetailFragment();
         fragment.setArguments(args);
-        PloyeeApi service = fragment.getRetrofit().create(PloyeeApi.class);
+        PloyerApi service = fragment.getRetrofit().create(PloyerApi.class);
         PloyeeServiceDetailPresenter.inject(service, userId, "en", serviceId, fragment);
         return fragment;
     }
@@ -144,8 +147,7 @@ public class PloyeeServiceDetailFragment extends BaseFragment implements PloyeeS
             public boolean onMenuItemClick(MenuItem item) {
                 int id = item.getItemId();
                 if (id == R.id.menu_done_item_done) {
-                    showToast("Done");
-                    dismiss();
+                    onClickDone();
                     return true;
                 }
                 return false;
@@ -172,14 +174,19 @@ public class PloyeeServiceDetailFragment extends BaseFragment implements PloyeeS
                 public void call(String s) {
                     mRangeBar.setRangePinsByIndices(Integer.valueOf(s), mRangeBar.getRightIndex());
                 }
-            });
+            }, InputType.TYPE_CLASS_NUMBER);
         } else if (id == mEditTextPriceTo.getId()) {
             PopupMenuUtils.showPopupAlertEditTextFromEditTextMenu(mEditTextPriceTo, new Action1<String>() {
                 @Override
                 public void call(String s) {
-                    mRangeBar.setRangePinsByIndices(mRangeBar.getLeftIndex(), Integer.valueOf(s));
+                    Integer value = Integer.valueOf(s);
+                    if (null != value && value >= 2) {
+                        mRangeBar.setTickEnd(value);
+                        mRangeBar.setRangePinsByIndices(mRangeBar.getLeftIndex(), value);
+                    }
+
                 }
-            });
+            }, InputType.TYPE_CLASS_NUMBER);
         }
     }
 
@@ -213,8 +220,7 @@ public class PloyeeServiceDetailFragment extends BaseFragment implements PloyeeS
     }
 
     @Override
-    public void bindData(PloyeeServiceDetailGson.Data data) {
-        showToast(data.toString());
+    public void bindData(PloyerServiceDetailGson.Data data) {
         mData = new PloyeeServiceDetailVM(data);
         bindDataToView(mData);
     }
@@ -227,7 +233,35 @@ public class PloyeeServiceDetailFragment extends BaseFragment implements PloyeeS
             mRangeBar.setTickEnd(data.getPriceMax());
             mRangeBar.setTickStart(data.getPriceMin());
             mAdapter.replaceData(data.getData().getSubServices());
+            if (data.getServiceId() == -1) {
+                mEditTextOthers.setVisibility(View.VISIBLE);
+            } else {
+                mEditTextOthers.setVisibility(View.GONE);
+            }
         }
+    }
+
+    private PostSavePloyerServiceDetailGson gatheredData() {
+        PostSavePloyerServiceDetailGson data = null;
+        if (null != mData && null != mData.getData() && null != mAdapter) {
+            data = new PostSavePloyerServiceDetailGson(mData.getData().closeThis());
+            data.setCertificate(extractString(mEditTextCertificate));
+            data.setDescription(extractString(mEditTextDescription));
+            data.setEquipment(extractString(mEditTextEquipmentNeeded));
+            data.setPriceMax(extractLong(mEditTextPriceTo));
+            data.setPriceMax(extractLong(mEditTextPriceFrom));
+            data.setServiceNameOthers(extractString(mEditTextOthers));
+        }
+
+        if (null != data && null != mAdapter) {
+            data.setSubServiceLv2IdList(mAdapter.gatheredSubServiceIds());
+        }
+
+        return data;
+    }
+
+    private void onClickDone() {
+        mPresenter.requestSaveServiceDetail(gatheredData());
     }
 
 

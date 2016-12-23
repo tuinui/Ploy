@@ -27,6 +27,7 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:animateLayoutChanges="true"
                     android:orientation="vertical"
                     android:padding="16dp">
 
@@ -44,6 +45,7 @@
                         android:layout_marginTop="16dp"
                         android:hint="@string/Name_of_service_you_offer"
                         android:inputType="text|textMultiLine"
+                        android:visibility="gone"
                         app:met_floatingLabel="normal"
                         app:met_floatingLabelAlwaysShown="true"
                         app:met_floatingLabelText="@string/Services" />
@@ -79,11 +81,12 @@
                                 android:layout_height="wrap_content"
                                 android:layout_weight="0"
                                 android:gravity="left"
+                                android:hint="@string/From"
                                 android:inputType="number"
                                 android:maxWidth="80dp"
                                 android:minWidth="60dp"
                                 android:paddingRight="8dp"
-                                android:text="80"
+                                android:text="0"
                                 app:met_floatingLabel="normal"
                                 app:met_floatingLabelAlwaysShown="true"
                                 app:met_floatingLabelText="@string/From" />
@@ -102,11 +105,12 @@
                                 android:layout_height="wrap_content"
                                 android:layout_weight="0"
                                 android:gravity="right"
+                                android:hint="@string/To"
                                 android:inputType="number"
                                 android:maxWidth="80dp"
                                 android:minWidth="60dp"
                                 android:paddingRight="8dp"
-                                android:text="5000"
+                                android:text="2"
                                 app:met_floatingLabel="normal"
                                 app:met_floatingLabelAlwaysShown="true"
                                 app:met_floatingLabelText="@string/To" />
@@ -119,9 +123,9 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             app:rangeBarPaddingBottom="8dp"
-                            app:tickEnd="5000"
-                            app:tickInterval="10"
-                            app:tickStart="10" />
+                            app:tickEnd="100"
+                            app:tickInterval="1"
+                            app:tickStart="0" />
 
                     </LinearLayout>
 
@@ -152,7 +156,7 @@
 
                 </LinearLayout>
 
-            <include layout="@layout/view_sub_services"/>
+                <include layout="@layout/view_sub_services" />
 
             </LinearLayout>
 

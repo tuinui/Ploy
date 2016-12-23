@@ -9,7 +9,7 @@ import android.widget.Space;
 import android.widget.TextView;
 
 import com.nos.ploy.R;
-import com.nos.ploy.api.ployee.model.PloyeeServiceDetailGson;
+import com.nos.ploy.api.ployer.model.PloyerServiceDetailGson;
 import com.nos.ploy.flow.ployee.home.content.service.detail.contract.subservice.viewmodel.HeaderSubServiceVM;
 import com.nos.ploy.flow.ployee.home.content.service.detail.contract.subservice.viewmodel.NormalSubServiceVM;
 import com.nos.ploy.flow.ployee.home.content.service.detail.contract.subservice.viewmodel.PloyeeServiceDetailSubServiceItemBaseViewModel;
@@ -32,21 +32,33 @@ public class PloyeeServiceDetailSubServiceRecyclerAdapter extends RecyclerView.A
     public PloyeeServiceDetailSubServiceRecyclerAdapter() {
     }
 
-    public void replaceData(List<PloyeeServiceDetailGson.Data.SubService> datas) {
+    public void replaceData(List<PloyerServiceDetailGson.Data.SubService> datas) {
         mDatas.clear();
         mDatas.addAll(toVM(datas));
         notifyDataSetChanged();
     }
 
-    private List<PloyeeServiceDetailSubServiceItemBaseViewModel> toVM(List<PloyeeServiceDetailGson.Data.SubService> datas) {
+    public List<Long> gatheredSubServiceIds() {
+        List<Long> results = new ArrayList<>();
+        if (RecyclerAdapterUtils.getSize(mDatas) > 0) {
+            for (PloyeeServiceDetailSubServiceItemBaseViewModel vm : mDatas) {
+                if (vm instanceof NormalSubServiceVM) {
+                    results.add(((NormalSubServiceVM) vm).getData().getSubServiceLv2Id());
+                }
+            }
+        }
+        return results;
+    }
+
+    private List<PloyeeServiceDetailSubServiceItemBaseViewModel> toVM(List<PloyerServiceDetailGson.Data.SubService> datas) {
         List<PloyeeServiceDetailSubServiceItemBaseViewModel> results = new ArrayList<>();
-        for (PloyeeServiceDetailGson.Data.SubService data : datas) {
-            PloyeeServiceDetailGson.Data.SubService.SubServiceLv1 subServiceLv1 = data.getSubServiceLV1();
+        for (PloyerServiceDetailGson.Data.SubService data : datas) {
+            PloyerServiceDetailGson.Data.SubService.SubServiceLv1 subServiceLv1 = data.getSubServiceLV1();
             if (subServiceLv1 != null) {
                 results.add(new HeaderSubServiceVM(subServiceLv1));
             }
-            List<PloyeeServiceDetailGson.Data.SubService.SubServiceLv2> subServicesLv2 = data.getSubServiceLV2();
-            for (PloyeeServiceDetailGson.Data.SubService.SubServiceLv2 sub2 : subServicesLv2) {
+            List<PloyerServiceDetailGson.Data.SubService.SubServiceLv2> subServicesLv2 = data.getSubServiceLV2();
+            for (PloyerServiceDetailGson.Data.SubService.SubServiceLv2 sub2 : subServicesLv2) {
                 results.add(new NormalSubServiceVM(sub2));
             }
         }

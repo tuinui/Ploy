@@ -14,7 +14,7 @@
         android:minHeight="?attr/actionBarSize"
         android:padding="16dp"
         android:text="Services"
-        android:textAppearance="@style/TextAppearance.Widget.AppCompat.Toolbar.Title"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
         android:textColor="@android:color/white" />
 
     <android.support.v7.widget.RecyclerView

@@ -1,44 +1,56 @@
 package com.nos.ploy.flow.ployee.home.content.service.detail.contract;
 
-import com.nos.ploy.api.ployee.PloyeeApi;
-import com.nos.ploy.api.ployee.model.PloyeeServiceDetailGson;
-import com.nos.ploy.api.ployee.model.PostPloyeeServiceDetailGson;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
+import com.nos.ploy.api.base.RetrofitCallUtils;
+import com.nos.ploy.api.base.response.BaseResponse;
+import com.nos.ploy.api.ployer.model.PloyerServiceDetailGson;
+import com.nos.ploy.api.ployer.model.PostGetPloyerServiceDetailGson;
+import com.nos.ploy.api.ployer.PloyerApi;
+import com.nos.ploy.api.ployer.model.PostSavePloyerServiceDetailGson;
 
 /**
  * Created by Saran on 1/12/2559.
  */
 
 public class PloyeeServiceDetailPresenter implements PloyeeServiceDetailContract.Presenter {
-    private PloyeeApi mService;
+    private PloyerApi mService;
     private Long mUserId;
     private String languageCode;
     private Long mServiceId;
     private PloyeeServiceDetailContract.View mView;
-    private PloyeeServiceDetailGson.Data mData;
-    private Callback<PloyeeServiceDetailGson> mCallbackPloyeeServiceDetailGson = new Callback<PloyeeServiceDetailGson>() {
+    private PloyerServiceDetailGson.Data mData;
+    private RetrofitCallUtils.RetrofitCallback<PloyerServiceDetailGson> mCallbackGetServiceDetailGson = new RetrofitCallUtils.RetrofitCallback<PloyerServiceDetailGson>() {
         @Override
-        public void onResponse(Call<PloyeeServiceDetailGson> call, Response<PloyeeServiceDetailGson> response) {
+        public void onDataSuccess(PloyerServiceDetailGson data) {
             mView.setRefreshing(false);
-            if (response.isSuccessful() && response.body().isSuccess()) {
-                mData = response.body().getData();
+            if (null != data && null != data.getData()) {
+                mData = data.getData();
                 mView.bindData(mData);
-            } else {
-                mView.toast("isNotSuccessful");
+            }
+
+        }
+
+        @Override
+        public void onDataFailure(String failCause) {
+            mView.setRefreshing(false);
+        }
+    };
+
+    private RetrofitCallUtils.RetrofitCallback<BaseResponse<Object>> mCallbackPostSaveServiceDetail = new RetrofitCallUtils.RetrofitCallback<BaseResponse<Object>>() {
+        @Override
+        public void onDataSuccess(BaseResponse<Object> data) {
+            mView.showLoadingDialog(false);
+            if (null != data) {
+                refreshData();
             }
         }
 
         @Override
-        public void onFailure(Call<PloyeeServiceDetailGson> call, Throwable t) {
-            mView.setRefreshing(false);
-            mView.toast("onFailure");
+        public void onDataFailure(String failCause) {
+            mView.showLoadingDialog(false);
         }
     };
 
-    private PloyeeServiceDetailPresenter(PloyeeApi mService, Long mUserId, String languageCode, Long mServiceId, PloyeeServiceDetailContract.View mView) {
+    private PloyeeServiceDetailPresenter(PloyerApi mService, Long mUserId, String languageCode, Long mServiceId, PloyeeServiceDetailContract.View mView) {
         this.mService = mService;
         this.mUserId = mUserId;
         this.languageCode = languageCode;
@@ -47,13 +59,13 @@ public class PloyeeServiceDetailPresenter implements PloyeeServiceDetailContract
         mView.setPresenter(this);
     }
 
-    public static PloyeeServiceDetailPresenter inject(PloyeeApi mService, Long mUserId, String languageCode, Long mServiceId, PloyeeServiceDetailContract.View mView) {
+    public static PloyeeServiceDetailPresenter inject(PloyerApi mService, Long mUserId, String languageCode, Long mServiceId, PloyeeServiceDetailContract.View mView) {
         return new PloyeeServiceDetailPresenter(mService, mUserId, languageCode, mServiceId, mView);
     }
 
     @Override
     public void start() {
-        if(mData == null){
+        if (mData == null) {
             refreshData();
         }
     }
@@ -61,7 +73,19 @@ public class PloyeeServiceDetailPresenter implements PloyeeServiceDetailContract
     @Override
     public void refreshData() {
         mView.setRefreshing(true);
-        mService.getServiceDetail(new PostPloyeeServiceDetailGson(mServiceId, mUserId, languageCode))
-                .enqueue(mCallbackPloyeeServiceDetailGson);
+        RetrofitCallUtils
+                .with(mService.getServiceDetail(new PostGetPloyerServiceDetailGson(mServiceId, mUserId, languageCode)), mCallbackGetServiceDetailGson)
+                .enqueue(mView.getContext());
+
+    }
+
+    @Override
+    public void requestSaveServiceDetail(PostSavePloyerServiceDetailGson data) {
+        if (null == data) {
+            return;
+        }
+        mView.showLoadingDialog(true);
+        RetrofitCallUtils
+                .with(mService.postSaveServiceDetail(data), mCallbackPostSaveServiceDetail).enqueue(mView.getContext());
     }
 }
