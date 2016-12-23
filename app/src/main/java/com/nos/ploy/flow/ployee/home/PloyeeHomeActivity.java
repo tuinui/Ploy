@@ -14,6 +14,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewStub;
 import android.widget.ImageView;
@@ -32,6 +33,7 @@ import com.nos.ploy.flow.ployee.home.content.service.list.PloyeeServiceListFragm
 import com.nos.ploy.flow.ployee.profile.PloyeeProfileFragment;
 import com.nos.ploy.flow.ployee.settings.PloyeeSettingsFragment;
 import com.nos.ploy.utils.DrawableUtils;
+import com.nos.ploy.utils.PopupMenuUtils;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -138,7 +140,7 @@ public class PloyeeHomeActivity extends BaseActivity implements View.OnClickList
     }
 
     private void initView() {
-        mViewPager.setEnabled(false);
+        mViewPager.setPagingEnabled(false);
     }
 
 
@@ -186,17 +188,34 @@ public class PloyeeHomeActivity extends BaseActivity implements View.OnClickList
         }
     }
 
+    private Toolbar.OnMenuItemClickListener mAvailabilityMenuItemClickListener = new Toolbar.OnMenuItemClickListener() {
+        @Override
+        public boolean onMenuItemClick(MenuItem item) {
+            int id = item.getItemId();
+            if (id == R.id.menu_done_item_done) {
+                onClickDoneAvailability();
+            }
+            return false;
+        }
+    };
+
+    private void onClickDoneAvailability() {
+        if (mAvailabilityFragment != null) {
+            mAvailabilityFragment.onClickDone();
+        }
+    }
 
     private void onClickBottomMenu(@BottomMenu int menu) {
         if (menu == AVAILABLITY) {
-//            addFragmentToActivity(mAvailabilityFragment, R.id.framelayout_ployee_home_content_container);
             mToolbar.setTitle(LAvailability);
             mSearchView.setVisibility(View.GONE);
             mViewPager.setCurrentItem(1);
+            PopupMenuUtils.clearAndInflateMenu(mToolbar, R.menu.menu_done, mAvailabilityMenuItemClickListener);
             mImageViewFooterServiceList.setActivated(false);
             mImageViewFooterAvailability.setActivated(true);
         } else if (menu == SERVICE_LIST) {
             mToolbar.setTitle(LPloyee);
+            PopupMenuUtils.clearMenu(mToolbar);
             mSearchView.setVisibility(View.VISIBLE);
             mViewPager.setCurrentItem(0);
             mImageViewFooterServiceList.setActivated(true);

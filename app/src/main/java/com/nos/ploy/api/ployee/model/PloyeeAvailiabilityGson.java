@@ -13,6 +13,8 @@ import java.util.List;
 public class PloyeeAvailiabilityGson extends BaseResponse<PloyeeAvailiabilityGson.Data> {
 
     public  class Data {
+        @SerializedName("userId")
+        private long userId;
         @SerializedName("holidayMode")
         private boolean holidayMode;
         @SerializedName("avaItems")
@@ -21,12 +23,35 @@ public class PloyeeAvailiabilityGson extends BaseResponse<PloyeeAvailiabilityGso
         public Data() {
         }
 
+        private Data(long userId, boolean holidayMode, List<AvailabilityItem> availabilityItems) {
+            this.userId = userId;
+            this.holidayMode = holidayMode;
+            this.availabilityItems = availabilityItems;
+        }
+
+        public void setUserId(long userId) {
+            this.userId = userId;
+        }
+
+        public void setHolidayMode(boolean holidayMode) {
+            this.holidayMode = holidayMode;
+        }
+
+
         public boolean getHolidayMode() {
             return holidayMode;
         }
 
         public List<AvailabilityItem> getAvailabilityItems() {
             return availabilityItems;
+        }
+
+        public void setAvailabilityItems(List<AvailabilityItem> availabilityItems) {
+            this.availabilityItems = availabilityItems;
+        }
+
+        public Data cloneThis() {
+            return new Data(userId,holidayMode,availabilityItems);
         }
 
         public  class AvailabilityItem {
@@ -51,6 +76,7 @@ public class PloyeeAvailiabilityGson extends BaseResponse<PloyeeAvailiabilityGso
 
             public AvailabilityItem() {
             }
+
 
             public long getDurationId() {
                 return durationId;

@@ -8,6 +8,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatDialog;
 import android.support.v7.app.AppCompatDialogFragment;
 import android.support.v7.widget.Toolbar;
@@ -32,6 +33,10 @@ public abstract class BaseFragment extends AppCompatDialogFragment {
 
     private ProgressDialog mProgressDialog;
     protected static final String KEY_USER_ID = "USER_ID";
+    private SwipeRefreshLayout mSwipeRefreshLayout;
+    private SwipeRefreshLayout.OnRefreshListener mOnRefreshListener;
+    private SwipeRefreshLayout mRefreshLayout;
+    private boolean isRefreshing;
 
     protected boolean isDialog() {
         return false;
@@ -89,11 +94,13 @@ public abstract class BaseFragment extends AppCompatDialogFragment {
             activity.runOnUiThread(action);
         }
     }
+
     protected void finishThisActivity() {
         if (isActivityReady()) {
             ActivityCompat.finishAfterTransition(getActivity());
         }
     }
+
     protected boolean isActivityReady() {
         return null != getActivity() && !getActivity().isFinishing() && !isActivityDestroyed();
     }
@@ -144,7 +151,40 @@ public abstract class BaseFragment extends AppCompatDialogFragment {
         }
     }
 
+    protected void setRefreshLayout(SwipeRefreshLayout swipeRefreshLayout, final SwipeRefreshLayout.OnRefreshListener listener) {
+        if (null == swipeRefreshLayout) {
+            return;
+        }
+        this.mRefreshLayout = swipeRefreshLayout;
+        mRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                isRefreshing = true;
+                listener.onRefresh();
+            }
+        });
+    }
+    protected void showRefreshing() {
+        if (mRefreshLayout == null) {
+            showLoading();
+            return;
+        }
+        if (!isRefreshing) {
+            isRefreshing = true;
+            mRefreshLayout.setRefreshing(true);
+        }
+    }
 
+    protected void dismissRefreshing() {
+        if (mRefreshLayout == null) {
+            dismissLoading();
+            return;
+        }
+        if (isRefreshing) {
+            isRefreshing = false;
+            mRefreshLayout.setRefreshing(false);
+        }
+    }
     protected void dismissLoading() {
         if (!isActivityReady()) {
             return;

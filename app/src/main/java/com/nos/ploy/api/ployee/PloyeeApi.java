@@ -31,4 +31,8 @@ public interface PloyeeApi {
     Call<PloyeeAvailiabilityGson> getAvailability(@Query("userId") long userId);
 
 
+    @POST("api/avai/save")
+    Call<PloyeeAvailiabilityGson> postSaveAvailability(@Body PloyeeAvailiabilityGson.Data data);
+
+
 }

@@ -37,6 +37,19 @@ public class AvailabilityRecyclerAdapter extends RecyclerView.Adapter<RecyclerVi
         notifyDataSetChanged();
     }
 
+    public List<PloyeeAvailiabilityGson.Data.AvailabilityItem> gatheredData(){
+        List<PloyeeAvailiabilityGson.Data.AvailabilityItem> results = new ArrayList<>();
+        if(RecyclerAdapterUtils.getSize(mDatas) > 0){
+            for(AvailabilityViewModel vm : mDatas){
+                if(vm instanceof NormalItemAvailabilityVM){
+                    results.add(((NormalItemAvailabilityVM) vm).getData());
+                }
+            }
+        }
+
+        return results;
+    }
+
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, @AvailabilityViewModel.ViewType int viewType) {
         switch (viewType) {
