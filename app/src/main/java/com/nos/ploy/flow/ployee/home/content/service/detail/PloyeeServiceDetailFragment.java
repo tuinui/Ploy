@@ -11,11 +11,13 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.appyvet.rangebar.RangeBar;
 import com.nos.ploy.R;
 import com.nos.ploy.api.ployee.PloyeeApi;
+import com.nos.ploy.api.ployee.model.PloyeeAvailiabilityGson;
 import com.nos.ploy.api.ployer.model.PloyerServiceDetailGson;
 import com.nos.ploy.api.ployer.PloyerApi;
 import com.nos.ploy.api.ployer.model.PostSavePloyerServiceDetailGson;
@@ -26,6 +28,8 @@ import com.nos.ploy.flow.ployee.home.content.service.detail.contract.PloyeeServi
 import com.nos.ploy.flow.ployee.home.content.service.detail.contract.subservice.PloyeeServiceDetailSubServiceRecyclerAdapter;
 import com.nos.ploy.utils.PopupMenuUtils;
 import com.rengwuxian.materialedittext.MaterialEditText;
+
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -58,6 +62,8 @@ public class PloyeeServiceDetailFragment extends BaseSupportFragment implements 
     RecyclerView mRecyclerSubService;
     @BindView(R.id.textview_sub_services_header)
     TextView mTextViewSubServicesHeader;
+    @BindView(R.id.button_ployee_service_reset)
+    Button mButtonReset;
 
     private RangeBar.OnRangeBarChangeListener mRangeBarListener = new RangeBar.OnRangeBarChangeListener() {
         @Override
@@ -134,6 +140,7 @@ public class PloyeeServiceDetailFragment extends BaseSupportFragment implements 
 
         mEditTextPriceFrom.setOnClickListener(this);
         mEditTextPriceTo.setOnClickListener(this);
+        mButtonReset.setOnClickListener(this);
 
         mSwipeRefreshLayout.setOnRefreshListener(mOnRefreshListener);
 
@@ -181,7 +188,9 @@ public class PloyeeServiceDetailFragment extends BaseSupportFragment implements 
             PopupMenuUtils.showPopupAlertEditTextFromEditTextMenu(mEditTextPriceFrom, new Action1<String>() {
                 @Override
                 public void call(String s) {
-                    mRangeBar.setRangePinsByIndices(Integer.valueOf(s), mRangeBar.getRightIndex());
+                    Integer value = Integer.valueOf(s);
+                    mRangeBar.setTickStart(value);
+                    mRangeBar.setRangePinsByIndices(value, mRangeBar.getRightIndex());
                 }
             }, InputType.TYPE_CLASS_NUMBER);
         } else if (id == mEditTextPriceTo.getId()) {
@@ -196,6 +205,8 @@ public class PloyeeServiceDetailFragment extends BaseSupportFragment implements 
 
                 }
             }, InputType.TYPE_CLASS_NUMBER);
+        }else if(id == mButtonReset.getId()){
+            onClickReset();
         }
     }
 
@@ -234,13 +245,36 @@ public class PloyeeServiceDetailFragment extends BaseSupportFragment implements 
         bindDataToView(mData);
     }
 
+    private void onClickReset() {
+        if (null != mData && null != mData.getData()) {
+            PloyerServiceDetailGson.Data data = mData.getData().closeThis();
+            data.setServiceNameOthers("");
+            data.setPriceMax(2);
+            data.setPriceMin(0);
+            data.setEquipment("");
+            data.setCertificate("");
+            data.setDescription("");
+            if (null != data.getSubServices()) {
+                for (PloyerServiceDetailGson.Data.SubService subService : data.getSubServices()) {
+                    if (null != subService.getSubServiceLV2()) {
+                        for (PloyerServiceDetailGson.Data.SubService.SubServiceLv2 subServiceLv2 : subService.getSubServiceLV2()) {
+                            subServiceLv2.setChecked(false);
+                        }
+                    }
+                }
+            }
+            bindData(data);
+        }
+
+    }
+
     private void bindDataToView(PloyeeServiceDetailContract.ViewModel data) {
         if (null != data) {
             mEditTextDescription.setText(data.getDescription());
             mEditTextCertificate.setText(data.getCertificate());
             mEditTextEquipmentNeeded.setText(data.getEquipmentNeeded());
-            mRangeBar.setTickEnd(data.getPriceMax());
             mRangeBar.setTickStart(data.getPriceMin());
+            mRangeBar.setTickEnd(data.getPriceMax());
             if (null != data.getData() && null != data.getData().getSubServices() && !data.getData().getSubServices().isEmpty()) {
                 mAdapter.replaceData(data.getData().getSubServices());
                 mTextViewSubServicesHeader.setVisibility(View.VISIBLE);

@@ -217,6 +217,11 @@ public class PloyerServiceDetailGson extends BaseResponse<PloyerServiceDetailGso
                 @SerializedName("checked")
                 private Boolean checked;
 
+                public Boolean getChecked() {
+                    return checked;
+                }
+
+
                 public SubServiceLv2() {
                 }
 

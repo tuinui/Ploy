@@ -31,5 +31,7 @@ public class PloyeeServiceDetailContract {
         PloyerServiceDetailGson.Data getData();
         long getServiceId();
         String getServiceOthersName();
+
+
     }
 }
