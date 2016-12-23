@@ -12,19 +12,142 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="?attr/listPreferredItemHeightSmall" />
+
+            <include layout="@layout/view_divider" />
+
+            <android.support.design.internal.ForegroundLinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="?attr/listPreferredItemHeight"
+                android:background="@android:color/white"
+                android:clickable="true"
+                android:foreground="?attr/selectableItemBackground"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@android:color/white"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="16dp"
+                    android:paddingRight="8dp"
+                    android:text="Language"
+                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0"
+                    android:background="@android:color/white"
+                    android:drawableRight="@drawable/ic_chevron_right_gray_32dp"
+                    android:gravity="center_vertical"
+                    android:minHeight="?attr/listPreferredItemHeight"
+                    android:paddingLeft="16dp"
+                    android:paddingRight="8dp"
+                    android:text="English"
+                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
+                    android:textColor="@android:color/darker_gray" />
+
+            </android.support.design.internal.ForegroundLinearLayout>
+
+            <include layout="@layout/view_divider" />
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="?attr/listPreferredItemHeightSmall" />
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@android:color/white"
+                android:orientation="vertical">
+
+                <include layout="@layout/view_divider" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="?attr/selectableItemBackground"
+                    android:clickable="true"
+                    android:drawableRight="@drawable/ic_chevron_right_gray_32dp"
+                    android:gravity="center_vertical"
+                    android:minHeight="?attr/listPreferredItemHeight"
+                    android:paddingLeft="16dp"
+                    android:paddingRight="8dp"
+                    android:text="Privacy Policy"
+                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium" />
+
+                <include layout="@layout/view_divider" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="?attr/selectableItemBackground"
+                    android:clickable="true"
+                    android:drawableRight="@drawable/ic_chevron_right_gray_32dp"
+                    android:gravity="center_vertical"
+                    android:minHeight="?attr/listPreferredItemHeight"
+                    android:paddingLeft="16dp"
+                    android:paddingRight="8dp"
+                    android:text="Term&amp;Conditions"
+                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium" />
+
+                <include layout="@layout/view_divider" />
+
+                <TextView
+                    android:id="@+id/textView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="?attr/selectableItemBackground"
+                    android:clickable="true"
+                    android:drawableRight="@drawable/ic_chevron_right_gray_32dp"
+                    android:gravity="center_vertical"
+                    android:minHeight="?attr/listPreferredItemHeight"
+                    android:paddingLeft="16dp"
+                    android:paddingRight="8dp"
+                    android:text="Legal"
+                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium" />
+
+                <include layout="@layout/view_divider" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="?attr/selectableItemBackground"
+                    android:clickable="true"
+                    android:drawableRight="@drawable/ic_chevron_right_gray_32dp"
+                    android:gravity="center_vertical"
+                    android:minHeight="?attr/listPreferredItemHeight"
+                    android:paddingLeft="16dp"
+                    android:paddingRight="8dp"
+                    android:text="FAQ"
+                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium" />
+
+                <include layout="@layout/view_divider" />
+
+            </LinearLayout>
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="?attr/listPreferredItemHeightSmall" />
 
 
             <Button
-                android:layout_width="match_parent"
-                android:layout_margin="16dp"
                 android:id="@+id/button_ployee_settings_logout"
-                android:text="@string/Log_out"
                 style="@style/Widget.AppCompat.Button.Colored"
-                android:layout_height="wrap_content" />
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="16dp"
+                android:text="@string/Log_out" />
 
         </LinearLayout>
-
 
 
     </android.support.v4.widget.NestedScrollView>

@@ -3,6 +3,7 @@ package com.nos.ploy.flow.ployee.home.content.availability;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SwitchCompat;
 import android.view.LayoutInflater;
@@ -16,6 +17,7 @@ import com.nos.ploy.api.ployee.model.PloyeeAvailiabilityGson;
 import com.nos.ploy.base.BaseFragment;
 import com.nos.ploy.flow.ployee.home.content.availability.contract.AvailabilityViewModel;
 import com.nos.ploy.flow.ployee.home.content.availability.contract.NormalItemAvailabilityVM;
+import com.nos.ploy.flow.ployee.home.content.availability.contract.WeekAvailabilityVM;
 import com.nos.ploy.flow.ployee.home.content.availability.view.AvailabilityRecyclerAdapter;
 
 import java.util.ArrayList;
@@ -73,20 +75,14 @@ public class PloyeeAvailabilityFragment extends BaseFragment {
     @Override
     public void onResume() {
         super.onResume();
-        if(null == mData){
+        if (null == mData) {
             refreshData();
         }
     }
 
-    @Override
-    public boolean onBackPressed() {
-
-        return super.onBackPressed();
-    }
-
     private void refreshData() {
         showLoading();
-        RetrofitCallUtils.with(mApi.getAvailability(mUserId), new RetrofitCallUtils.RetrofitCallback<PloyeeAvailiabilityGson>() {
+        RetrofitCallUtils.with(mApi.getAvailability(69), new RetrofitCallUtils.RetrofitCallback<PloyeeAvailiabilityGson>() {
             @Override
             public void onDataSuccess(PloyeeAvailiabilityGson data) {
                 dismissLoading();
@@ -99,7 +95,7 @@ public class PloyeeAvailabilityFragment extends BaseFragment {
             public void onDataFailure(String failCause) {
                 dismissLoading();
             }
-        });
+        }).enqueue(getContext());
     }
 
     private void bindData(PloyeeAvailiabilityGson.Data data) {
@@ -114,6 +110,7 @@ public class PloyeeAvailabilityFragment extends BaseFragment {
 
     private List<AvailabilityViewModel> toVm(List<PloyeeAvailiabilityGson.Data.AvailabilityItem> datas) {
         List<AvailabilityViewModel> vms = new ArrayList<>();
+        vms.add(WeekAvailabilityVM.create());
         for (PloyeeAvailiabilityGson.Data.AvailabilityItem item : datas) {
             vms.add(new NormalItemAvailabilityVM(item));
         }
@@ -122,13 +119,13 @@ public class PloyeeAvailabilityFragment extends BaseFragment {
 
     private void initRecyclerView() {
         //TODO : this should be change from grid to LinearLayoutManager with จัน ถึง ศุกร์
-        mRecyclerViewTimeTable.setLayoutManager(new GridLayoutManager(mRecyclerViewTimeTable.getContext(), 8) {
+        mRecyclerViewTimeTable.setLayoutManager(new LinearLayoutManager(getContext()){
             @Override
             public boolean canScrollVertically() {
                 return false;
             }
-
         });
+
         mRecyclerViewTimeTable.setAdapter(mAdapter);
     }
 

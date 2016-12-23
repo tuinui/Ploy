@@ -72,5 +72,6 @@
     <string name="Invalid_email_address">Invalid email address</string>
     <string name="Password_reset">Password reset</string>
     <string name="Log_out">Log out</string>
+    <string name="Availability">Availability</string>
 
 </resources>

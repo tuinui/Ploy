@@ -7,7 +7,8 @@
     <color name="gray_background_light">#EBECEC</color>
     <color name="gray_splash_screen">#3B464A</color>
 
-    <color name="blue_availability">#89BBC1</color>
+    <drawable name="blue_availability">#89BBC1</drawable>
+    <drawable name="gray_availability">#EBECEC</drawable>
     <color name="black_bb_transparent">#BB000000</color>
     <color name="black_88_transparent">#88000000</color>
     <color name="white_cc_transparent">#CCFFFFFF</color>

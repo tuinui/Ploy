@@ -40,7 +40,7 @@ public class FragmentTransactionUtils {
     public static void addFragmentToActivity(@NonNull FragmentManager fragmentManager,
                                              @NonNull Fragment fragment, int frameId, String tag) {
         FragmentTransaction transaction = fragmentManager.beginTransaction();
-        transaction.setCustomAnimations(R.anim.animation_localization_activity_transition_in, R.anim.animation_localization_activity_transition_out);
+//        transaction.setCustomAnimations(R.anim.animation_localization_activity_transition_in, R.anim.animation_localization_activity_transition_out);
         transaction.replace(frameId, fragment, tag);
         transaction.commit();
     }

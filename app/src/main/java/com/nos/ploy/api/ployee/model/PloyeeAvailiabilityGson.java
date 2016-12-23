@@ -14,14 +14,14 @@ public class PloyeeAvailiabilityGson extends BaseResponse<PloyeeAvailiabilityGso
 
     public  class Data {
         @SerializedName("holidayMode")
-        private Boolean holidayMode;
+        private boolean holidayMode;
         @SerializedName("avaItems")
         private List<AvailabilityItem> availabilityItems = new ArrayList<>();
 
         public Data() {
         }
 
-        public Boolean getHolidayMode() {
+        public boolean getHolidayMode() {
             return holidayMode;
         }
 
@@ -31,7 +31,7 @@ public class PloyeeAvailiabilityGson extends BaseResponse<PloyeeAvailiabilityGso
 
         public  class AvailabilityItem {
             @SerializedName("durationId")
-            private Long durationId;
+            private long durationId;
             @SerializedName("durationValue")
             private String durationValue;
             @SerializedName("sun")
@@ -52,7 +52,7 @@ public class PloyeeAvailiabilityGson extends BaseResponse<PloyeeAvailiabilityGso
             public AvailabilityItem() {
             }
 
-            public Long getDurationId() {
+            public long getDurationId() {
                 return durationId;
             }
 

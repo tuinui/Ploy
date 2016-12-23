@@ -58,8 +58,8 @@ public abstract class RetrofitCallUtils<T> {
                         if (baseResponse.isSuccess()) {
 
                             if (null != baseResponse.getData()) {
-                                T result = (T)response.body();
-                                if(null != result){
+                                T result = (T) response.body();
+                                if (null != result) {
                                     onDataSuccess(result);
                                 }
 
@@ -69,6 +69,7 @@ public abstract class RetrofitCallUtils<T> {
                             }
                         } else {
                             onDataFailure(baseResponse.getErrorMessage());
+                            showToast(context, baseResponse.getErrorMessage());
                         }
                     } else {
                         showToast(context, "isNotSuccessful");
@@ -80,6 +81,7 @@ public abstract class RetrofitCallUtils<T> {
                 public void onFailure(Call call, Throwable t) {
                     if (null != t && null != t.getMessage()) {
                         onDataFailure(t.getMessage());
+                        showToast(context, t.getMessage());
                     }
                 }
             });
