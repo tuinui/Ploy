@@ -25,8 +25,10 @@ public class WorkAroundMapFragment extends SupportMapFragment {
 
         frameLayout.setBackgroundColor(getResources().getColor(android.R.color.transparent));
 
-        ((ViewGroup) layout).addView(frameLayout,
-                new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+        if (layout != null) {
+            ((ViewGroup) layout).addView(frameLayout,
+                    new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+        }
 
         return layout;
     }

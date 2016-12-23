@@ -12,4 +12,6 @@
     <color name="black_bb_transparent">#BB000000</color>
     <color name="black_88_transparent">#88000000</color>
     <color name="white_cc_transparent">#CCFFFFFF</color>
+
+    <color name="gray_alpha">#66aaaaaa</color>
 </resources>

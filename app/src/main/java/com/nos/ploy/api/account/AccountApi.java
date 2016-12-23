@@ -1,6 +1,7 @@
 package com.nos.ploy.api.account;
 
 import com.nos.ploy.api.account.model.PostUploadProfileImageGson;
+import com.nos.ploy.api.account.model.ProfileGson;
 import com.nos.ploy.api.account.model.ProfileImageGson;
 import com.nos.ploy.api.authentication.model.AccountGson;
 
@@ -23,5 +24,8 @@ public interface AccountApi {
 
     @GET("/api/user/profileImg")
     Call<ProfileImageGson> getProfileImage(@Query("userId") long userId);
+
+    @GET("/api/user/profile")
+    Call<ProfileGson> getProfileGson(@Query("userId") long userId);
 
 }

@@ -63,6 +63,10 @@ public class AccountInfoLoader {
     }
 
     public static void getProfileImage(final Context context, long userId, final Action1<List<ProfileImageGson.Data>> onFinish) {
+        getProfileImage(context, userId, false, onFinish);
+    }
+
+    public static void getProfileImage(final Context context, long userId, boolean forceRefresh, final Action1<List<ProfileImageGson.Data>> onFinish) {
         List<ProfileImageGson.Data> results = SharePreferenceUtils.getProfileImages(context);
         Call<ProfileImageGson> call = RetrofitManager.getRetrofit(context).create(AccountApi.class).getProfileImage(userId);
         final Callback<ProfileImageGson> callbackSaveCache = new Callback<ProfileImageGson>() {
@@ -78,7 +82,7 @@ public class AccountInfoLoader {
 
             }
         };
-        if (results != null && !results.isEmpty()) {
+        if (results != null && !results.isEmpty() && !forceRefresh) {
             onFinish.call(results);
             call.enqueue(callbackSaveCache);
         } else {
@@ -102,4 +106,5 @@ public class AccountInfoLoader {
             });
         }
     }
+
 }
