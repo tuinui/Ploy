@@ -1,5 +1,8 @@
 package com.nos.ploy.api.account.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.gson.annotations.SerializedName;
 import com.nos.ploy.api.base.response.BaseResponse;
 
@@ -52,7 +55,7 @@ public class ProfileGson extends BaseResponse<ProfileGson.Data> {
         @SerializedName("interest")
         private String interest;
         @SerializedName("language")
-        private List<Language> language = new ArrayList<>();
+        private ArrayList<Language> language = new ArrayList<>();
         @SerializedName("transport")
         private List<Transport> transport = new ArrayList<>();
         @SerializedName("location")
@@ -65,7 +68,7 @@ public class ProfileGson extends BaseResponse<ProfileGson.Data> {
         public Data() {
         }
 
-        private Data(Long userProfileId, long userId, String aboutMe, String education, String work, String interest, List<Language> language, List<Transport> transport, Location location, boolean contactPhone, boolean contactEmail) {
+        private Data(Long userProfileId, long userId, String aboutMe, String education, String work, String interest, ArrayList<Language> language, List<Transport> transport, Location location, boolean contactPhone, boolean contactEmail) {
             this.userProfileId = userProfileId;
             this.userId = userId;
             this.aboutMe = aboutMe;
@@ -124,7 +127,7 @@ public class ProfileGson extends BaseResponse<ProfileGson.Data> {
             this.interest = interest;
         }
 
-        public void setLanguage(List<Language> language) {
+        public void setLanguage(ArrayList<Language> language) {
             this.language = language;
         }
 
@@ -156,7 +159,7 @@ public class ProfileGson extends BaseResponse<ProfileGson.Data> {
             return interest;
         }
 
-        public List<Language> getLanguage() {
+        public ArrayList<Language> getLanguage() {
             return language;
         }
 
@@ -172,7 +175,7 @@ public class ProfileGson extends BaseResponse<ProfileGson.Data> {
             return null != userProfileId ? userProfileId : Long.valueOf(0L);
         }
 
-        public class Language {
+        public static class Language implements Parcelable {
             /*
               "spokenLanguageCode": "de",
         "spokenLanguageValue": "Germany"
@@ -193,6 +196,34 @@ public class ProfileGson extends BaseResponse<ProfileGson.Data> {
             public String getSpokenLanguageValue() {
                 return spokenLanguageValue;
             }
+
+            @Override
+            public int describeContents() {
+                return 0;
+            }
+
+            @Override
+            public void writeToParcel(Parcel dest, int flags) {
+                dest.writeString(this.spokenLanguageCode);
+                dest.writeString(this.spokenLanguageValue);
+            }
+
+            protected Language(Parcel in) {
+                this.spokenLanguageCode = in.readString();
+                this.spokenLanguageValue = in.readString();
+            }
+
+            public static final Parcelable.Creator<Language> CREATOR = new Parcelable.Creator<Language>() {
+                @Override
+                public Language createFromParcel(Parcel source) {
+                    return new Language(source);
+                }
+
+                @Override
+                public Language[] newArray(int size) {
+                    return new Language[size];
+                }
+            };
         }
 
 

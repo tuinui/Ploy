@@ -31,10 +31,10 @@ public interface AccountApi {
     Call<ProfileGson> getProfileGson(@Query("userId") long userId);
 
     @POST("/api/user/profile/save")
-    Call<ProfileGson> postSaveProfileGson(@Body PostUpdateProfileGson data);
+    Call<Object> postSaveProfileGson(@Body PostUpdateProfileGson data);
 
     @POST("/api/user/profile/update")
-    Call<ProfileGson> postUpdateProfileGson(@Body PostUpdateProfileGson data);
+    Call<Object> postUpdateProfileGson(@Body PostUpdateProfileGson data);
 
     @POST("/api/user/profileImg/delete")
     Call<Object> postDeleteProfileImage(@Body PostDeleteProfileImageGson data);

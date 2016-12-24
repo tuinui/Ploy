@@ -75,5 +75,6 @@
     <string name="Availability">Availability</string>
     <string name="Profile">Profile</string>
     <string name="Upload_photo">Upload photo</string>
+    <string name="Language_spoken">Language spoken</string>
 
 </resources>

@@ -24,11 +24,11 @@ public class PostUpdateProfileGson {
     @SerializedName("interest")
     private String interest;
     @SerializedName("language")
-    private List<String> language = new ArrayList<>();
+    private ArrayList<String> language = new ArrayList<>();
     @SerializedName("transport")
     private List<Long> transport = new ArrayList<>();
     @SerializedName("location")
-    private ProfileGson.Data.Location location = new ProfileGson.Data.Location();
+    private ProfileGson.Data.Location location;
     @SerializedName("contactPhone")
     private boolean contactPhone;
     @SerializedName("contactEmail")
@@ -89,8 +89,19 @@ public class PostUpdateProfileGson {
         this.interest = interest;
     }
 
-    public void setLanguage(List<String> language) {
+    public void setLanguage(ArrayList<String> language) {
         this.language = language;
+    }
+
+    public void addLanguage(String code){
+        if(language == null){
+            language = new ArrayList<>();
+        }
+
+        if (!language.contains(code)) {
+            language.add(code);
+        }
+
     }
 
     public void setTransport(List<Long> transport) {
@@ -133,7 +144,7 @@ public class PostUpdateProfileGson {
         return interest;
     }
 
-    public List<String> getLanguage() {
+    public ArrayList<String> getLanguage() {
         return language;
     }
 

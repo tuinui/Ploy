@@ -3,8 +3,6 @@ package com.nos.ploy.flow.ployee.profile;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -24,7 +22,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
@@ -44,7 +41,7 @@ import com.nos.ploy.api.base.RetrofitCallUtils;
 import com.nos.ploy.api.base.response.ResponseMessage;
 import com.nos.ploy.api.utils.loader.AccountInfoLoader;
 import com.nos.ploy.base.BaseActivity;
-import com.nos.ploy.flow.ployee.home.content.availability.view.AvailabilityRecyclerAdapter;
+import com.nos.ploy.flow.ployee.profile.language.LanguageChooserFragment;
 import com.nos.ploy.flow.ployee.profile.upload.UploadPhotoFragment;
 import com.nos.ploy.utils.FragmentTransactionUtils;
 import com.nos.ploy.utils.GoogleApiAvailabilityUtils;
@@ -53,7 +50,6 @@ import com.nos.ploy.utils.RecyclerUtils;
 import com.rengwuxian.materialedittext.MaterialEditText;
 
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
 
 import butterknife.BindDrawable;
@@ -82,7 +78,7 @@ public class PloyeeProfileActivity extends BaseActivity implements OnMapReadyCal
     @BindView(R.id.edittext_ployee_profile_interest)
     MaterialEditText mEditTextInterest;
     @BindView(R.id.textview_ployee_profile_language_support)
-    TextView mTExtViewLanguageSupport;
+    TextView mTextViewLanguageSupport;
     @BindView(R.id.recyclerview_ployee_profile_tranportation)
     RecyclerView mRecyclerViewTransport;
     @BindView(R.id.toolbar_main)
@@ -171,7 +167,9 @@ public class PloyeeProfileActivity extends BaseActivity implements OnMapReadyCal
             dismissLoading();
             dismissRefreshing();
             if (null != data && null != data.getData()) {
+
                 bindData(data.getData());
+
             }
         }
 
@@ -185,15 +183,42 @@ public class PloyeeProfileActivity extends BaseActivity implements OnMapReadyCal
 
         }
     };
+
+    private RetrofitCallUtils.RetrofitCallback<Object> mCallbackUpdateData = new RetrofitCallUtils.RetrofitCallback<Object>() {
+        @Override
+        public void onDataSuccess(Object data) {
+            dismissLoading();
+            if (null != data) {
+                refreshData(PloyeeProfileActivity.this);
+            }
+        }
+
+        @Override
+        public void onDataFailure(ResponseMessage failCause) {
+            dismissLoading();
+            if (TextUtils.equals(failCause.getMessageCode(), ResponseMessage.CODE_DATA_NOT_FOUND)) {
+                shouldRequestCallSave = true;
+            }
+
+        }
+    };
+
+
     private ImageSliderPagerAdapter mAdapter;
     private int mDotsCount;
     private List<ImageView> mImageViewDots = new ArrayList<>();
     private GoogleApiClient mGoogleApiClient;
     private List<TransportGson> mMapTransports = new ArrayList<>();
+    private ProfileGson.Data mOriginalData;
 
 
     private void bindData(ProfileGson.Data data) {
+        mOriginalData = data;
         mData = new PostUpdateProfileGson(data, mUserId);
+        bindData(mData);
+    }
+
+    private void bindData(PostUpdateProfileGson data) {
         if (null != data) {
             mEditTextAboutMe.setText(data.getAboutMe());
             mEditTextEducation.setText(data.getEducation());
@@ -202,8 +227,28 @@ public class PloyeeProfileActivity extends BaseActivity implements OnMapReadyCal
             mButtonEmail.setActivated(data.isContactEmail());
             mButtonPhone.setActivated(data.isContactPhone());
             mRecyclerViewTransport.setAdapter(mTransportRecyclerAdapter);
+
+            ProfileGson.Data.Location locationData = mData.getLocation();
+            if (null != locationData) {
+                setCurrentLatLng(new LatLng(locationData.getLat(), locationData.getLng()));
+            } else {
+                getLocationAndSetToAddressView();
+            }
+
+
         }
 
+        if (null != mOriginalData) {
+            String languageSupports = "";
+            if (mOriginalData.getLanguage() != null && !mOriginalData.getLanguage().isEmpty()) {
+                for (ProfileGson.Data.Language language : mOriginalData.getLanguage()) {
+                    languageSupports += language.getSpokenLanguageValue() + " ,";
+                }
+
+            }
+            mTextViewLanguageSupport.setText(languageSupports);
+
+        }
 
     }
 
@@ -214,9 +259,12 @@ public class PloyeeProfileActivity extends BaseActivity implements OnMapReadyCal
 
 
     private void refreshData(Context context) {
-        showRefreshing();
-        RetrofitCallUtils.with(mApi.getProfileGson(mUserId), mCallbackLoadData).enqueue(context);
-        refreshSlider();
+        if (null != context && isReady()) {
+            showRefreshing();
+            RetrofitCallUtils.with(mApi.getProfileGson(mUserId), mCallbackLoadData).enqueue(context);
+            refreshSlider();
+        }
+
     }
 
     @Override
@@ -320,9 +368,7 @@ public class PloyeeProfileActivity extends BaseActivity implements OnMapReadyCal
     @Override
     public void onResume() {
         super.onResume();
-        if (null == mData) {
-            refreshData(PloyeeProfileActivity.this);
-        }
+
     }
 
     private void initToolbar() {
@@ -344,11 +390,11 @@ public class PloyeeProfileActivity extends BaseActivity implements OnMapReadyCal
     }
 
     private void onClickDone() {
-        showRefreshing();
+        showLoading();
         if (shouldRequestCallSave) {
-            RetrofitCallUtils.with(mApi.postSaveProfileGson(gatheredData()), mCallbackLoadData).enqueue(this);
+            RetrofitCallUtils.with(mApi.postSaveProfileGson(gatheredData()), mCallbackUpdateData).enqueue(this);
         } else {
-            RetrofitCallUtils.with(mApi.postUpdateProfileGson(gatheredData()), mCallbackLoadData).enqueue(this);
+            RetrofitCallUtils.with(mApi.postUpdateProfileGson(gatheredData()), mCallbackUpdateData).enqueue(this);
         }
     }
 
@@ -377,6 +423,7 @@ public class PloyeeProfileActivity extends BaseActivity implements OnMapReadyCal
         mButtonEmail.setOnClickListener(this);
         mButtonPhone.setOnClickListener(this);
         mImageButtonCheckin.setOnClickListener(this);
+        mTextViewLanguageSupport.setOnClickListener(this);
         setRefreshLayout(mSwipeRefreshLayout, new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -404,25 +451,18 @@ public class PloyeeProfileActivity extends BaseActivity implements OnMapReadyCal
         mGoogleMap = googleMap;
         if (mGoogleMap != null) {
             mGoogleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
-            moveCameraToCurrentLocation();
+        }
+        if (null == mData) {
+            refreshData(PloyeeProfileActivity.this);
         }
     }
 
-    private void moveCameraToCurrentLocation() {
-        if (mGoogleMap != null && null != mGoogleApiClient) {
-            MyLocationUtils.getLastKnownLocation(this, mGoogleApiClient, new Action1<Location>() {
-
-                @Override
-                public void call(Location location) {
-                    if (null != location) {
-                        mCurrentLatLng = new LatLng(location.getLatitude(), location.getLongitude());
-                        LatLng latlng = new LatLng(location.getLatitude(), location.getLongitude());
-                        mGoogleMap.moveCamera(CameraUpdateFactory.newLatLng(latlng));
-                        mGoogleMap.animateCamera(CameraUpdateFactory.zoomTo(17));
-                        mGoogleMap.addMarker(new MarkerOptions().position(latlng));
-                    }
-                }
-            });
+    private void moveCameraToCurrentLocation(LatLng latLng) {
+        if (mGoogleMap != null) {
+            mGoogleMap.clear();
+            mGoogleMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+            mGoogleMap.animateCamera(CameraUpdateFactory.zoomTo(17));
+            mGoogleMap.addMarker(new MarkerOptions().position(latLng));
         }
     }
 
@@ -436,24 +476,41 @@ public class PloyeeProfileActivity extends BaseActivity implements OnMapReadyCal
         } else if (id == mFabProfileImage.getId()) {
             showUploadPhotoFragment();
         } else if (id == mImageButtonCheckin.getId()) {
-            checkInAndShowCurrentAddress();
+            getLocationAndSetToAddressView();
+        } else if (id == mTextViewLanguageSupport.getId()) {
+            showLanguageChooser();
         }
     }
 
+    private void showLanguageChooser() {
+        showFragment(LanguageChooserFragment.newInstance(mUserId, mData.getLanguage(), new LanguageChooserFragment.OnDataChangedListener() {
+            @Override
+            public void onDataChanged(ArrayList<String> datas) {
+                mData.setLanguage(datas);
+                bindData(mData);
+            }
+        }));
 
-    private void checkInAndShowCurrentAddress() {
+    }
+
+    private void getLocationAndSetToAddressView() {
         MyLocationUtils.getLastKnownLocation(this, mGoogleApiClient, true, new Action1<Location>() {
             @Override
             public void call(Location location) {
                 if (null != location) {
-                    mCurrentLatLng = new LatLng(location.getLatitude(), location.getLongitude());
-                    moveCameraToCurrentLocation();
-                    String address = MyLocationUtils.getCompleteAddressString(PloyeeProfileActivity.this, location.getLatitude(), location.getLongitude());
-                    mTextViewAddress.setText(address);
+                    setCurrentLatLng(new LatLng(location.getLatitude(), location.getLongitude()));
                 }
             }
         });
 
+    }
+
+
+    private void setCurrentLatLng(LatLng latlng) {
+        mCurrentLatLng = latlng;
+        moveCameraToCurrentLocation(mCurrentLatLng);
+        String address = MyLocationUtils.getCompleteAddressString(PloyeeProfileActivity.this, mCurrentLatLng.latitude, mCurrentLatLng.longitude);
+        mTextViewAddress.setText(address);
     }
 
     private void dummyData() {
