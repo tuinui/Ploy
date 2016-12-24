@@ -2,6 +2,7 @@ package com.nos.ploy.flow.ployee.home.content.availability;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.annotation.UiThread;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -45,21 +46,6 @@ public class PloyeeAvailabilityFragment extends BaseFragment implements View.OnC
     private long mUserId;
     private AvailabilityRecyclerAdapter mAdapter = new AvailabilityRecyclerAdapter();
     private PloyeeAvailiabilityGson.Data mData;
-    private Runnable mRunnableOnClickDone = new Runnable() {
-        @Override
-        public void run() {
-            PloyeeAvailiabilityGson.Data data = mData.cloneThis();
-            if(null != data){
-                data.setHolidayMode(mSwitchHoliday.isChecked());
-                data.setUserId(mUserId);
-                if(null != mAdapter){
-                    data.setAvailabilityItems(mAdapter.gatheredData());
-                }
-                requestSaveData(data);
-            }
-
-        }
-    };
 
 
     public static PloyeeAvailabilityFragment newInstance(long userId) {
@@ -162,9 +148,16 @@ public class PloyeeAvailabilityFragment extends BaseFragment implements View.OnC
         mRecyclerViewTimeTable.setAdapter(mAdapter);
     }
 
-
     public void onClickDone() {
-        runOnUiThread(mRunnableOnClickDone);
+        PloyeeAvailiabilityGson.Data data = mData.cloneThis();
+        if(null != data){
+            data.setHolidayMode(mSwitchHoliday.isChecked());
+            data.setUserId(mUserId);
+            if(null != mAdapter){
+                data.setAvailabilityItems(mAdapter.gatheredData());
+            }
+            requestSaveData(data);
+        }
 
     }
 
@@ -191,18 +184,21 @@ public class PloyeeAvailabilityFragment extends BaseFragment implements View.OnC
             item.setSat(false);
             item.setSun(false);
         }
-        bindData(mData);
+        bindData(data);
     }
 
     private void requestSaveData(PloyeeAvailiabilityGson.Data data) {
+        showLoading();
         RetrofitCallUtils.with(mApi.postSaveAvailability(data), new RetrofitCallUtils.RetrofitCallback<PloyeeAvailiabilityGson>() {
             @Override
             public void onDataSuccess(PloyeeAvailiabilityGson data) {
+                dismissLoading();
                 refreshData();
             }
 
             @Override
             public void onDataFailure(ResponseMessage failCause) {
+                dismissLoading();
                 refreshData();
             }
         }).enqueue(getContext());
