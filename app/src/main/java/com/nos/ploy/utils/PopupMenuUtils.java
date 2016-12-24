@@ -3,6 +3,8 @@ package com.nos.ploy.utils;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.provider.Settings;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.IdRes;
 import android.support.annotation.LayoutRes;
@@ -252,9 +254,9 @@ public class PopupMenuUtils {
             return;
         }
         CharSequence title = "";
-        if(TextUtils.isEmpty(editText.getHint()) && editText instanceof MaterialEditText){
+        if (TextUtils.isEmpty(editText.getHint()) && editText instanceof MaterialEditText) {
             title = ((MaterialEditText) editText).getFloatingLabelText();
-        }else{
+        } else {
             title = editText.getHint();
         }
         showPopupAlertEditTextMenu(editText.getContext(), title, editText.getText(), onConfirm, editText.getInputType());
@@ -336,6 +338,36 @@ public class PopupMenuUtils {
         return true;
     }
 
+    public static void showDialogLocationSettings(final Context context, final Action1<Void> onDenied) {
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setMessage("Location not available");
+        builder.setPositiveButton("Settings", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface paramDialogInterface, int paramInt) {
+                // TODO Auto-generated method stub
+                paramDialogInterface.dismiss();
+                Intent myIntent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                context.startActivity(myIntent);
+                //get gps
+            }
+        });
+        builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+
+            @Override
+            public void onClick(DialogInterface paramDialogInterface, int paramInt) {
+                // TODO Auto-generated method stub
+                paramDialogInterface.dismiss();
+                if (null != onDenied) {
+                    onDenied.call(null);
+                }
+            }
+        });
+
+        if(isAvaiableContext(context)){
+            builder.create().show();
+        }
+    }
 //    public static void showInfoDialogAutoLink(Context context, String title, Spanned messageWithLink, String positiveTitle) {
 //        if (!isAvaiableContext(context)) {
 //            return;

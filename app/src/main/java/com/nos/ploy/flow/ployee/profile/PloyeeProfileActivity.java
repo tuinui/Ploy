@@ -2,27 +2,35 @@ package com.nos.ploy.flow.ployee.profile;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.text.TextUtilsCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.widget.CardView;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.nos.ploy.R;
 import com.nos.ploy.api.account.AccountApi;
 import com.nos.ploy.api.account.model.ProfileGson;
@@ -31,15 +39,15 @@ import com.nos.ploy.api.base.RetrofitCallUtils;
 import com.nos.ploy.api.base.response.ResponseMessage;
 import com.nos.ploy.api.utils.loader.AccountInfoLoader;
 import com.nos.ploy.base.BaseActivity;
-import com.nos.ploy.custom.view.WorkAroundMapFragment;
 import com.nos.ploy.flow.ployee.profile.upload.UploadPhotoFragment;
 import com.nos.ploy.utils.FragmentTransactionUtils;
+import com.nos.ploy.utils.GoogleApiAvailabilityUtils;
+import com.nos.ploy.utils.MyLocationUtils;
 import com.nos.ploy.utils.RecyclerUtils;
 import com.rengwuxian.materialedittext.MaterialEditText;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 import butterknife.BindDrawable;
 import butterknife.BindString;
@@ -51,11 +59,13 @@ import rx.functions.Action1;
  * Created by Saran on 15/12/2559.
  */
 
-public class PloyeeProfileActivity extends BaseActivity implements OnMapReadyCallback, View.OnClickListener, ViewPager.OnPageChangeListener {
+public class PloyeeProfileActivity extends BaseActivity implements OnMapReadyCallback, View.OnClickListener, ViewPager.OnPageChangeListener, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
     @BindView(R.id.button_ployee_profile_show_email)
     Button mButtonEmail;
     @BindView(R.id.button_ployee_profile_show_phone_no)
     Button mButtonPhone;
+    @BindView(R.id.textview_ployee_profile_address)
+    TextView mTextViewAddress;
     @BindView(R.id.edittext_ployee_profile_about_me)
     MaterialEditText mEditTextAboutMe;
     @BindView(R.id.edittext_ployee_profile_education)
@@ -82,17 +92,41 @@ public class PloyeeProfileActivity extends BaseActivity implements OnMapReadyCal
     ViewPager mViewPagerSlider;
     @BindView(R.id.swiperefreshlayout_ployee_profile)
     SwipeRefreshLayout mSwipeRefreshLayout;
+    @BindView(R.id.imagebutton_ployee_profile_checkin)
+    ImageButton mImageButtonCheckin;
     @BindDrawable(R.drawable.nonselecteditem_dot)
     Drawable mDrawableNonSelecteddot;
     @BindDrawable(R.drawable.selecteditem_dot)
     Drawable mDrawableSelectedDot;
 
-    private GoogleMap mMap;
+    private GoogleMap mGoogleMap;
     private SupportMapFragment mMapFragment = SupportMapFragment.newInstance();
     private AccountApi mApi;
     private ProfileGson.Data mData;
 
     private boolean shouldRequestCallSave = false;
+
+    private LocationListener mLocationManagerListener = new LocationListener() {
+        @Override
+        public void onLocationChanged(Location location) {
+
+        }
+
+        @Override
+        public void onStatusChanged(String provider, int status, Bundle extras) {
+
+        }
+
+        @Override
+        public void onProviderEnabled(String provider) {
+
+        }
+
+        @Override
+        public void onProviderDisabled(String provider) {
+
+        }
+    };
     private RetrofitCallUtils.RetrofitCallback<ProfileGson> mCallbackLoadData = new RetrofitCallUtils.RetrofitCallback<ProfileGson>() {
         @Override
         public void onDataSuccess(ProfileGson data) {
@@ -116,6 +150,8 @@ public class PloyeeProfileActivity extends BaseActivity implements OnMapReadyCal
     private ImageSliderPagerAdapter mAdapter;
     private int mDotsCount;
     private List<ImageView> mImageViewDots = new ArrayList<>();
+    private GoogleApiClient mGoogleApiClient;
+    private LocationManager mLocationManager;
 
 
     private void bindData(ProfileGson.Data data) {
@@ -143,11 +179,18 @@ public class PloyeeProfileActivity extends BaseActivity implements OnMapReadyCal
         setContentView(R.layout.fragment_ployee_profile);
         ButterKnife.bind(this);
         mApi = getRetrofit().create(AccountApi.class);
-        initMap();
         initToolbar();
         initView();
         initSlider();
-//        dummyData();
+        if (GoogleApiAvailabilityUtils.checkPlayServices(this)) {
+            mGoogleApiClient = new GoogleApiClient.Builder(this, this, this).addApi(LocationServices.API).build();
+        }
+
+    }
+
+    private void initLocationManager() {
+        mLocationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        mLocationManager.requestSingleUpdate(LocationManager.GPS_PROVIDER, mLocationManagerListener, null);
     }
 
     private void initSlider() {
@@ -208,9 +251,19 @@ public class PloyeeProfileActivity extends BaseActivity implements OnMapReadyCal
     }
 
     @Override
-    protected void onStop() {
-        super.onStop();
+    protected void onStart() {
+        super.onStart();
+        if (null != mGoogleApiClient) {
+            mGoogleApiClient.connect();
+        }
+    }
 
+    @Override
+    protected void onStop() {
+        if (null != mGoogleApiClient) {
+            mGoogleApiClient.disconnect();
+        }
+        super.onStop();
     }
 
     @Override
@@ -250,9 +303,9 @@ public class PloyeeProfileActivity extends BaseActivity implements OnMapReadyCal
 
     private ProfileGson.Data gatheredData() {
         ProfileGson.Data data;
-        if(null != mData){
+        if (null != mData) {
             data = mData.cloneThis();
-        }else{
+        } else {
             data = new ProfileGson.Data();
         }
         data.setAboutMe(extractString(mEditTextAboutMe));
@@ -268,6 +321,7 @@ public class PloyeeProfileActivity extends BaseActivity implements OnMapReadyCal
     private void initView() {
         mButtonEmail.setOnClickListener(this);
         mButtonPhone.setOnClickListener(this);
+        mImageButtonCheckin.setOnClickListener(this);
         setRefreshLayout(mSwipeRefreshLayout, new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -294,11 +348,28 @@ public class PloyeeProfileActivity extends BaseActivity implements OnMapReadyCal
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
-        mMap = googleMap;
-        if (mMap != null) {
-            mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
-            mMap.getUiSettings().setZoomControlsEnabled(true);
+        mGoogleMap = googleMap;
+        if (mGoogleMap != null) {
+            mGoogleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+            moveCameraToCurrentLocation();
+        }
+    }
 
+    private void moveCameraToCurrentLocation() {
+        if (mGoogleMap != null && null != mGoogleApiClient) {
+            MyLocationUtils.getLastKnownLocation(this, mGoogleApiClient, new Action1<Location>() {
+                @Override
+                public void call(Location location) {
+                    if(null != location){
+                        LatLng latlng = new LatLng(location.getLatitude(), location.getLongitude());
+                        mGoogleMap.moveCamera(CameraUpdateFactory.newLatLng(latlng));
+                        mGoogleMap.animateCamera(CameraUpdateFactory.zoomTo(17));
+
+                        mGoogleMap.addMarker(new MarkerOptions().position(latlng));
+                    }
+
+                }
+            });
         }
     }
 
@@ -311,10 +382,28 @@ public class PloyeeProfileActivity extends BaseActivity implements OnMapReadyCal
             mButtonPhone.setActivated(!mButtonPhone.isActivated());
         } else if (id == mFabProfileImage.getId()) {
             showUploadPhotoFragment();
+        } else if (id == mImageButtonCheckin.getId()) {
+            checkInAndShowCurrentAddress();
         }
     }
 
-    private void dummyData(){
+
+    private void checkInAndShowCurrentAddress() {
+        MyLocationUtils.getLastKnownLocation(this, mGoogleApiClient, true, new Action1<Location>() {
+            @Override
+            public void call(Location location) {
+                if(null != location){
+                    moveCameraToCurrentLocation();
+                    String address = MyLocationUtils.getCompleteAddressString(PloyeeProfileActivity.this, location.getLatitude(), location.getLongitude());
+                    mTextViewAddress.setText(address);
+                }
+
+            }
+        });
+
+    }
+
+    private void dummyData() {
         mEditTextProfileWork.setText("workๆๆๆๆ");
         mEditTextInterest.setText("ก้สนใจยู่อิอิ");
         mEditTextEducation.setText("เอดูดุ้000");
@@ -355,6 +444,22 @@ public class PloyeeProfileActivity extends BaseActivity implements OnMapReadyCal
 
     @Override
     public void onPageScrollStateChanged(int state) {
+
+    }
+
+    @Override
+    public void onConnected(@Nullable Bundle bundle) {
+        initMap();
+    }
+
+
+    @Override
+    public void onConnectionSuspended(int i) {
+
+    }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
 
     }
 }

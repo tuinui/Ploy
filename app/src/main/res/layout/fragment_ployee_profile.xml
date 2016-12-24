@@ -76,26 +76,28 @@
 
                     <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="?attr/actionBarSize"
+                        android:layout_height="wrap_content"
+                        android:minHeight="?attr/actionBarSize"
                         android:orientation="horizontal">
 
-                        <com.nos.ploy.custom.view.RatioImageView
+                        <android.support.v7.widget.AppCompatImageButton
+                            android:id="@+id/imagebutton_ployee_profile_checkin"
                             android:layout_width="wrap_content"
                             android:layout_height="match_parent"
                             android:layout_weight="0"
-                            android:background="@color/colorPrimary"
+                            android:backgroundTint="@color/colorPrimary"
                             android:padding="16dp"
-                            android:src="@drawable/ic_ployee_location_30dp"
-                            app:ratioHeight="9"
-                            app:ratioWidth="16" />
+                            android:src="@drawable/ic_ployee_location_30dp" />
 
                         <TextView
                             android:id="@+id/textview_ployee_profile_address"
                             android:layout_width="match_parent"
-                            android:layout_height="match_parent"
+                            android:layout_height="wrap_content"
                             android:layout_weight="1"
+                            android:ellipsize="end"
                             android:gravity="center"
-                            android:text="75116 Paris, lle-de-Frence" />
+                            android:padding="4dp"
+                            tools:text="@string/lorem_ipsum" />
 
 
                     </LinearLayout>
