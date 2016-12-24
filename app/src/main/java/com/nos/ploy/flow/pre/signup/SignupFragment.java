@@ -26,6 +26,7 @@ import com.nos.ploy.api.authentication.AuthenticationApi;
 import com.nos.ploy.api.authentication.model.AccountGson;
 import com.nos.ploy.api.authentication.model.PostSignupGson;
 import com.nos.ploy.api.base.RetrofitCallUtils;
+import com.nos.ploy.api.base.response.ResponseMessage;
 import com.nos.ploy.base.BaseFragment;
 import com.nos.ploy.utils.DatePickerUtils;
 import com.nos.ploy.utils.ImagePickerUtils;
@@ -308,7 +309,7 @@ public class SignUpFragment extends BaseFragment implements View.OnClickListener
             }
 
             @Override
-            public void onDataFailure(String failCause) {
+            public void onDataFailure(ResponseMessage failCause) {
                 dismissLoading();
             }
         }).enqueue(context);
@@ -337,7 +338,7 @@ public class SignUpFragment extends BaseFragment implements View.OnClickListener
                     }
 
                     @Override
-                    public void onDataFailure(String failCause) {
+                    public void onDataFailure(ResponseMessage failCause) {
                         dismissLoading();
                         onFinishUpload.call(false);
                     }

@@ -37,12 +37,8 @@ public class ImageSliderPagerAdapter extends PagerAdapter {
         if (null == images || images.isEmpty()) {
             mDatas.add(mEmptyData);
         } else {
-            for (int i = 0; i < 20; i++) {
-                mDatas.addAll(images);
-            }
-
+            mDatas.addAll(images);
         }
-
         notifyDataSetChanged();
     }
 

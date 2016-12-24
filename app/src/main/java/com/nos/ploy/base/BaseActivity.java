@@ -8,9 +8,11 @@ import android.os.Bundle;
 import android.support.annotation.IdRes;
 import android.support.annotation.StringRes;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.EditText;
 
 import com.akexorcist.localizationactivity.LocalizationActivity;
 import com.nos.ploy.DrawerController;
@@ -32,7 +34,8 @@ public class BaseActivity extends LocalizationActivity {
     private boolean isActivityDestroyed = false;
     private ProgressDialog mProgressDialog;
     protected Long mUserId;
-
+    private SwipeRefreshLayout mRefreshLayout;
+    private boolean isRefreshing;
 
     @Override
     protected void onDestroy() {
@@ -164,5 +167,91 @@ public class BaseActivity extends LocalizationActivity {
 
     protected boolean isActivityReady() {
         return !isFinishing() && !isActivityDestroyedCompat();
+    }
+
+    protected void showRefreshing() {
+        if (mRefreshLayout == null) {
+            showLoading();
+            return;
+        }
+        if (!isRefreshing) {
+            isRefreshing = true;
+            mRefreshLayout.setRefreshing(true);
+        }
+    }
+    protected void setRefreshLayout(SwipeRefreshLayout swipeRefreshLayout, final SwipeRefreshLayout.OnRefreshListener listener) {
+        if (null == swipeRefreshLayout) {
+            return;
+        }
+        this.mRefreshLayout = swipeRefreshLayout;
+        mRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                isRefreshing = true;
+                listener.onRefresh();
+            }
+        });
+    }
+    protected void dismissRefreshing() {
+        if (mRefreshLayout == null) {
+            dismissLoading();
+            return;
+        }
+        if (isRefreshing) {
+            isRefreshing = false;
+            mRefreshLayout.setRefreshing(false);
+        }
+    }
+
+    protected String extractString(EditText editText) {
+        if (null != editText && null != editText.getText() && !TextUtils.isEmpty(editText.getText())) {
+            return editText.getText().toString();
+        } else {
+            return "";
+        }
+    }
+
+    protected long extractLong(EditText editText) {
+        if (null != editText && null != editText.getText() && !TextUtils.isEmpty(editText.getText())) {
+            String text = editText.getText().toString();
+            try {
+                return Long.parseLong(text);
+            } catch (NumberFormatException e) {
+                return 0;
+            }
+        } else {
+            return 0;
+        }
+    }
+
+
+    protected double extractDouble(EditText editText) {
+        if (null != editText && null != editText.getText() && !TextUtils.isEmpty(editText.getText())) {
+            String text = editText.getText().toString();
+            try {
+                return Double.parseDouble(text);
+            } catch (NumberFormatException e) {
+                if (!TextUtils.isEmpty(text) && text.contains(",")) {
+                    text = String.valueOf(TextUtils.replace(text, new String[]{","}, new String[]{""}));
+                    return extractDouble(text);
+                } else {
+                    return -404;
+                }
+            }
+        } else {
+            return -404;
+        }
+    }
+
+    protected double extractDouble(String s) {
+        if (!TextUtils.isEmpty(s)) {
+            try {
+                return Double.parseDouble(s);
+            } catch (NumberFormatException e) {
+                return 0;
+            }
+        } else {
+            return 0;
+        }
     }
 }

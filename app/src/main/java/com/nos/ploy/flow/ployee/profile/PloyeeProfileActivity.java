@@ -1,13 +1,17 @@
 package com.nos.ploy.flow.ployee.profile;
 
+import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.text.TextUtilsCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.CardView;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -24,15 +28,18 @@ import com.nos.ploy.api.account.AccountApi;
 import com.nos.ploy.api.account.model.ProfileGson;
 import com.nos.ploy.api.account.model.ProfileImageGson;
 import com.nos.ploy.api.base.RetrofitCallUtils;
+import com.nos.ploy.api.base.response.ResponseMessage;
 import com.nos.ploy.api.utils.loader.AccountInfoLoader;
 import com.nos.ploy.base.BaseActivity;
 import com.nos.ploy.custom.view.WorkAroundMapFragment;
 import com.nos.ploy.flow.ployee.profile.upload.UploadPhotoFragment;
 import com.nos.ploy.utils.FragmentTransactionUtils;
+import com.nos.ploy.utils.RecyclerUtils;
 import com.rengwuxian.materialedittext.MaterialEditText;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import butterknife.BindDrawable;
 import butterknife.BindString;
@@ -47,6 +54,8 @@ import rx.functions.Action1;
 public class PloyeeProfileActivity extends BaseActivity implements OnMapReadyCallback, View.OnClickListener, ViewPager.OnPageChangeListener {
     @BindView(R.id.button_ployee_profile_show_email)
     Button mButtonEmail;
+    @BindView(R.id.button_ployee_profile_show_phone_no)
+    Button mButtonPhone;
     @BindView(R.id.edittext_ployee_profile_about_me)
     MaterialEditText mEditTextAboutMe;
     @BindView(R.id.edittext_ployee_profile_education)
@@ -73,40 +82,40 @@ public class PloyeeProfileActivity extends BaseActivity implements OnMapReadyCal
     ViewPager mViewPagerSlider;
     @BindView(R.id.swiperefreshlayout_ployee_profile)
     SwipeRefreshLayout mSwipeRefreshLayout;
-    @BindView(R.id.cardview_ployee_profile_image_container)
-    CardView mCardViewImageContainer;
     @BindDrawable(R.drawable.nonselecteditem_dot)
     Drawable mDrawableNonSelecteddot;
     @BindDrawable(R.drawable.selecteditem_dot)
     Drawable mDrawableSelectedDot;
 
     private GoogleMap mMap;
-    private WorkAroundMapFragment mMapFragment = WorkAroundMapFragment.newInstance();
+    private SupportMapFragment mMapFragment = SupportMapFragment.newInstance();
     private AccountApi mApi;
     private ProfileGson.Data mData;
-    private SwipeRefreshLayout.OnRefreshListener mOnRefreshListener = new SwipeRefreshLayout.OnRefreshListener() {
-        @Override
-        public void onRefresh() {
-            refreshData();
-        }
-    };
 
+    private boolean shouldRequestCallSave = false;
     private RetrofitCallUtils.RetrofitCallback<ProfileGson> mCallbackLoadData = new RetrofitCallUtils.RetrofitCallback<ProfileGson>() {
         @Override
         public void onDataSuccess(ProfileGson data) {
+            dismissLoading();
+            dismissRefreshing();
             if (null != data && null != data.getData()) {
                 bindData(data.getData());
             }
         }
 
         @Override
-        public void onDataFailure(String failCause) {
+        public void onDataFailure(ResponseMessage failCause) {
+            dismissLoading();
+            dismissRefreshing();
+            if (TextUtils.equals(failCause.getMessageCode(), ResponseMessage.CODE_DATA_NOT_FOUND)) {
+                shouldRequestCallSave = true;
+            }
 
         }
     };
     private ImageSliderPagerAdapter mAdapter;
     private int mDotsCount;
-    private ImageView[] mImageViewDots;
+    private List<ImageView> mImageViewDots = new ArrayList<>();
 
 
     private void bindData(ProfileGson.Data data) {
@@ -116,12 +125,15 @@ public class PloyeeProfileActivity extends BaseActivity implements OnMapReadyCal
             mEditTextEducation.setText(data.getEducation());
             mEditTextInterest.setText(data.getInterest());
             mEditTextProfileWork.setText(data.getWork());
+            mButtonEmail.setActivated(data.isContactEmail());
+            mButtonPhone.setActivated(data.isContactPhone());
         }
 
     }
 
-    private void refreshData() {
-        RetrofitCallUtils.with(mApi.getProfileGson(mUserId), mCallbackLoadData);
+    private void refreshData(Context context) {
+        showRefreshing();
+        RetrofitCallUtils.with(mApi.getProfileGson(mUserId), mCallbackLoadData).enqueue(context);
         refreshSlider();
     }
 
@@ -135,8 +147,7 @@ public class PloyeeProfileActivity extends BaseActivity implements OnMapReadyCal
         initToolbar();
         initView();
         initSlider();
-
-
+//        dummyData();
     }
 
     private void initSlider() {
@@ -148,26 +159,30 @@ public class PloyeeProfileActivity extends BaseActivity implements OnMapReadyCal
     }
 
     private void setUiPageViewController() {
-
+        mLinearLayoutDotsContainer.removeAllViews();
         mDotsCount = mAdapter.getCount();
-        if(mDotsCount > 0){
-            mImageViewDots = new ImageView[mDotsCount];
+        if (mDotsCount > 0) {
+            mImageViewDots.clear();
+
 
             for (int i = 0; i < mDotsCount; i++) {
-                mImageViewDots[i] = new ImageView(this);
-                mImageViewDots[i].setImageDrawable(mDrawableNonSelecteddot);
-
+                ImageView img = new ImageView(this);
+                img.setImageDrawable(mDrawableNonSelecteddot);
                 LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
                         LinearLayout.LayoutParams.WRAP_CONTENT,
                         LinearLayout.LayoutParams.WRAP_CONTENT
                 );
 
                 params.setMargins(4, 0, 4, 0);
+                mLinearLayoutDotsContainer.addView(img, params);
+                mImageViewDots.add(img);
 
-                mLinearLayoutDotsContainer.addView(mImageViewDots[i], params);
+
+            }
+            if (RecyclerUtils.isAvailableData(mImageViewDots, 0)) {
+                mImageViewDots.get(0).setImageDrawable(mDrawableSelectedDot);
             }
 
-            mImageViewDots[0].setImageDrawable(mDrawableSelectedDot);
         }
 
     }
@@ -202,7 +217,7 @@ public class PloyeeProfileActivity extends BaseActivity implements OnMapReadyCal
     public void onResume() {
         super.onResume();
         if (null == mData) {
-            refreshData();
+            refreshData(PloyeeProfileActivity.this);
         }
     }
 
@@ -225,15 +240,42 @@ public class PloyeeProfileActivity extends BaseActivity implements OnMapReadyCal
     }
 
     private void onClickDone() {
+        showRefreshing();
+        if (shouldRequestCallSave) {
+            RetrofitCallUtils.with(mApi.postSaveProfileGson(gatheredData()), mCallbackLoadData).enqueue(this);
+        } else {
+            RetrofitCallUtils.with(mApi.postUpdateProfileGson(gatheredData()), mCallbackLoadData).enqueue(this);
+        }
+    }
 
+    private ProfileGson.Data gatheredData() {
+        ProfileGson.Data data;
+        if(null != mData){
+            data = mData.cloneThis();
+        }else{
+            data = new ProfileGson.Data();
+        }
+        data.setAboutMe(extractString(mEditTextAboutMe));
+        data.setEducation(extractString(mEditTextEducation));
+        data.setInterest(extractString(mEditTextInterest));
+        data.setUserId(mUserId);
+        data.setWork(extractString(mEditTextProfileWork));
+        data.setContactEmail(mButtonEmail.isActivated());
+        data.setContactPhone(mButtonPhone.isActivated());
+        return data;
     }
 
     private void initView() {
         mButtonEmail.setOnClickListener(this);
-        mSwipeRefreshLayout.setOnRefreshListener(mOnRefreshListener);
+        mButtonPhone.setOnClickListener(this);
+        setRefreshLayout(mSwipeRefreshLayout, new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                refreshData(mSwipeRefreshLayout.getContext());
+            }
+        });
 //        mSliderLayout.setOnClickListener(this);
         mFabProfileImage.setOnClickListener(this);
-        mCardViewImageContainer.setOnClickListener(this);
 //        mSliderLayout.stopAutoCycle();
 
     }
@@ -242,7 +284,7 @@ public class PloyeeProfileActivity extends BaseActivity implements OnMapReadyCal
         FragmentTransactionUtils.addFragmentToActivity(getSupportFragmentManager(), mMapFragment, R.id.framelayout_ployee_profile_maps_container);
         if (null != mMapFragment) {
             mMapFragment.getMapAsync(this);
-            if(null != mMapFragment.getView()){
+            if (null != mMapFragment.getView()) {
                 mMapFragment.getView().setClickable(false);
             }
 
@@ -256,12 +298,6 @@ public class PloyeeProfileActivity extends BaseActivity implements OnMapReadyCal
         if (mMap != null) {
             mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
             mMap.getUiSettings().setZoomControlsEnabled(true);
-            mMapFragment.setListener(new WorkAroundMapFragment.OnTouchListener() {
-                @Override
-                public void onTouch() {
-                    mScrollView.requestDisallowInterceptTouchEvent(true);
-                }
-            });
 
         }
     }
@@ -271,21 +307,30 @@ public class PloyeeProfileActivity extends BaseActivity implements OnMapReadyCal
         int id = v.getId();
         if (id == mButtonEmail.getId()) {
             mButtonEmail.setActivated(!mButtonEmail.isActivated());
-        /*} else if (id == mSliderLayout.getId()) {
-            Toast.makeText(this, "a;sldkfj;laskdfj,", Toast.LENGTH_LONG).show();
-        }*/
+        } else if (id == mButtonPhone.getId()) {
+            mButtonPhone.setActivated(!mButtonPhone.isActivated());
         } else if (id == mFabProfileImage.getId()) {
             showUploadPhotoFragment();
-        } else if (id == mCardViewImageContainer.getId()) {
-            Toast.makeText(this, "a;sldkfj;laskdfj,", Toast.LENGTH_LONG).show();
         }
+    }
+
+    private void dummyData(){
+        mEditTextProfileWork.setText("workๆๆๆๆ");
+        mEditTextInterest.setText("ก้สนใจยู่อิอิ");
+        mEditTextEducation.setText("เอดูดุ้000");
+        mEditTextAboutMe.setText("หล่อ");
     }
 
     private void showUploadPhotoFragment() {
         AccountInfoLoader.getProfileImage(this, mUserId, false, new Action1<List<ProfileImageGson.Data>>() {
                     @Override
                     public void call(List<ProfileImageGson.Data> datas) {
-                        showFragment(UploadPhotoFragment.newInstance(mUserId, new ArrayList<>(datas)));
+                        showFragment(UploadPhotoFragment.newInstance(mUserId, new ArrayList<>(datas), new UploadPhotoFragment.OnDataChangeListener() {
+                            @Override
+                            public void onDataChange() {
+                                refreshData(PloyeeProfileActivity.this);
+                            }
+                        }));
                     }
                 }
         );
@@ -299,10 +344,14 @@ public class PloyeeProfileActivity extends BaseActivity implements OnMapReadyCal
     @Override
     public void onPageSelected(int position) {
         for (int i = 0; i < mDotsCount; i++) {
-            mImageViewDots[i].setImageDrawable(mDrawableNonSelecteddot);
-        }
+            if (RecyclerUtils.isAvailableData(mImageViewDots, i)) {
+                mImageViewDots.get(i).setImageDrawable(mDrawableNonSelecteddot);
+            }
 
-        mImageViewDots[position].setImageDrawable(mDrawableSelectedDot);
+        }
+        if (RecyclerUtils.isAvailableData(mImageViewDots, position)) {
+            mImageViewDots.get(position).setImageDrawable(mDrawableSelectedDot);
+        }
     }
 
     @Override

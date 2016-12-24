@@ -22,6 +22,7 @@ import com.nos.ploy.api.authentication.AuthenticationApi;
 import com.nos.ploy.api.authentication.model.PostLoginFacebookGson;
 import com.nos.ploy.api.authentication.model.UserTokenGson;
 import com.nos.ploy.api.base.RetrofitCallUtils;
+import com.nos.ploy.api.base.response.ResponseMessage;
 import com.nos.ploy.base.BaseActivity;
 import com.nos.ploy.cache.UserTokenManager;
 import com.nos.ploy.flow.ployee.home.PloyeeHomeActivity;
@@ -116,7 +117,7 @@ public class SignInSignupActivity extends BaseActivity implements View.OnClickLi
                             }
 
                             @Override
-                            public void onDataFailure(String failCause) {
+                            public void onDataFailure(ResponseMessage failCause) {
                                 dismissLoading();
                             }
                         })

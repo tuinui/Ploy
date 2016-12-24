@@ -13,6 +13,7 @@ import android.widget.Button;
 
 import com.nos.ploy.R;
 import com.nos.ploy.api.base.RetrofitCallUtils;
+import com.nos.ploy.api.base.response.ResponseMessage;
 import com.nos.ploy.api.ployee.PloyeeApi;
 import com.nos.ploy.api.ployee.model.PloyeeAvailiabilityGson;
 import com.nos.ploy.base.BaseFragment;
@@ -124,7 +125,7 @@ public class PloyeeAvailabilityFragment extends BaseFragment implements View.OnC
             }
 
             @Override
-            public void onDataFailure(String failCause) {
+            public void onDataFailure(ResponseMessage failCause) {
                 dismissRefreshing();
             }
         }).enqueue(getContext());
@@ -201,7 +202,7 @@ public class PloyeeAvailabilityFragment extends BaseFragment implements View.OnC
             }
 
             @Override
-            public void onDataFailure(String failCause) {
+            public void onDataFailure(ResponseMessage failCause) {
                 refreshData();
             }
         }).enqueue(getContext());

@@ -2,6 +2,7 @@ package com.nos.ploy.flow.ployee.home.content.service.detail.contract;
 
 import com.nos.ploy.api.base.RetrofitCallUtils;
 import com.nos.ploy.api.base.response.BaseResponse;
+import com.nos.ploy.api.base.response.ResponseMessage;
 import com.nos.ploy.api.ployer.model.PloyerServiceDetailGson;
 import com.nos.ploy.api.ployer.model.PostGetPloyerServiceDetailGson;
 import com.nos.ploy.api.ployer.PloyerApi;
@@ -30,7 +31,7 @@ public class PloyeeServiceDetailPresenter implements PloyeeServiceDetailContract
         }
 
         @Override
-        public void onDataFailure(String failCause) {
+        public void onDataFailure(ResponseMessage failCause) {
             mView.setRefreshing(false);
         }
     };
@@ -45,7 +46,7 @@ public class PloyeeServiceDetailPresenter implements PloyeeServiceDetailContract
         }
 
         @Override
-        public void onDataFailure(String failCause) {
+        public void onDataFailure(ResponseMessage failCause) {
             mView.showLoadingDialog(false);
         }
     };

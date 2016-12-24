@@ -19,12 +19,19 @@ public class ResponseMessage{
     public static final String CODE_EXISTING_INVALID_EMAIL_OR_PASSWORD = "201";
     public static final String CODE_EXISTING_INVALID_ACCOUNT_ROLE_USER = "202";
 
+    public static final String CODE_UNKNOWN = "-404";
+
     @SerializedName("msgCode")
     private String messageCode;
     @SerializedName("msgDesc")
     private String messageDescription;
 
     public ResponseMessage() {
+    }
+
+    public ResponseMessage(String messageDescription){
+        this.messageDescription = messageDescription;
+        this.messageCode = CODE_UNKNOWN;
     }
 
     public String getMessageCode() {

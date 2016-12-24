@@ -4,6 +4,7 @@ import android.content.Context;
 import android.widget.Toast;
 
 import com.nos.ploy.api.base.response.BaseResponse;
+import com.nos.ploy.api.base.response.ResponseMessage;
 import com.nos.ploy.base.BaseActivity;
 
 import retrofit2.Call;
@@ -22,7 +23,7 @@ public abstract class RetrofitCallUtils<T> {
 
     public abstract void onDataSuccess(T data);
 
-    public abstract void onDataFailure(String failCause);
+    public abstract void onDataFailure(ResponseMessage failCause);
 
     public RetrofitCallUtils(Call<T> call) {
         this.mCall = call;
@@ -37,7 +38,7 @@ public abstract class RetrofitCallUtils<T> {
             }
 
             @Override
-            public void onDataFailure(String failCause) {
+            public void onDataFailure(ResponseMessage failCause) {
                 callback.onDataFailure(failCause);
             }
         };
@@ -64,23 +65,23 @@ public abstract class RetrofitCallUtils<T> {
                                 }
 
                             } else {
-                                onDataFailure("null data");
+                                onDataFailure(new ResponseMessage("null data"));
                                 showToast(context, "null data");
                             }
                         } else {
-                            onDataFailure(baseResponse.getErrorMessage());
+                            onDataFailure(baseResponse.getResponseMessage());
                             showToast(context, baseResponse.getErrorMessage());
                         }
                     } else {
                         showToast(context, "isNotSuccessful");
-                        onDataFailure("isNotSuccessful");
+                        onDataFailure(new ResponseMessage("isNotSuccessful"));
                     }
                 }
 
                 @Override
                 public void onFailure(Call call, Throwable t) {
                     if (null != t && null != t.getMessage()) {
-                        onDataFailure(t.getMessage());
+                        onDataFailure(new ResponseMessage());
                         showToast(context, t.getMessage());
                     }
                 }
@@ -107,7 +108,7 @@ public abstract class RetrofitCallUtils<T> {
     public static interface RetrofitCallback<T> {
         void onDataSuccess(T data);
 
-        void onDataFailure(String failCause);
+        void onDataFailure(ResponseMessage failCause);
     }
 
 

@@ -28,4 +28,10 @@ public interface AccountApi {
     @GET("/api/user/profile")
     Call<ProfileGson> getProfileGson(@Query("userId") long userId);
 
+    @POST("/api/user/profile/save")
+    Call<ProfileGson> postSaveProfileGson(@Body ProfileGson.Data data);
+
+    @POST("/api/user/profile/update")
+    Call<ProfileGson> postUpdateProfileGson(@Body ProfileGson.Data data);
+
 }

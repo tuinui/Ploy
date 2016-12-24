@@ -27,6 +27,7 @@ import com.nos.ploy.api.authentication.model.PostLoginFacebookGson;
 import com.nos.ploy.api.authentication.model.PostLoginGson;
 import com.nos.ploy.api.authentication.model.UserTokenGson;
 import com.nos.ploy.api.base.RetrofitCallUtils;
+import com.nos.ploy.api.base.response.ResponseMessage;
 import com.nos.ploy.base.BaseFragment;
 import com.nos.ploy.cache.UserTokenManager;
 import com.nos.ploy.flow.ployee.home.PloyeeHomeActivity;
@@ -156,7 +157,7 @@ public class SignInFragment extends BaseFragment implements View.OnClickListener
                             }
 
                             @Override
-                            public void onDataFailure(String failCause) {
+                            public void onDataFailure(ResponseMessage failCause) {
                                 dismissLoading();
                             }
                         })
@@ -202,7 +203,7 @@ public class SignInFragment extends BaseFragment implements View.OnClickListener
             }
 
             @Override
-            public void onDataFailure(String failCause) {
+            public void onDataFailure(ResponseMessage failCause) {
                 dismissLoading();
             }
         }).enqueue(context);
