@@ -105,7 +105,36 @@ public class PloyeeHomeActivity extends BaseActivity implements View.OnClickList
 
     private PloyeeServiceListFragment mListFragment;
     private PloyeeAvailabilityFragment mAvailabilityFragment;
-//    private PloyeeProfileActivity mProfileFragment = PloyeeProfileActivity.newInstance();
+    //    private PloyeeProfileActivity mProfileFragment = PloyeeProfileActivity.newInstance();
+
+    private Action1<List<ProfileImageGson.Data>> mOnLoadProfileFinish = new Action1<List<ProfileImageGson.Data>>() {
+        @Override
+        public void call(List<ProfileImageGson.Data> datas) {
+            if (null != datas && !datas.isEmpty()) {
+                final ProfileImageGson.Data data = datas.get(0);
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Glide.with(PloyeeHomeActivity.this).load(data.getImagePath()).into(mImageViewProfile);
+                    }
+                });
+            }
+        }
+    };
+
+    private Action1<AccountGson.Data> mOnLoadAccountFinish = new Action1<AccountGson.Data>() {
+        @Override
+        public void call(final AccountGson.Data data) {
+            if (null != data) {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        mTextViewUsername.setText(data.getName());
+                    }
+                });
+            }
+        }
+    };
     private DrawerController.OnMenuItemSelectedListener mOnMenuItemSelectedListener = new DrawerController.OnMenuItemSelectedListener() {
         @Override
         public void onMenuItemSelected(@DrawerController.Menu int menu) {
@@ -149,35 +178,15 @@ public class PloyeeHomeActivity extends BaseActivity implements View.OnClickList
     private void initView() {
         mViewPager.setPagingEnabled(false);
         mLinearLayoutHeaderContainer.setOnClickListener(this);
-        AccountInfoLoader.getProfileImage(this, mUserId, new Action1<List<ProfileImageGson.Data>>() {
-            @Override
-            public void call(List<ProfileImageGson.Data> datas) {
-                if (null != datas && !datas.isEmpty()) {
-                    final ProfileImageGson.Data data = datas.get(0);
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            Glide.with(PloyeeHomeActivity.this).load(data.getImagePath()).into(mImageViewProfile);
-                        }
-                    });
-                }
-            }
-        });
-        AccountInfoLoader.getAccountGson(this, mUserId, new Action1<AccountGson.Data>() {
-            @Override
-            public void call(final AccountGson.Data data) {
-                if (null != data) {
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            mTextViewUsername.setText(data.getName());
-                        }
-                    });
-                }
-            }
-        });
     }
 
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        AccountInfoLoader.getProfileImage(this, mUserId, mOnLoadProfileFinish);
+        AccountInfoLoader.getAccountGson(this, mUserId, mOnLoadAccountFinish);
+    }
 
     private void initFragment() {
         mListFragment = PloyeeServiceListFragment.newInstance(mUserId);
@@ -220,8 +229,8 @@ public class PloyeeHomeActivity extends BaseActivity implements View.OnClickList
             onClickBottomMenu(SERVICE_LIST);
         } else if (id == mImageViewFooterAvailability.getId()) {
             onClickBottomMenu(AVAILABLITY);
-        }else if(id == mLinearLayoutHeaderContainer.getId()){
-            IntentUtils.startActivity(this,PloyeeProfileActivity.class);
+        } else if (id == mLinearLayoutHeaderContainer.getId()) {
+            IntentUtils.startActivity(this, PloyeeProfileActivity.class);
         }
     }
 

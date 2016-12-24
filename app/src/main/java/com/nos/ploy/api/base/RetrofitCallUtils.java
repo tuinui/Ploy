@@ -1,6 +1,7 @@
 package com.nos.ploy.api.base;
 
 import android.content.Context;
+import android.text.TextUtils;
 import android.widget.Toast;
 
 import com.google.gson.internal.LinkedTreeMap;
@@ -52,8 +53,7 @@ public abstract class RetrofitCallUtils<T> {
                 public void onResponse(Call call, Response response) {
                     if (null != response
                             && response.isSuccessful()
-                            && null != response.body()
-                            && response.body() instanceof BaseResponse) {
+                            && null != response.body()) {
 
                         if (response.body() instanceof BaseResponse) {
                             BaseResponse<T> baseResponse = (BaseResponse<T>) response.body();
@@ -75,8 +75,9 @@ public abstract class RetrofitCallUtils<T> {
                             }
                         } else if (response.body() instanceof LinkedTreeMap) {
                             LinkedTreeMap data = (LinkedTreeMap) response.body();
-                            if (null != data.get("responseMsg") && data.get("responseMsg") instanceof ResponseMessage) {
-                                if (((ResponseMessage) data.get("responseMsg")).isSuccess()) {
+                            if (null != data.get("responseMsg") && data.get("responseMsg") instanceof LinkedTreeMap && ((LinkedTreeMap) data.get("responseMsg")).get("msgCode") instanceof String) {
+                                String messageCode = (String) ((LinkedTreeMap) data.get("responseMsg")).get("msgCode");
+                                if (TextUtils.equals(messageCode, "000")) {
                                     onDataSuccess(null);
                                 } else {
                                     showToast(context, "isNotSuccessful");

@@ -48,15 +48,23 @@ public class ImageSliderPagerAdapter extends PagerAdapter {
     }
 
     @Override
+    public int getItemPosition(Object object) {
+        return PagerAdapter.POSITION_NONE;
+    }
+
+    @Override
     public boolean isViewFromObject(View view, Object object) {
         return view == ((LinearLayout) object);
     }
+
+
 
     @Override
     public Object instantiateItem(ViewGroup container, int position) {
         View itemView = LayoutInflater.from(mContext).inflate(R.layout.view_profile_image_slider_item, container, false);
 
         ImageView imageView = (ImageView) itemView.findViewById(R.id.imageview_profile_image_slider_item);
+        imageView.setImageDrawable(null);
         if (RecyclerUtils.isAvailableData(mDatas, position)) {
             ProfileImageGson.Data data = mDatas.get(position);
             if (!TextUtils.isEmpty(data.getImagePath())) {
