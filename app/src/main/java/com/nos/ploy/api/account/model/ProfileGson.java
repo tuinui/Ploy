@@ -42,7 +42,7 @@ public class ProfileGson extends BaseResponse<ProfileGson.Data> {
         @SerializedName("userProfileId")
         private Long userProfileId;
         @SerializedName("userId")
-        private long userId;
+        private Long userId;
         @SerializedName("aboutMe")
         private String aboutMe;
         @SerializedName("education")
@@ -58,14 +58,14 @@ public class ProfileGson extends BaseResponse<ProfileGson.Data> {
         @SerializedName("location")
         private Location location = new Location();
         @SerializedName("contactPhone")
-        private boolean contactPhone;
+        private Boolean contactPhone;
         @SerializedName("contactEmail")
-        private boolean contactEmail;
+        private Boolean contactEmail;
 
         public Data() {
         }
 
-        private Data(Long userProfileId, long userId, String aboutMe, String education, String work, String interest, List<Language> language, List<Transport> transport, Location location,boolean contactPhone,boolean contactEmail) {
+        private Data(Long userProfileId, long userId, String aboutMe, String education, String work, String interest, List<Language> language, List<Transport> transport, Location location, boolean contactPhone, boolean contactEmail) {
             this.userProfileId = userProfileId;
             this.userId = userId;
             this.aboutMe = aboutMe;
@@ -79,8 +79,8 @@ public class ProfileGson extends BaseResponse<ProfileGson.Data> {
             this.contactPhone = contactPhone;
         }
 
-        public Data cloneThis(){
-            return new Data(null,userId,aboutMe,education,work,interest,language,transport,location,contactEmail,contactPhone);
+        public Data cloneThis() {
+            return new Data(null, userId, aboutMe, education, work, interest, language, transport, location, contactEmail, contactPhone);
         }
 
 
@@ -104,12 +104,12 @@ public class ProfileGson extends BaseResponse<ProfileGson.Data> {
             this.work = work;
         }
 
-        public boolean isContactPhone() {
-            return contactPhone;
+        public Boolean isContactPhone() {
+            return null != contactPhone && contactPhone;
         }
 
-        public boolean isContactEmail() {
-            return contactEmail;
+        public Boolean isContactEmail() {
+            return null != contactEmail && contactEmail;
         }
 
         public void setContactPhone(boolean contactPhone) {
@@ -136,8 +136,8 @@ public class ProfileGson extends BaseResponse<ProfileGson.Data> {
             this.location = location;
         }
 
-        public long getUserId() {
-            return userId;
+        public Long getUserId() {
+            return null != userId ? userId : Long.valueOf(0L);
         }
 
         public String getAboutMe() {
@@ -168,11 +168,11 @@ public class ProfileGson extends BaseResponse<ProfileGson.Data> {
             return location;
         }
 
-        public long getUserProfileId() {
-            return userProfileId;
+        public Long getUserProfileId() {
+            return null != userProfileId ? userProfileId : Long.valueOf(0L);
         }
 
-        private class Language {
+        public class Language {
             /*
               "spokenLanguageCode": "de",
         "spokenLanguageValue": "Germany"
@@ -185,6 +185,7 @@ public class ProfileGson extends BaseResponse<ProfileGson.Data> {
             public Language() {
             }
 
+
             public String getSpokenLanguageCode() {
                 return spokenLanguageCode;
             }
@@ -195,7 +196,7 @@ public class ProfileGson extends BaseResponse<ProfileGson.Data> {
         }
 
 
-        private class Transport {
+        public static class Transport {
             /*
             {
         "transportId": 2,
@@ -214,6 +215,10 @@ public class ProfileGson extends BaseResponse<ProfileGson.Data> {
             public Transport() {
             }
 
+            public Transport(long transportId) {
+                this.transportId = transportId;
+            }
+
             public long getTransportId() {
                 return transportId;
             }
@@ -223,7 +228,7 @@ public class ProfileGson extends BaseResponse<ProfileGson.Data> {
             }
         }
 
-        private class Location {
+        public static class Location {
             /*
                 "lat": 40.3342,
                 "lng": 20.333
@@ -236,12 +241,17 @@ public class ProfileGson extends BaseResponse<ProfileGson.Data> {
             public Location() {
             }
 
+            public Location(Double lat, Double lng) {
+                this.lat = lat;
+                this.lng = lng;
+            }
+
             public Double getLat() {
-                return lat;
+                return null != lat ? lat : Double.valueOf(0D);
             }
 
             public Double getLng() {
-                return lng;
+                return null != lng ? lng : Double.valueOf(0D);
             }
         }
     }

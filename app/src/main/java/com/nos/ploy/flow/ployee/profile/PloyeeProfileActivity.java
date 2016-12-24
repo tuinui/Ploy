@@ -12,6 +12,8 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.MenuItem;
@@ -22,6 +24,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
@@ -33,12 +36,15 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.nos.ploy.R;
 import com.nos.ploy.api.account.AccountApi;
+import com.nos.ploy.api.account.model.PostUpdateProfileGson;
 import com.nos.ploy.api.account.model.ProfileGson;
 import com.nos.ploy.api.account.model.ProfileImageGson;
+import com.nos.ploy.api.account.model.TransportGson;
 import com.nos.ploy.api.base.RetrofitCallUtils;
 import com.nos.ploy.api.base.response.ResponseMessage;
 import com.nos.ploy.api.utils.loader.AccountInfoLoader;
 import com.nos.ploy.base.BaseActivity;
+import com.nos.ploy.flow.ployee.home.content.availability.view.AvailabilityRecyclerAdapter;
 import com.nos.ploy.flow.ployee.profile.upload.UploadPhotoFragment;
 import com.nos.ploy.utils.FragmentTransactionUtils;
 import com.nos.ploy.utils.GoogleApiAvailabilityUtils;
@@ -47,6 +53,7 @@ import com.nos.ploy.utils.RecyclerUtils;
 import com.rengwuxian.materialedittext.MaterialEditText;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 import butterknife.BindDrawable;
@@ -76,6 +83,8 @@ public class PloyeeProfileActivity extends BaseActivity implements OnMapReadyCal
     MaterialEditText mEditTextInterest;
     @BindView(R.id.textview_ployee_profile_language_support)
     TextView mTExtViewLanguageSupport;
+    @BindView(R.id.recyclerview_ployee_profile_tranportation)
+    RecyclerView mRecyclerViewTransport;
     @BindView(R.id.toolbar_main)
     Toolbar mToolbar;
     @BindString(R.string.Profile)
@@ -98,33 +107,62 @@ public class PloyeeProfileActivity extends BaseActivity implements OnMapReadyCal
     Drawable mDrawableNonSelecteddot;
     @BindDrawable(R.drawable.selecteditem_dot)
     Drawable mDrawableSelectedDot;
-
     private GoogleMap mGoogleMap;
     private SupportMapFragment mMapFragment = SupportMapFragment.newInstance();
     private AccountApi mApi;
-    private ProfileGson.Data mData;
+    private PostUpdateProfileGson mData;
+    public LatLng mCurrentLatLng;
 
     private boolean shouldRequestCallSave = false;
 
-    private LocationListener mLocationManagerListener = new LocationListener() {
+    private TransportRecyclerAdapter mTransportRecyclerAdapter = new TransportRecyclerAdapter() {
         @Override
-        public void onLocationChanged(Location location) {
+        public void onBindViewHolder(final TransportRecyclerAdapter.ViewHolder holder, int position) {
+            if (RecyclerUtils.isAvailableData(mMapTransports, position)) {
+                TransportGson data = mMapTransports.get(position);
+                data.getId();
 
+//                Glide.with(holder.imgTransport.getContext()).load(data.getDrawable()).into(holder.imgTransport);
+                holder.imgTransport.setImageResource(data.getDrawable());
+                holder.tvTitle.setText(data.getTitle());
+
+                holder.imgTransport.setActivated(isTransportActivated(data.getId()));
+                holder.imgTransport.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (RecyclerUtils.isAvailableData(mMapTransports, holder.getAdapterPosition())) {
+                            TransportGson data = mMapTransports.get(holder.getAdapterPosition());
+                            toggleEnableTransport(data.getId(), holder.getAdapterPosition());
+                        }
+                    }
+                });
+            }
         }
 
-        @Override
-        public void onStatusChanged(String provider, int status, Bundle extras) {
 
+        private void toggleEnableTransport(long transportId, int position) {
+            if (isTransportActivated(transportId)) {
+                for (Long id : new ArrayList<>(mData.getTransport())) {
+                    if (id == transportId) {
+                        mData.getTransport().remove(id);
+                    }
+                }
+            } else {
+                if (null == mData.getTransport()) {
+                    ArrayList<Long> ids = new ArrayList<>();
+                    mData.setTransport(ids);
+                }
+                mData.getTransport().add(transportId);
+            }
+            if (getItemCount() > 0) {
+                notifyItemChanged(position);
+            }
         }
 
-        @Override
-        public void onProviderEnabled(String provider) {
-
-        }
 
         @Override
-        public void onProviderDisabled(String provider) {
-
+        public int getItemCount() {
+            return RecyclerUtils.getSize(mMapTransports);
         }
     };
     private RetrofitCallUtils.RetrofitCallback<ProfileGson> mCallbackLoadData = new RetrofitCallUtils.RetrofitCallback<ProfileGson>() {
@@ -151,11 +189,11 @@ public class PloyeeProfileActivity extends BaseActivity implements OnMapReadyCal
     private int mDotsCount;
     private List<ImageView> mImageViewDots = new ArrayList<>();
     private GoogleApiClient mGoogleApiClient;
-    private LocationManager mLocationManager;
+    private List<TransportGson> mMapTransports = new ArrayList<>();
 
 
     private void bindData(ProfileGson.Data data) {
-        mData = data;
+        mData = new PostUpdateProfileGson(data, mUserId);
         if (null != data) {
             mEditTextAboutMe.setText(data.getAboutMe());
             mEditTextEducation.setText(data.getEducation());
@@ -163,9 +201,17 @@ public class PloyeeProfileActivity extends BaseActivity implements OnMapReadyCal
             mEditTextProfileWork.setText(data.getWork());
             mButtonEmail.setActivated(data.isContactEmail());
             mButtonPhone.setActivated(data.isContactPhone());
+            mRecyclerViewTransport.setAdapter(mTransportRecyclerAdapter);
         }
 
+
     }
+
+
+    private boolean isTransportActivated(long transportId) {
+        return null != mData && null != mData.getTransport() && !mData.getTransport().isEmpty() && mData.getTransport().contains(transportId);
+    }
+
 
     private void refreshData(Context context) {
         showRefreshing();
@@ -182,16 +228,23 @@ public class PloyeeProfileActivity extends BaseActivity implements OnMapReadyCal
         initToolbar();
         initView();
         initSlider();
+        initRecyclerView();
         if (GoogleApiAvailabilityUtils.checkPlayServices(this)) {
             mGoogleApiClient = new GoogleApiClient.Builder(this, this, this).addApi(LocationServices.API).build();
         }
+    }
+
+    private void initRecyclerView() {
+        mRecyclerViewTransport.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false) {
+            @Override
+            public boolean canScrollVertically() {
+                return false;
+            }
+        });
+        mMapTransports.addAll(TransportGson.TRANSPORT_DATA);
 
     }
 
-    private void initLocationManager() {
-        mLocationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        mLocationManager.requestSingleUpdate(LocationManager.GPS_PROVIDER, mLocationManagerListener, null);
-    }
 
     private void initSlider() {
         mAdapter = new ImageSliderPagerAdapter(this);
@@ -206,8 +259,6 @@ public class PloyeeProfileActivity extends BaseActivity implements OnMapReadyCal
         mDotsCount = mAdapter.getCount();
         if (mDotsCount > 0) {
             mImageViewDots.clear();
-
-
             for (int i = 0; i < mDotsCount; i++) {
                 ImageView img = new ImageView(this);
                 img.setImageDrawable(mDrawableNonSelecteddot);
@@ -301,21 +352,25 @@ public class PloyeeProfileActivity extends BaseActivity implements OnMapReadyCal
         }
     }
 
-    private ProfileGson.Data gatheredData() {
-        ProfileGson.Data data;
-        if (null != mData) {
-            data = mData.cloneThis();
+    private PostUpdateProfileGson gatheredData() {
+        if (mData != null) {
+            mData.setAboutMe(extractString(mEditTextAboutMe));
+            mData.setEducation(extractString(mEditTextEducation));
+            mData.setInterest(extractString(mEditTextInterest));
+            mData.setUserId(mUserId);
+            mData.setWork(extractString(mEditTextProfileWork));
+            mData.setContactEmail(mButtonEmail.isActivated());
+            mData.setContactPhone(mButtonPhone.isActivated());
+            if (mCurrentLatLng != null) {
+                mData.setLocation(new ProfileGson.Data.Location(mCurrentLatLng.latitude, mCurrentLatLng.longitude));
+            }
+
+
+            return mData;
         } else {
-            data = new ProfileGson.Data();
+            return new PostUpdateProfileGson();
         }
-        data.setAboutMe(extractString(mEditTextAboutMe));
-        data.setEducation(extractString(mEditTextEducation));
-        data.setInterest(extractString(mEditTextInterest));
-        data.setUserId(mUserId);
-        data.setWork(extractString(mEditTextProfileWork));
-        data.setContactEmail(mButtonEmail.isActivated());
-        data.setContactPhone(mButtonPhone.isActivated());
-        return data;
+
     }
 
     private void initView() {
@@ -328,9 +383,7 @@ public class PloyeeProfileActivity extends BaseActivity implements OnMapReadyCal
                 refreshData(mSwipeRefreshLayout.getContext());
             }
         });
-//        mSliderLayout.setOnClickListener(this);
         mFabProfileImage.setOnClickListener(this);
-//        mSliderLayout.stopAutoCycle();
 
     }
 
@@ -358,16 +411,16 @@ public class PloyeeProfileActivity extends BaseActivity implements OnMapReadyCal
     private void moveCameraToCurrentLocation() {
         if (mGoogleMap != null && null != mGoogleApiClient) {
             MyLocationUtils.getLastKnownLocation(this, mGoogleApiClient, new Action1<Location>() {
+
                 @Override
                 public void call(Location location) {
-                    if(null != location){
+                    if (null != location) {
+                        mCurrentLatLng = new LatLng(location.getLatitude(), location.getLongitude());
                         LatLng latlng = new LatLng(location.getLatitude(), location.getLongitude());
                         mGoogleMap.moveCamera(CameraUpdateFactory.newLatLng(latlng));
                         mGoogleMap.animateCamera(CameraUpdateFactory.zoomTo(17));
-
                         mGoogleMap.addMarker(new MarkerOptions().position(latlng));
                     }
-
                 }
             });
         }
@@ -392,12 +445,12 @@ public class PloyeeProfileActivity extends BaseActivity implements OnMapReadyCal
         MyLocationUtils.getLastKnownLocation(this, mGoogleApiClient, true, new Action1<Location>() {
             @Override
             public void call(Location location) {
-                if(null != location){
+                if (null != location) {
+                    mCurrentLatLng = new LatLng(location.getLatitude(), location.getLongitude());
                     moveCameraToCurrentLocation();
                     String address = MyLocationUtils.getCompleteAddressString(PloyeeProfileActivity.this, location.getLatitude(), location.getLongitude());
                     mTextViewAddress.setText(address);
                 }
-
             }
         });
 
