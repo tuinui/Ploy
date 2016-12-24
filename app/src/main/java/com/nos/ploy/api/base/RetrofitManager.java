@@ -41,7 +41,7 @@ public class RetrofitManager {
 
     private static OkHttpClient getOkHttpClient(final Context context, final boolean withAuthen) {
         return new OkHttpClient.Builder()
-                .connectTimeout(5, TimeUnit.SECONDS)
+                .connectTimeout(60, TimeUnit.SECONDS)
                 .addInterceptor(new HttpLoggingInterceptor())
                 .addInterceptor(new Interceptor() {
                     @Override

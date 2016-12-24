@@ -39,6 +39,12 @@ public class PostUploadProfileImageGson {
         return this;
     }
 
+    public PostUploadProfileImageGson create(List<ImageBody> body){
+        this.imageBase64List.clear();
+        this.imageBase64List.addAll(body);
+        return this;
+    }
+
     public static class ImageBody {
         @SerializedName("imgId")
         private Long imgId;

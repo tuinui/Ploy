@@ -1,5 +1,6 @@
 package com.nos.ploy.flow.ployee.profile.upload;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -19,16 +20,17 @@ import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.BitmapImageViewTarget;
 import com.nos.ploy.R;
 import com.nos.ploy.api.account.AccountApi;
+import com.nos.ploy.api.account.model.PostDeleteProfileImageGson;
 import com.nos.ploy.api.account.model.PostUploadProfileImageGson;
 import com.nos.ploy.api.account.model.ProfileImageGson;
 import com.nos.ploy.api.base.RetrofitCallUtils;
-import com.nos.ploy.api.base.response.BaseResponse;
 import com.nos.ploy.api.base.response.ResponseMessage;
 import com.nos.ploy.api.utils.loader.AccountInfoLoader;
 import com.nos.ploy.base.BaseFragment;
 import com.nos.ploy.flow.ployee.profile.upload.view.UploadPhotoRecyclerAdapter;
 import com.nos.ploy.utils.ImagePickerUtils;
 import com.nos.ploy.utils.MyFileUtils;
+import com.nos.ploy.utils.PopupMenuUtils;
 import com.nos.ploy.utils.RecyclerUtils;
 
 import net.yazeed44.imagepicker.model.ImageEntry;
@@ -59,15 +61,29 @@ public class UploadPhotoFragment extends BaseFragment {
     @BindDrawable(R.drawable.ic_add_gray_48dp)
     Drawable mDrawableAddGray;
     private List<ProfileImageGson.Data> mDatas = new ArrayList<>();
-    private List<String> base64ToUploads = new ArrayList<>();
+    private List<PostUploadProfileImageGson.ImageBody> mImageToUploads = new ArrayList<>();
     private RetrofitCallUtils.RetrofitCallback<ProfileImageGson> mCallBackUpload = new RetrofitCallUtils.RetrofitCallback<ProfileImageGson>() {
         @Override
         public void onDataSuccess(ProfileImageGson data) {
             dismissLoading();
             if (data != null && null != data.getData()) {
                 mOnDataChangeListener.onDataChange();
-                bindData(data.getData());
+                refreshData();
             }
+        }
+
+        @Override
+        public void onDataFailure(ResponseMessage failCause) {
+            dismissLoading();
+        }
+    };
+
+    private RetrofitCallUtils.RetrofitCallback<Object> mCallbackDelete = new RetrofitCallUtils.RetrofitCallback<Object>() {
+        @Override
+        public void onDataSuccess(Object data) {
+            dismissLoading();
+            mOnDataChangeListener.onDataChange();
+            refreshData();
         }
 
         @Override
@@ -87,33 +103,57 @@ public class UploadPhotoFragment extends BaseFragment {
 
 
     private UploadPhotoRecyclerAdapter mAdapter = new UploadPhotoRecyclerAdapter() {
+
         @Override
         public void onBindViewHolder(final UploadPhotoRecyclerAdapter.ViewHolder holder, int position) {
+            View.OnClickListener onclick = new View.OnClickListener() {
+                @Override
+                public void onClick(final View v) {
+                    ImagePickerUtils.pickImage(v.getContext(), new Action1<ImageEntry>() {
+                        @Override
+                        public void call(ImageEntry imageEntry) {
+                            if (null != imageEntry && !TextUtils.isEmpty(imageEntry.path)) {
+                                Glide.with(v.getContext()).load(imageEntry.path).asBitmap().into(new BitmapImageViewTarget(holder.imgUpload) {
+                                    @Override
+                                    public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
+                                        super.onResourceReady(resource, glideAnimation);
+                                        holder.imgUpload.setImageBitmap(resource);
+                                        if (RecyclerUtils.isAvailableData(mDatas, holder.getAdapterPosition())) {
+                                            ProfileImageGson.Data data = mDatas.get(holder.getAdapterPosition());
+                                            mImageToUploads.add(new PostUploadProfileImageGson.ImageBody(data.getImgId(), MyFileUtils.encodeToBase64(resource)));
+                                        } else {
+                                            mImageToUploads.add(new PostUploadProfileImageGson.ImageBody(MyFileUtils.encodeToBase64(resource)));
+                                        }
+
+
+                                    }
+                                });
+                            }
+
+                        }
+                    });
+                }
+            };
             if (RecyclerUtils.isAvailableData(mDatas, position) && !TextUtils.isEmpty(mDatas.get(position).getImagePath())) {
                 Glide.with(holder.imgUpload.getContext()).load(mDatas.get(position).getImagePath()).into(holder.imgUpload);
-            } else {
-                holder.imgUpload.setImageDrawable(mDrawableAddGray);
-                holder.imgUpload.setOnClickListener(new View.OnClickListener() {
+                holder.imgUpload.setOnClickListener(onclick);
+                holder.imgUpload.setLongClickable(true);
+                holder.imgUpload.setOnLongClickListener(new View.OnLongClickListener() {
                     @Override
-                    public void onClick(final View v) {
-                        ImagePickerUtils.pickImage(v.getContext(), new Action1<ImageEntry>() {
-                            @Override
-                            public void call(ImageEntry imageEntry) {
-                                if (null != imageEntry && !TextUtils.isEmpty(imageEntry.path)) {
-                                    Glide.with(v.getContext()).load(imageEntry.path).asBitmap().into(new BitmapImageViewTarget(holder.imgUpload) {
-                                        @Override
-                                        public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
-                                            super.onResourceReady(resource, glideAnimation);
-                                            holder.imgUpload.setImageBitmap(resource);
-                                            base64ToUploads.add(MyFileUtils.encodeToBase64(resource));
-                                        }
-                                    });
-                                }
-
-                            }
-                        });
+                    public boolean onLongClick(View v) {
+                        if (RecyclerUtils.isAvailableData(mDatas, holder.getAdapterPosition())) {
+                            ProfileImageGson.Data data = mDatas.get(holder.getAdapterPosition());
+                            attempDeleteProfileImage(v.getContext(), data.getImgId());
+                            return true;
+                        }
+                        return false;
                     }
                 });
+            } else {
+                holder.imgUpload.setImageDrawable(mDrawableAddGray);
+                holder.imgUpload.setOnClickListener(onclick);
+                holder.imgUpload.setLongClickable(false);
+                holder.imgUpload.setOnLongClickListener(null);
             }
         }
 
@@ -180,7 +220,8 @@ public class UploadPhotoFragment extends BaseFragment {
     }
 
     private void initRecyclerView() {
-        mRecyclerViewUploadPhoto.setLayoutManager(new GridLayoutManager(getContext(), RecyclerUtils.calculateNoOfColumns(getContext(), 180)));
+//        int itemWidth = ScreenUtils.getScreenDisplay(getContext())/ 3;
+        mRecyclerViewUploadPhoto.setLayoutManager(new GridLayoutManager(getContext(), RecyclerUtils.calculateNoOfColumns(getContext(), 160)));
         mRecyclerViewUploadPhoto.setAdapter(mAdapter);
     }
 
@@ -206,17 +247,37 @@ public class UploadPhotoFragment extends BaseFragment {
             public boolean onMenuItemClick(MenuItem item) {
                 int id = item.getItemId();
                 if (id == R.id.menu_done_item_done) {
-                    onClickDone();
+                    requestSaveProfileImage();
                 }
                 return false;
             }
         });
     }
 
-    private void onClickDone() {
+    private void requestSaveProfileImage() {
         showLoading();
-        RetrofitCallUtils.with(mApi.postUploadProfileImage(PostUploadProfileImageGson.with(mUserId).createNew(base64ToUploads))
+        RetrofitCallUtils.with(mApi.postUploadProfileImage(PostUploadProfileImageGson.with(mUserId).create(mImageToUploads))
                 , mCallBackUpload)
+                .enqueue(getContext());
+    }
+
+
+    private void attempDeleteProfileImage(Context context, final long imageId) {
+        PopupMenuUtils.showConfirmationAlertMenu(context, "Delete", "Do you want to delete this image?", new Action1<Boolean>() {
+            @Override
+            public void call(Boolean yes) {
+                if (yes) {
+                    requestDeleteProfileImage(imageId);
+                }
+            }
+        });
+
+    }
+
+    private void requestDeleteProfileImage(long imageId) {
+        showLoading();
+        RetrofitCallUtils
+                .with(mApi.postDeleteProfileImage(new PostDeleteProfileImageGson(imageId)), mCallbackDelete)
                 .enqueue(getContext());
     }
 

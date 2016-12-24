@@ -204,7 +204,7 @@ public class PloyeeProfileActivity extends BaseActivity implements OnMapReadyCal
     };
 
     private void refreshSlider() {
-        AccountInfoLoader.getProfileImage(this, mUserId, false, mOnLoadProfileImageFinish);
+        AccountInfoLoader.getProfileImage(this, mUserId, true, mOnLoadProfileImageFinish);
     }
 
     @Override
@@ -328,7 +328,7 @@ public class PloyeeProfileActivity extends BaseActivity implements OnMapReadyCal
                         showFragment(UploadPhotoFragment.newInstance(mUserId, new ArrayList<>(datas), new UploadPhotoFragment.OnDataChangeListener() {
                             @Override
                             public void onDataChange() {
-                                refreshData(PloyeeProfileActivity.this);
+                                refreshSlider();
                             }
                         }));
                     }
@@ -347,7 +347,6 @@ public class PloyeeProfileActivity extends BaseActivity implements OnMapReadyCal
             if (RecyclerUtils.isAvailableData(mImageViewDots, i)) {
                 mImageViewDots.get(i).setImageDrawable(mDrawableNonSelecteddot);
             }
-
         }
         if (RecyclerUtils.isAvailableData(mImageViewDots, position)) {
             mImageViewDots.get(position).setImageDrawable(mDrawableSelectedDot);

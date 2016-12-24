@@ -3,6 +3,7 @@ package com.nos.ploy.api.base;
 import android.content.Context;
 import android.widget.Toast;
 
+import com.google.gson.internal.LinkedTreeMap;
 import com.nos.ploy.api.base.response.BaseResponse;
 import com.nos.ploy.api.base.response.ResponseMessage;
 import com.nos.ploy.base.BaseActivity;
@@ -54,24 +55,36 @@ public abstract class RetrofitCallUtils<T> {
                             && null != response.body()
                             && response.body() instanceof BaseResponse) {
 
+                        if (response.body() instanceof BaseResponse) {
+                            BaseResponse<T> baseResponse = (BaseResponse<T>) response.body();
+                            if (baseResponse.isSuccess()) {
 
-                        BaseResponse<T> baseResponse = (BaseResponse<T>) response.body();
-                        if (baseResponse.isSuccess()) {
+                                if (null != baseResponse.getData()) {
+                                    T result = (T) response.body();
+                                    if (null != result) {
+                                        onDataSuccess(result);
+                                    }
 
-                            if (null != baseResponse.getData()) {
-                                T result = (T) response.body();
-                                if (null != result) {
-                                    onDataSuccess(result);
+                                } else {
+                                    onDataFailure(new ResponseMessage("null data"));
+                                    showToast(context, "null data");
                                 }
-
                             } else {
-                                onDataFailure(new ResponseMessage("null data"));
-                                showToast(context, "null data");
+                                onDataFailure(baseResponse.getResponseMessage());
+                                showToast(context, baseResponse.getErrorMessage());
                             }
-                        } else {
-                            onDataFailure(baseResponse.getResponseMessage());
-                            showToast(context, baseResponse.getErrorMessage());
+                        } else if (response.body() instanceof LinkedTreeMap) {
+                            LinkedTreeMap data = (LinkedTreeMap) response.body();
+                            if (null != data.get("responseMsg") && data.get("responseMsg") instanceof ResponseMessage) {
+                                if (((ResponseMessage) data.get("responseMsg")).isSuccess()) {
+                                    onDataSuccess(null);
+                                } else {
+                                    showToast(context, "isNotSuccessful");
+                                    onDataFailure(new ResponseMessage("isNotSuccessful"));
+                                }
+                            }
                         }
+
                     } else {
                         showToast(context, "isNotSuccessful");
                         onDataFailure(new ResponseMessage("isNotSuccessful"));
