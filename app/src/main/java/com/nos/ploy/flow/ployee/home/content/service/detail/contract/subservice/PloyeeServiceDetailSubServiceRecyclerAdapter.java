@@ -15,7 +15,7 @@ import com.nos.ploy.flow.ployee.home.content.service.detail.contract.subservice.
 import com.nos.ploy.flow.ployee.home.content.service.detail.contract.subservice.viewmodel.NormalSubServiceVM;
 import com.nos.ploy.flow.ployee.home.content.service.detail.contract.subservice.viewmodel.PloyeeServiceDetailSubServiceItemBaseViewModel;
 import com.nos.ploy.flow.ployee.home.content.service.detail.contract.subservice.viewmodel.SpaceSubServiceVM;
-import com.nos.ploy.utils.RecyclerAdapterUtils;
+import com.nos.ploy.utils.RecyclerUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,7 +41,7 @@ public class PloyeeServiceDetailSubServiceRecyclerAdapter extends RecyclerView.A
 
     public List<Long> gatheredSubServiceIds() {
         List<Long> results = new ArrayList<>();
-        if (RecyclerAdapterUtils.getSize(mDatas) > 0) {
+        if (RecyclerUtils.getSize(mDatas) > 0) {
             for (PloyeeServiceDetailSubServiceItemBaseViewModel vm : mDatas) {
                 if (vm instanceof NormalSubServiceVM) {
                     NormalSubServiceVM data = ((NormalSubServiceVM) vm);
@@ -90,7 +90,7 @@ public class PloyeeServiceDetailSubServiceRecyclerAdapter extends RecyclerView.A
 
     @Override
     public int getItemViewType(int position) {
-        if (RecyclerAdapterUtils.isAvailableData(mDatas, position)) {
+        if (RecyclerUtils.isAvailableData(mDatas, position)) {
             return mDatas.get(position).getViewType();
         }
         return PloyeeServiceDetailSubServiceItemBaseViewModel.NONE;
@@ -98,7 +98,7 @@ public class PloyeeServiceDetailSubServiceRecyclerAdapter extends RecyclerView.A
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        if (RecyclerAdapterUtils.isAvailableData(mDatas, position)) {
+        if (RecyclerUtils.isAvailableData(mDatas, position)) {
             @PloyeeServiceDetailSubServiceItemBaseViewModel.ViewType int viewType = getItemViewType(position);
             PloyeeServiceDetailSubServiceItemBaseViewModel data = mDatas.get(position);
             switch (viewType) {
@@ -134,7 +134,7 @@ public class PloyeeServiceDetailSubServiceRecyclerAdapter extends RecyclerView.A
 
     @Override
     public int getItemCount() {
-        return RecyclerAdapterUtils.getSize(mDatas);
+        return RecyclerUtils.getSize(mDatas);
     }
 
     public static class HeaderVH extends RecyclerView.ViewHolder {

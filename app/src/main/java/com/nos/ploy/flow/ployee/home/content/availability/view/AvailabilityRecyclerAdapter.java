@@ -11,8 +11,7 @@ import com.nos.ploy.R;
 import com.nos.ploy.api.ployee.model.PloyeeAvailiabilityGson;
 import com.nos.ploy.flow.ployee.home.content.availability.contract.AvailabilityViewModel;
 import com.nos.ploy.flow.ployee.home.content.availability.contract.NormalItemAvailabilityVM;
-import com.nos.ploy.flow.ployee.home.content.availability.contract.WeekAvailabilityVM;
-import com.nos.ploy.utils.RecyclerAdapterUtils;
+import com.nos.ploy.utils.RecyclerUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,7 +39,7 @@ public class AvailabilityRecyclerAdapter extends RecyclerView.Adapter<RecyclerVi
 
     public List<PloyeeAvailiabilityGson.Data.AvailabilityItem> gatheredData() {
         List<PloyeeAvailiabilityGson.Data.AvailabilityItem> results = new ArrayList<>();
-        if (RecyclerAdapterUtils.getSize(mDatas) > 0) {
+        if (RecyclerUtils.getSize(mDatas) > 0) {
             for (AvailabilityViewModel vm : mDatas) {
                 if (vm instanceof NormalItemAvailabilityVM) {
                     results.add(((NormalItemAvailabilityVM) vm).getData());
@@ -69,7 +68,7 @@ public class AvailabilityRecyclerAdapter extends RecyclerView.Adapter<RecyclerVi
     public
     @AvailabilityViewModel.ViewType
     int getItemViewType(int position) {
-        if (RecyclerAdapterUtils.isAvailableData(mDatas, position)) {
+        if (RecyclerUtils.isAvailableData(mDatas, position)) {
             return mDatas.get(position).getViewType();
         }
         return AvailabilityViewModel.NONE;
@@ -77,7 +76,7 @@ public class AvailabilityRecyclerAdapter extends RecyclerView.Adapter<RecyclerVi
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        if (!RecyclerAdapterUtils.isAvailableData(mDatas, position)) {
+        if (!RecyclerUtils.isAvailableData(mDatas, position)) {
             return;
         }
         AvailabilityViewModel vm = mDatas.get(position);
@@ -170,7 +169,7 @@ public class AvailabilityRecyclerAdapter extends RecyclerView.Adapter<RecyclerVi
 
     @Override
     public int getItemCount() {
-        return RecyclerAdapterUtils.getSize(mDatas);
+        return RecyclerUtils.getSize(mDatas);
     }
 
     public static class NormalVH extends RecyclerView.ViewHolder {

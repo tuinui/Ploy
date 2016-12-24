@@ -12,7 +12,7 @@
 //import com.nos.ploy.flow.ployee.home.content.availability.contract.HeaderDayAvailabilityVM;
 //import com.nos.ploy.flow.ployee.home.content.availability.contract.HeaderTimeAvailabilityVM;
 //import com.nos.ploy.flow.ployee.home.content.availability.contract.NormalItemAvailabilityVM;
-//import com.nos.ploy.utils.RecyclerAdapterUtils;
+//import com.nos.ploy.utils.RecyclerUtils;
 //
 //import java.util.ArrayList;
 //import java.util.List;
@@ -24,7 +24,7 @@
 // * Created by Saran on 22/11/2559.
 // */
 //
-//public class PloyeeAvailabilityRecyclerAdapter_Deprecated extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+//public class PloyeeAvailabilityRecyclerAdapter_Deprecated extends RecyclerView.ViewHolder<RecyclerView.ViewHolder> {
 //
 //
 //    private List<AvailabilityViewModel> mDatas = new ArrayList<>();
@@ -54,7 +54,7 @@
 //
 //    @Override
 //    public int getItemViewType(int position) {
-//        if (RecyclerAdapterUtils.isAvailableData(mDatas, position)) {
+//        if (RecyclerUtils.isAvailableData(mDatas, position)) {
 //            return mDatas.get(position).getViewType();
 //        }
 //
@@ -72,7 +72,7 @@
 //    @Override
 //    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
 //        @AvailabilityViewModel.ViewType int viewType = getItemViewType(position);
-//        if (RecyclerAdapterUtils.isAvailableData(mDatas, position)) {
+//        if (RecyclerUtils.isAvailableData(mDatas, position)) {
 //            AvailabilityViewModel data = mDatas.get(position);
 //            switch (viewType) {
 //

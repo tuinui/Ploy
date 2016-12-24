@@ -10,7 +10,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 
 import com.nos.ploy.base.BaseActivity;
-import com.nos.ploy.base.BaseSupportFragment;
+import com.nos.ploy.base.BaseFragment;
 
 
 /**
@@ -44,34 +44,34 @@ public class FragmentTransactionUtils {
         transaction.commit();
     }
 
-    public static void showFragment(@NonNull BaseSupportFragment parentFragment, @NonNull BaseSupportFragment fragmentToShow) {
+    public static void showFragment(@NonNull BaseFragment parentFragment, @NonNull BaseFragment fragmentToShow) {
         showFragment(parentFragment, fragmentToShow, null);
     }
 
 
-    public static void showFragment(@NonNull BaseSupportFragment parentFragment, @NonNull BaseSupportFragment fragmentToShow, String tag) {
+    public static void showFragment(@NonNull BaseFragment parentFragment, @NonNull BaseFragment fragmentToShow, String tag) {
         if (parentFragment.isReadyForFragmentTransaction()) {
             showFragment(parentFragment.getFragmentManager(), fragmentToShow, tag);
         }
     }
 
-    public static void showFragment(@NonNull BaseActivity activity, @NonNull BaseSupportFragment fragmentToShow) {
+    public static void showFragment(@NonNull BaseActivity activity, @NonNull BaseFragment fragmentToShow) {
         showFragment(activity, fragmentToShow, null);
 
     }
 
-    public static void showFragment(@NonNull BaseActivity activity, @NonNull BaseSupportFragment fragmentToShow, String tag) {
+    public static void showFragment(@NonNull BaseActivity activity, @NonNull BaseFragment fragmentToShow, String tag) {
         if (!activity.isFinishing() && !activity.isActivityDestroyedCompat()) {
             showFragment(activity.getSupportFragmentManager(), fragmentToShow, tag);
         }
     }
 
-    private static void showFragment(@NonNull FragmentManager fragmentManager, @NonNull BaseSupportFragment fragmentToShow, String tag) {
+    private static void showFragment(@NonNull FragmentManager fragmentManager, @NonNull BaseFragment fragmentToShow, String tag) {
         fragmentToShow.show(fragmentManager, tag);
     }
 
 
-    public static void dismissFragment(@NonNull BaseSupportFragment baseFragment) {
+    public static void dismissFragment(@NonNull BaseFragment baseFragment) {
         if (baseFragment.isReadyForFragmentTransaction() && null != baseFragment.getFragmentManager() && baseFragment.isResumed()) {
             baseFragment.dismiss();
         }

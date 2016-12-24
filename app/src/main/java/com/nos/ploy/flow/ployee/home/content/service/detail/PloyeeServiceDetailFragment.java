@@ -17,19 +17,16 @@ import android.widget.TextView;
 import com.appyvet.rangebar.RangeBar;
 import com.nos.ploy.R;
 import com.nos.ploy.api.ployee.PloyeeApi;
-import com.nos.ploy.api.ployee.model.PloyeeAvailiabilityGson;
 import com.nos.ploy.api.ployer.model.PloyerServiceDetailGson;
 import com.nos.ploy.api.ployer.PloyerApi;
 import com.nos.ploy.api.ployer.model.PostSavePloyerServiceDetailGson;
-import com.nos.ploy.base.BaseSupportFragment;
+import com.nos.ploy.base.BaseFragment;
 import com.nos.ploy.flow.ployee.home.content.service.detail.contract.PloyeeServiceDetailContract;
 import com.nos.ploy.flow.ployee.home.content.service.detail.contract.PloyeeServiceDetailPresenter;
 import com.nos.ploy.flow.ployee.home.content.service.detail.contract.PloyeeServiceDetailVM;
 import com.nos.ploy.flow.ployee.home.content.service.detail.contract.subservice.PloyeeServiceDetailSubServiceRecyclerAdapter;
 import com.nos.ploy.utils.PopupMenuUtils;
 import com.rengwuxian.materialedittext.MaterialEditText;
-
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -39,7 +36,7 @@ import rx.functions.Action1;
  * Created by Saran on 19/11/2559.
  */
 
-public class PloyeeServiceDetailFragment extends BaseSupportFragment implements PloyeeServiceDetailContract.View, View.OnClickListener {
+public class PloyeeServiceDetailFragment extends BaseFragment implements PloyeeServiceDetailContract.View, View.OnClickListener {
     @BindView(R.id.rangebar_ployee_service_rate)
     RangeBar mRangeBar;
     @BindView(R.id.edittext_ployee_service_price_from)

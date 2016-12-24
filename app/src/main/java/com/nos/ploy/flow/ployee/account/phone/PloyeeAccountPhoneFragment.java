@@ -10,7 +10,7 @@ import android.view.ViewGroup;
 
 import com.hbb20.CountryCodePicker;
 import com.nos.ploy.R;
-import com.nos.ploy.base.BaseSupportFragment;
+import com.nos.ploy.base.BaseFragment;
 import com.rengwuxian.materialedittext.MaterialEditText;
 
 import butterknife.BindString;
@@ -21,7 +21,7 @@ import butterknife.ButterKnife;
  * Created by Saran on 5/12/2559.
  */
 
-public class PloyeeAccountPhoneFragment extends BaseSupportFragment {
+public class PloyeeAccountPhoneFragment extends BaseFragment {
     @BindView(R.id.countrycodepicker_ployee_account_phone)
     CountryCodePicker mCcpPhone;
     @BindView(R.id.edittext_ployee_account_phone_number)

@@ -16,7 +16,9 @@
         <android.support.v4.widget.NestedScrollView
             android:id="@+id/scrollview_ployee_profile"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:scrollbarAlwaysDrawVerticalTrack="true"
+            android:scrollbars="vertical">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -26,43 +28,39 @@
                 <android.support.v7.widget.CardView
                     android:id="@+id/cardview_ployee_profile_image_container"
                     android:layout_width="match_parent"
-                    android:clickable="true"
-                    android:foreground="?attr/selectableItemBackground"
                     android:layout_height="wrap_content">
 
-                    <com.daimajia.slider.library.SliderLayout
-                        android:id="@+id/sliderlayout_ployee_profile_image"
-                        android:layout_width="match_parent"
-                        android:layout_height="240dp" />
+                    <include layout="@layout/view_profile_image_slider" />
 
                     <android.support.design.widget.FloatingActionButton
                         android:id="@+id/fab_ployee_profile_image"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="bottom|right|end"
+                        android:layout_gravity="bottom|right"
                         android:layout_margin="8dp"
-                        android:clickable="false"
                         android:src="@drawable/ic_camera_ploy_37dp"
                         app:backgroundTint="@color/gray_alpha"
-                        app:elevation="0dp"
                         app:fabSize="mini" />
 
                 </android.support.v7.widget.CardView>
 
 
-                <!--<com.nos.ploy.custom.view.RatioFrameLayout-->
-                <!--android:id="@+id/framelayout_ployee_profile_maps_container"-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--app:ratioHeight="9"-->
-                <!--app:ratioWidth="16">-->
-                <fragment
-                    android:id="@+id/mapfragment_ployee_profile"
-                    class="com.nos.ploy.custom.view.WorkAroundMapFragment"
-                    android:layout_width="match_parent"
-                    android:layout_height="200dp" />
+                <FrameLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
 
+                    <FrameLayout
+                        android:id="@+id/framelayout_ployee_profile_maps_container"
+                        android:layout_width="match_parent"
+                        android:layout_height="200dp"
+                        android:clickable="true" />
 
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="200dp"
+                        android:clickable="true" />
+
+                </FrameLayout>
                 <!--<fragment-->
                 <!--android:id="@+id/map"-->
                 <!--class="com.nos.ploy.custom.view.WorkAroundMapFragment"-->

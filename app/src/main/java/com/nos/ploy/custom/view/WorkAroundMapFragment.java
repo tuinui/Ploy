@@ -17,6 +17,16 @@ import com.google.android.gms.maps.SupportMapFragment;
 public class WorkAroundMapFragment extends SupportMapFragment {
     private OnTouchListener mListener;
 
+    public static WorkAroundMapFragment newInstance() {
+
+        Bundle args = new Bundle();
+
+        WorkAroundMapFragment fragment = new WorkAroundMapFragment();
+        fragment.setArguments(args);
+        return fragment;
+    }
+
+
     @Override
     public View onCreateView(LayoutInflater layoutInflater, ViewGroup viewGroup, Bundle savedInstance) {
         View layout = super.onCreateView(layoutInflater, viewGroup, savedInstance);

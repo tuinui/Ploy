@@ -1,8 +1,6 @@
 package com.nos.ploy.base;
 
-import android.app.Activity;
 import android.app.Dialog;
-import android.app.DialogFragment;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.Bundle;
@@ -12,6 +10,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatDialog;
+import android.support.v7.app.AppCompatDialogFragment;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.View;
@@ -27,10 +26,10 @@ import com.nos.ploy.utils.FragmentTransactionUtils;
 import retrofit2.Retrofit;
 
 /**
- * Created by Saran on 24/12/2559.
+ * Created by User on 1/10/2559.
  */
 
-public class BaseFragment extends DialogFragment {
+public abstract class BaseFragment extends AppCompatDialogFragment {
 
     private ProgressDialog mProgressDialog;
     protected static final String KEY_USER_ID = "USER_ID";
@@ -53,7 +52,7 @@ public class BaseFragment extends DialogFragment {
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        Dialog dialog = new AppCompatDialog(getActivity(), R.style.AppTheme_Light) {
+        Dialog dialog = new AppCompatDialog(getContext(), R.style.AppTheme_Light) {
             @Override
             public void onBackPressed() {
                 if (!BaseFragment.this.onBackPressed()) {
@@ -76,7 +75,7 @@ public class BaseFragment extends DialogFragment {
     }
 
     protected Retrofit getRetrofit() {
-        return RetrofitManager.getRetrofit(getActivity());
+        return RetrofitManager.getRetrofit(getContext());
     }
 
     protected void enableBackButton(Toolbar toolbar) {
@@ -90,7 +89,7 @@ public class BaseFragment extends DialogFragment {
     }
 
     protected void runOnUiThread(Runnable action) {
-        Activity activity = getActivity();
+        FragmentActivity activity = getActivity();
         if (null != activity && !activity.isFinishing()) {
             activity.runOnUiThread(action);
         }
@@ -119,9 +118,7 @@ public class BaseFragment extends DialogFragment {
     }
 
     protected void showFragment(BaseFragment fragment) {
-        if(isReadyForFragmentTransaction()){
-            fragment.show(getFragmentManager(),null);
-        }
+        FragmentTransactionUtils.showFragment(this, fragment);
     }
 
     protected void showToast(String message) {
@@ -147,7 +144,7 @@ public class BaseFragment extends DialogFragment {
             return;
         }
         if (null == mProgressDialog) {
-            mProgressDialog = getLoadingProgressDialog(getActivity());
+            mProgressDialog = getLoadingProgressDialog(getContext());
         }
         if (!mProgressDialog.isShowing()) {
             mProgressDialog.show();

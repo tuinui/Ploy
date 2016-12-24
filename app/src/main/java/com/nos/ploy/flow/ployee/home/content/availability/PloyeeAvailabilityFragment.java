@@ -15,7 +15,7 @@ import com.nos.ploy.R;
 import com.nos.ploy.api.base.RetrofitCallUtils;
 import com.nos.ploy.api.ployee.PloyeeApi;
 import com.nos.ploy.api.ployee.model.PloyeeAvailiabilityGson;
-import com.nos.ploy.base.BaseSupportFragment;
+import com.nos.ploy.base.BaseFragment;
 import com.nos.ploy.flow.ployee.home.content.availability.contract.AvailabilityViewModel;
 import com.nos.ploy.flow.ployee.home.content.availability.contract.NormalItemAvailabilityVM;
 import com.nos.ploy.flow.ployee.home.content.availability.contract.WeekAvailabilityVM;
@@ -31,7 +31,7 @@ import butterknife.ButterKnife;
  * Created by Saran on 22/11/2559.
  */
 
-public class PloyeeAvailabilityFragment extends BaseSupportFragment implements View.OnClickListener {
+public class PloyeeAvailabilityFragment extends BaseFragment implements View.OnClickListener {
     @BindView(R.id.recyclerview_ployee_availability_time_table)
     RecyclerView mRecyclerViewTimeTable;
     @BindView(R.id.switchcompat_ployee_availablity_holiday)

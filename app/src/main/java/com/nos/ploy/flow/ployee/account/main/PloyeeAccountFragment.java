@@ -11,7 +11,7 @@ import android.view.ViewGroup;
 import com.facebook.login.widget.LoginButton;
 import com.nos.ploy.R;
 import com.nos.ploy.api.authentication.model.AccountGson;
-import com.nos.ploy.base.BaseSupportFragment;
+import com.nos.ploy.base.BaseFragment;
 import com.nos.ploy.flow.ployee.account.phone.PloyeeAccountPhoneFragment;
 import com.rengwuxian.materialedittext.MaterialEditText;
 
@@ -23,7 +23,7 @@ import butterknife.ButterKnife;
  * Created by Saran on 3/12/2559.
  */
 
-public class PloyeeAccountFragment extends BaseSupportFragment implements View.OnClickListener {
+public class PloyeeAccountFragment extends BaseFragment implements View.OnClickListener {
     @BindView(R.id.edittext_ployee_account_main_first_name)
     MaterialEditText mEditTextFirstname;
     @BindView(R.id.edittext_ployee_account_main_birthday)

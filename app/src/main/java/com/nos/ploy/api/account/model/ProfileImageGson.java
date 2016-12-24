@@ -1,5 +1,8 @@
 package com.nos.ploy.api.account.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.gson.annotations.SerializedName;
 import com.nos.ploy.api.base.response.BaseResponse;
 
@@ -60,7 +63,7 @@ public class ProfileImageGson extends BaseResponse<List<ProfileImageGson.Data>> 
 //        }
 //        ]
 //    }
-    public static class Data {
+    public static class Data implements Parcelable {
 
         @SerializedName("imgId")
         private Long imgId;
@@ -90,6 +93,38 @@ public class ProfileImageGson extends BaseResponse<List<ProfileImageGson.Data>> 
         public String getImageName() {
             return imageName;
         }
+
+        @Override
+        public int describeContents() {
+            return 0;
+        }
+
+        @Override
+        public void writeToParcel(Parcel dest, int flags) {
+            dest.writeValue(this.imgId);
+            dest.writeValue(this.userId);
+            dest.writeString(this.imagePath);
+            dest.writeString(this.imageName);
+        }
+
+        protected Data(Parcel in) {
+            this.imgId = (Long) in.readValue(Long.class.getClassLoader());
+            this.userId = (Long) in.readValue(Long.class.getClassLoader());
+            this.imagePath = in.readString();
+            this.imageName = in.readString();
+        }
+
+        public static final Parcelable.Creator<Data> CREATOR = new Parcelable.Creator<Data>() {
+            @Override
+            public Data createFromParcel(Parcel source) {
+                return new Data(source);
+            }
+
+            @Override
+            public Data[] newArray(int size) {
+                return new Data[size];
+            }
+        };
     }
 
 }

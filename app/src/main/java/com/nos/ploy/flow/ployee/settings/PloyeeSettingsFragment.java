@@ -10,7 +10,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import com.nos.ploy.R;
-import com.nos.ploy.base.BaseSupportFragment;
+import com.nos.ploy.base.BaseFragment;
 import com.nos.ploy.cache.UserTokenManager;
 
 import butterknife.BindView;
@@ -20,7 +20,7 @@ import butterknife.ButterKnife;
  * Created by Saran on 19/12/2559.
  */
 
-public class PloyeeSettingsFragment extends BaseSupportFragment implements View.OnClickListener {
+public class PloyeeSettingsFragment extends BaseFragment implements View.OnClickListener {
 
     @BindView(R.id.button_ployee_settings_logout)
     Button mButtonLogout;

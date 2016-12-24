@@ -10,7 +10,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.nos.ploy.R;
-import com.nos.ploy.base.BaseSupportFragment;
+import com.nos.ploy.base.BaseFragment;
 import com.rengwuxian.materialedittext.MaterialEditText;
 
 import butterknife.BindString;
@@ -21,7 +21,7 @@ import butterknife.ButterKnife;
  * Created by Saran on 29/11/2559.
  */
 
-public class ForgotPasswordFragment extends BaseSupportFragment {
+public class ForgotPasswordFragment extends BaseFragment {
 
     @BindView(R.id.button_forgot_password_confirm)
     Button mButtonConfirm;

@@ -14,7 +14,7 @@ import android.view.ViewGroup;
 import com.nos.ploy.R;
 import com.nos.ploy.api.ployee.PloyeeApi;
 import com.nos.ploy.api.ployee.model.PloyeeServiceListGson;
-import com.nos.ploy.base.BaseSupportFragment;
+import com.nos.ploy.base.BaseFragment;
 import com.nos.ploy.flow.ployee.home.content.service.detail.PloyeeServiceDetailFragment;
 import com.nos.ploy.flow.ployee.home.content.service.list.viewmodel.PloyeeServiceItemViewModel;
 
@@ -33,7 +33,7 @@ import rx.functions.Action1;
  * Created by User on 19/11/2559.
  */
 
-public class PloyeeServiceListFragment extends BaseSupportFragment implements SearchView.OnQueryTextListener {
+public class PloyeeServiceListFragment extends BaseFragment implements SearchView.OnQueryTextListener {
 
 
     @BindView(R.id.recyclerview_ployee_service_list)

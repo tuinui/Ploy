@@ -26,7 +26,7 @@ import com.nos.ploy.api.authentication.AuthenticationApi;
 import com.nos.ploy.api.authentication.model.AccountGson;
 import com.nos.ploy.api.authentication.model.PostSignupGson;
 import com.nos.ploy.api.base.RetrofitCallUtils;
-import com.nos.ploy.base.BaseSupportFragment;
+import com.nos.ploy.base.BaseFragment;
 import com.nos.ploy.utils.DatePickerUtils;
 import com.nos.ploy.utils.ImagePickerUtils;
 import com.nos.ploy.utils.MyFileUtils;
@@ -47,7 +47,7 @@ import rx.functions.Action1;
  * Created by User on 11/11/2559.
  */
 
-public class SignUpFragment extends BaseSupportFragment implements View.OnClickListener {
+public class SignUpFragment extends BaseFragment implements View.OnClickListener {
     @BindView(R.id.button_signup_detail_create_account)
     Button mButtonCreateAccount;
     @BindView(R.id.toolbar_main)
@@ -109,7 +109,7 @@ public class SignUpFragment extends BaseSupportFragment implements View.OnClickL
 //    private SignupProfileImageRecyclerAdapter mProfileImageAdapter = new SignupProfileImageRecyclerAdapter() {
 //        @Override
 //        public void onBindViewHolder(final SignupProfileImageRecyclerAdapter.ViewHolder holder, int position) {
-//            if (RecyclerAdapterUtils.isAvailableData(mDatas, position)) {
+//            if (RecyclerUtils.isAvailableData(mDatas, position)) {
 //                SignupFragmentContract.ViewModel data = mDatas.get(position);
 //                if (data.getViewType() == SignupFragmentContract.ViewModel.ADD_MORE) {
 //                    holder.imgProfile.setImageDrawable(mDrawableProfile);
@@ -128,7 +128,7 @@ public class SignUpFragment extends BaseSupportFragment implements View.OnClickL
 //                        @Override
 //                        public void onClick(View v) {
 //                            int position = holder.getAdapterPosition();
-//                            if (RecyclerAdapterUtils.isAvailableData(mDatas, position)) {
+//                            if (RecyclerUtils.isAvailableData(mDatas, position)) {
 //                                mDatas.remove(position);
 //                                notifyItemRemoved(position);
 //                                notifyPhotoDataSetChanged();
@@ -143,7 +143,7 @@ public class SignUpFragment extends BaseSupportFragment implements View.OnClickL
 //        public
 //        @SignupFragmentContract.ViewModel.ViewType
 //        int getItemViewType(int position) {
-//            if (RecyclerAdapterUtils.isAvailableData(mDatas, position)) {
+//            if (RecyclerUtils.isAvailableData(mDatas, position)) {
 //                return mDatas.get(position).getViewType();
 //            }
 //            return SignupFragmentContract.ViewModel.NONE;
@@ -151,7 +151,7 @@ public class SignUpFragment extends BaseSupportFragment implements View.OnClickL
 //
 //        @Override
 //        public int getItemCount() {
-//            return RecyclerAdapterUtils.getSize(mDatas);
+//            return RecyclerUtils.getSize(mDatas);
 //        }
 //    };
 
@@ -316,7 +316,7 @@ public class SignUpFragment extends BaseSupportFragment implements View.OnClickL
 
     private void checkIfProfileImageWillUpload(Long userId, Action1<Boolean> onFinishUpload) {
         if (mBitmapToUpload != null) {
-            String base64 = MyFileUtils.encodeToBase64(mBitmapToUpload, Bitmap.CompressFormat.JPEG, 100);
+            String base64 = MyFileUtils.encodeToBase64(mBitmapToUpload);
             requestPostUploadProfileImage(userId, base64, onFinishUpload);
         } else {
             onFinishUpload.call(true);
