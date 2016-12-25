@@ -22,6 +22,10 @@ import rx.functions.Action1;
 public class AccountInfoLoader {
 
     public static void getAccountGson(final Context context, long userId, final Action1<AccountGson.Data> onFinish) {
+        getAccountGson(context, userId, false, onFinish);
+    }
+
+    public static void getAccountGson(final Context context, long userId, boolean forceRefresh, final Action1<AccountGson.Data> onFinish) {
         AccountGson.Data data = SharePreferenceUtils.getAccountGson(context);
         Call<AccountGson> call = RetrofitManager.getRetrofit(context).create(AccountApi.class).getAccountGson(userId);
         final Callback<AccountGson> callbackSaveCache = new Callback<AccountGson>() {
@@ -37,7 +41,7 @@ public class AccountInfoLoader {
 
             }
         };
-        if (data != null) {
+        if (data != null && !forceRefresh) {
             onFinish.call(data);
             call.enqueue(callbackSaveCache);
         } else {

@@ -113,12 +113,10 @@
                     android:inputType="text|textMultiLine"
                     android:lines="3"
                     android:maxLines="3"
-                    app:met_baseColor="@color/colorPrimary"
-                    app:met_floatingLabel="normal"
-                    app:met_floatingLabelText="@string/About_me"
                     app:met_floatingLabelTextColor="@color/colorPrimary"
-                    app:met_primaryColor="@color/colorPrimary"
-                    app:met_textColorHint="@android:color/darker_gray"
+                    app:met_baseColor="@color/colorPrimary"
+                    app:met_floatingLabel="highlight"
+                    app:met_floatingLabelText="@string/About_me"
                     app:met_underlineColor="@android:color/darker_gray" />
 
                 <com.rengwuxian.materialedittext.MaterialEditText
@@ -131,10 +129,9 @@
                     android:lines="3"
                     android:maxLines="3"
                     app:met_baseColor="@color/colorPrimary"
-                    app:met_floatingLabel="normal"
-                    app:met_floatingLabelText="@string/Education"
                     app:met_floatingLabelTextColor="@color/colorPrimary"
-                    app:met_textColorHint="@android:color/darker_gray"
+                    app:met_floatingLabel="highlight"
+                    app:met_floatingLabelText="@string/Education"
                     app:met_underlineColor="@android:color/darker_gray" />
 
                 <com.rengwuxian.materialedittext.MaterialEditText
@@ -147,10 +144,9 @@
                     android:lines="3"
                     android:maxLines="3"
                     app:met_baseColor="@color/colorPrimary"
-                    app:met_floatingLabel="normal"
-                    app:met_floatingLabelText="@string/Work"
                     app:met_floatingLabelTextColor="@color/colorPrimary"
-                    app:met_textColorHint="@android:color/darker_gray"
+                    app:met_floatingLabel="highlight"
+                    app:met_floatingLabelText="@string/Work"
                     app:met_underlineColor="@android:color/darker_gray" />
 
                 <com.rengwuxian.materialedittext.MaterialEditText
@@ -163,10 +159,9 @@
                     android:lines="3"
                     android:maxLines="3"
                     app:met_baseColor="@color/colorPrimary"
-                    app:met_floatingLabel="normal"
-                    app:met_floatingLabelText="@string/Interest"
                     app:met_floatingLabelTextColor="@color/colorPrimary"
-                    app:met_textColorHint="@android:color/darker_gray"
+                    app:met_floatingLabel="highlight"
+                    app:met_floatingLabelText="@string/Interest"
                     app:met_underlineColor="@android:color/darker_gray" />
 
 
@@ -209,7 +204,7 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="16dp"
+                    android:layout_margin="8dp"
                     android:orientation="vertical">
 
                     <TextView

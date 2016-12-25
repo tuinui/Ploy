@@ -8,192 +8,166 @@
 
     <include layout="@layout/view_main_appbar" />
 
-    <android.support.v4.widget.NestedScrollView
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/swiperefreshlayout_ployee_account_main"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <LinearLayout
+        <android.support.v4.widget.NestedScrollView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:layout_height="wrap_content">
 
-            <Space
-                android:layout_width="match_parent"
-                android:layout_height="40dp" />
-
-            <android.support.v7.widget.CardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
-
-                    <com.rengwuxian.materialedittext.MaterialEditText
-                        android:id="@+id/edittext_ployee_account_main_first_name"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="16dp"
-                        android:layout_marginRight="16dp"
-                        android:layout_marginTop="16dp"
-                        android:hint="@string/First_Name_asterisk"
-                        android:inputType="textPersonName"
-                        app:met_baseColor="@android:color/white"
-                        app:met_floatingLabel="normal"
-                        app:met_floatingLabelAlwaysShown="true"
-                        app:met_floatingLabelText="@string/First_Name_asterisk"
-                        app:met_floatingLabelTextColor="@color/colorPrimary"
-                        app:met_helperTextColor="@color/colorPrimary"
-                        app:met_primaryColor="@color/colorPrimary"
-                        app:met_textColor="@android:color/black"
-                        app:met_textColorHint="@color/colorPrimary"
-                        app:met_underlineColor="@color/colorPrimary" />
-
-                    <com.rengwuxian.materialedittext.MaterialEditText
-                        android:id="@+id/edittext_ployee_account_main_last_name"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="16dp"
-                        android:layout_marginRight="16dp"
-                        android:layout_marginTop="16dp"
-                        android:hint="@string/Last_Name_asterisk"
-                        android:inputType="textPersonName"
-                        app:met_baseColor="@android:color/white"
-                        app:met_floatingLabel="normal"
-                        app:met_floatingLabelAlwaysShown="true"
-                        app:met_floatingLabelText="@string/Last_Name_asterisk"
-                        app:met_floatingLabelTextColor="@color/colorPrimary"
-                        app:met_helperTextColor="@color/colorPrimary"
-                        app:met_primaryColor="@color/colorPrimary"
-                        app:met_textColor="@android:color/black"
-                        app:met_textColorHint="@color/colorPrimary"
-                        app:met_underlineColor="@color/colorPrimary" />
-
-
-                    <com.rengwuxian.materialedittext.MaterialEditText
-                        android:id="@+id/edittext_ployee_account_main_birthday"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="16dp"
-                        android:layout_marginRight="16dp"
-                        android:layout_marginTop="16dp"
-                        android:hint="@string/Birthday"
-                        android:inputType="date"
-                        app:met_baseColor="@android:color/white"
-                        app:met_floatingLabel="normal"
-                        app:met_floatingLabelAlwaysShown="true"
-                        app:met_floatingLabelText="@string/Birthday"
-                        app:met_floatingLabelTextColor="@color/colorPrimary"
-                        app:met_helperTextColor="@color/colorPrimary"
-                        app:met_primaryColor="@color/colorPrimary"
-                        app:met_textColor="@android:color/black"
-                        app:met_textColorHint="@color/colorPrimary"
-                        app:met_underlineColor="@color/colorPrimary" />
-
-                    <com.rengwuxian.materialedittext.MaterialEditText
-                        android:id="@+id/edittext_ployee_account_main_email"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="16dp"
-                        android:hint="@string/Email_Address_asterisk"
-                        android:inputType="textPersonName"
-                        app:met_baseColor="@android:color/white"
-                        app:met_floatingLabel="normal"
-                        app:met_floatingLabelAlwaysShown="true"
-                        app:met_floatingLabelText="@string/Email_Address_asterisk"
-                        app:met_floatingLabelTextColor="@color/colorPrimary"
-                        app:met_helperTextColor="@color/colorPrimary"
-                        app:met_primaryColor="@color/colorPrimary"
-                        app:met_textColor="@android:color/black"
-                        app:met_textColorHint="@color/colorPrimary"
-                        app:met_underlineColor="@color/colorPrimary" />
-
-
-                </LinearLayout>
-
-            </android.support.v7.widget.CardView>
-
-            <Space
-                android:layout_width="match_parent"
-                android:layout_height="40dp" />
-
-            <android.support.v7.widget.CardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
-
-                    <com.rengwuxian.materialedittext.MaterialEditText
-                        android:id="@+id/edittext_ployee_account_main_phone"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="16dp"
-                        android:layout_marginRight="16dp"
-                        android:layout_marginTop="16dp"
-                        android:hint="@string/Phone_asterisk"
-                        android:inputType="phone"
-                        app:met_baseColor="@android:color/white"
-                        app:met_floatingLabel="normal"
-                        app:met_floatingLabelAlwaysShown="true"
-                        app:met_floatingLabelText="@string/Phone_asterisk"
-                        app:met_floatingLabelTextColor="@color/colorPrimary"
-                        app:met_helperTextColor="@color/colorPrimary"
-                        app:met_primaryColor="@color/colorPrimary"
-                        app:met_textColor="@android:color/black"
-                        app:met_textColorHint="@color/colorPrimary"
-                        app:met_underlineColor="@color/colorPrimary" />
-
-                    <com.rengwuxian.materialedittext.MaterialEditText
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="16dp"
-                        android:hint="@string/Change_password"
-                        android:inputType="textPassword"
-                        app:met_baseColor="@android:color/white"
-                        app:met_floatingLabel="normal"
-                        app:met_floatingLabelAlwaysShown="true"
-                        app:met_floatingLabelText="@string/Change_password"
-                        app:met_floatingLabelTextColor="@color/colorPrimary"
-                        app:met_helperTextColor="@color/colorPrimary"
-                        app:met_primaryColor="@color/colorPrimary"
-                        app:met_textColor="@android:color/black"
-                        app:met_textColorHint="@color/colorPrimary"
-                        app:met_underlineColor="@color/colorPrimary" />
-
-
-                </LinearLayout>
-
-            </android.support.v7.widget.CardView>
-
-            <Space
-                android:layout_width="match_parent"
-                android:layout_height="40dp" />
-
-            <com.facebook.login.widget.LoginButton
-                android:id="@+id/loginbutton_ployee_account_main_facebook"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginLeft="32dp"
-                android:layout_marginRight="32dp"
-                android:paddingBottom="16dp"
-                android:paddingTop="16dp" />
-
-            <TextView
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="32dp"
-                android:background="?attr/selectableItemBackground"
-                android:clickable="true"
-                android:gravity="center"
-                android:text="@string/If_you_are_offering_a_service_your_email_and_or_phone_number_will_be_available_to_other_members_as_means_to_contact_you"
-                android:textAppearance="@style/TextAppearance.AppCompat.Caption" />
+                android:orientation="vertical">
 
-        </LinearLayout>
-    </android.support.v4.widget.NestedScrollView>
+                <Space
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp" />
+
+                <android.support.v7.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <com.rengwuxian.materialedittext.MaterialEditText
+                            android:id="@+id/edittext_ployee_account_main_first_name"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="16dp"
+                            android:layout_marginRight="16dp"
+                            android:layout_marginTop="16dp"
+                            android:hint="@string/First_Name_asterisk"
+                            android:inputType="textPersonName"
+                            app:met_baseColor="@color/colorPrimary"
+                            app:met_floatingLabel="highlight"
+                            app:met_floatingLabelText="@string/First_Name_asterisk"
+                            app:met_floatingLabelTextColor="@color/colorPrimary" />
+
+                        <com.rengwuxian.materialedittext.MaterialEditText
+                            android:id="@+id/edittext_ployee_account_main_last_name"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="16dp"
+                            android:layout_marginRight="16dp"
+                            android:layout_marginTop="16dp"
+                            android:hint="@string/Last_Name_asterisk"
+                            android:inputType="textPersonName"
+                            app:met_baseColor="@color/colorPrimary"
+                            app:met_floatingLabel="highlight"
+                            app:met_floatingLabelText="@string/Last_Name_asterisk"
+                            app:met_floatingLabelTextColor="@color/colorPrimary" />
+
+
+                        <com.rengwuxian.materialedittext.MaterialEditText
+                            android:id="@+id/edittext_ployee_account_main_birthday"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="16dp"
+                            android:layout_marginRight="16dp"
+                            android:layout_marginTop="16dp"
+                            android:hint="@string/Birthday"
+                            android:inputType="date"
+                            app:met_baseColor="@color/colorPrimary"
+                            app:met_floatingLabel="highlight"
+                            app:met_floatingLabelText="@string/Birthday"
+                            app:met_floatingLabelTextColor="@color/colorPrimary" />
+
+                        <com.rengwuxian.materialedittext.MaterialEditText
+                            android:id="@+id/edittext_ployee_account_main_email"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="16dp"
+                            android:hint="@string/Email_Address_asterisk"
+                            android:inputType="textPersonName"
+                            app:met_baseColor="@color/colorPrimary"
+                            app:met_floatingLabel="highlight"
+                            app:met_floatingLabelText="@string/Email_Address_asterisk"
+                            app:met_floatingLabelTextColor="@color/colorPrimary" />
+
+
+                    </LinearLayout>
+
+                </android.support.v7.widget.CardView>
+
+                <Space
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp" />
+
+                <android.support.v7.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <com.rengwuxian.materialedittext.MaterialEditText
+                            android:id="@+id/edittext_ployee_account_main_phone"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="16dp"
+                            android:layout_marginRight="16dp"
+                            android:layout_marginTop="16dp"
+                            android:hint="@string/Phone_asterisk"
+                            android:inputType="phone"
+                            app:met_baseColor="@color/colorPrimary"
+                            app:met_floatingLabelTextColor="@color/colorPrimary"
+                            app:met_floatingLabel="highlight"
+                            app:met_floatingLabelText="@string/Phone_asterisk"
+                       />
+
+                        <com.rengwuxian.materialedittext.MaterialEditText
+                            android:id="@+id/edittext_ployee_account_main_password"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="16dp"
+                            android:hint="@string/Change_password"
+                            android:inputType="textPassword"
+                            app:met_baseColor="@color/colorPrimary"
+                            app:met_floatingLabelTextColor="@color/colorPrimary"
+                            app:met_floatingLabel="highlight"
+                            app:met_floatingLabelText="@string/Change_password"/>
+
+
+                    </LinearLayout>
+
+                </android.support.v7.widget.CardView>
+
+                <Space
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp" />
+
+                <com.facebook.login.widget.LoginButton
+                    android:id="@+id/loginbutton_ployee_account_main_facebook"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="32dp"
+                    android:layout_marginRight="32dp"
+                    android:paddingBottom="16dp"
+                    android:paddingTop="16dp" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="32dp"
+                    android:background="?attr/selectableItemBackground"
+                    android:clickable="true"
+                    android:gravity="center"
+                    android:text="@string/If_you_are_offering_a_service_your_email_and_or_phone_number_will_be_available_to_other_members_as_means_to_contact_you"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Caption" />
+
+            </LinearLayout>
+        </android.support.v4.widget.NestedScrollView>
+
+
+    </android.support.v4.widget.SwipeRefreshLayout>
 
 
 </LinearLayout>

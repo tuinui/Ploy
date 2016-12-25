@@ -77,7 +77,7 @@ public class PloyeeAccountPhoneFragment extends BaseFragment {
     }
 
     private String gatheredData() {
-        return mCcpPhone.getSelectedCountryCode() + extractString(mEditTextPhoneNumber);
+        return mCcpPhone.getSelectedCountryCodeWithPlus() + extractString(mEditTextPhoneNumber);
     }
 
     public void setListener(FragmentInteractionListener listener) {

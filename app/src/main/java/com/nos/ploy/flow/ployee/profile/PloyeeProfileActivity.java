@@ -36,7 +36,7 @@ import com.nos.ploy.api.account.AccountApi;
 import com.nos.ploy.api.account.model.PostUpdateProfileGson;
 import com.nos.ploy.api.account.model.ProfileGson;
 import com.nos.ploy.api.account.model.ProfileImageGson;
-import com.nos.ploy.api.account.model.TransportGson;
+import com.nos.ploy.api.account.model.DummyTransportGson;
 import com.nos.ploy.api.base.RetrofitCallUtils;
 import com.nos.ploy.api.base.response.ResponseMessage;
 import com.nos.ploy.api.utils.loader.AccountInfoLoader;
@@ -115,7 +115,7 @@ public class PloyeeProfileActivity extends BaseActivity implements OnMapReadyCal
         @Override
         public void onBindViewHolder(final TransportRecyclerAdapter.ViewHolder holder, int position) {
             if (RecyclerUtils.isAvailableData(mMapTransports, position)) {
-                TransportGson data = mMapTransports.get(position);
+                DummyTransportGson data = mMapTransports.get(position);
                 data.getId();
 
 //                Glide.with(holder.imgTransport.getContext()).load(data.getDrawable()).into(holder.imgTransport);
@@ -127,7 +127,7 @@ public class PloyeeProfileActivity extends BaseActivity implements OnMapReadyCal
                     @Override
                     public void onClick(View v) {
                         if (RecyclerUtils.isAvailableData(mMapTransports, holder.getAdapterPosition())) {
-                            TransportGson data = mMapTransports.get(holder.getAdapterPosition());
+                            DummyTransportGson data = mMapTransports.get(holder.getAdapterPosition());
                             toggleEnableTransport(data.getId(), holder.getAdapterPosition());
                         }
                     }
@@ -207,7 +207,7 @@ public class PloyeeProfileActivity extends BaseActivity implements OnMapReadyCal
     private int mDotsCount;
     private List<ImageView> mImageViewDots = new ArrayList<>();
     private GoogleApiClient mGoogleApiClient;
-    private List<TransportGson> mMapTransports = new ArrayList<>();
+    private List<DummyTransportGson> mMapTransports = new ArrayList<>();
     private ProfileGson.Data mOriginalData;
 
 
@@ -287,7 +287,7 @@ public class PloyeeProfileActivity extends BaseActivity implements OnMapReadyCal
                 return false;
             }
         });
-        mMapTransports.addAll(TransportGson.TRANSPORT_DATA);
+        mMapTransports.addAll(DummyTransportGson.TRANSPORT_DATA);
 
     }
 

@@ -45,12 +45,65 @@ public class AccountGson extends BaseResponse<AccountGson.Data> {
         private String userType;
         @SerializedName("phone")
         private String phone;
+        @SerializedName("fbUserId")
+        private String fbUserId;
 
         public Data() {
         }
 
+        public Data(Long userId, String firstName, String lastName, String birthDay, String email, String password, String userType, String phone, String fbUserId) {
+            this.userId = userId;
+            this.firstName = firstName;
+            this.lastName = lastName;
+            this.birthDay = birthDay;
+            this.email = email;
+            this.password = password;
+            this.userType = userType;
+            this.phone = phone;
+            this.fbUserId = fbUserId;
+        }
+
+        public Data cloneThis() {
+            return new Data(getUserId(),firstName,lastName,birthDay,email,password,userType,phone,fbUserId);
+        }
         public String getBirthDay() {
             return birthDay;
+        }
+
+        public void setUserId(Long userId) {
+            this.userId = userId;
+        }
+
+        public void setFirstName(String firstName) {
+            this.firstName = firstName;
+        }
+
+        public void setLastName(String lastName) {
+            this.lastName = lastName;
+        }
+
+        public void setBirthDay(String birthDay) {
+            this.birthDay = birthDay;
+        }
+
+        public void setEmail(String email) {
+            this.email = email;
+        }
+
+        public void setPassword(String password) {
+            this.password = password;
+        }
+
+        public void setUserType(String userType) {
+            this.userType = userType;
+        }
+
+        public void setPhone(String phone) {
+            this.phone = phone;
+        }
+
+        public void setFbUserId(String fbUserId) {
+            this.fbUserId = fbUserId;
         }
 
         public String getEmail() {
@@ -85,6 +138,10 @@ public class AccountGson extends BaseResponse<AccountGson.Data> {
             return userType;
         }
 
+        public String getFbUserId() {
+            return fbUserId;
+        }
+
 
         @Override
         public int describeContents() {
@@ -101,6 +158,7 @@ public class AccountGson extends BaseResponse<AccountGson.Data> {
             dest.writeString(this.password);
             dest.writeString(this.userType);
             dest.writeString(this.phone);
+            dest.writeString(this.fbUserId);
         }
 
         protected Data(Parcel in) {
@@ -112,9 +170,10 @@ public class AccountGson extends BaseResponse<AccountGson.Data> {
             this.password = in.readString();
             this.userType = in.readString();
             this.phone = in.readString();
+            this.fbUserId = in.readString();
         }
 
-        public static final Parcelable.Creator<Data> CREATOR = new Parcelable.Creator<Data>() {
+        public static final Creator<Data> CREATOR = new Creator<Data>() {
             @Override
             public Data createFromParcel(Parcel source) {
                 return new Data(source);
@@ -125,6 +184,8 @@ public class AccountGson extends BaseResponse<AccountGson.Data> {
                 return new Data[size];
             }
         };
+
+
     }
 
 }

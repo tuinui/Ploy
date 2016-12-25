@@ -2,22 +2,38 @@ package com.nos.ploy.flow.ployee.account.main;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.facebook.CallbackManager;
+import com.facebook.FacebookCallback;
+import com.facebook.FacebookException;
+import com.facebook.login.LoginManager;
+import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 import com.nos.ploy.R;
+import com.nos.ploy.api.account.AccountApi;
+import com.nos.ploy.api.authentication.AuthenticationApi;
 import com.nos.ploy.api.authentication.model.AccountGson;
+import com.nos.ploy.api.authentication.model.PostFacebookMapUser;
+import com.nos.ploy.api.base.RetrofitCallUtils;
+import com.nos.ploy.api.base.response.ResponseMessage;
+import com.nos.ploy.api.utils.loader.AccountInfoLoader;
 import com.nos.ploy.base.BaseFragment;
 import com.nos.ploy.flow.ployee.account.phone.PloyeeAccountPhoneFragment;
 import com.rengwuxian.materialedittext.MaterialEditText;
 
+import java.util.Arrays;
+
 import butterknife.BindString;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import rx.functions.Action1;
 
 /**
  * Created by Saran on 3/12/2559.
@@ -38,6 +54,10 @@ public class PloyeeAccountFragment extends BaseFragment implements View.OnClickL
     LoginButton mLoginButtonFacebook;
     @BindView(R.id.toolbar_main)
     Toolbar mToolbar;
+    @BindView(R.id.swiperefreshlayout_ployee_account_main)
+    SwipeRefreshLayout mSwipeRefreshLayout;
+    @BindView(R.id.edittext_ployee_account_main_password)
+    MaterialEditText mEdittextPassword;
 
     @BindString(R.string.Account)
     String LAccount;
@@ -50,6 +70,50 @@ public class PloyeeAccountFragment extends BaseFragment implements View.OnClickL
     });
     private AccountGson.Data mData;
     private static final String KEY_ACCOUNT_GSON = "ACCOUNT_GSON";
+    private CallbackManager mCallbackManager;
+    private AuthenticationApi mAuthenApi;
+    private AccountApi mAccountApi;
+    private Long mUserId;
+
+    private FacebookCallback<LoginResult> mLoginResultCallback = new FacebookCallback<LoginResult>() {
+
+        @Override
+        public void onSuccess(LoginResult loginResult) {
+            requestFacebookMapping(loginResult);
+        }
+
+        @Override
+        public void onCancel() {
+
+        }
+
+
+        @Override
+        public void onError(FacebookException error) {
+
+        }
+    };
+    private RetrofitCallUtils.RetrofitCallback<Object> mCallbackUpdateData = new RetrofitCallUtils.RetrofitCallback<Object>() {
+        @Override
+        public void onDataSuccess(Object data) {
+            dismissLoading();
+            refreshData();
+        }
+
+        @Override
+        public void onDataFailure(ResponseMessage failCause) {
+            dismissLoading();
+        }
+    };
+    private Action1<AccountGson.Data> mOnLoadAccountFinish = new Action1<AccountGson.Data>() {
+        @Override
+        public void call(AccountGson.Data data) {
+            dismissRefreshing();
+            if (null != data) {
+                bindData(data);
+            }
+        }
+    };
 
     public static PloyeeAccountFragment newInstance(AccountGson.Data data) {
 
@@ -60,6 +124,17 @@ public class PloyeeAccountFragment extends BaseFragment implements View.OnClickL
         return fragment;
     }
 
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (null != getArguments()) {
+            mData = getArguments().getParcelable(KEY_ACCOUNT_GSON);
+            mAuthenApi = getRetrofit().create(AuthenticationApi.class);
+            mAccountApi = getRetrofit().create(AccountApi.class);
+            mUserId = mData.getUserId();
+        }
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -68,31 +143,33 @@ public class PloyeeAccountFragment extends BaseFragment implements View.OnClickL
         return v;
     }
 
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (null != getArguments()) {
-            mData = getArguments().getParcelable(KEY_ACCOUNT_GSON);
-        }
-    }
-
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         initToolbar();
         initView();
-        bindData();
+        initFacebookButton();
+        bindData(mData);
     }
 
-    private void bindData() {
-        if (null != mData) {
-            mEditTextFirstname.setText(mData.getFirstName());
-            mEditTextLastName.setText(mData.getLastName());
-            mEditTextPhone.setText(mData.getPhone());
-            mEditTextEmail.setText(mData.getEmail());
-            mEditTextBirthday.setText(mData.getBirthDay());
-        }
+    private void initFacebookButton() {
+        mCallbackManager = CallbackManager.Factory.create();
+        LoginManager.getInstance().registerCallback(mCallbackManager, mLoginResultCallback);
+        mLoginButtonFacebook.setReadPermissions(Arrays.asList(
+                "public_profile", "email"));
+        mLoginButtonFacebook.setFragment(this);
+        mLoginButtonFacebook.registerCallback(mCallbackManager, mLoginResultCallback);
+    }
+
+    private void initView() {
+        setRefreshLayout(mSwipeRefreshLayout, new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                refreshData();
+            }
+        });
+        mEditTextPhone.setOnClickListener(this);
     }
 
     private void initToolbar() {
@@ -103,20 +180,56 @@ public class PloyeeAccountFragment extends BaseFragment implements View.OnClickL
             @Override
             public boolean onMenuItemClick(MenuItem item) {
                 if (item.getItemId() == R.id.menu_done_item_done) {
-
+                    requestUpdateAccount();
                 }
                 return false;
             }
         });
     }
 
+    private void bindData(AccountGson.Data data) {
+        mData = data;
+        if (null != mData) {
+            mEditTextFirstname.setText(mData.getFirstName());
+            mEditTextLastName.setText(mData.getLastName());
+            mEditTextPhone.setText(mData.getPhone());
+            mEditTextEmail.setText(mData.getEmail());
+            mEditTextBirthday.setText(mData.getBirthDay());
+            if (TextUtils.isEmpty(mData.getFbUserId())) {
+                mLoginButtonFacebook.setVisibility(View.GONE);
+            } else {
+                mLoginButtonFacebook.setVisibility(View.VISIBLE);
+            }
+        }
+    }
+
     private void requestUpdateAccount() {
+        AccountGson.Data data = mData.cloneThis();
+        data.setFirstName(extractString(mEditTextFirstname));
+        data.setLastName(extractString(mEditTextLastName));
+        data.setBirthDay(extractString(mEditTextBirthday));
+        data.setEmail(extractString(mEditTextEmail));
+        data.setPhone(extractString(mEditTextPhone));
+        data.setPassword(extractString(mEdittextPassword));
+        showLoading();
+        RetrofitCallUtils.with(mAccountApi.postUpdateAccountGson(data), mCallbackUpdateData).enqueue(getContext());
+    }
+
+    private void requestFacebookMapping(LoginResult loginResult) {
+        if (null != loginResult && null != loginResult.getAccessToken() && null != loginResult.getAccessToken().getUserId()) {
+            showLoading();
+            RetrofitCallUtils
+                    .with(mAuthenApi.postFacebookMapUser(new PostFacebookMapUser(loginResult.getAccessToken().getUserId(), mUserId))
+                            , mCallbackUpdateData);
+        }
 
     }
 
-    private void initView() {
-        mEditTextPhone.setOnClickListener(this);
+    private void refreshData() {
+        showRefreshing();
+        AccountInfoLoader.getAccountGson(getContext(), mUserId, true, mOnLoadAccountFinish);
     }
+
 
     @Override
     public void onClick(View view) {

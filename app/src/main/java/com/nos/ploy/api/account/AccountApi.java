@@ -21,6 +21,9 @@ public interface AccountApi {
     @GET("/api/user/account")
     Call<AccountGson> getAccountGson(@Query("userId") long userId);
 
+    @POST("/api/user/account/update")
+    Call<Object> postUpdateAccountGson(@Body AccountGson.Data data);
+
     @POST("/api/user/profileImg/upload")
     Call<ProfileImageGson> postUploadProfileImage(@Body PostUploadProfileImageGson data);
 
