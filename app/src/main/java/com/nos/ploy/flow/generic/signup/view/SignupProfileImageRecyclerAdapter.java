@@ -1,4 +1,4 @@
-package com.nos.ploy.flow.pre.signup.view;
+package com.nos.ploy.flow.generic.signup.view;
 
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.RecyclerView;

@@ -24,7 +24,7 @@ import java.util.Map;
  */
 public class DrawerController {
     @Retention(RetentionPolicy.SOURCE)
-    @IntDef({NONE, ACCOUNT, SETTINGS})
+    @IntDef({NONE, ACCOUNT, SETTINGS,WHAT_IS_PLOYER,WHAT_IS_PLOYEE})
     public @interface Menu {
     }
 

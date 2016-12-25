@@ -1,4 +1,4 @@
-package com.nos.ploy.flow.pre.signin;
+package com.nos.ploy.flow.generic.signin;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;

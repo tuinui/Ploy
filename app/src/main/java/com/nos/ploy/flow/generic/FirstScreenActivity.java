@@ -1,4 +1,4 @@
-package com.nos.ploy.flow.pre;
+package com.nos.ploy.flow.generic;
 
 import android.os.Bundle;
 import android.view.View;
@@ -9,7 +9,7 @@ import com.nos.ploy.base.BaseActivity;
 import com.nos.ploy.cache.UserTokenManager;
 import com.nos.ploy.flow.ployee.home.PloyeeHomeActivity;
 import com.nos.ploy.flow.ployer.home.PloyerHomeActivity;
-import com.nos.ploy.flow.pre.register.SignInSignupActivity;
+import com.nos.ploy.flow.generic.register.SignInSignupActivity;
 import com.nos.ploy.utils.IntentUtils;
 
 import butterknife.BindView;

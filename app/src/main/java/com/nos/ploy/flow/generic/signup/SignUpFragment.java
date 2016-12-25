@@ -1,4 +1,4 @@
-package com.nos.ploy.flow.pre.signup;
+package com.nos.ploy.flow.generic.signup;
 
 import android.content.Context;
 import android.graphics.Bitmap;

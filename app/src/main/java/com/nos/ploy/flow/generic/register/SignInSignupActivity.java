@@ -1,4 +1,4 @@
-package com.nos.ploy.flow.pre.register;
+package com.nos.ploy.flow.generic.register;
 
 import android.content.Context;
 import android.content.Intent;
@@ -26,8 +26,8 @@ import com.nos.ploy.api.base.response.ResponseMessage;
 import com.nos.ploy.base.BaseActivity;
 import com.nos.ploy.cache.UserTokenManager;
 import com.nos.ploy.flow.ployee.home.PloyeeHomeActivity;
-import com.nos.ploy.flow.pre.signin.SignInFragment;
-import com.nos.ploy.flow.pre.signup.SignUpFragment;
+import com.nos.ploy.flow.generic.signin.SignInFragment;
+import com.nos.ploy.flow.generic.signup.SignUpFragment;
 import com.nos.ploy.utils.IntentUtils;
 
 import org.json.JSONException;

@@ -25,7 +25,7 @@
 
 
         <activity
-            android:name=".flow.pre.SplashScreenActivity"
+            android:name=".flow.generic.SplashScreenActivity"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -34,12 +34,12 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".flow.pre.FirstScreenActivity"
+            android:name=".flow.generic.FirstScreenActivity"
             android:screenOrientation="portrait"/>
 
 
         <activity
-            android:name=".flow.pre.register.SignInSignupActivity"
+            android:name=".flow.generic.register.SignInSignupActivity"
             android:screenOrientation="portrait" />
 
         <activity
