@@ -39,7 +39,8 @@ public class PloyeeServiceDetailPresenter implements PloyeeServiceDetailContract
     private RetrofitCallUtils.RetrofitCallback<BaseResponse<Object>> mCallbackPostSaveServiceDetail = new RetrofitCallUtils.RetrofitCallback<BaseResponse<Object>>() {
         @Override
         public void onDataSuccess(BaseResponse<Object> data) {
-            mView.showLoadingDialog(false);
+
+            mView.saveServiceSuccess();
             if (null != data) {
                 refreshData();
             }

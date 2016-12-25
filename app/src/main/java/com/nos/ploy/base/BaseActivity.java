@@ -13,6 +13,7 @@ import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.akexorcist.localizationactivity.LocalizationActivity;
 import com.nos.ploy.DrawerController;
@@ -119,6 +120,12 @@ public class BaseActivity extends LocalizationActivity {
         FragmentTransactionUtils.showFragment(this, baseFragment);
     }
 
+    protected void showToast(String message) {
+        if (isReady()) {
+            Toast toast = Toast.makeText(this, message, Toast.LENGTH_LONG);
+            toast.show();
+        }
+    }
     public void showFragment(BaseFragment baseFragment, String tag) {
         FragmentTransactionUtils.showFragment(this, baseFragment, tag);
     }

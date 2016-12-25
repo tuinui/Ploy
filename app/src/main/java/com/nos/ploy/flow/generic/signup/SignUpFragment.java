@@ -303,6 +303,7 @@ public class SignUpFragment extends BaseFragment implements View.OnClickListener
                     public void call(Boolean success) {
                         if (success) {
                             goBackToLoginFragment();
+
                         }
                     }
                 });
@@ -334,6 +335,7 @@ public class SignUpFragment extends BaseFragment implements View.OnClickListener
                     @Override
                     public void onDataSuccess(ProfileImageGson data) {
                         dismissLoading();
+
                         onFinishUpload.call(true);
                     }
 

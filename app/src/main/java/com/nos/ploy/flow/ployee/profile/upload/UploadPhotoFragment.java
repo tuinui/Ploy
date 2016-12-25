@@ -82,6 +82,7 @@ public class UploadPhotoFragment extends BaseFragment {
         @Override
         public void onDataSuccess(Object data) {
             dismissLoading();
+            showToast("Success");
             mOnDataChangeListener.onDataChange();
             refreshData();
         }

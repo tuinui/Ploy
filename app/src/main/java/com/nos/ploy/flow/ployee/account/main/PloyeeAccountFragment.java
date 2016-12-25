@@ -93,6 +93,7 @@ public class PloyeeAccountFragment extends BaseFragment implements View.OnClickL
         @Override
         public void onDataSuccess(Object data) {
             dismissLoading();
+            showToast("Success");
             refreshData();
         }
 

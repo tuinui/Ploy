@@ -80,13 +80,16 @@ public class PloyeeServiceDetailFragment extends BaseFragment implements PloyeeS
     private PloyeeServiceDetailContract.ViewModel mData;
     private PloyeeServiceDetailSubServiceRecyclerAdapter mAdapter = new PloyeeServiceDetailSubServiceRecyclerAdapter();
     private static final String KEY_SERVICE_ID = "SERVICE_ID";
+    private static final String KEY_TOOLBAR_TITLE = "TOOLBAR_TITLE";
     private long mUserId;
     private long mServiceId;
+    private String mToolbarTitle;
 
-    public static PloyeeServiceDetailFragment newInstance(long userId, long serviceId) {
+    public static PloyeeServiceDetailFragment newInstance(long userId, long serviceId, String title) {
         Bundle args = new Bundle();
         args.putLong(KEY_USER_ID, userId);
         args.putLong(KEY_SERVICE_ID, serviceId);
+        args.putString(KEY_TOOLBAR_TITLE, title);
         PloyeeServiceDetailFragment fragment = new PloyeeServiceDetailFragment();
         fragment.setArguments(args);
         PloyerApi service = fragment.getRetrofit().create(PloyerApi.class);
@@ -101,6 +104,7 @@ public class PloyeeServiceDetailFragment extends BaseFragment implements PloyeeS
         if (null != getArguments()) {
             mUserId = getArguments().getLong(KEY_USER_ID, 0);
             mServiceId = getArguments().getLong(KEY_SERVICE_ID, 0);
+            mToolbarTitle = getArguments().getString(KEY_TOOLBAR_TITLE, "");
         }
     }
 
@@ -152,7 +156,7 @@ public class PloyeeServiceDetailFragment extends BaseFragment implements PloyeeS
 
     private void initToolbar() {
         enableBackButton(mToolbar);
-        mToolbar.setTitle(R.string.Aide_au_senior);
+        mToolbar.setTitle(mToolbarTitle);
         mToolbar.setSubtitle(R.string.Service);
         mToolbar.inflateMenu(R.menu.menu_done);
         mToolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
@@ -186,8 +190,9 @@ public class PloyeeServiceDetailFragment extends BaseFragment implements PloyeeS
                 @Override
                 public void call(String s) {
                     Integer value = Integer.valueOf(s);
-                    mRangeBar.setTickStart(value);
-                    mRangeBar.setRangePinsByIndices(value, mRangeBar.getRightIndex());
+                    if (null != value && value >= 0 && value <= 995) {
+                        mRangeBar.setRangePinsByValue(value, Float.parseFloat(mRangeBar.getRightPinValue()));
+                    }
                 }
             }, InputType.TYPE_CLASS_NUMBER);
         } else if (id == mEditTextPriceTo.getId()) {
@@ -196,13 +201,12 @@ public class PloyeeServiceDetailFragment extends BaseFragment implements PloyeeS
                 public void call(String s) {
                     Integer value = Integer.valueOf(s);
                     if (null != value && value >= 2) {
-                        mRangeBar.setTickEnd(value);
-                        mRangeBar.setRangePinsByIndices(mRangeBar.getLeftIndex(), value);
+                        mRangeBar.setRangePinsByValue(Float.parseFloat(mRangeBar.getLeftPinValue()), value);
                     }
 
                 }
             }, InputType.TYPE_CLASS_NUMBER);
-        }else if(id == mButtonReset.getId()){
+        } else if (id == mButtonReset.getId()) {
             onClickReset();
         }
     }
@@ -242,11 +246,18 @@ public class PloyeeServiceDetailFragment extends BaseFragment implements PloyeeS
         bindDataToView(mData);
     }
 
+    @Override
+    public void saveServiceSuccess() {
+        showLoadingDialog(false);
+        showToast("Success");
+        dismiss();
+    }
+
     private void onClickReset() {
         if (null != mData && null != mData.getData()) {
             PloyerServiceDetailGson.Data data = mData.getData().closeThis();
             data.setServiceNameOthers("");
-            data.setPriceMax(2);
+            data.setPriceMax(1000);
             data.setPriceMin(0);
             data.setEquipment("");
             data.setCertificate("");
@@ -270,8 +281,10 @@ public class PloyeeServiceDetailFragment extends BaseFragment implements PloyeeS
             mEditTextDescription.setText(data.getDescription());
             mEditTextCertificate.setText(data.getCertificate());
             mEditTextEquipmentNeeded.setText(data.getEquipmentNeeded());
-            mRangeBar.setTickStart(data.getPriceMin());
-            mRangeBar.setTickEnd(data.getPriceMax());
+            if (data.getPriceMin() >= 0 && data.getPriceMax() <= 1000 && data.getPriceMax() > data.getPriceMin()) {
+                mRangeBar.setRangePinsByValue(data.getPriceMin(), data.getPriceMax());
+            }
+
             if (null != data.getData() && null != data.getData().getSubServices() && !data.getData().getSubServices().isEmpty()) {
                 mAdapter.replaceData(data.getData().getSubServices());
                 mTextViewSubServicesHeader.setVisibility(View.VISIBLE);
@@ -284,6 +297,7 @@ public class PloyeeServiceDetailFragment extends BaseFragment implements PloyeeS
             if (mServiceId == -1) {
                 mEditTextOthers.setVisibility(View.VISIBLE);
                 mEditTextOthers.setText(data.getServiceOthersName());
+
             } else {
                 mEditTextOthers.setVisibility(View.GONE);
             }

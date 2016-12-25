@@ -7,8 +7,8 @@ android {
         applicationId "com.nos.ploy"
         minSdkVersion 17
         targetSdkVersion 22
-        versionCode 102
-        versionName "1.0.2"
+        versionCode 103
+        versionName "1.0.3"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
 

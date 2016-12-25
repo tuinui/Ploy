@@ -193,6 +193,7 @@ public class PloyeeAvailabilityFragment extends BaseFragment implements View.OnC
             @Override
             public void onDataSuccess(PloyeeAvailiabilityGson data) {
                 dismissLoading();
+                showToast("Success");
                 refreshData();
             }
 

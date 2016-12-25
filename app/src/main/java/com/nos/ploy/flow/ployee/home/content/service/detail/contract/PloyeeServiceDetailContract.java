@@ -15,6 +15,7 @@ public class PloyeeServiceDetailContract {
         void bindData(PloyerServiceDetailGson.Data data);
 
 
+        void saveServiceSuccess();
     }
 
     public interface Presenter extends BasePresenter {

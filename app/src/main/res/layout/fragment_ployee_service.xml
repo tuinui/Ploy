@@ -58,7 +58,6 @@
                         android:layout_marginTop="16dp"
                         android:hint="@string/Say_something_about_experience_you_have_in_this_service_category"
                         android:inputType="text|textMultiLine"
-                        android:lines="3"
                         app:met_floatingLabel="normal"
                         app:met_floatingLabelAlwaysShown="true"
                         app:met_floatingLabelText="@string/Description" />
@@ -123,8 +122,8 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             app:rangeBarPaddingBottom="8dp"
-                            app:tickEnd="100"
-                            app:tickInterval="1"
+                            app:tickEnd="1000"
+                            app:tickInterval="5"
                             app:tickStart="0" />
 
                     </LinearLayout>
@@ -137,7 +136,6 @@
                         android:layout_marginTop="16dp"
                         android:hint="@string/Describe_certificate_or_diploma_related_to_the_service_you_want_to_provide"
                         android:inputType="text|textMultiLine"
-                        android:lines="3"
                         app:met_floatingLabel="normal"
                         app:met_floatingLabelAlwaysShown="true"
                         app:met_floatingLabelText="@string/Certificate" />
@@ -149,7 +147,6 @@
                         android:layout_marginTop="16dp"
                         android:hint="@string/Describe_equipment_and_tools_that_you_can_provide_to_ployer"
                         android:inputType="text|textMultiLine"
-                        android:lines="3"
                         app:met_floatingLabel="normal"
                         app:met_floatingLabelAlwaysShown="true"
                         app:met_floatingLabelText="@string/Equipment_needed" />

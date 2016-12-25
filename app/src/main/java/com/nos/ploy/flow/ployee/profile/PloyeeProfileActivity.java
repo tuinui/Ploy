@@ -204,6 +204,7 @@ public class PloyeeProfileActivity extends BaseActivity implements OnMapReadyCal
         @Override
         public void onDataSuccess(Object data) {
             dismissLoading();
+            showToast("Success");
             refreshData(PloyeeProfileActivity.this);
 
         }

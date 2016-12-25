@@ -68,7 +68,7 @@ public class PloyeeServiceListFragment extends BaseFragment implements SearchVie
     private Action1<PloyeeServiceItemViewModel> mActionOnClickServiceItem = new Action1<PloyeeServiceItemViewModel>() {
         @Override
         public void call(PloyeeServiceItemViewModel data) {
-            showFragment(PloyeeServiceDetailFragment.newInstance(mUserId, data.getId()));
+            showFragment(PloyeeServiceDetailFragment.newInstance(mUserId, data.getId(), data.getText()));
         }
     };
     private List<PloyeeServiceItemViewModel> mDatas = new ArrayList<>();
@@ -174,7 +174,7 @@ public class PloyeeServiceListFragment extends BaseFragment implements SearchVie
                     .replaceAll(filteredModelList)
                     .commit();
         }
-        if(null != mRecyclerView){
+        if (null != mRecyclerView) {
             mRecyclerView.scrollToPosition(0);
         }
 
