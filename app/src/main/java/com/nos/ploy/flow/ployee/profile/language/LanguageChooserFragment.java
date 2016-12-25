@@ -3,6 +3,7 @@ package com.nos.ploy.flow.ployee.profile.language;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -66,6 +67,7 @@ public class LanguageChooserFragment extends BaseFragment {
             if (RecyclerUtils.isAvailableData(mDatas, position)) {
                 ProfileGson.Data.Language language = mDatas.get(position);
                 holder.radio.setText(language.getSpokenLanguageValue());
+                holder.radio.setChecked(isLanguageSupported(language.getSpokenLanguageCode()));
                 holder.radio.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                     @Override
                     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -86,6 +88,10 @@ public class LanguageChooserFragment extends BaseFragment {
                     }
                 });
             }
+        }
+
+        private boolean isLanguageSupported(String languageCode) {
+            return null != mSpokenCodes && !mSpokenCodes.isEmpty() && mSpokenCodes.contains(languageCode);
         }
 
         @Override
@@ -140,6 +146,7 @@ public class LanguageChooserFragment extends BaseFragment {
                 return true;
             }
         });
+        mRecyclerView.addItemDecoration(new DividerItemDecoration(getContext(),DividerItemDecoration.VERTICAL));
         mRecyclerView.setAdapter(mAdapter);
     }
 
@@ -180,7 +187,7 @@ public class LanguageChooserFragment extends BaseFragment {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
                 int id = item.getItemId();
-                if(id == R.id.menu_done_item_done){
+                if (id == R.id.menu_done_item_done) {
                     getListener().onDataChanged(mSpokenCodes);
                     dismiss();
                 }

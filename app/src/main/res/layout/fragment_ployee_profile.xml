@@ -181,10 +181,9 @@
                         android:layout_height="match_parent"
                         android:layout_weight="0"
                         android:gravity="center"
-                        android:padding="8dp"
+                        android:padding="4dp"
                         android:text="@string/Language"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                        android:textStyle="bold" />
+                        android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
                     <TextView
                         android:id="@+id/textview_ployee_profile_language_support"
@@ -194,6 +193,7 @@
                         android:background="?attr/selectableItemBackground"
                         android:clickable="true"
                         android:drawablePadding="16dp"
+
                         android:drawableRight="@drawable/ic_chevron_right_gray_32dp"
                         android:ellipsize="end"
                         android:gravity="center_vertical|right"

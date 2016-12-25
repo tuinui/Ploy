@@ -188,9 +188,8 @@ public class PloyeeProfileActivity extends BaseActivity implements OnMapReadyCal
         @Override
         public void onDataSuccess(Object data) {
             dismissLoading();
-            if (null != data) {
-                refreshData(PloyeeProfileActivity.this);
-            }
+            refreshData(PloyeeProfileActivity.this);
+
         }
 
         @Override
@@ -244,7 +243,6 @@ public class PloyeeProfileActivity extends BaseActivity implements OnMapReadyCal
                 for (ProfileGson.Data.Language language : mOriginalData.getLanguage()) {
                     languageSupports += language.getSpokenLanguageValue() + " ,";
                 }
-
             }
             mTextViewLanguageSupport.setText(languageSupports);
 
@@ -488,6 +486,7 @@ public class PloyeeProfileActivity extends BaseActivity implements OnMapReadyCal
             public void onDataChanged(ArrayList<String> datas) {
                 mData.setLanguage(datas);
                 bindData(mData);
+                onClickDone();
             }
         }));
 
