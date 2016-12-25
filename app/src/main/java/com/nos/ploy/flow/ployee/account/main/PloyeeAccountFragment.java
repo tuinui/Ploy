@@ -161,6 +161,7 @@ public class PloyeeAccountFragment extends BaseFragment implements View.OnClickL
 
     private void initView() {
         disableEditable(mEditTextPhone);
+        disableEditable(mEditTextEmail);
         disableEditable(mEditTextBirthday);
         setRefreshLayout(mSwipeRefreshLayout, new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -208,7 +209,7 @@ public class PloyeeAccountFragment extends BaseFragment implements View.OnClickL
         data.setFirstName(extractString(mEditTextFirstname));
         data.setLastName(extractString(mEditTextLastName));
         data.setBirthDay(extractString(mEditTextBirthday));
-        data.setEmail(extractString(mEditTextEmail));
+//        data.setEmail(extractString(mEditTextEmail));
         data.setPhone(extractString(mEditTextPhone));
         data.setPassword(extractString(mEdittextPassword));
         showLoading();

@@ -7,11 +7,13 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.InputType;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import com.appyvet.rangebar.RangeBar;
@@ -28,6 +30,7 @@ import com.nos.ploy.flow.ployee.home.content.service.detail.contract.subservice.
 import com.nos.ploy.utils.PopupMenuUtils;
 import com.rengwuxian.materialedittext.MaterialEditText;
 
+import butterknife.BindString;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import rx.functions.Action1;
@@ -37,7 +40,7 @@ import rx.functions.Action1;
  */
 
 public class PloyeeServiceDetailFragment extends BaseFragment implements PloyeeServiceDetailContract.View, View.OnClickListener {
-    @BindView(R.id.rangebar_ployee_service_rate)
+    @BindView(R.id.materialrangebar_ployee_service_rate)
     RangeBar mRangeBar;
     @BindView(R.id.edittext_ployee_service_price_from)
     MaterialEditText mEditTextPriceFrom;
@@ -61,6 +64,8 @@ public class PloyeeServiceDetailFragment extends BaseFragment implements PloyeeS
     TextView mTextViewSubServicesHeader;
     @BindView(R.id.button_ployee_service_reset)
     Button mButtonReset;
+    @BindString(R.string.This_field_is_required)
+    String LThis_field_is_required;
 
     private RangeBar.OnRangeBarChangeListener mRangeBarListener = new RangeBar.OnRangeBarChangeListener() {
         @Override
@@ -164,7 +169,7 @@ public class PloyeeServiceDetailFragment extends BaseFragment implements PloyeeS
             public boolean onMenuItemClick(MenuItem item) {
                 int id = item.getItemId();
                 if (id == R.id.menu_done_item_done) {
-                    onClickDone();
+                    attempUpdateService();
                     return true;
                 }
                 return false;
@@ -190,8 +195,9 @@ public class PloyeeServiceDetailFragment extends BaseFragment implements PloyeeS
                 @Override
                 public void call(String s) {
                     Integer value = Integer.valueOf(s);
-                    if (null != value && value >= 0 && value <= 995) {
+                    if (null != value && value >= 0 && value < (Integer.valueOf(mRangeBar.getRightPinValue()) - 2)) {
                         mRangeBar.setRangePinsByValue(value, Float.parseFloat(mRangeBar.getRightPinValue()));
+                        mRangeBar.setTickInterval(5);
                     }
                 }
             }, InputType.TYPE_CLASS_NUMBER);
@@ -200,8 +206,19 @@ public class PloyeeServiceDetailFragment extends BaseFragment implements PloyeeS
                 @Override
                 public void call(String s) {
                     Integer value = Integer.valueOf(s);
-                    if (null != value && value >= 2) {
+                    if (null != value && value >= 2 && value > (Integer.valueOf(mRangeBar.getLeftPinValue()) + 2)) {
+                        if (value > 1000) {
+                            if (value >= 9999) {
+                                value = 9999;
+                            }
+                            mRangeBar.setTickEnd(value);
+
+                        } else {
+                            mRangeBar.setTickEnd(1000);
+                        }
+
                         mRangeBar.setRangePinsByValue(Float.parseFloat(mRangeBar.getLeftPinValue()), value);
+                        mRangeBar.setTickInterval(5);
                     }
 
                 }
@@ -281,8 +298,22 @@ public class PloyeeServiceDetailFragment extends BaseFragment implements PloyeeS
             mEditTextDescription.setText(data.getDescription());
             mEditTextCertificate.setText(data.getCertificate());
             mEditTextEquipmentNeeded.setText(data.getEquipmentNeeded());
-            if (data.getPriceMin() >= 0 && data.getPriceMax() <= 1000 && data.getPriceMax() > data.getPriceMin()) {
-                mRangeBar.setRangePinsByValue(data.getPriceMin(), data.getPriceMax());
+            if (data.getPriceMin() >= 0 && (data.getPriceMax() - 2) > data.getPriceMin()) {
+
+                if (data.getPriceMax() > 1000) {
+                    long priceMax;
+                    if (data.getPriceMax() >= 9999) {
+                        priceMax = 9999;
+                    } else {
+                        priceMax = data.getPriceMax();
+                    }
+
+                    mRangeBar.setTickEnd(priceMax);
+                    mRangeBar.setRangePinsByValue(data.getPriceMin(), priceMax);
+                } else {
+                    mRangeBar.setTickEnd(1000);
+                    mRangeBar.setRangePinsByValue(data.getPriceMin(), data.getPriceMax());
+                }
             }
 
             if (null != data.getData() && null != data.getData().getSubServices() && !data.getData().getSubServices().isEmpty()) {
@@ -325,7 +356,35 @@ public class PloyeeServiceDetailFragment extends BaseFragment implements PloyeeS
         return data;
     }
 
-    private void onClickDone() {
+    private void attempUpdateService() {
+        boolean canRequest = true;
+
+        if (TextUtils.isEmpty(extractAndCheckError(mEditTextDescription))) {
+            canRequest = false;
+        }
+
+        if (mServiceId == -1 && TextUtils.isEmpty(extractAndCheckError(mEditTextOthers))) {
+            canRequest = false;
+        }
+
+        if (canRequest) {
+            requestUpdateServiceDetail();
+        }
+
+    }
+
+    private String extractAndCheckError(EditText editText) {
+        String result = extractString(editText);
+        if (TextUtils.isEmpty(result)) {
+            editText.setError(LThis_field_is_required);
+            editText.requestFocus();
+        } else {
+            editText.setError(null);
+        }
+        return result;
+    }
+
+    private void requestUpdateServiceDetail() {
         mPresenter.requestSaveServiceDetail(gatheredData());
     }
 

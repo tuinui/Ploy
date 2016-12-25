@@ -4,6 +4,7 @@ import android.app.Application;
 
 import com.facebook.FacebookSdk;
 import com.facebook.appevents.AppEventsLogger;
+import com.nos.ploy.custom.UncaughtExceptionHandler;
 
 /**
  * Created by User on 9/11/2559.
@@ -17,5 +18,6 @@ public class MyApplication extends Application {
         // Initialize the SDK before executing any other operations,
         FacebookSdk.sdkInitialize(getApplicationContext());
         AppEventsLogger.activateApp(this);
+        Thread.setDefaultUncaughtExceptionHandler(new UncaughtExceptionHandler(this));
     }
 }

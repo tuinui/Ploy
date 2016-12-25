@@ -48,5 +48,6 @@ public class DatePickerUtils {
             }
         }, Calendar.getInstance().get(Calendar.YEAR), Calendar.getInstance().get(Calendar.MONTH), Calendar.getInstance().get(Calendar.DAY_OF_MONTH));
         dialog.getDatePicker().setMaxDate(new Date().getTime());
+        dialog.show();
     }
 }
