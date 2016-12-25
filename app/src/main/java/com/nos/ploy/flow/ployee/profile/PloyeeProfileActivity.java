@@ -196,6 +196,8 @@ public class PloyeeProfileActivity extends BaseActivity implements OnMapReadyCal
             if (TextUtils.equals(failCause.getMessageCode(), ResponseMessage.CODE_DATA_NOT_FOUND)) {
                 shouldRequestCallSave = true;
             }
+            bindData(new ProfileGson.Data());
+
 
         }
     };
