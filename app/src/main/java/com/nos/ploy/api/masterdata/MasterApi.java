@@ -1,6 +1,7 @@
 package com.nos.ploy.api.masterdata;
 
 import com.nos.ploy.api.account.model.ProfileGson;
+import com.nos.ploy.api.account.model.TransportGson;
 import com.nos.ploy.api.masterdata.model.HtmlAppGson;
 import com.nos.ploy.api.masterdata.model.LanguageGson;
 
@@ -20,4 +21,8 @@ public interface MasterApi {
     //api/getHtmlApp?lgCode=en&dataId=5
     @GET("/api/getHtmlApp")
     Call<HtmlAppGson> getHtmlApp(@Query("lgCode") String languageCode,@Query("dataId") long dataId);
+
+    ///api/transport
+    @GET("/api/transport")
+    Call<TransportGson> getTransportList();
 }

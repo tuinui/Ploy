@@ -33,7 +33,7 @@ public class PloyeeAccountPhoneFragment extends BaseFragment {
     String LPhone_number;
     private FragmentInteractionListener listener;
     private static final String KEY_DEFAULT_VALUE = "DEFAULT_VALUE";
-    private String mDefaultPhoneNumber;
+//    private String mDefaultPhoneNumber;
 
     public static PloyeeAccountPhoneFragment newInstance(String defaultValue, FragmentInteractionListener listener) {
 
@@ -53,7 +53,7 @@ public class PloyeeAccountPhoneFragment extends BaseFragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (null != getArguments()) {
-            mDefaultPhoneNumber = getArguments().getString(KEY_DEFAULT_VALUE, "");
+//            mDefaultPhoneNumber = getArguments().getString(KEY_DEFAULT_VALUE, "");
         }
     }
 
@@ -69,11 +69,11 @@ public class PloyeeAccountPhoneFragment extends BaseFragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         initToolbar();
-        bindData();
+//        bindData();
     }
 
     private void bindData() {
-        mEditTextPhoneNumber.setText(mDefaultPhoneNumber);
+//        mEditTextPhoneNumber.setText(mDefaultPhoneNumber);
     }
 
     private void initToolbar() {

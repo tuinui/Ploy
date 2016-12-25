@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.os.Bundle;
+import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -36,9 +37,11 @@ import com.nos.ploy.api.account.AccountApi;
 import com.nos.ploy.api.account.model.PostUpdateProfileGson;
 import com.nos.ploy.api.account.model.ProfileGson;
 import com.nos.ploy.api.account.model.ProfileImageGson;
-import com.nos.ploy.api.account.model.DummyTransportGson;
+import com.nos.ploy.api.account.model.TransportGson;
+import com.nos.ploy.api.account.model.TransportGsonVm;
 import com.nos.ploy.api.base.RetrofitCallUtils;
 import com.nos.ploy.api.base.response.ResponseMessage;
+import com.nos.ploy.api.masterdata.MasterApi;
 import com.nos.ploy.api.utils.loader.AccountInfoLoader;
 import com.nos.ploy.base.BaseActivity;
 import com.nos.ploy.flow.ployee.profile.language.LanguageChooserFragment;
@@ -105,17 +108,30 @@ public class PloyeeProfileActivity extends BaseActivity implements OnMapReadyCal
     Drawable mDrawableSelectedDot;
     private GoogleMap mGoogleMap;
     private SupportMapFragment mMapFragment = SupportMapFragment.newInstance();
-    private AccountApi mApi;
+    private AccountApi mAccountApi;
     private PostUpdateProfileGson mData;
     public LatLng mCurrentLatLng;
-
+    private MasterApi mMasterApi;
     private boolean shouldRequestCallSave = false;
+    private RetrofitCallUtils.RetrofitCallback<TransportGson> mCallbackTransport = new RetrofitCallUtils.RetrofitCallback<TransportGson>() {
+        @Override
+        public void onDataSuccess(TransportGson data) {
+            dismissLoading();
+            if (null != data && null != data.getData()) {
+                bindTransportData(data.getData());
+            }
+        }
 
+        @Override
+        public void onDataFailure(ResponseMessage failCause) {
+            dismissLoading();
+        }
+    };
     private TransportRecyclerAdapter mTransportRecyclerAdapter = new TransportRecyclerAdapter() {
         @Override
         public void onBindViewHolder(final TransportRecyclerAdapter.ViewHolder holder, int position) {
-            if (RecyclerUtils.isAvailableData(mMapTransports, position)) {
-                DummyTransportGson data = mMapTransports.get(position);
+            if (RecyclerUtils.isAvailableData(mAllDataTransports, position)) {
+                TransportGsonVm data = mAllDataTransports.get(position);
                 data.getId();
 
 //                Glide.with(holder.imgTransport.getContext()).load(data.getDrawable()).into(holder.imgTransport);
@@ -126,8 +142,8 @@ public class PloyeeProfileActivity extends BaseActivity implements OnMapReadyCal
                 holder.imgTransport.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if (RecyclerUtils.isAvailableData(mMapTransports, holder.getAdapterPosition())) {
-                            DummyTransportGson data = mMapTransports.get(holder.getAdapterPosition());
+                        if (RecyclerUtils.isAvailableData(mAllDataTransports, holder.getAdapterPosition())) {
+                            TransportGsonVm data = mAllDataTransports.get(holder.getAdapterPosition());
                             toggleEnableTransport(data.getId(), holder.getAdapterPosition());
                         }
                     }
@@ -158,7 +174,7 @@ public class PloyeeProfileActivity extends BaseActivity implements OnMapReadyCal
 
         @Override
         public int getItemCount() {
-            return RecyclerUtils.getSize(mMapTransports);
+            return RecyclerUtils.getSize(mAllDataTransports);
         }
     };
     private RetrofitCallUtils.RetrofitCallback<ProfileGson> mCallbackLoadData = new RetrofitCallUtils.RetrofitCallback<ProfileGson>() {
@@ -207,7 +223,7 @@ public class PloyeeProfileActivity extends BaseActivity implements OnMapReadyCal
     private int mDotsCount;
     private List<ImageView> mImageViewDots = new ArrayList<>();
     private GoogleApiClient mGoogleApiClient;
-    private List<DummyTransportGson> mMapTransports = new ArrayList<>();
+    private List<TransportGsonVm> mAllDataTransports = new ArrayList<>();
     private ProfileGson.Data mOriginalData;
 
 
@@ -225,7 +241,7 @@ public class PloyeeProfileActivity extends BaseActivity implements OnMapReadyCal
             mEditTextProfileWork.setText(data.getWork());
             mButtonEmail.setActivated(data.isContactEmail());
             mButtonPhone.setActivated(data.isContactPhone());
-            mRecyclerViewTransport.setAdapter(mTransportRecyclerAdapter);
+
 
             ProfileGson.Data.Location locationData = mData.getLocation();
             if (null != locationData) {
@@ -245,11 +261,52 @@ public class PloyeeProfileActivity extends BaseActivity implements OnMapReadyCal
                 }
             }
             mTextViewLanguageSupport.setText(languageSupports);
-
         }
 
     }
 
+
+    private void requestTransportData() {
+        showLoading();
+        RetrofitCallUtils
+                .with(mMasterApi.getTransportList(), mCallbackTransport)
+                .enqueue(this);
+    }
+
+    private void bindTransportData(List<ProfileGson.Data.Transport> data) {
+        mAllDataTransports.clear();
+        mTransportRecyclerAdapter.notifyDataSetChanged();
+        mAllDataTransports.addAll(toVm(data));
+        mTransportRecyclerAdapter.notifyDataSetChanged();
+    }
+
+    private List<TransportGsonVm> toVm(List<ProfileGson.Data.Transport> datas) {
+        List<TransportGsonVm> vms = new ArrayList<>();
+        for (ProfileGson.Data.Transport data : datas) {
+            vms.add(new TransportGsonVm(data.getTransportId(), data.getTransportName(), toTransportIcon(data.getTransportId())));
+        }
+        return vms;
+    }
+
+    private
+    @DrawableRes
+    int toTransportIcon(long transportId) {
+        if (transportId == 1) {
+            return R.drawable.selector_drawable_walk_blue_gray;
+        } else if (transportId == 2) {
+            return R.drawable.selector_drawable_bike_blue_gray;
+        } else if (transportId == 3) {
+            return R.drawable.selector_drawable_car_blue_gray;
+        } else if (transportId == 4) {
+            return R.drawable.selector_drawable_motobike_blue_gray;
+        } else if (transportId == 5) {
+            return R.drawable.selector_drawable_truck_blue_gray;
+        } else if (transportId == 6) {
+            return R.drawable.selector_drawable_bus_blue_gray;
+        } else {
+            return R.drawable.ic_close_white_24dp;
+        }
+    }
 
     private boolean isTransportActivated(long transportId) {
         return null != mData && null != mData.getTransport() && !mData.getTransport().isEmpty() && mData.getTransport().contains(transportId);
@@ -259,7 +316,7 @@ public class PloyeeProfileActivity extends BaseActivity implements OnMapReadyCal
     private void refreshData(Context context) {
         if (null != context && isReady()) {
             showRefreshing();
-            RetrofitCallUtils.with(mApi.getProfileGson(mUserId), mCallbackLoadData).enqueue(context);
+            RetrofitCallUtils.with(mAccountApi.getProfileGson(mUserId), mCallbackLoadData).enqueue(context);
             refreshSlider();
         }
 
@@ -270,7 +327,8 @@ public class PloyeeProfileActivity extends BaseActivity implements OnMapReadyCal
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_ployee_profile);
         ButterKnife.bind(this);
-        mApi = getRetrofit().create(AccountApi.class);
+        mAccountApi = getRetrofit().create(AccountApi.class);
+        mMasterApi = getRetrofit().create(MasterApi.class);
         initToolbar();
         initView();
         initSlider();
@@ -287,7 +345,7 @@ public class PloyeeProfileActivity extends BaseActivity implements OnMapReadyCal
                 return false;
             }
         });
-        mMapTransports.addAll(DummyTransportGson.TRANSPORT_DATA);
+        mRecyclerViewTransport.setAdapter(mTransportRecyclerAdapter);
 
     }
 
@@ -366,7 +424,9 @@ public class PloyeeProfileActivity extends BaseActivity implements OnMapReadyCal
     @Override
     public void onResume() {
         super.onResume();
-
+        if (mAllDataTransports.isEmpty()) {
+            requestTransportData();
+        }
     }
 
     private void initToolbar() {
@@ -390,9 +450,9 @@ public class PloyeeProfileActivity extends BaseActivity implements OnMapReadyCal
     private void onClickDone() {
         showLoading();
         if (shouldRequestCallSave) {
-            RetrofitCallUtils.with(mApi.postSaveProfileGson(gatheredData()), mCallbackUpdateData).enqueue(this);
+            RetrofitCallUtils.with(mAccountApi.postSaveProfileGson(gatheredData()), mCallbackUpdateData).enqueue(this);
         } else {
-            RetrofitCallUtils.with(mApi.postUpdateProfileGson(gatheredData()), mCallbackUpdateData).enqueue(this);
+            RetrofitCallUtils.with(mAccountApi.postUpdateProfileGson(gatheredData()), mCallbackUpdateData).enqueue(this);
         }
     }
 
