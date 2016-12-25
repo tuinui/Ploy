@@ -2,6 +2,7 @@ package com.nos.ploy.api.authentication;
 
 import com.nos.ploy.api.authentication.model.AccountGson;
 import com.nos.ploy.api.authentication.model.PostFacebookMapUser;
+import com.nos.ploy.api.authentication.model.PostForgotPasswordGson;
 import com.nos.ploy.api.authentication.model.PostLoginFacebookGson;
 import com.nos.ploy.api.authentication.model.PostLoginGson;
 import com.nos.ploy.api.authentication.model.PostSignupGson;
@@ -29,4 +30,10 @@ public interface AuthenticationApi {
     ///api/auth/facebookMappingUser
     @POST("/api/auth/facebookMappingUser")
     Call<Object> postFacebookMapUser(@Body PostFacebookMapUser data);
+
+    //    /api/user/forgotPassword
+    @POST("/api/user/forgotPassword")
+    Call<Object> postForgotPassword(@Body PostForgotPasswordGson data);
+
+
 }

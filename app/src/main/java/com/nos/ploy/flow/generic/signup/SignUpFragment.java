@@ -218,7 +218,7 @@ public class SignUpFragment extends BaseFragment implements View.OnClickListener
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        dummyData();
+//        dummyData();
         initView();
         initToolbar(mToolbar);
     }

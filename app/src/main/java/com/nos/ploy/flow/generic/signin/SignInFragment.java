@@ -115,7 +115,7 @@ public class SignInFragment extends BaseFragment implements View.OnClickListener
         super.onViewCreated(view, savedInstanceState);
         initView();
         initToolbar();
-        dummyData();
+//        dummyData();
     }
 
     private void initToolbar() {

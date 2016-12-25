@@ -7,6 +7,7 @@ import android.widget.DatePicker;
 import android.widget.TimePicker;
 
 import java.util.Calendar;
+import java.util.Date;
 
 import rx.functions.Action1;
 
@@ -33,7 +34,7 @@ public class DatePickerUtils {
     }
 
     public static void chooseDate(Context context, final Action1<String> onSuccess) {
-        new DatePickerDialog(context, new DatePickerDialog.OnDateSetListener() {
+        DatePickerDialog dialog = new DatePickerDialog(context, new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
                 Calendar calendar = Calendar.getInstance();
@@ -45,7 +46,7 @@ public class DatePickerUtils {
                     onSuccess.call(dateString);
                 }
             }
-        }, Calendar.getInstance().get(Calendar.YEAR), Calendar.getInstance().get(Calendar.MONTH), Calendar.getInstance().get(Calendar.DAY_OF_MONTH)).show();
-
+        }, Calendar.getInstance().get(Calendar.YEAR), Calendar.getInstance().get(Calendar.MONTH), Calendar.getInstance().get(Calendar.DAY_OF_MONTH));
+        dialog.getDatePicker().setMaxDate(new Date().getTime());
     }
 }

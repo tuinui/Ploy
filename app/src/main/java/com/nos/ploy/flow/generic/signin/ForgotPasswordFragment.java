@@ -3,13 +3,21 @@ package com.nos.ploy.flow.generic.signin;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
+import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import com.nos.ploy.R;
+import com.nos.ploy.api.authentication.AuthenticationApi;
+import com.nos.ploy.api.authentication.model.PostForgotPasswordGson;
+import com.nos.ploy.api.authentication.model.PostSignupGson;
+import com.nos.ploy.api.base.RetrofitCallUtils;
+import com.nos.ploy.api.base.response.ResponseMessage;
 import com.nos.ploy.base.BaseFragment;
 import com.rengwuxian.materialedittext.MaterialEditText;
 
@@ -21,7 +29,7 @@ import butterknife.ButterKnife;
  * Created by Saran on 29/11/2559.
  */
 
-public class ForgotPasswordFragment extends BaseFragment {
+public class ForgotPasswordFragment extends BaseFragment implements View.OnClickListener {
 
     @BindView(R.id.button_forgot_password_confirm)
     Button mButtonConfirm;
@@ -37,6 +45,28 @@ public class ForgotPasswordFragment extends BaseFragment {
     Toolbar mToolbar;
     @BindString(R.string.Password_reset)
     String LPassword_reset;
+    @BindString(R.string.This_field_is_required)
+    String LThis_field_is_required;
+    @BindString(R.string.Password_does_not_match_the_confirm_password)
+    String LPassword_does_not_match_the_confirm_password;
+
+    private RetrofitCallUtils.RetrofitCallback<Object> mCallbackForgotPassword = new RetrofitCallUtils.RetrofitCallback<Object>() {
+        @Override
+        public void onDataSuccess(Object data) {
+            dismissLoading();
+            showToast("Success , Please check email");
+            dismiss();
+        }
+
+        @Override
+        public void onDataFailure(ResponseMessage failCause) {
+            dismissLoading();
+
+        }
+    };
+
+    private AuthenticationApi mApi;
+
 
     public static ForgotPasswordFragment newInstance() {
         Bundle args = new Bundle();
@@ -46,8 +76,10 @@ public class ForgotPasswordFragment extends BaseFragment {
     }
 
 
-    private void attempSubmit() {
-
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mApi = getRetrofit().create(AuthenticationApi.class);
     }
 
     @Nullable
@@ -55,7 +87,6 @@ public class ForgotPasswordFragment extends BaseFragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_forgot_password, container, false);
         ButterKnife.bind(this, v);
-        initToolbar();
         return v;
     }
 
@@ -67,5 +98,61 @@ public class ForgotPasswordFragment extends BaseFragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        initToolbar();
+        initView();
+    }
+
+    private void initView() {
+        mButtonConfirm.setOnClickListener(this);
+    }
+
+
+    private void attempSubmit() {
+        String email = extractAndCheckError(mEditTextEmail);
+        String password = extractAndCheckError(mEditTextPassword);
+        String rePassword = extractAndCheckError(mEditTextRePassword);
+        boolean canSubmit = !TextUtils.isEmpty(email) && !TextUtils.isEmpty(password) && !TextUtils.isEmpty(rePassword);
+        if (!isEmailValid(email)) {
+            mEditTextEmail.setError(getString(R.string.Invalid_email_address));
+            canSubmit = false;
+        }
+
+        if (canSubmit) {
+            if (TextUtils.equals(password, rePassword)) {
+                mEditTextPassword.setError(null);
+                mEditTextRePassword.setError(null);
+                requestForgotPassword(new PostForgotPasswordGson(email, password));
+            } else {
+                mEditTextRePassword.setError(LPassword_does_not_match_the_confirm_password);
+            }
+        }
+    }
+
+    private void requestForgotPassword(PostForgotPasswordGson data) {
+        showLoading();
+        RetrofitCallUtils.with(mApi.postForgotPassword(data), mCallbackForgotPassword).enqueue(getContext());
+    }
+
+    private boolean isEmailValid(CharSequence email) {
+        return Patterns.EMAIL_ADDRESS.matcher(email).matches();
+    }
+
+    private String extractAndCheckError(EditText editText) {
+        String result = extractString(editText);
+        if (TextUtils.isEmpty(result)) {
+            editText.setError(LThis_field_is_required);
+            editText.requestFocus();
+        } else {
+            editText.setError(null);
+        }
+        return result;
+    }
+
+    @Override
+    public void onClick(View v) {
+        int id = v.getId();
+        if (id == mButtonConfirm.getId()) {
+            attempSubmit();
+        }
     }
 }
