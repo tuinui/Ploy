@@ -3,6 +3,7 @@ package com.nos.ploy.flow.ployee.account.phone;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -31,15 +32,29 @@ public class PloyeeAccountPhoneFragment extends BaseFragment {
     @BindString(R.string.Phone_number)
     String LPhone_number;
     private FragmentInteractionListener listener;
+    private static final String KEY_DEFAULT_VALUE = "DEFAULT_VALUE";
+    private String mDefaultPhoneNumber;
 
-    public static PloyeeAccountPhoneFragment newInstance(FragmentInteractionListener listener) {
+    public static PloyeeAccountPhoneFragment newInstance(String defaultValue, FragmentInteractionListener listener) {
 
         Bundle args = new Bundle();
-
+        if (!TextUtils.isEmpty(defaultValue) && defaultValue.contains("+")) {
+//            defaultValue = String.valueOf(TextUtils.replace(defaultValue, new String[]{"+"}, new String[]{""}));
+            defaultValue =  defaultValue.replaceAll("\\+", "");
+        }
+        args.putString(KEY_DEFAULT_VALUE, defaultValue);
         PloyeeAccountPhoneFragment fragment = new PloyeeAccountPhoneFragment();
         fragment.setListener(listener);
         fragment.setArguments(args);
         return fragment;
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (null != getArguments()) {
+            mDefaultPhoneNumber = getArguments().getString(KEY_DEFAULT_VALUE, "");
+        }
     }
 
     @Nullable
@@ -54,6 +69,11 @@ public class PloyeeAccountPhoneFragment extends BaseFragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         initToolbar();
+        bindData();
+    }
+
+    private void bindData() {
+        mEditTextPhoneNumber.setText(mDefaultPhoneNumber);
     }
 
     private void initToolbar() {
@@ -88,6 +108,10 @@ public class PloyeeAccountPhoneFragment extends BaseFragment {
         return listener;
     }
 
+    @Override
+    protected boolean isDialog() {
+        return true;
+    }
 
     public static interface FragmentInteractionListener {
         public void onConfirmData(String phoneNumber);

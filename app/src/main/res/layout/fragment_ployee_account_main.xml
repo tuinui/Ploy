@@ -44,8 +44,7 @@
                             android:layout_marginTop="16dp"
                             android:hint="@string/First_Name_asterisk"
                             android:inputType="textPersonName"
-                            app:met_baseColor="@color/colorPrimary"
-                            app:met_floatingLabel="highlight"
+                            app:met_baseColor="@color/colorPrimary"                            app:met_floatingLabel="highlight"
                             app:met_floatingLabelText="@string/First_Name_asterisk"
                             app:met_floatingLabelTextColor="@color/colorPrimary" />
 

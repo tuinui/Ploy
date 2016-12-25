@@ -40,7 +40,7 @@ public class DatePickerUtils {
                 calendar.set(Calendar.YEAR, year);
                 calendar.set(Calendar.MONTH, month);
                 calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth); //reset seconds to zero
-                String dateString = DateParseUtils.parseDate(calendar.getTime(), DateParseUtils.ISO8601_DATE_PATTERN_FROM_API);
+                String dateString = DateParseUtils.parseDate(calendar.getTime(), DateParseUtils.DATE_PATTERN_FROM_API);
                 if (null != onSuccess) {
                     onSuccess.call(dateString);
                 }

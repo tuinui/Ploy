@@ -19,7 +19,7 @@ import java.util.TimeZone;
 @SuppressWarnings("deprecation")
 public class DateParseUtils {
     public static final String ISO8601_DATE_TIME_PATTERN_FROM_API = "yyyy-MM-dd'T'HH:mm:ss.SSSZZZZZ";
-    public static final String ISO8601_DATE_PATTERN_FROM_API = "yyyy-MM-dd";
+    public static final String DATE_PATTERN_FROM_API = "yyyy-MM-dd";
     public static final String DATE_TIME_PATTERN_HH_mm = "HH:mm";
     public static final String DATE_TIME_PATTERN_dd_MM_YYYY = "dd/MM/yyyy";
 
@@ -34,8 +34,8 @@ public class DateParseUtils {
                 sdf = new SimpleDateFormat(newPattern, Locale.getDefault());
                 result = sdf.format(date);
             } catch (ParseException e) {
-                if (!TextUtils.equals(oldPattern, ISO8601_DATE_PATTERN_FROM_API)) {
-                    return parseDateString(dateString, ISO8601_DATE_PATTERN_FROM_API, newPattern);
+                if (!TextUtils.equals(oldPattern, DATE_PATTERN_FROM_API)) {
+                    return parseDateString(dateString, DATE_PATTERN_FROM_API, newPattern);
                 }
 
                 e.printStackTrace();
@@ -55,8 +55,8 @@ public class DateParseUtils {
                 Date date = sdf.parse(dateString);
                 time = date.getTime();
             } catch (ParseException e) {
-                if (!TextUtils.equals(oldPattern, ISO8601_DATE_PATTERN_FROM_API)) {
-                    return getTimeFromDateString(dateString, ISO8601_DATE_PATTERN_FROM_API);
+                if (!TextUtils.equals(oldPattern, DATE_PATTERN_FROM_API)) {
+                    return getTimeFromDateString(dateString, DATE_PATTERN_FROM_API);
                 }
                 e.printStackTrace();
             }
@@ -67,7 +67,7 @@ public class DateParseUtils {
     }
 
     public static long getTimeFromDateString(String dateString) {
-        return getTimeFromDateString(dateString, ISO8601_DATE_PATTERN_FROM_API);
+        return getTimeFromDateString(dateString, DATE_PATTERN_FROM_API);
     }
 
 
@@ -94,8 +94,8 @@ public class DateParseUtils {
             calendar.setTime(date);
             return calendar;
         } catch (ParseException e) {
-            if (!TextUtils.equals(oldPattern, ISO8601_DATE_PATTERN_FROM_API)) {
-                return toCalendar(dateString, ISO8601_DATE_PATTERN_FROM_API);
+            if (!TextUtils.equals(oldPattern, DATE_PATTERN_FROM_API)) {
+                return toCalendar(dateString, DATE_PATTERN_FROM_API);
             }
             e.printStackTrace();
         }

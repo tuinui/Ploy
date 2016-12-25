@@ -6,6 +6,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
+import android.support.annotation.StyleRes;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -15,6 +16,7 @@ import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -52,7 +54,14 @@ public abstract class BaseFragment extends AppCompatDialogFragment {
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        Dialog dialog = new AppCompatDialog(getContext(), R.style.AppTheme_Light) {
+        Dialog dialog;
+        @StyleRes int style;
+        if (isDialog()) {
+            style = getTheme();
+        } else {
+            style = R.style.AppTheme_Light;
+        }
+        dialog = new AppCompatDialog(getContext(), style) {
             @Override
             public void onBackPressed() {
                 if (!BaseFragment.this.onBackPressed()) {
@@ -68,6 +77,14 @@ public abstract class BaseFragment extends AppCompatDialogFragment {
     }
 
     @Override
+    public void onStart() {
+        super.onStart();
+        if (null != getDialog() && null != getDialog().getWindow() && null != getContext() && isDialog()) {
+            getDialog().getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.WRAP_CONTENT);
+        }
+    }
+
+    @Override
     public void dismiss() {
         if (isReadyForFragmentTransaction() && null != getFragmentManager()) {
             super.dismiss();
@@ -78,12 +95,22 @@ public abstract class BaseFragment extends AppCompatDialogFragment {
         return RetrofitManager.getRetrofit(getContext());
     }
 
+    protected void enableBackButton(Toolbar toolbar, View.OnClickListener onNavigationClick) {
+        if (isDialog()) {
+            toolbar.setNavigationIcon(R.drawable.ic_close_white_24dp);
+        } else {
+            toolbar.setNavigationIcon(R.drawable.ic_chevron_left_white_24dp);
+        }
+
+        toolbar.setNavigationOnClickListener(onNavigationClick);
+
+    }
+
     protected void enableBackButton(Toolbar toolbar) {
-        toolbar.setNavigationIcon(R.drawable.ic_chevron_left_white_24dp);
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+        enableBackButton(toolbar, new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                BaseFragment.this.dismiss();
+            public void onClick(View view) {
+                dismiss();
             }
         });
     }
@@ -164,6 +191,7 @@ public abstract class BaseFragment extends AppCompatDialogFragment {
             }
         });
     }
+
     protected void showRefreshing() {
         if (mRefreshLayout == null) {
             showLoading();
@@ -185,6 +213,7 @@ public abstract class BaseFragment extends AppCompatDialogFragment {
             mRefreshLayout.setRefreshing(false);
         }
     }
+
     protected void dismissLoading() {
         if (!isActivityReady()) {
             return;

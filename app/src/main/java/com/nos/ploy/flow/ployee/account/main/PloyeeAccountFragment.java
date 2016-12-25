@@ -26,6 +26,7 @@ import com.nos.ploy.api.base.response.ResponseMessage;
 import com.nos.ploy.api.utils.loader.AccountInfoLoader;
 import com.nos.ploy.base.BaseFragment;
 import com.nos.ploy.flow.ployee.account.phone.PloyeeAccountPhoneFragment;
+import com.nos.ploy.utils.DatePickerUtils;
 import com.rengwuxian.materialedittext.MaterialEditText;
 
 import java.util.Arrays;
@@ -62,12 +63,7 @@ public class PloyeeAccountFragment extends BaseFragment implements View.OnClickL
     @BindString(R.string.Account)
     String LAccount;
 
-    private PloyeeAccountPhoneFragment mPhoneFragment = PloyeeAccountPhoneFragment.newInstance(new PloyeeAccountPhoneFragment.FragmentInteractionListener() {
-        @Override
-        public void onConfirmData(String phoneNumber) {
-            mEditTextPhone.setText(phoneNumber);
-        }
-    });
+
     private AccountGson.Data mData;
     private static final String KEY_ACCOUNT_GSON = "ACCOUNT_GSON";
     private CallbackManager mCallbackManager;
@@ -163,6 +159,8 @@ public class PloyeeAccountFragment extends BaseFragment implements View.OnClickL
     }
 
     private void initView() {
+        disableEditable(mEditTextPhone);
+        disableEditable(mEditTextBirthday);
         setRefreshLayout(mSwipeRefreshLayout, new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -170,6 +168,7 @@ public class PloyeeAccountFragment extends BaseFragment implements View.OnClickL
             }
         });
         mEditTextPhone.setOnClickListener(this);
+        mEditTextBirthday.setOnClickListener(this);
     }
 
     private void initToolbar() {
@@ -235,7 +234,19 @@ public class PloyeeAccountFragment extends BaseFragment implements View.OnClickL
     public void onClick(View view) {
         int id = view.getId();
         if (id == mEditTextPhone.getId()) {
-            showFragment(mPhoneFragment);
+            showFragment(PloyeeAccountPhoneFragment.newInstance(extractString(mEditTextPhone), new PloyeeAccountPhoneFragment.FragmentInteractionListener() {
+                @Override
+                public void onConfirmData(String phoneNumber) {
+                    mEditTextPhone.setText(phoneNumber);
+                }
+            }));
+        } else if (id == mEditTextBirthday.getId()) {
+            DatePickerUtils.chooseDate(mEditTextBirthday.getContext(), new Action1<String>() {
+                @Override
+                public void call(String s) {
+                    mEditTextBirthday.setText(s);
+                }
+            });
         }
     }
 }
