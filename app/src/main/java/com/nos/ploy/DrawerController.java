@@ -24,7 +24,7 @@ import java.util.Map;
  */
 public class DrawerController {
     @Retention(RetentionPolicy.SOURCE)
-    @IntDef({NONE, ACCOUNT, SETTINGS,WHAT_IS_PLOYER,WHAT_IS_PLOYEE})
+    @IntDef({NONE, ACCOUNT, SETTINGS, WHAT_IS_PLOYER, WHAT_IS_PLOYEE})
     public @interface Menu {
     }
 
@@ -66,9 +66,9 @@ public class DrawerController {
                     @Override
                     public void onClick(View view) {
                         listener.onMenuItemSelected(toMenu(menu));
+                        closeDrawer(drawerLayout);
                     }
                 });
-
             }
 
             @Override

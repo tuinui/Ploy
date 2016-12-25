@@ -27,6 +27,7 @@ import com.nos.ploy.api.utils.loader.AccountInfoLoader;
 import com.nos.ploy.base.BaseActivity;
 import com.nos.ploy.cache.UserTokenManager;
 import com.nos.ploy.custom.view.CustomViewPager;
+import com.nos.ploy.flow.generic.htmltext.HtmlTextFragment;
 import com.nos.ploy.flow.ployee.account.main.PloyeeAccountFragment;
 import com.nos.ploy.flow.ployee.home.content.availability.PloyeeAvailabilityFragment;
 import com.nos.ploy.flow.ployee.home.content.service.list.PloyeeServiceListFragment;
@@ -153,6 +154,12 @@ public class PloyeeHomeActivity extends BaseActivity implements View.OnClickList
                     break;
                 case DrawerController.SETTINGS:
                     showFragment(PloyeeSettingsFragment.newInstance());
+                    break;
+                case DrawerController.WHAT_IS_PLOYEE:
+                    showFragment(HtmlTextFragment.newInstance(HtmlTextFragment.WHAT_IS_PLOYEE));
+                    break;
+                case DrawerController.WHAT_IS_PLOYER:
+                    showFragment(HtmlTextFragment.newInstance(HtmlTextFragment.WHAT_IS_PLOYER));
                     break;
             }
         }
