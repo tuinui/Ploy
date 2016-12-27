@@ -14,4 +14,7 @@
     <color name="white_cc_transparent">#CCFFFFFF</color>
 
     <color name="gray_alpha">#66aaaaaa</color>
+
+    <color name="gray_edittext_header">#52504A</color>
+    <color name="gray_edittext_text">#848484</color>
 </resources>

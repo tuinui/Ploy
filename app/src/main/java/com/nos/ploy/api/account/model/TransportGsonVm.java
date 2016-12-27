@@ -10,9 +10,7 @@ public class TransportGsonVm {
 
     private String title;
     private long id;
-    private
-    @DrawableRes
-    int drawable;
+    private @DrawableRes int drawable;
 
     public TransportGsonVm(long id, String title, @DrawableRes int drawable) {
         this.id = id;

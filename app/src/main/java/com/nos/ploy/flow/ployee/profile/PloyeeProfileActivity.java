@@ -19,7 +19,6 @@ import android.text.TextUtils;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -121,8 +120,6 @@ public class PloyeeProfileActivity extends BaseActivity implements OnMapReadyCal
         public void onBindViewHolder(final TransportRecyclerAdapter.ViewHolder holder, int position) {
             if (RecyclerUtils.isAvailableData(mAllDataTransports, position)) {
                 TransportGsonVm data = mAllDataTransports.get(position);
-                data.getId();
-
 //                Glide.with(holder.imgTransport.getContext()).load(data.getDrawable()).into(holder.imgTransport);
                 holder.imgTransport.setImageResource(data.getDrawable());
                 holder.tvTitle.setText(data.getTitle());
@@ -187,9 +184,7 @@ public class PloyeeProfileActivity extends BaseActivity implements OnMapReadyCal
             dismissLoading();
             dismissRefreshing();
             if (null != data && null != data.getData()) {
-
                 bindData(data.getData());
-
             }
         }
 
@@ -201,8 +196,6 @@ public class PloyeeProfileActivity extends BaseActivity implements OnMapReadyCal
                 shouldRequestCallSave = true;
             }
             bindData(new ProfileGson.Data());
-
-
         }
     };
     private Action1<List<ProfileImageGson.Data>> mOnLoadProfileImageFinish = new Action1<List<ProfileImageGson.Data>>() {
@@ -241,6 +234,7 @@ public class PloyeeProfileActivity extends BaseActivity implements OnMapReadyCal
     private void bindData(ProfileGson.Data data) {
         mOriginalData = data;
         mData = new PostUpdateProfileGson(data, mUserId);
+        requestTransportData();
         bindData(mData);
     }
 
@@ -286,8 +280,10 @@ public class PloyeeProfileActivity extends BaseActivity implements OnMapReadyCal
     private void bindTransportData(List<ProfileGson.Data.Transport> data) {
         mAllDataTransports.clear();
         mTransportRecyclerAdapter.notifyDataSetChanged();
+//        for(int i = 0 ;i<10;i++){
         mAllDataTransports.addAll(toVm(data));
-        mTransportRecyclerAdapter.notifyDataSetChanged();
+//        }
+        mTransportRecyclerAdapter.notifyItemRangeChanged(0, mTransportRecyclerAdapter.getItemCount());
     }
 
     private List<TransportGsonVm> toVm(List<ProfileGson.Data.Transport> datas) {
@@ -480,6 +476,10 @@ public class PloyeeProfileActivity extends BaseActivity implements OnMapReadyCal
             }
         });
         mFabProfileImage.setOnClickListener(this);
+        mEditTextAboutMe.setFocusFraction(1f);
+        mEditTextEducation.setFocusFraction(1f);
+        mEditTextProfileWork.setFocusFraction(1f);
+        mEditTextInterest.setFocusFraction(1f);
 
     }
 

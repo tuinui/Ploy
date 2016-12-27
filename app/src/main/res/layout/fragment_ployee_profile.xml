@@ -85,22 +85,22 @@
                             android:layout_width="80dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="0"
-                            android:maxHeight="120dp"
-                            android:clickable="true"
-                            android:scaleType="centerInside"
                             android:background="@color/colorPrimary"
+                            android:clickable="true"
+                            android:maxHeight="120dp"
                             android:padding="16dp"
+                            android:scaleType="centerInside"
                             android:src="@drawable/ic_ployee_location_30dp" />
 
                         <TextView
                             android:id="@+id/textview_ployee_profile_address"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:layout_gravity="center"
                             android:layout_weight="1"
                             android:ellipsize="end"
                             android:gravity="center"
                             android:padding="4dp"
-                            android:layout_gravity="center"
                             tools:text="@string/lorem_ipsum" />
 
 
@@ -112,61 +112,77 @@
                     android:id="@+id/edittext_ployee_profile_about_me"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="16dp"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="16dp"
+                    android:layout_marginTop="16dp"
                     android:hint="@string/About_me"
                     android:inputType="text|textMultiLine"
                     android:lines="3"
+                    android:maxLength="300"
                     android:maxLines="3"
-                    app:met_baseColor="@color/colorPrimary"
-                    app:met_floatingLabel="highlight"
+                    app:met_floatingLabel="normal"
                     app:met_floatingLabelText="@string/About_me"
-                    app:met_floatingLabelTextColor="@color/colorPrimary"
-                    app:met_underlineColor="@android:color/darker_gray" />
+                    app:met_floatingLabelTextColor="@color/gray_edittext_header"
+                    app:met_maxCharacters="300"
+                    app:met_textColor="@color/gray_edittext_text"
+                    tools:text="@string/lorem_ipsum" />
 
                 <com.rengwuxian.materialedittext.MaterialEditText
                     android:id="@+id/edittext_ployee_profile_education"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="16dp"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="16dp"
+                    android:layout_marginTop="16dp"
                     android:hint="@string/Education"
                     android:inputType="text|textMultiLine"
                     android:lines="3"
+                    android:maxLength="300"
                     android:maxLines="3"
-                    app:met_baseColor="@color/colorPrimary"
-                    app:met_floatingLabel="highlight"
+                    app:met_floatingLabel="normal"
                     app:met_floatingLabelText="@string/Education"
-                    app:met_floatingLabelTextColor="@color/colorPrimary"
-                    app:met_underlineColor="@android:color/darker_gray" />
+                    app:met_floatingLabelTextColor="@color/gray_edittext_header"
+                    app:met_maxCharacters="300"
+                    app:met_textColor="@color/gray_edittext_text"
+                    tools:text="@string/lorem_ipsum" />
 
                 <com.rengwuxian.materialedittext.MaterialEditText
                     android:id="@+id/edittext_ployee_profile_work"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="16dp"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="16dp"
+                    android:layout_marginTop="16dp"
                     android:hint="@string/Work"
                     android:inputType="text|textMultiLine"
                     android:lines="3"
+                    android:maxLength="300"
                     android:maxLines="3"
-                    app:met_baseColor="@color/colorPrimary"
-                    app:met_floatingLabel="highlight"
+                    app:met_floatingLabel="normal"
                     app:met_floatingLabelText="@string/Work"
-                    app:met_floatingLabelTextColor="@color/colorPrimary"
-                    app:met_underlineColor="@android:color/darker_gray" />
+                    app:met_floatingLabelTextColor="@color/gray_edittext_header"
+                    app:met_maxCharacters="300"
+                    app:met_textColor="@color/gray_edittext_text"
+                    tools:text="@string/lorem_ipsum" />
 
                 <com.rengwuxian.materialedittext.MaterialEditText
                     android:id="@+id/edittext_ployee_profile_interest"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="16dp"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="16dp"
+                    android:layout_marginTop="16dp"
                     android:hint="@string/Interest"
                     android:inputType="text|textMultiLine"
                     android:lines="3"
+                    android:maxLength="300"
                     android:maxLines="3"
-                    app:met_baseColor="@color/colorPrimary"
-                    app:met_floatingLabel="highlight"
+                    app:met_floatingLabel="normal"
                     app:met_floatingLabelText="@string/Interest"
-                    app:met_floatingLabelTextColor="@color/colorPrimary"
-                    app:met_underlineColor="@android:color/darker_gray" />
+                    app:met_floatingLabelTextColor="@color/gray_edittext_header"
+                    app:met_maxCharacters="300"
+                    app:met_textColor="@color/gray_edittext_text"
+                    tools:text="@string/lorem_ipsum" />
 
 
                 <LinearLayout
@@ -224,7 +240,6 @@
 
                         <android.support.v7.widget.AppCompatButton
                             android:id="@+id/button_ployee_profile_show_phone_no"
-                            style="@style/Widget.AppCompat.Button.Colored"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
@@ -236,7 +251,6 @@
 
                         <android.support.v7.widget.AppCompatButton
                             android:id="@+id/button_ployee_profile_show_email"
-                            style="@style/Widget.AppCompat.Button.Colored"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
