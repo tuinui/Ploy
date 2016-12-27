@@ -24,7 +24,7 @@ public abstract class LanguageChooserRecyclerAdapter extends RecyclerView.Adapte
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.radiobutton_language_chooser)
-        ToggleableRadioButton radio;
+        public ToggleableRadioButton radio;
 
         public ViewHolder(View v) {
             super(v);

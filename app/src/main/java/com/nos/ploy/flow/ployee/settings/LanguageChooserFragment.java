@@ -1,4 +1,4 @@
-package com.nos.ploy.flow.ployee.profile.language;
+package com.nos.ploy.flow.ployee.settings;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -7,6 +7,7 @@ import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -21,6 +22,8 @@ import com.nos.ploy.api.base.response.ResponseMessage;
 import com.nos.ploy.api.masterdata.MasterApi;
 import com.nos.ploy.api.masterdata.model.LanguageGson;
 import com.nos.ploy.base.BaseFragment;
+import com.nos.ploy.flow.ployee.profile.language.LanguageChooserRecyclerAdapter;
+import com.nos.ploy.flow.ployee.profile.language.SpokenLanguageChooserFragment;
 import com.nos.ploy.utils.RecyclerUtils;
 
 import java.util.ArrayList;
@@ -30,10 +33,10 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /**
- * Created by Saran on 25/12/2559.
+ * Created by Saran on 28/12/2559.
  */
 
-public class LanguageChooserFragment extends BaseFragment {
+public class LanguageChooserFragment extends BaseFragment{
     private static final String KEY_SPOKEN_LANGUAGE_DATA = "LANGUAGE_DATA";
     @BindView(R.id.toolbar_main)
     Toolbar mToolbar;
@@ -44,41 +47,22 @@ public class LanguageChooserFragment extends BaseFragment {
     @BindView(R.id.swiperefreshlayout_language_chooser)
     SwipeRefreshLayout mSwipeRefreshLayout;
     private long mUserId;
-    private ArrayList<String> mSpokenCodes = new ArrayList<>();
-    private OnDataChangedListener listener;
+    private ArrayList<String> mDatas = new ArrayList<>();
+    private SpokenLanguageChooserFragment.OnDataChangedListener listener;
     private MasterApi mApi;
-    private List<ProfileGson.Data.Language> mDatas = new ArrayList<>();
+//    private List<ProfileGson.Data.Language> mDatas = new ArrayList<>();
     private LanguageChooserRecyclerAdapter mAdapter = new LanguageChooserRecyclerAdapter() {
         @Override
         public void onBindViewHolder(final LanguageChooserRecyclerAdapter.ViewHolder holder, int position) {
             if (RecyclerUtils.isAvailableData(mDatas, position)) {
-                ProfileGson.Data.Language language = mDatas.get(position);
-                holder.radio.setText(language.getSpokenLanguageValue());
-                holder.radio.setChecked(isLanguageSupported(language.getSpokenLanguageCode()));
-                holder.radio.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                    @Override
-                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                        if (RecyclerUtils.isAvailableData(mDatas, holder.getAdapterPosition())) {
-                            ProfileGson.Data.Language language = mDatas.get(holder.getAdapterPosition());
-                            if (isChecked) {
-                                if (!mSpokenCodes.contains(language.getSpokenLanguageCode())) {
-                                    mSpokenCodes.add(language.getSpokenLanguageCode());
-                                }
-                            } else {
-                                if (mSpokenCodes.contains(language.getSpokenLanguageCode())) {
-                                    mSpokenCodes.remove(language.getSpokenLanguageCode());
-                                }
-                            }
-
-                        }
-
-                    }
-                });
+                String language = mDatas.get(position);
+                holder.radio.setText(language);
+                holder.radio.setChecked(isLanguageSupported(language));
             }
         }
 
         private boolean isLanguageSupported(String languageCode) {
-            return null != mSpokenCodes && !mSpokenCodes.isEmpty() && mSpokenCodes.contains(languageCode);
+            return TextUtils.equals(languageCode,"Frenc");
         }
 
         @Override
@@ -86,31 +70,22 @@ public class LanguageChooserFragment extends BaseFragment {
             return RecyclerUtils.getSize(mDatas);
         }
     };
-    private RetrofitCallUtils.RetrofitCallback<LanguageGson> mCallbackLoadLanguage = new RetrofitCallUtils.RetrofitCallback<LanguageGson>() {
-        @Override
-        public void onDataSuccess(LanguageGson data) {
-            dismissRefreshing();
-            if (null != data && null != data.getData()) {
-                bindData(data.getData());
-            }
-        }
 
-        @Override
-        public void onDataFailure(ResponseMessage failCause) {
-            dismissRefreshing();
-        }
-    };
+    private boolean mSingleChoiceMode = false;
 
-    public static LanguageChooserFragment newInstance(long userId, ArrayList<String> datas, OnDataChangedListener listener) {
+    public static LanguageChooserFragment newInstance(long userId, ArrayList<String> datas, SpokenLanguageChooserFragment.OnDataChangedListener listener) {
 
         Bundle args = new Bundle();
         args.putLong(KEY_USER_ID, userId);
         args.putStringArrayList(KEY_SPOKEN_LANGUAGE_DATA, datas);
         LanguageChooserFragment fragment = new LanguageChooserFragment();
         fragment.setArguments(args);
-
         fragment.setListener(listener);
         return fragment;
+    }
+
+    public void setSingleChoiceMode(boolean singleChoiceMode) {
+        this.mSingleChoiceMode = singleChoiceMode;
     }
 
     @Override
@@ -118,7 +93,7 @@ public class LanguageChooserFragment extends BaseFragment {
         super.onCreate(savedInstanceState);
         if (null != getArguments()) {
             mUserId = getArguments().getLong(KEY_USER_ID, 0);
-            mSpokenCodes = getArguments().getStringArrayList(KEY_SPOKEN_LANGUAGE_DATA);
+            mDatas = getArguments().getStringArrayList(KEY_SPOKEN_LANGUAGE_DATA);
         }
         mApi = getRetrofit().create(MasterApi.class);
     }
@@ -136,7 +111,7 @@ public class LanguageChooserFragment extends BaseFragment {
         super.onViewCreated(view, savedInstanceState);
         initToolbar();
         initRecyclerView();
-        initView();
+        bindData();
     }
 
     private void initRecyclerView() {
@@ -150,32 +125,13 @@ public class LanguageChooserFragment extends BaseFragment {
         mRecyclerView.setAdapter(mAdapter);
     }
 
-    private void initView() {
-        setRefreshLayout(mSwipeRefreshLayout, new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                refreshData();
-            }
-        });
-    }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        if (null == mDatas || mDatas.isEmpty()) {
-            refreshData();
-        }
-    }
 
-    private void refreshData() {
-        showRefreshing();
-        RetrofitCallUtils.with(mApi.getLanguageList(), mCallbackLoadLanguage).enqueue(getContext());
-    }
 
-    private void bindData(List<ProfileGson.Data.Language> data) {
-        if (null != data) {
-            mDatas.clear();
-            mDatas.addAll(data);
+
+
+    private void bindData() {
+        if (!mDatas.isEmpty()) {
             mAdapter.notifyDataSetChanged();
         }
     }
@@ -188,7 +144,7 @@ public class LanguageChooserFragment extends BaseFragment {
             public boolean onMenuItemClick(MenuItem item) {
                 int id = item.getItemId();
                 if (id == R.id.menu_done_item_done) {
-                    getListener().onDataChanged(mSpokenCodes);
+                    getListener().onClickDone(mDatas);
                     dismiss();
                 }
                 return false;
@@ -197,15 +153,15 @@ public class LanguageChooserFragment extends BaseFragment {
         enableBackButton(mToolbar);
     }
 
-    public OnDataChangedListener getListener() {
+    public SpokenLanguageChooserFragment.OnDataChangedListener getListener() {
         return listener;
     }
 
-    public void setListener(OnDataChangedListener listener) {
+    public void setListener(SpokenLanguageChooserFragment.OnDataChangedListener listener) {
         this.listener = listener;
     }
 
     public static interface OnDataChangedListener {
-        public void onDataChanged(ArrayList<String> datas);
+        public void onClickDone(ArrayList<String> datas);
     }
 }

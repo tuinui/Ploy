@@ -21,6 +21,7 @@ import com.nos.ploy.R;
 import com.nos.ploy.api.base.RetrofitManager;
 import com.nos.ploy.cache.UserTokenManager;
 import com.nos.ploy.utils.FragmentTransactionUtils;
+import com.nos.ploy.utils.NetworkUtils;
 
 import java.util.Map;
 
@@ -56,6 +57,7 @@ public class BaseActivity extends LocalizationActivity {
     @Override
     public void onResume() {
         super.onResume();
+        NetworkUtils.isDeviceOnline(this);
         isActivityDestroyed = false;
     }
 
@@ -65,6 +67,11 @@ public class BaseActivity extends LocalizationActivity {
         } else {
             return isActivityDestroyed;
         }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
     }
 
     public boolean isReady() {
@@ -120,12 +127,20 @@ public class BaseActivity extends LocalizationActivity {
         FragmentTransactionUtils.showFragment(this, baseFragment);
     }
 
-    protected void showToast(String message) {
+    protected void showToastLong(String message) {
         if (isReady()) {
             Toast toast = Toast.makeText(this, message, Toast.LENGTH_LONG);
             toast.show();
         }
     }
+
+    protected void showToastShort(String message) {
+        if (isReady()) {
+            Toast toast = Toast.makeText(this, message, Toast.LENGTH_SHORT);
+            toast.show();
+        }
+    }
+
 
     public void showFragment(BaseFragment baseFragment, String tag) {
         FragmentTransactionUtils.showFragment(this, baseFragment, tag);

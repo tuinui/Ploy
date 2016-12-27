@@ -43,7 +43,7 @@ import com.nos.ploy.api.base.response.ResponseMessage;
 import com.nos.ploy.api.masterdata.MasterApi;
 import com.nos.ploy.api.utils.loader.AccountInfoLoader;
 import com.nos.ploy.base.BaseActivity;
-import com.nos.ploy.flow.ployee.profile.language.LanguageChooserFragment;
+import com.nos.ploy.flow.ployee.profile.language.SpokenLanguageChooserFragment;
 import com.nos.ploy.flow.ployee.profile.upload.UploadPhotoFragment;
 import com.nos.ploy.utils.FragmentTransactionUtils;
 import com.nos.ploy.utils.GoogleApiAvailabilityUtils;
@@ -216,7 +216,7 @@ public class PloyeeProfileActivity extends BaseActivity implements OnMapReadyCal
         @Override
         public void onDataSuccess(Object data) {
             dismissLoading();
-            showToast("Success");
+            showToastLong("Success");
             refreshData(PloyeeProfileActivity.this);
 
         }
@@ -532,13 +532,13 @@ public class PloyeeProfileActivity extends BaseActivity implements OnMapReadyCal
     }
 
     private void showLanguageChooser() {
-        showFragment(LanguageChooserFragment.newInstance(mUserId, mData.getLanguage(), new LanguageChooserFragment.OnDataChangedListener() {
+        showFragment(SpokenLanguageChooserFragment.newInstance(mUserId, mData.getLanguage(), new SpokenLanguageChooserFragment.OnDataChangedListener() {
             @Override
-            public void onDataChanged(ArrayList<String> datas) {
+            public void onClickDone(ArrayList<String> datas) {
                 mData = gatheredData();
                 mData.setLanguage(datas);
                 bindData(mData);
-                onClickDone();
+                PloyeeProfileActivity.this.onClickDone();
             }
         }));
 

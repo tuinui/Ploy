@@ -15,6 +15,9 @@ import com.nos.ploy.R;
 import com.nos.ploy.base.BaseFragment;
 import com.nos.ploy.cache.UserTokenManager;
 import com.nos.ploy.flow.generic.htmltext.HtmlTextFragment;
+import com.nos.ploy.flow.ployee.profile.language.SpokenLanguageChooserFragment;
+
+import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -41,14 +44,46 @@ public class PloyeeSettingsFragment extends BaseFragment implements View.OnClick
     Toolbar mToolbar;
     @BindView(R.id.textview_main_appbar_title)
     TextView mTextViewTitle;
+    private long mUserId;
+    private SpokenLanguageChooserFragment.OnDataChangedListener mOnChangedListener = new SpokenLanguageChooserFragment.OnDataChangedListener() {
+        @Override
+        public void onClickDone(ArrayList<String> datas) {
 
-    public static PloyeeSettingsFragment newInstance() {
+        }
+    };
+    private ArrayList<String> mDummyAppLanguages = new ArrayList<>();
+
+    public static PloyeeSettingsFragment newInstance(long userId) {
 
         Bundle args = new Bundle();
-
+        args.putLong(KEY_USER_ID,userId);
         PloyeeSettingsFragment fragment = new PloyeeSettingsFragment();
         fragment.setArguments(args);
         return fragment;
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if(null != getArguments()){
+            mUserId = getArguments().getLong(KEY_USER_ID);
+        }
+        dummyAppLanguages();
+    }
+
+    private void dummyAppLanguages(){
+        if(mDummyAppLanguages.isEmpty()){
+            mDummyAppLanguages.add("French");
+            mDummyAppLanguages.add("English");
+            mDummyAppLanguages.add("German");
+            mDummyAppLanguages.add("Spanish");
+            mDummyAppLanguages.add("Arabic");
+            mDummyAppLanguages.add("Russian");
+            mDummyAppLanguages.add("Chinese");
+            mDummyAppLanguages.add("Japanese");
+            mDummyAppLanguages.add("Polish");
+            mDummyAppLanguages.add("Portuguese");
+        }
     }
 
     @Nullable
@@ -72,6 +107,7 @@ public class PloyeeSettingsFragment extends BaseFragment implements View.OnClick
         mTextViewFaq.setOnClickListener(this);
         mTextViewLegal.setOnClickListener(this);
         mTextViewTerm.setOnClickListener(this);
+        mLinearLayoutLanguageContainer.setOnClickListener(this);
     }
 
     private void initToolbar() {
@@ -93,6 +129,9 @@ public class PloyeeSettingsFragment extends BaseFragment implements View.OnClick
             showFragment(HtmlTextFragment.newInstance(HtmlTextFragment.LEGAL));
         } else if (id == mTextViewTerm.getId()) {
             showFragment(HtmlTextFragment.newInstance(HtmlTextFragment.TERM_AND_CONDITIONS));
+        } else if (id == mLinearLayoutLanguageContainer.getId()) {
+            showFragment(LanguageChooserFragment.newInstance(mUserId, mDummyAppLanguages, mOnChangedListener));
         }
     }
+
 }

@@ -144,7 +144,7 @@ public class PloyeeHomeActivity extends BaseActivity implements View.OnClickList
                     });
                     break;
                 case DrawerController.SETTINGS:
-                    showFragment(PloyeeSettingsFragment.newInstance());
+                    showFragment(PloyeeSettingsFragment.newInstance(mUserId));
                     break;
                 case DrawerController.WHAT_IS_PLOYEE:
                     showFragment(HtmlTextFragment.newInstance(HtmlTextFragment.WHAT_IS_PLOYEE));
