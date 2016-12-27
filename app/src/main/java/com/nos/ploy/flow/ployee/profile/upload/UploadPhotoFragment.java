@@ -219,7 +219,6 @@ public class UploadPhotoFragment extends BaseFragment {
     }
 
     private void initRecyclerView() {
-//        int itemWidth = ScreenUtils.getScreenDisplay(getContext())/ 3;
         mRecyclerViewUploadPhoto.setLayoutManager(new GridLayoutManager(getContext(), RecyclerUtils.calculateNoOfColumns(getContext(), 160)));
         mRecyclerViewUploadPhoto.setAdapter(mAdapter);
     }

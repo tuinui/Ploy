@@ -10,6 +10,7 @@
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/swiperefreshlayout_upload_photo"
         android:layout_width="match_parent"
+        android:background="@drawable/background_gradient_color_primary"
         android:layout_height="wrap_content">
 
         <android.support.v7.widget.RecyclerView

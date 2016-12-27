@@ -170,6 +170,12 @@ public class PloyeeAccountFragment extends BaseFragment implements View.OnClickL
         });
         mEditTextPhone.setOnClickListener(this);
         mEditTextBirthday.setOnClickListener(this);
+        mEditTextFirstname.setFocusFraction(1f);
+        mEditTextEmail.setFocusFraction(1f);
+        mEditTextPhone.setFocusFraction(1f);
+        mEditTextLastName.setFocusFraction(1f);
+        mEditTextBirthday.setFocusFraction(1f);
+        mEdittextPassword.setFocusFraction(1f);
     }
 
     private void initToolbar() {
