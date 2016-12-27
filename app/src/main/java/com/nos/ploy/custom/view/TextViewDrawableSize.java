@@ -45,16 +45,17 @@ public class TextViewDrawableSize extends AppCompatTextView {
             initCompoundDrawableSize();
         }
     }
-    public void setCompoundDrawableWidth(int dp){
-        mDrawableWidth = ScreenUtils.convertDIPToPixels(getContext(),dp);
+
+    public void setCompoundDrawableWidth(int dp) {
+        mDrawableWidth = ScreenUtils.convertDIPToPixels(getContext(), dp);
         if (mDrawableWidth > 0 || mDrawableHeight > 0) {
             initCompoundDrawableSize();
         }
 
     }
 
-    public void setCompoundDrawableHeight(int dp){
-        mDrawableHeight = ScreenUtils.convertDIPToPixels(getContext(),dp);
+    public void setCompoundDrawableHeight(int dp) {
+        mDrawableHeight = ScreenUtils.convertDIPToPixels(getContext(), dp);
         if (mDrawableWidth > 0 || mDrawableHeight > 0) {
             initCompoundDrawableSize();
         }

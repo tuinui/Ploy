@@ -23,18 +23,13 @@ import java.util.Map;
  * Created by User on 13/11/2559.
  */
 public class DrawerController {
-    @Retention(RetentionPolicy.SOURCE)
-    @IntDef({NONE, ACCOUNT, SETTINGS, WHAT_IS_PLOYER, WHAT_IS_PLOYEE})
-    public @interface Menu {
-    }
-
     public static final int NONE = -404;
     public static final int SETTINGS = 0;
     public static final int ACCOUNT = 1;
     public static final int WHAT_IS_PLOYER = 2;
     public static final int WHAT_IS_PLOYEE = 3;
-
     public static Map<Integer, String> MAP_MENU_NAMES = new LinkedHashMap<>();
+    private static DrawerController INTSTANCE = new DrawerController();
 
     static {
         MAP_MENU_NAMES.put(SETTINGS, "Settings");
@@ -43,13 +38,11 @@ public class DrawerController {
         MAP_MENU_NAMES.put(WHAT_IS_PLOYEE, "What is Ployee");
     }
 
-    private static DrawerController INTSTANCE = new DrawerController();
+    private DrawerController() {
+    }
 
     public static DrawerController getInstance() {
         return INTSTANCE;
-    }
-
-    private DrawerController() {
     }
 
     public static void initDrawer(final BaseActivity activity, final DrawerLayout drawerLayout, RecyclerView recyclerViewMenu, Toolbar toolbar, View toggleButton, final OnMenuItemSelectedListener listener) {
@@ -125,6 +118,11 @@ public class DrawerController {
         if (null != dl) {
             dl.closeDrawers();
         }
+    }
+
+    @Retention(RetentionPolicy.SOURCE)
+    @IntDef({NONE, ACCOUNT, SETTINGS, WHAT_IS_PLOYER, WHAT_IS_PLOYEE})
+    public @interface Menu {
     }
 
     public static interface OnMenuItemSelectedListener {

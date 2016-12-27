@@ -43,31 +43,6 @@ import rx.functions.Action1;
 public class PopupMenuUtils {
 
 
-    public static class MenuVM<T> {
-        private String menuTitle;
-        private Action1<T> action;
-        private T data;
-
-        public MenuVM(String menuTitle, T data, Action1<T> action) {
-            this.menuTitle = menuTitle;
-            this.action = action;
-            this.data = data;
-        }
-
-
-        public String getMenuTitle() {
-            return menuTitle;
-        }
-
-        public Action1<T> getAction() {
-            return action;
-        }
-
-        public T getData() {
-            return data;
-        }
-    }
-
     public static void showConfirmationAlertMenu(final Context context, @StringRes Integer titleResource, @StringRes Integer messageResource, final Action1<Boolean> onConfirm) {
         if (null == context || null == context.getResources()) {
             return;
@@ -97,7 +72,6 @@ public class PopupMenuUtils {
 
         showConfirmationAlertMenu(context, title, message, positiveButtonTextResource, negativeButtonTextResource, onConfirm);
     }
-
 
     public static void showConfirmationAlertMenu(final Context context, CharSequence title, CharSequence message, final Action1<Boolean> onConfirm) {
         showConfirmationAlertMenu(context, title, message, android.R.string.ok, android.R.string.cancel, onConfirm);
@@ -144,7 +118,6 @@ public class PopupMenuUtils {
             dialog.show();
         }
     }
-
 
     public static void showDialogMenu(String title, final List<MenuVM> datas, final Context context) {
         if (null == context) {
@@ -194,7 +167,6 @@ public class PopupMenuUtils {
         showDialogMenu(null, datas, context);
     }
 
-
     /**
      * now support inputType.length = 3;
      *
@@ -241,7 +213,6 @@ public class PopupMenuUtils {
         }
     }
 
-
     public static void showPopupAlertEditTextFromEditTextMenu(EditText editText, final Action1<String> onConfirm, int... inputTypes) {
         if (null == editText) {
             return;
@@ -261,7 +232,6 @@ public class PopupMenuUtils {
         }
         showPopupAlertEditTextMenu(editText.getContext(), title, editText.getText(), onConfirm, editText.getInputType());
     }
-
 
     public static void showPopupListMenus(final View anchor, final List<MenuVM> infos) {
         if (null == anchor || !isAvaiableContext(anchor.getContext())) {
@@ -298,11 +268,6 @@ public class PopupMenuUtils {
         popupWindow.setContentWidth(measureContentWidth(adapter, anchor));
         popupWindow.setAdapter(adapter);
         popupWindow.show();
-    }
-
-
-    public interface PopupMenuGetViewListener {
-        View onGetView(final int position, View convertView, @NonNull ViewGroup parent, ListPopupWindow popupWindow);
     }
 
     public static ListPopupWindow showPopupListMenus(final View anchor, final List<? extends MenuVM> infos, @LayoutRes int layoutId, @IdRes int textViewResId, final PopupMenuGetViewListener listener) {
@@ -364,8 +329,48 @@ public class PopupMenuUtils {
             }
         });
 
-        if(isAvaiableContext(context)){
+        if (isAvaiableContext(context)) {
             builder.create().show();
+        }
+    }
+
+    private static int measureContentWidth(ListAdapter listAdapter, View view) {
+        ViewGroup mMeasureParent = null;
+        int maxWidth = 0;
+        View itemView = null;
+        int itemType = 0;
+
+        final int widthMeasureSpec = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED);
+        final int heightMeasureSpec = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED);
+        final int count = listAdapter.getCount();
+        for (int i = 0; i < count; i++) {
+            final int positionType = listAdapter.getItemViewType(i);
+            if (positionType != itemType) {
+                itemType = positionType;
+                itemView = null;
+            }
+
+            if (mMeasureParent == null) {
+                mMeasureParent = new FrameLayout(view.getContext());
+            }
+
+            itemView = listAdapter.getView(i, itemView, mMeasureParent);
+            itemView.measure(widthMeasureSpec, heightMeasureSpec);
+
+            final int itemWidth = itemView.getMeasuredWidth();
+
+            if (itemWidth > maxWidth) {
+                maxWidth = itemWidth;
+            }
+        }
+
+        return maxWidth + ScreenUtils.convertDIPToPixels(view.getContext(), 16);
+    }
+
+    public static void setMenuTitle(Menu menu, @IdRes int menuItemId, String title) {
+        MenuItem menuItem = getMenuItemById(menu, menuItemId);
+        if (null != menuItem) {
+            menuItem.setTitle(title);
         }
     }
 //    public static void showInfoDialogAutoLink(Context context, String title, Spanned messageWithLink, String positiveTitle) {
@@ -463,48 +468,6 @@ public class PopupMenuUtils {
 //        showDoneDialog(activity, activity.getString(title), activity.getString(info), activity.getString(positiveTitle));
 //    }
 
-
-    private static int measureContentWidth(ListAdapter listAdapter, View view) {
-        ViewGroup mMeasureParent = null;
-        int maxWidth = 0;
-        View itemView = null;
-        int itemType = 0;
-
-        final int widthMeasureSpec = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED);
-        final int heightMeasureSpec = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED);
-        final int count = listAdapter.getCount();
-        for (int i = 0; i < count; i++) {
-            final int positionType = listAdapter.getItemViewType(i);
-            if (positionType != itemType) {
-                itemType = positionType;
-                itemView = null;
-            }
-
-            if (mMeasureParent == null) {
-                mMeasureParent = new FrameLayout(view.getContext());
-            }
-
-            itemView = listAdapter.getView(i, itemView, mMeasureParent);
-            itemView.measure(widthMeasureSpec, heightMeasureSpec);
-
-            final int itemWidth = itemView.getMeasuredWidth();
-
-            if (itemWidth > maxWidth) {
-                maxWidth = itemWidth;
-            }
-        }
-
-        return maxWidth + ScreenUtils.convertDIPToPixels(view.getContext(), 16);
-    }
-
-
-    public static void setMenuTitle(Menu menu, @IdRes int menuItemId, String title) {
-        MenuItem menuItem = getMenuItemById(menu, menuItemId);
-        if (null != menuItem) {
-            menuItem.setTitle(title);
-        }
-    }
-
     public static void setMenuIcon(Menu menu, @IdRes int menuItemId, @DrawableRes int drawableId) {
         MenuItem menuItem = getMenuItemById(menu, menuItemId);
         if (null != menuItem) {
@@ -545,6 +508,18 @@ public class PopupMenuUtils {
         }
     }
 
+    public static void clearMenu(Toolbar toolbar) {
+        if (null != toolbar) {
+            if (null != toolbar.getMenu()) {
+                toolbar.getMenu().clear();
+            }
+        }
+    }
+
+    public interface PopupMenuGetViewListener {
+        View onGetView(final int position, View convertView, @NonNull ViewGroup parent, ListPopupWindow popupWindow);
+    }
+
 
     /*
      TextView toolbarTitle = null;
@@ -560,11 +535,28 @@ public class PopupMenuUtils {
         }
      */
 
-    public static void clearMenu(Toolbar toolbar) {
-        if (null != toolbar) {
-            if (null != toolbar.getMenu()) {
-                toolbar.getMenu().clear();
-            }
+    public static class MenuVM<T> {
+        private String menuTitle;
+        private Action1<T> action;
+        private T data;
+
+        public MenuVM(String menuTitle, T data, Action1<T> action) {
+            this.menuTitle = menuTitle;
+            this.action = action;
+            this.data = data;
+        }
+
+
+        public String getMenuTitle() {
+            return menuTitle;
+        }
+
+        public Action1<T> getAction() {
+            return action;
+        }
+
+        public T getData() {
+            return data;
         }
     }
 }

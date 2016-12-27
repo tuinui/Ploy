@@ -15,16 +15,17 @@ import com.nos.ploy.base.BaseFragment;
 public class SplashScreenFragment extends BaseFragment {
 
     public static SplashScreenFragment newInstance() {
-        
+
         Bundle args = new Bundle();
-        
+
         SplashScreenFragment fragment = new SplashScreenFragment();
         fragment.setArguments(args);
         return fragment;
     }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.activity_splash_screen,container,false);
+        return inflater.inflate(R.layout.activity_splash_screen, container, false);
     }
 }

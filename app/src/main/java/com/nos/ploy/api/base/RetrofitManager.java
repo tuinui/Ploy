@@ -27,7 +27,7 @@ public class RetrofitManager {
     public static Retrofit getRetrofit(Context context) {
         Retrofit.Builder builder = new Retrofit.Builder()
                 .baseUrl(HTTP_HOST_PRODUCTION);
-        builder.client(getOkHttpClient(context,true));
+        builder.client(getOkHttpClient(context, true));
         builder.addConverterFactory(GsonConverterFactory.create());
 
         return builder.build();
@@ -50,14 +50,12 @@ public class RetrofitManager {
                         Request.Builder builder = original.newBuilder()
                                 .method(original.method(), original.body());
                         UserTokenGson.Data data = UserTokenManager.getToken(context);
-                        if(null != data){
-                            builder.header("Authorization",data.getToken());
+                        if (null != data) {
+                            builder.header("Authorization", data.getToken());
                         }
 
 
                         Response response = chain.proceed(builder.build());
-
-
 
 
                         return response;

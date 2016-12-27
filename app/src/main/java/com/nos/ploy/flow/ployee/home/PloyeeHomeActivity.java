@@ -49,10 +49,14 @@ import butterknife.ButterKnife;
 import rx.functions.Action1;
 
 public class PloyeeHomeActivity extends BaseActivity implements View.OnClickListener, SearchView.OnQueryTextListener {
+    private static final int SERVICE_LIST = 1;
+    private static final int AVAILABLITY = 2;
     @BindView(R.id.imageview_main_footer_more)
     ImageView mImageViewMore;
     @BindView(R.id.toolbar_main)
     Toolbar mToolbar;
+    @BindView(R.id.textview_main_appbar_title)
+    TextView mTextViewTitle;
     //    @BindView(R.id.recyclerview_ployee_home)
 //    RecyclerView mRecyclerView;
     @BindView(R.id.imageview_main_footer_logo1)
@@ -89,25 +93,12 @@ public class PloyeeHomeActivity extends BaseActivity implements View.OnClickList
     int mColorGray;
     private List<Fragment> mContentFragments = new ArrayList<>();
     private PloyeeHomePagerAdapter mPagerAdapter;
-
-
-    @Retention(RetentionPolicy.SOURCE)
-    @IntDef({SERVICE_LIST, AVAILABLITY})
-    public @interface BottomMenu {
-    }
-
-    private static final int SERVICE_LIST = 1;
-    private static final int AVAILABLITY = 2;
-
     private SearchView mSearchView;
     private
     @BottomMenu
     int mCurrentMenu = SERVICE_LIST;
-
     private PloyeeServiceListFragment mListFragment;
     private PloyeeAvailabilityFragment mAvailabilityFragment;
-    //    private PloyeeProfileActivity mProfileFragment = PloyeeProfileActivity.newInstance();
-
     private Action1<List<ProfileImageGson.Data>> mOnLoadProfileFinish = new Action1<List<ProfileImageGson.Data>>() {
         @Override
         public void call(List<ProfileImageGson.Data> datas) {
@@ -122,7 +113,7 @@ public class PloyeeHomeActivity extends BaseActivity implements View.OnClickList
             }
         }
     };
-
+    //    private PloyeeProfileActivity mProfileFragment = PloyeeProfileActivity.newInstance();
     private Action1<AccountGson.Data> mOnLoadAccountFinish = new Action1<AccountGson.Data>() {
         @Override
         public void call(final AccountGson.Data data) {
@@ -162,6 +153,16 @@ public class PloyeeHomeActivity extends BaseActivity implements View.OnClickList
                     showFragment(HtmlTextFragment.newInstance(HtmlTextFragment.WHAT_IS_PLOYER));
                     break;
             }
+        }
+    };
+    private Toolbar.OnMenuItemClickListener mAvailabilityMenuItemClickListener = new Toolbar.OnMenuItemClickListener() {
+        @Override
+        public boolean onMenuItemClick(MenuItem item) {
+            int id = item.getItemId();
+            if (id == R.id.menu_done_item_done) {
+                onClickDoneAvailability();
+            }
+            return false;
         }
     };
 
@@ -226,7 +227,7 @@ public class PloyeeHomeActivity extends BaseActivity implements View.OnClickList
 
     private void initToolbar() {
         enableBackButton(mToolbar);
-        mToolbar.setTitle(LPloyee);
+        mTextViewTitle.setText(LPloyee);
     }
 
     @Override
@@ -241,17 +242,6 @@ public class PloyeeHomeActivity extends BaseActivity implements View.OnClickList
         }
     }
 
-    private Toolbar.OnMenuItemClickListener mAvailabilityMenuItemClickListener = new Toolbar.OnMenuItemClickListener() {
-        @Override
-        public boolean onMenuItemClick(MenuItem item) {
-            int id = item.getItemId();
-            if (id == R.id.menu_done_item_done) {
-                onClickDoneAvailability();
-            }
-            return false;
-        }
-    };
-
     private void onClickDoneAvailability() {
         if (mAvailabilityFragment != null) {
             mAvailabilityFragment.onClickDone();
@@ -260,14 +250,14 @@ public class PloyeeHomeActivity extends BaseActivity implements View.OnClickList
 
     private void onClickBottomMenu(@BottomMenu int menu) {
         if (menu == AVAILABLITY) {
-            mToolbar.setTitle(LAvailability);
+            mTextViewTitle.setText(LAvailability);
             mSearchView.setVisibility(View.GONE);
             mViewPager.setCurrentItem(1);
             PopupMenuUtils.clearAndInflateMenu(mToolbar, R.menu.menu_done, mAvailabilityMenuItemClickListener);
             mImageViewFooterServiceList.setActivated(false);
             mImageViewFooterAvailability.setActivated(true);
         } else if (menu == SERVICE_LIST) {
-            mToolbar.setTitle(LPloyee);
+            mTextViewTitle.setText(LPloyee);
             PopupMenuUtils.clearMenu(mToolbar);
             mSearchView.setVisibility(View.VISIBLE);
             mViewPager.setCurrentItem(0);
@@ -286,6 +276,10 @@ public class PloyeeHomeActivity extends BaseActivity implements View.OnClickList
         return null != mListFragment && mCurrentMenu == SERVICE_LIST && mListFragment.onQueryTextChange(newText);
     }
 
+    @Retention(RetentionPolicy.SOURCE)
+    @IntDef({SERVICE_LIST, AVAILABLITY})
+    public @interface BottomMenu {
+    }
 
     public static class PloyeeHomePagerAdapter extends FragmentStatePagerAdapter {
 

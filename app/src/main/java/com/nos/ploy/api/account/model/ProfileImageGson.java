@@ -65,6 +65,17 @@ public class ProfileImageGson extends BaseResponse<List<ProfileImageGson.Data>> 
 //    }
     public static class Data implements Parcelable {
 
+        public static final Parcelable.Creator<Data> CREATOR = new Parcelable.Creator<Data>() {
+            @Override
+            public Data createFromParcel(Parcel source) {
+                return new Data(source);
+            }
+
+            @Override
+            public Data[] newArray(int size) {
+                return new Data[size];
+            }
+        };
         @SerializedName("imgId")
         private Long imgId;
         @SerializedName("userId")
@@ -74,8 +85,14 @@ public class ProfileImageGson extends BaseResponse<List<ProfileImageGson.Data>> 
         @SerializedName("imageName")
         private String imageName;
 
-
         public Data() {
+        }
+
+        protected Data(Parcel in) {
+            this.imgId = (Long) in.readValue(Long.class.getClassLoader());
+            this.userId = (Long) in.readValue(Long.class.getClassLoader());
+            this.imagePath = in.readString();
+            this.imageName = in.readString();
         }
 
         public Long getImgId() {
@@ -106,25 +123,6 @@ public class ProfileImageGson extends BaseResponse<List<ProfileImageGson.Data>> 
             dest.writeString(this.imagePath);
             dest.writeString(this.imageName);
         }
-
-        protected Data(Parcel in) {
-            this.imgId = (Long) in.readValue(Long.class.getClassLoader());
-            this.userId = (Long) in.readValue(Long.class.getClassLoader());
-            this.imagePath = in.readString();
-            this.imageName = in.readString();
-        }
-
-        public static final Parcelable.Creator<Data> CREATOR = new Parcelable.Creator<Data>() {
-            @Override
-            public Data createFromParcel(Parcel source) {
-                return new Data(source);
-            }
-
-            @Override
-            public Data[] newArray(int size) {
-                return new Data[size];
-            }
-        };
     }
 
 }

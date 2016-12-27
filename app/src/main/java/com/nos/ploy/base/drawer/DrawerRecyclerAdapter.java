@@ -21,6 +21,7 @@ public abstract class DrawerRecyclerAdapter extends RecyclerView.Adapter<DrawerR
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         public final TextView tvItem;
+
         public ViewHolder(View itemView) {
             super(itemView);
             tvItem = (TextView) itemView.findViewById(R.id.textview_list_item);

@@ -43,6 +43,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class SignInFragment extends BaseFragment implements View.OnClickListener {
+    private static final String TAG = "SignInFragment";
     @BindView(R.id.button_signup_signin)
     Button mButtonSignin;
     @BindView(R.id.loginbutton_signin)
@@ -55,13 +56,14 @@ public class SignInFragment extends BaseFragment implements View.OnClickListener
     EditText mEditTextPassword;
     @BindView(R.id.toolbar_main)
     Toolbar mToolbar;
+    @BindView(R.id.textview_main_appbar_title)
+    TextView mTextViewTitle;
     @BindString(R.string.This_field_is_required)
     String LThis_field_is_required;
     @BindString(R.string.Log_in)
     String LLogin;
     private AuthenticationApi mService;
     private CallbackManager mCallbackManager;
-    private static final String TAG = "SignInFragment";
     private FacebookCallback<LoginResult> mLoginResultCallback = new FacebookCallback<LoginResult>() {
 
         @Override
@@ -119,7 +121,7 @@ public class SignInFragment extends BaseFragment implements View.OnClickListener
     }
 
     private void initToolbar() {
-        mToolbar.setTitle(LLogin);
+        mTextViewTitle.setText(LLogin);
         enableBackButton(mToolbar);
     }
 

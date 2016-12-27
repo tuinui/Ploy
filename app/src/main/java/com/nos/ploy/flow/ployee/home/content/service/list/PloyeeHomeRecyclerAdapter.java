@@ -31,6 +31,16 @@ public class PloyeeHomeRecyclerAdapter extends SortedListAdapter<PloyeeServiceIt
         return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.view_textview_list_item, parent, false));
     }
 
+    @Override
+    protected boolean areItemsTheSame(PloyeeServiceItemViewModel item1, PloyeeServiceItemViewModel item2) {
+        return item1.getId() == item2.getId();
+    }
+
+    @Override
+    protected boolean areItemContentsTheSame(PloyeeServiceItemViewModel oldItem, PloyeeServiceItemViewModel newItem) {
+        return oldItem.equals(newItem);
+    }
+
     public class ViewHolder extends SortedListAdapter.ViewHolder<PloyeeServiceItemViewModel> {
         public TextView tvTitle;
 
@@ -51,15 +61,5 @@ public class PloyeeHomeRecyclerAdapter extends SortedListAdapter<PloyeeServiceIt
                 }
             });
         }
-    }
-
-    @Override
-    protected boolean areItemsTheSame(PloyeeServiceItemViewModel item1, PloyeeServiceItemViewModel item2) {
-        return item1.getId() == item2.getId();
-    }
-
-    @Override
-    protected boolean areItemContentsTheSame(PloyeeServiceItemViewModel oldItem, PloyeeServiceItemViewModel newItem) {
-        return oldItem.equals(newItem);
     }
 }

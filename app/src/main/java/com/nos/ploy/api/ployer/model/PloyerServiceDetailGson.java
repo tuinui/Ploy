@@ -106,84 +106,84 @@ public class PloyerServiceDetailGson extends BaseResponse<PloyerServiceDetailGso
             this.subServices = subServices;
         }
 
-        public void setServiceId(Long serviceId) {
-            this.serviceId = serviceId;
-        }
-
-        public void setUserId(Long userId) {
-            this.userId = userId;
-        }
-
-        public void setServiceMappingId(Long serviceMappingId) {
-            this.serviceMappingId = serviceMappingId;
-        }
-
-        public void setServiceNameOthers(String serviceNameOthers) {
-            this.serviceNameOthers = serviceNameOthers;
-        }
-
-        public void setDescription(String description) {
-            this.description = description;
-        }
-
-        public void setPriceMin(long priceMin) {
-            this.priceMin = priceMin;
-        }
-
-        public void setPriceMax(long priceMax) {
-            this.priceMax = priceMax;
-        }
-
-        public void setCertificate(String certificate) {
-            this.certificate = certificate;
-        }
-
-        public void setEquipment(String equipment) {
-            this.equipment = equipment;
-        }
-
-        public void setSubServices(List<SubService> subServices) {
-            this.subServices = subServices;
-        }
-
         public long getServiceId() {
             return serviceId;
+        }
+
+        public void setServiceId(Long serviceId) {
+            this.serviceId = serviceId;
         }
 
         public long getUserId() {
             return userId;
         }
 
+        public void setUserId(Long userId) {
+            this.userId = userId;
+        }
+
         public long getServiceMappingId() {
             return serviceMappingId;
+        }
+
+        public void setServiceMappingId(Long serviceMappingId) {
+            this.serviceMappingId = serviceMappingId;
         }
 
         public String getServiceNameOthers() {
             return serviceNameOthers;
         }
 
+        public void setServiceNameOthers(String serviceNameOthers) {
+            this.serviceNameOthers = serviceNameOthers;
+        }
+
         public String getDescription() {
             return description;
+        }
+
+        public void setDescription(String description) {
+            this.description = description;
         }
 
         public long getPriceMin() {
             return priceMin;
         }
 
+        public void setPriceMin(long priceMin) {
+            this.priceMin = priceMin;
+        }
+
         public long getPriceMax() {
             return priceMax;
+        }
+
+        public void setPriceMax(long priceMax) {
+            this.priceMax = priceMax;
         }
 
         public String getCertificate() {
             return certificate;
         }
 
+        public void setCertificate(String certificate) {
+            this.certificate = certificate;
+        }
+
         public String getEquipment() {
             return equipment;
         }
 
+        public void setEquipment(String equipment) {
+            this.equipment = equipment;
+        }
+
         public List<SubService> getSubServices() {
             return subServices;
+        }
+
+        public void setSubServices(List<SubService> subServices) {
+            this.subServices = subServices;
         }
 
         public Data closeThis() {
@@ -217,44 +217,43 @@ public class PloyerServiceDetailGson extends BaseResponse<PloyerServiceDetailGso
                 @SerializedName("checked")
                 private Boolean checked;
 
+                public SubServiceLv2() {
+                }
+
                 public Boolean getChecked() {
                     return checked;
                 }
 
-
-                public SubServiceLv2() {
+                public void setChecked(Boolean checked) {
+                    this.checked = checked;
                 }
 
                 public Long getSubServiceLv2Id() {
                     return subServiceLv2Id;
                 }
 
-                public Long getSubServiceLv1Id() {
-                    return subServiceLv1Id;
-                }
-
-                public String getName() {
-                    return name;
-                }
-
-                public Boolean isChecked() {
-                    return null != checked && checked;
-                }
-
                 public void setSubServiceLv2Id(Long subServiceLv2Id) {
                     this.subServiceLv2Id = subServiceLv2Id;
+                }
+
+                public Long getSubServiceLv1Id() {
+                    return subServiceLv1Id;
                 }
 
                 public void setSubServiceLv1Id(Long subServiceLv1Id) {
                     this.subServiceLv1Id = subServiceLv1Id;
                 }
 
+                public String getName() {
+                    return name;
+                }
+
                 public void setName(String name) {
                     this.name = name;
                 }
 
-                public void setChecked(Boolean checked) {
-                    this.checked = checked;
+                public Boolean isChecked() {
+                    return null != checked && checked;
                 }
             }
 
@@ -270,28 +269,28 @@ public class PloyerServiceDetailGson extends BaseResponse<PloyerServiceDetailGso
                 public SubServiceLv1() {
                 }
 
-                public void setSubServiceLv1Id(Long subServiceLv1Id) {
-                    this.subServiceLv1Id = subServiceLv1Id;
+                public String getName() {
+                    return name;
                 }
 
                 public void setName(String name) {
                     this.name = name;
                 }
 
-                public void setServiceId(Long serviceId) {
-                    this.serviceId = serviceId;
-                }
-
-                public String getName() {
-                    return name;
-                }
-
                 public Long getSubServiceLv1Id() {
                     return subServiceLv1Id;
                 }
 
+                public void setSubServiceLv1Id(Long subServiceLv1Id) {
+                    this.subServiceLv1Id = subServiceLv1Id;
+                }
+
                 public Long getServiceId() {
                     return serviceId;
+                }
+
+                public void setServiceId(Long serviceId) {
+                    this.serviceId = serviceId;
                 }
             }
         }

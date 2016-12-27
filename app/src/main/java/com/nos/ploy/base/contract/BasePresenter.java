@@ -6,5 +6,6 @@ package com.nos.ploy.base.contract;
 
 public interface BasePresenter {
     void start();
+
     void refreshData();
 }

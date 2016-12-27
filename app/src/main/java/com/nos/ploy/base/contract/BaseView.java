@@ -7,8 +7,12 @@ import android.content.Context;
  */
 public interface BaseView<T> {
     void setPresenter(T presenter);
+
     void setRefreshing(boolean active);
+
     void toast(String s);
+
     void showLoadingDialog(boolean active);
+
     Context getContext();
 }

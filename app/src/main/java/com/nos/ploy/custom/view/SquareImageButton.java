@@ -1,7 +1,6 @@
 package com.nos.ploy.custom.view;
 
 import android.content.Context;
-import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.AppCompatImageButton;
 import android.util.AttributeSet;
 
@@ -9,7 +8,7 @@ import android.util.AttributeSet;
  * Created by Saran on 24/12/2559.
  */
 
-public class SquareImageButton extends AppCompatImageButton{
+public class SquareImageButton extends AppCompatImageButton {
     public SquareImageButton(Context context) {
         super(context);
     }

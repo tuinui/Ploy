@@ -2,11 +2,6 @@ package com.nos.ploy.api.account.model;
 
 import android.support.annotation.DrawableRes;
 
-import com.nos.ploy.R;
-
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * Created by Saran on 25/12/2559.
  */

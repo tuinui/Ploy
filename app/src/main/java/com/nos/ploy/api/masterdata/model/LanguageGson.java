@@ -9,5 +9,5 @@ import java.util.List;
  * Created by Saran on 25/12/2559.
  */
 
-public class LanguageGson extends BaseResponse<List<ProfileGson.Data.Language>>{
+public class LanguageGson extends BaseResponse<List<ProfileGson.Data.Language>> {
 }

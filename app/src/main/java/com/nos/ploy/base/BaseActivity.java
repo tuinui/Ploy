@@ -32,9 +32,9 @@ import retrofit2.Retrofit;
 
 public class BaseActivity extends LocalizationActivity {
 
+    protected Long mUserId;
     private boolean isActivityDestroyed = false;
     private ProgressDialog mProgressDialog;
-    protected Long mUserId;
     private SwipeRefreshLayout mRefreshLayout;
     private boolean isRefreshing;
 
@@ -47,7 +47,7 @@ public class BaseActivity extends LocalizationActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if(UserTokenManager.isLogin(this)){
+        if (UserTokenManager.isLogin(this)) {
             mUserId = UserTokenManager.getToken(this).getUserId();
         }
 
@@ -126,6 +126,7 @@ public class BaseActivity extends LocalizationActivity {
             toast.show();
         }
     }
+
     public void showFragment(BaseFragment baseFragment, String tag) {
         FragmentTransactionUtils.showFragment(this, baseFragment, tag);
     }
@@ -168,6 +169,7 @@ public class BaseActivity extends LocalizationActivity {
             return "";
         }
     }
+
     protected Retrofit getRetrofit() {
         return RetrofitManager.getRetrofit(this);
     }
@@ -186,6 +188,7 @@ public class BaseActivity extends LocalizationActivity {
             mRefreshLayout.setRefreshing(true);
         }
     }
+
     protected void setRefreshLayout(SwipeRefreshLayout swipeRefreshLayout, final SwipeRefreshLayout.OnRefreshListener listener) {
         if (null == swipeRefreshLayout) {
             return;
@@ -199,6 +202,7 @@ public class BaseActivity extends LocalizationActivity {
             }
         });
     }
+
     protected void dismissRefreshing() {
         if (mRefreshLayout == null) {
             dismissLoading();

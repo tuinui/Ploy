@@ -10,7 +10,7 @@ import android.support.v4.graphics.drawable.DrawableCompat;
 
 public class DrawableUtils {
 
-    public static Drawable changeDrawableColor(Drawable drawable, @ColorInt  int color) {
+    public static Drawable changeDrawableColor(Drawable drawable, @ColorInt int color) {
         drawable = DrawableCompat.wrap(drawable);
         DrawableCompat.setTint(drawable, color);
         return drawable;

@@ -7,12 +7,12 @@ import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
+import android.widget.TextView;
 
 import com.nos.ploy.R;
 import com.nos.ploy.api.account.model.ProfileGson;
@@ -34,33 +34,20 @@ import butterknife.ButterKnife;
  */
 
 public class LanguageChooserFragment extends BaseFragment {
+    private static final String KEY_SPOKEN_LANGUAGE_DATA = "LANGUAGE_DATA";
     @BindView(R.id.toolbar_main)
     Toolbar mToolbar;
+    @BindView(R.id.textview_main_appbar_title)
+    TextView mTextViewTitle;
     @BindView(R.id.recyclerview_language_chooser)
     RecyclerView mRecyclerView;
     @BindView(R.id.swiperefreshlayout_language_chooser)
     SwipeRefreshLayout mSwipeRefreshLayout;
-    private static final String KEY_SPOKEN_LANGUAGE_DATA = "LANGUAGE_DATA";
     private long mUserId;
     private ArrayList<String> mSpokenCodes = new ArrayList<>();
     private OnDataChangedListener listener;
     private MasterApi mApi;
-
-    private RetrofitCallUtils.RetrofitCallback<LanguageGson> mCallbackLoadLanguage = new RetrofitCallUtils.RetrofitCallback<LanguageGson>() {
-        @Override
-        public void onDataSuccess(LanguageGson data) {
-            dismissRefreshing();
-            if (null != data && null != data.getData()) {
-                bindData(data.getData());
-            }
-        }
-
-        @Override
-        public void onDataFailure(ResponseMessage failCause) {
-            dismissRefreshing();
-        }
-    };
-
+    private List<ProfileGson.Data.Language> mDatas = new ArrayList<>();
     private LanguageChooserRecyclerAdapter mAdapter = new LanguageChooserRecyclerAdapter() {
         @Override
         public void onBindViewHolder(final LanguageChooserRecyclerAdapter.ViewHolder holder, int position) {
@@ -99,7 +86,20 @@ public class LanguageChooserFragment extends BaseFragment {
             return RecyclerUtils.getSize(mDatas);
         }
     };
-    private List<ProfileGson.Data.Language> mDatas = new ArrayList<>();
+    private RetrofitCallUtils.RetrofitCallback<LanguageGson> mCallbackLoadLanguage = new RetrofitCallUtils.RetrofitCallback<LanguageGson>() {
+        @Override
+        public void onDataSuccess(LanguageGson data) {
+            dismissRefreshing();
+            if (null != data && null != data.getData()) {
+                bindData(data.getData());
+            }
+        }
+
+        @Override
+        public void onDataFailure(ResponseMessage failCause) {
+            dismissRefreshing();
+        }
+    };
 
     public static LanguageChooserFragment newInstance(long userId, ArrayList<String> datas, OnDataChangedListener listener) {
 
@@ -146,7 +146,7 @@ public class LanguageChooserFragment extends BaseFragment {
                 return true;
             }
         });
-        mRecyclerView.addItemDecoration(new DividerItemDecoration(getContext(),DividerItemDecoration.VERTICAL));
+        mRecyclerView.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL));
         mRecyclerView.setAdapter(mAdapter);
     }
 
@@ -181,7 +181,7 @@ public class LanguageChooserFragment extends BaseFragment {
     }
 
     private void initToolbar() {
-        mToolbar.setTitle(R.string.Language_spoken);
+        mTextViewTitle.setText(R.string.Language_spoken);
         mToolbar.inflateMenu(R.menu.menu_done);
         mToolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
             @Override
@@ -197,12 +197,12 @@ public class LanguageChooserFragment extends BaseFragment {
         enableBackButton(mToolbar);
     }
 
-    public void setListener(OnDataChangedListener listener) {
-        this.listener = listener;
-    }
-
     public OnDataChangedListener getListener() {
         return listener;
+    }
+
+    public void setListener(OnDataChangedListener listener) {
+        this.listener = listener;
     }
 
     public static interface OnDataChangedListener {

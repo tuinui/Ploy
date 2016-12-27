@@ -9,7 +9,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.nos.ploy.R;
@@ -40,6 +39,8 @@ public class PloyeeSettingsFragment extends BaseFragment implements View.OnClick
     TextView mTextViewFaq;
     @BindView(R.id.toolbar_main)
     Toolbar mToolbar;
+    @BindView(R.id.textview_main_appbar_title)
+    TextView mTextViewTitle;
 
     public static PloyeeSettingsFragment newInstance() {
 
@@ -74,7 +75,7 @@ public class PloyeeSettingsFragment extends BaseFragment implements View.OnClick
     }
 
     private void initToolbar() {
-        mToolbar.setTitle(R.string.Settings);
+        mTextViewTitle.setText(R.string.Settings);
         enableBackButton(mToolbar);
     }
 

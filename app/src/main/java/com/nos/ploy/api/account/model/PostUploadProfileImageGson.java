@@ -39,7 +39,7 @@ public class PostUploadProfileImageGson {
         return this;
     }
 
-    public PostUploadProfileImageGson create(List<ImageBody> body){
+    public PostUploadProfileImageGson create(List<ImageBody> body) {
         this.imageBase64List.clear();
         this.imageBase64List.addAll(body);
         return this;

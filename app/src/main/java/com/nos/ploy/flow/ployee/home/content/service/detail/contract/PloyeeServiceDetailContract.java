@@ -23,14 +23,21 @@ public class PloyeeServiceDetailContract {
         void requestSaveServiceDetail(PostSavePloyerServiceDetailGson postSavePloyeeServiceDetailGson);
     }
 
-    public interface ViewModel{
+    public interface ViewModel {
         String getDescription();
+
         String getCertificate();
+
         String getEquipmentNeeded();
+
         long getPriceMin();
+
         long getPriceMax();
+
         PloyerServiceDetailGson.Data getData();
+
         long getServiceId();
+
         String getServiceOthersName();
 
 

@@ -5,10 +5,8 @@ import android.location.Address;
 import android.location.Criteria;
 import android.location.Geocoder;
 import android.location.Location;
-import android.location.LocationListener;
 import android.location.LocationManager;
-import android.os.Bundle;
-import android.support.v7.app.AlertDialog;
+import android.text.TextUtils;
 
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
@@ -51,7 +49,10 @@ public class MyLocationUtils {
                 StringBuilder strReturnedAddress = new StringBuilder("");
 
                 for (int i = 0; i < returnedAddress.getMaxAddressLineIndex(); i++) {
-                    strReturnedAddress.append(returnedAddress.getAddressLine(i)).append("\n");
+                    String addresLineI = returnedAddress.getAddressLine(i);
+                    if(!TextUtils.isEmpty(addresLineI)){
+                        strReturnedAddress.append(addresLineI).append("\n");
+                    }
                 }
                 strAdd = strReturnedAddress.toString();
             } else {
@@ -59,7 +60,7 @@ public class MyLocationUtils {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return strAdd;
+        return strAdd.trim();
     }
 
 //    private static AlertDialog DIALOG_LOCATION_SETTINGS;

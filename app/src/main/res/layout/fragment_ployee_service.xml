@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:custom="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/white"
@@ -33,10 +32,11 @@
 
                     <android.support.v7.widget.AppCompatButton
                         android:id="@+id/button_ployee_service_reset"
+                        style="@style/PloyButtonTransparentGrayBorder"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/Reset"
-                        app:backgroundTint="@android:color/white" />
+                        android:textAllCaps="false" />
 
                     <com.rengwuxian.materialedittext.MaterialEditText
                         android:id="@+id/edittext_ployee_service_others"
@@ -46,23 +46,23 @@
                         android:hint="@string/Name_of_service_you_offer"
                         android:inputType="text|textMultiLine"
                         android:visibility="gone"
-                        app:met_maxCharacters="140"
                         app:met_floatingLabel="normal"
                         app:met_floatingLabelAlwaysShown="true"
-                        app:met_floatingLabelText="@string/Services" />
+                        app:met_floatingLabelText="@string/Services"
+                        app:met_maxCharacters="140" />
 
 
                     <com.rengwuxian.materialedittext.MaterialEditText
                         android:id="@+id/edittext_ployee_service_description"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        app:met_maxCharacters="300"
                         android:layout_marginTop="16dp"
                         android:hint="@string/Say_something_about_experience_you_have_in_this_service_category"
                         android:inputType="text|textMultiLine"
                         app:met_floatingLabel="normal"
                         app:met_floatingLabelAlwaysShown="true"
-                        app:met_floatingLabelText="@string/Description" />
+                        app:met_floatingLabelText="@string/Description"
+                        app:met_maxCharacters="300" />
 
 
                     <LinearLayout
@@ -129,12 +129,12 @@
                             app:tickStart="0" />
 
                         <!--<com.edmodo.rangebar.RangeBar-->
-                            <!--android:id="@+id/rangebar_ployee_service_rate"-->
-                            <!--android:layout_width="match_parent"-->
-                            <!--app:tickInterval="5"-->
-                            <!--app:tickEnd="1000"-->
-                            <!--app:tickStart="0"-->
-                            <!--android:layout_height="wrap_content" />-->
+                        <!--android:id="@+id/rangebar_ployee_service_rate"-->
+                        <!--android:layout_width="match_parent"-->
+                        <!--app:tickInterval="5"-->
+                        <!--app:tickEnd="1000"-->
+                        <!--app:tickStart="0"-->
+                        <!--android:layout_height="wrap_content" />-->
 
                     </LinearLayout>
 

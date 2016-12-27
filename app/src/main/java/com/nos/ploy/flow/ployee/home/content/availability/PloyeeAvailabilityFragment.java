@@ -2,7 +2,6 @@ package com.nos.ploy.flow.ployee.home.content.availability;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.annotation.UiThread;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -150,10 +149,10 @@ public class PloyeeAvailabilityFragment extends BaseFragment implements View.OnC
 
     public void onClickDone() {
         PloyeeAvailiabilityGson.Data data = mData.cloneThis();
-        if(null != data){
+        if (null != data) {
             data.setHolidayMode(mSwitchHoliday.isChecked());
             data.setUserId(mUserId);
-            if(null != mAdapter){
+            if (null != mAdapter) {
                 data.setAvailabilityItems(mAdapter.gatheredData());
             }
             requestSaveData(data);

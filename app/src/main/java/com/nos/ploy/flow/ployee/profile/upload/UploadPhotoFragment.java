@@ -14,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.animation.GlideAnimation;
@@ -50,10 +51,13 @@ import rx.functions.Action1;
 
 public class UploadPhotoFragment extends BaseFragment {
 
+    private static final String KEY_DATAS = "PROFILE_IMAGE_DATAS";
     @BindView(R.id.recyclerview_upload_photo)
     RecyclerView mRecyclerViewUploadPhoto;
     @BindView(R.id.toolbar_main)
     Toolbar mToolbar;
+    @BindView(R.id.textview_main_appbar_title)
+    TextView mTextViewTitle;
     @BindView(R.id.swiperefreshlayout_upload_photo)
     SwipeRefreshLayout mSwipreRefreshLaayout;
     @BindString(R.string.Upload_photo)
@@ -62,6 +66,16 @@ public class UploadPhotoFragment extends BaseFragment {
     Drawable mDrawableAddGray;
     private List<ProfileImageGson.Data> mDatas = new ArrayList<>();
     private List<PostUploadProfileImageGson.ImageBody> mImageToUploads = new ArrayList<>();
+    private long mUserId;
+    private AccountApi mApi;
+    private Action1<List<ProfileImageGson.Data>> mCallbackOnRefreshFinish = new Action1<List<ProfileImageGson.Data>>() {
+        @Override
+        public void call(List<ProfileImageGson.Data> datas) {
+            dismissRefreshing();
+            bindData(datas);
+        }
+    };
+    private OnDataChangeListener mOnDataChangeListener;
     private RetrofitCallUtils.RetrofitCallback<ProfileImageGson> mCallBackUpload = new RetrofitCallUtils.RetrofitCallback<ProfileImageGson>() {
         @Override
         public void onDataSuccess(ProfileImageGson data) {
@@ -77,7 +91,6 @@ public class UploadPhotoFragment extends BaseFragment {
             dismissLoading();
         }
     };
-
     private RetrofitCallUtils.RetrofitCallback<Object> mCallbackDelete = new RetrofitCallUtils.RetrofitCallback<Object>() {
         @Override
         public void onDataSuccess(Object data) {
@@ -92,17 +105,6 @@ public class UploadPhotoFragment extends BaseFragment {
             dismissLoading();
         }
     };
-
-
-    private Action1<List<ProfileImageGson.Data>> mCallbackOnRefreshFinish = new Action1<List<ProfileImageGson.Data>>() {
-        @Override
-        public void call(List<ProfileImageGson.Data> datas) {
-            dismissRefreshing();
-            bindData(datas);
-        }
-    };
-
-
     private UploadPhotoRecyclerAdapter mAdapter = new UploadPhotoRecyclerAdapter() {
 
         @Override
@@ -163,10 +165,6 @@ public class UploadPhotoFragment extends BaseFragment {
             return 3;
         }
     };
-    private static final String KEY_DATAS = "PROFILE_IMAGE_DATAS";
-    private long mUserId;
-    private AccountApi mApi;
-    private OnDataChangeListener mOnDataChangeListener;
 
     public static UploadPhotoFragment newInstance(long userId, ArrayList<ProfileImageGson.Data> datas, OnDataChangeListener listener) {
 
@@ -240,7 +238,7 @@ public class UploadPhotoFragment extends BaseFragment {
     }
 
     private void initToolbar() {
-        mToolbar.setTitle(LUpload_photo);
+        mTextViewTitle.setText(LUpload_photo);
         enableBackButton(mToolbar);
         mToolbar.inflateMenu(R.menu.menu_done);
         mToolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {

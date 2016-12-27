@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
@@ -41,6 +42,7 @@ import rx.functions.Action1;
  */
 
 public class PloyeeAccountFragment extends BaseFragment implements View.OnClickListener {
+    private static final String KEY_ACCOUNT_GSON = "ACCOUNT_GSON";
     @BindView(R.id.edittext_ployee_account_main_first_name)
     MaterialEditText mEditTextFirstname;
     @BindView(R.id.edittext_ployee_account_main_birthday)
@@ -55,22 +57,41 @@ public class PloyeeAccountFragment extends BaseFragment implements View.OnClickL
     LoginButton mLoginButtonFacebook;
     @BindView(R.id.toolbar_main)
     Toolbar mToolbar;
+    @BindView(R.id.textview_main_appbar_title)
+    TextView mTextViewTitle;
     @BindView(R.id.swiperefreshlayout_ployee_account_main)
     SwipeRefreshLayout mSwipeRefreshLayout;
     @BindView(R.id.edittext_ployee_account_main_password)
     MaterialEditText mEdittextPassword;
-
     @BindString(R.string.Account)
     String LAccount;
-
-
     private AccountGson.Data mData;
-    private static final String KEY_ACCOUNT_GSON = "ACCOUNT_GSON";
     private CallbackManager mCallbackManager;
     private AuthenticationApi mAuthenApi;
     private AccountApi mAccountApi;
     private Long mUserId;
+    private Action1<AccountGson.Data> mOnLoadAccountFinish = new Action1<AccountGson.Data>() {
+        @Override
+        public void call(AccountGson.Data data) {
+            dismissRefreshing();
+            if (null != data) {
+                bindData(data);
+            }
+        }
+    };
+    private RetrofitCallUtils.RetrofitCallback<Object> mCallbackUpdateData = new RetrofitCallUtils.RetrofitCallback<Object>() {
+        @Override
+        public void onDataSuccess(Object data) {
+            dismissLoading();
+            showToast("Success");
+            refreshData();
+        }
 
+        @Override
+        public void onDataFailure(ResponseMessage failCause) {
+            dismissLoading();
+        }
+    };
     private FacebookCallback<LoginResult> mLoginResultCallback = new FacebookCallback<LoginResult>() {
 
         @Override
@@ -87,28 +108,6 @@ public class PloyeeAccountFragment extends BaseFragment implements View.OnClickL
         @Override
         public void onError(FacebookException error) {
 
-        }
-    };
-    private RetrofitCallUtils.RetrofitCallback<Object> mCallbackUpdateData = new RetrofitCallUtils.RetrofitCallback<Object>() {
-        @Override
-        public void onDataSuccess(Object data) {
-            dismissLoading();
-            showToast("Success");
-            refreshData();
-        }
-
-        @Override
-        public void onDataFailure(ResponseMessage failCause) {
-            dismissLoading();
-        }
-    };
-    private Action1<AccountGson.Data> mOnLoadAccountFinish = new Action1<AccountGson.Data>() {
-        @Override
-        public void call(AccountGson.Data data) {
-            dismissRefreshing();
-            if (null != data) {
-                bindData(data);
-            }
         }
     };
 
@@ -174,7 +173,7 @@ public class PloyeeAccountFragment extends BaseFragment implements View.OnClickL
     }
 
     private void initToolbar() {
-        mToolbar.setTitle(LAccount);
+        mTextViewTitle.setText(LAccount);
         enableBackButton(mToolbar);
         mToolbar.inflateMenu(R.menu.menu_done);
         mToolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {

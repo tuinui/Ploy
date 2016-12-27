@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.animation.GlideAnimation;
@@ -53,6 +54,8 @@ public class SignUpFragment extends BaseFragment implements View.OnClickListener
     Button mButtonCreateAccount;
     @BindView(R.id.toolbar_main)
     Toolbar mToolbar;
+    @BindView(R.id.textview_main_appbar_title)
+    TextView mTextViewTitle;
     @BindView(R.id.edittext_signup_detail_password)
     MaterialEditText mEditTextPassword;
     @BindView(R.id.edittext_signup_detail_re_password)
@@ -241,7 +244,7 @@ public class SignUpFragment extends BaseFragment implements View.OnClickListener
 
     private void initToolbar(Toolbar toolbar) {
         enableBackButton(toolbar);
-        toolbar.setTitle(R.string.Sign_up);
+        mTextViewTitle.setText(R.string.Sign_up);
     }
 
 

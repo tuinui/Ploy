@@ -86,27 +86,6 @@ public class ProfileGson extends BaseResponse<ProfileGson.Data> {
             return new Data(null, userId, aboutMe, education, work, interest, language, transport, location, contactEmail, contactPhone);
         }
 
-
-        public void setUserProfileId(long userProfileId) {
-            this.userProfileId = userProfileId;
-        }
-
-        public void setUserId(long userId) {
-            this.userId = userId;
-        }
-
-        public void setAboutMe(String aboutMe) {
-            this.aboutMe = aboutMe;
-        }
-
-        public void setEducation(String education) {
-            this.education = education;
-        }
-
-        public void setWork(String work) {
-            this.work = work;
-        }
-
         public Boolean isContactPhone() {
             return null != contactPhone && contactPhone;
         }
@@ -123,59 +102,90 @@ public class ProfileGson extends BaseResponse<ProfileGson.Data> {
             this.contactEmail = contactEmail;
         }
 
-        public void setInterest(String interest) {
-            this.interest = interest;
-        }
-
-        public void setLanguage(ArrayList<Language> language) {
-            this.language = language;
-        }
-
-        public void setTransport(List<Transport> transport) {
-            this.transport = transport;
-        }
-
-        public void setLocation(Location location) {
-            this.location = location;
-        }
-
         public Long getUserId() {
             return null != userId ? userId : Long.valueOf(0L);
+        }
+
+        public void setUserId(long userId) {
+            this.userId = userId;
         }
 
         public String getAboutMe() {
             return aboutMe;
         }
 
+        public void setAboutMe(String aboutMe) {
+            this.aboutMe = aboutMe;
+        }
+
         public String getEducation() {
             return education;
+        }
+
+        public void setEducation(String education) {
+            this.education = education;
         }
 
         public String getWork() {
             return work;
         }
 
+        public void setWork(String work) {
+            this.work = work;
+        }
+
         public String getInterest() {
             return interest;
+        }
+
+        public void setInterest(String interest) {
+            this.interest = interest;
         }
 
         public ArrayList<Language> getLanguage() {
             return language;
         }
 
+        public void setLanguage(ArrayList<Language> language) {
+            this.language = language;
+        }
+
         public List<Transport> getTransport() {
             return transport;
+        }
+
+        public void setTransport(List<Transport> transport) {
+            this.transport = transport;
         }
 
         public Location getLocation() {
             return location;
         }
 
+        public void setLocation(Location location) {
+            this.location = location;
+        }
+
         public Long getUserProfileId() {
             return null != userProfileId ? userProfileId : Long.valueOf(0L);
         }
 
+        public void setUserProfileId(long userProfileId) {
+            this.userProfileId = userProfileId;
+        }
+
         public static class Language implements Parcelable {
+            public static final Parcelable.Creator<Language> CREATOR = new Parcelable.Creator<Language>() {
+                @Override
+                public Language createFromParcel(Parcel source) {
+                    return new Language(source);
+                }
+
+                @Override
+                public Language[] newArray(int size) {
+                    return new Language[size];
+                }
+            };
             /*
               "spokenLanguageCode": "de",
         "spokenLanguageValue": "Germany"
@@ -185,9 +195,14 @@ public class ProfileGson extends BaseResponse<ProfileGson.Data> {
             @SerializedName("spokenLanguageValue")
             private String spokenLanguageValue;
 
+
             public Language() {
             }
 
+            protected Language(Parcel in) {
+                this.spokenLanguageCode = in.readString();
+                this.spokenLanguageValue = in.readString();
+            }
 
             public String getSpokenLanguageCode() {
                 return spokenLanguageCode;
@@ -207,23 +222,6 @@ public class ProfileGson extends BaseResponse<ProfileGson.Data> {
                 dest.writeString(this.spokenLanguageCode);
                 dest.writeString(this.spokenLanguageValue);
             }
-
-            protected Language(Parcel in) {
-                this.spokenLanguageCode = in.readString();
-                this.spokenLanguageValue = in.readString();
-            }
-
-            public static final Parcelable.Creator<Language> CREATOR = new Parcelable.Creator<Language>() {
-                @Override
-                public Language createFromParcel(Parcel source) {
-                    return new Language(source);
-                }
-
-                @Override
-                public Language[] newArray(int size) {
-                    return new Language[size];
-                }
-            };
         }
 
 

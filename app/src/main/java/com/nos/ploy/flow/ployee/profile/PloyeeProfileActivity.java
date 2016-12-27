@@ -8,6 +8,7 @@ import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -20,7 +21,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -65,7 +65,8 @@ import rx.functions.Action1;
  * Created by Saran on 15/12/2559.
  */
 
-public class PloyeeProfileActivity extends BaseActivity implements OnMapReadyCallback, View.OnClickListener, ViewPager.OnPageChangeListener, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
+public class PloyeeProfileActivity extends BaseActivity implements OnMapReadyCallback, View.OnClickListener, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
+    public LatLng mCurrentLatLng;
     @BindView(R.id.button_ployee_profile_show_email)
     Button mButtonEmail;
     @BindView(R.id.button_ployee_profile_show_phone_no)
@@ -86,22 +87,22 @@ public class PloyeeProfileActivity extends BaseActivity implements OnMapReadyCal
     RecyclerView mRecyclerViewTransport;
     @BindView(R.id.toolbar_main)
     Toolbar mToolbar;
+    @BindView(R.id.textview_main_appbar_title)
+    TextView mTextViewTitle;
     @BindString(R.string.Profile)
     String LProfile;
     @BindView(R.id.scrollview_ployee_profile)
     NestedScrollView mScrollView;
-    @BindView(R.id.linearlayout_profile_image_slider_counts_dot)
-    LinearLayout mLinearLayoutDotsContainer;
     @BindView(R.id.fab_ployee_profile_image)
     FloatingActionButton mFabProfileImage;
-    //    @BindView(R.id.sliderlayout_ployee_profile_image)
-//    SliderLayout mSliderLayout;
     @BindView(R.id.viewpager_profile_image_slider)
     ViewPager mViewPagerSlider;
+    @BindView(R.id.tablayout_profile_image_slider_indicator)
+    TabLayout mTabLayoutSliderIndicator;
     @BindView(R.id.swiperefreshlayout_ployee_profile)
     SwipeRefreshLayout mSwipeRefreshLayout;
-    @BindView(R.id.imagebutton_ployee_profile_checkin)
-    ImageButton mImageButtonCheckin;
+    @BindView(R.id.imageview_ployee_profile_checkin)
+    ImageView mImageButtonCheckin;
     @BindDrawable(R.drawable.nonselecteditem_dot)
     Drawable mDrawableNonSelecteddot;
     @BindDrawable(R.drawable.selecteditem_dot)
@@ -110,23 +111,11 @@ public class PloyeeProfileActivity extends BaseActivity implements OnMapReadyCal
     private SupportMapFragment mMapFragment = SupportMapFragment.newInstance();
     private AccountApi mAccountApi;
     private PostUpdateProfileGson mData;
-    public LatLng mCurrentLatLng;
     private MasterApi mMasterApi;
     private boolean shouldRequestCallSave = false;
-    private RetrofitCallUtils.RetrofitCallback<TransportGson> mCallbackTransport = new RetrofitCallUtils.RetrofitCallback<TransportGson>() {
-        @Override
-        public void onDataSuccess(TransportGson data) {
-            dismissLoading();
-            if (null != data && null != data.getData()) {
-                bindTransportData(data.getData());
-            }
-        }
-
-        @Override
-        public void onDataFailure(ResponseMessage failCause) {
-            dismissLoading();
-        }
-    };
+    private ImageSliderPagerAdapter mAdapter;
+    private GoogleApiClient mGoogleApiClient;
+    private List<TransportGsonVm> mAllDataTransports = new ArrayList<>();
     private TransportRecyclerAdapter mTransportRecyclerAdapter = new TransportRecyclerAdapter() {
         @Override
         public void onBindViewHolder(final TransportRecyclerAdapter.ViewHolder holder, int position) {
@@ -177,6 +166,21 @@ public class PloyeeProfileActivity extends BaseActivity implements OnMapReadyCal
             return RecyclerUtils.getSize(mAllDataTransports);
         }
     };
+    private RetrofitCallUtils.RetrofitCallback<TransportGson> mCallbackTransport = new RetrofitCallUtils.RetrofitCallback<TransportGson>() {
+        @Override
+        public void onDataSuccess(TransportGson data) {
+            dismissLoading();
+            if (null != data && null != data.getData()) {
+                bindTransportData(data.getData());
+            }
+        }
+
+        @Override
+        public void onDataFailure(ResponseMessage failCause) {
+            dismissLoading();
+        }
+    };
+    private ProfileGson.Data mOriginalData;
     private RetrofitCallUtils.RetrofitCallback<ProfileGson> mCallbackLoadData = new RetrofitCallUtils.RetrofitCallback<ProfileGson>() {
         @Override
         public void onDataSuccess(ProfileGson data) {
@@ -201,7 +205,20 @@ public class PloyeeProfileActivity extends BaseActivity implements OnMapReadyCal
 
         }
     };
-
+    private Action1<List<ProfileImageGson.Data>> mOnLoadProfileImageFinish = new Action1<List<ProfileImageGson.Data>>() {
+        @Override
+        public void call(final List<ProfileImageGson.Data> datas) {
+            if (null != datas) {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        mAdapter.replaceData(datas);
+//                        setUiPageViewController();
+                    }
+                });
+            }
+        }
+    };
     private RetrofitCallUtils.RetrofitCallback<Object> mCallbackUpdateData = new RetrofitCallUtils.RetrofitCallback<Object>() {
         @Override
         public void onDataSuccess(Object data) {
@@ -220,15 +237,6 @@ public class PloyeeProfileActivity extends BaseActivity implements OnMapReadyCal
 
         }
     };
-
-
-    private ImageSliderPagerAdapter mAdapter;
-    private int mDotsCount;
-    private List<ImageView> mImageViewDots = new ArrayList<>();
-    private GoogleApiClient mGoogleApiClient;
-    private List<TransportGsonVm> mAllDataTransports = new ArrayList<>();
-    private ProfileGson.Data mOriginalData;
-
 
     private void bindData(ProfileGson.Data data) {
         mOriginalData = data;
@@ -267,7 +275,6 @@ public class PloyeeProfileActivity extends BaseActivity implements OnMapReadyCal
         }
 
     }
-
 
     private void requestTransportData() {
         showLoading();
@@ -315,7 +322,6 @@ public class PloyeeProfileActivity extends BaseActivity implements OnMapReadyCal
         return null != mData && null != mData.getTransport() && !mData.getTransport().isEmpty() && mData.getTransport().contains(transportId);
     }
 
-
     private void refreshData(Context context) {
         if (null != context && isReady()) {
             showRefreshing();
@@ -352,57 +358,39 @@ public class PloyeeProfileActivity extends BaseActivity implements OnMapReadyCal
 
     }
 
-
     private void initSlider() {
         mAdapter = new ImageSliderPagerAdapter(this);
         mViewPagerSlider.setAdapter(mAdapter);
         mViewPagerSlider.setCurrentItem(0);
-        mViewPagerSlider.addOnPageChangeListener(this);
-
+        mTabLayoutSliderIndicator.setupWithViewPager(mViewPagerSlider);
     }
 
-    private void setUiPageViewController() {
-        mLinearLayoutDotsContainer.removeAllViews();
-        mDotsCount = mAdapter.getCount();
-        if (mDotsCount > 0) {
-            mImageViewDots.clear();
-            for (int i = 0; i < mDotsCount; i++) {
-                ImageView img = new ImageView(this);
-                img.setImageDrawable(mDrawableNonSelecteddot);
-                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-                        LinearLayout.LayoutParams.WRAP_CONTENT,
-                        LinearLayout.LayoutParams.WRAP_CONTENT
-                );
-
-                params.setMargins(4, 0, 4, 0);
-                mLinearLayoutDotsContainer.addView(img, params);
-                mImageViewDots.add(img);
-
-
-            }
-            if (RecyclerUtils.isAvailableData(mImageViewDots, 0)) {
-                mImageViewDots.get(0).setImageDrawable(mDrawableSelectedDot);
-            }
-
-        }
-
-    }
-
-
-    private Action1<List<ProfileImageGson.Data>> mOnLoadProfileImageFinish = new Action1<List<ProfileImageGson.Data>>() {
-        @Override
-        public void call(final List<ProfileImageGson.Data> datas) {
-            if (null != datas) {
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        mAdapter.replaceData(datas);
-                        setUiPageViewController();
-                    }
-                });
-            }
-        }
-    };
+//    private void setUiPageViewController() {
+//        mLinearLayoutDotsContainer.removeAllViews();
+//        mDotsCount = mAdapter.getCount();
+//        if (mDotsCount > 0) {
+//            mImageViewDots.clear();
+//            for (int i = 0; i < mDotsCount; i++) {
+//                ImageView img = new ImageView(this);
+//                img.setImageDrawable(mDrawableNonSelecteddot);
+//                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+//                        LinearLayout.LayoutParams.WRAP_CONTENT,
+//                        LinearLayout.LayoutParams.WRAP_CONTENT
+//                );
+//
+//                params.setMargins(4, 0, 4, 0);
+//                mLinearLayoutDotsContainer.addView(img, params);
+//                mImageViewDots.add(img);
+//
+//
+//            }
+//            if (RecyclerUtils.isAvailableData(mImageViewDots, 0)) {
+//                mImageViewDots.get(0).setImageDrawable(mDrawableSelectedDot);
+//            }
+//
+//        }
+//
+//    }
 
     private void refreshSlider() {
         AccountInfoLoader.getProfileImage(this, mUserId, true, mOnLoadProfileImageFinish);
@@ -433,7 +421,7 @@ public class PloyeeProfileActivity extends BaseActivity implements OnMapReadyCal
     }
 
     private void initToolbar() {
-        mToolbar.setTitle(LProfile);
+        mTextViewTitle.setText(LProfile);
         enableBackButton(mToolbar);
         mToolbar.inflateMenu(R.menu.menu_done);
         mToolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
@@ -455,7 +443,7 @@ public class PloyeeProfileActivity extends BaseActivity implements OnMapReadyCal
         if (shouldRequestCallSave) {
             RetrofitCallUtils.with(mAccountApi.postSaveProfileGson(gatheredData()), mCallbackUpdateData).enqueue(this);
         } else {
-            RetrofitCallUtils.with(mAccountApi.postUpdateProfileGson(gatheredData()), mCallbackUpdateData).enqueue(this);
+            RetrofitCallUtils.with(mAccountApi.postSaveProfileGson(gatheredData()), mCallbackUpdateData).enqueue(this);
         }
     }
 
@@ -547,6 +535,7 @@ public class PloyeeProfileActivity extends BaseActivity implements OnMapReadyCal
         showFragment(LanguageChooserFragment.newInstance(mUserId, mData.getLanguage(), new LanguageChooserFragment.OnDataChangedListener() {
             @Override
             public void onDataChanged(ArrayList<String> datas) {
+                mData = gatheredData();
                 mData.setLanguage(datas);
                 bindData(mData);
                 onClickDone();
@@ -575,12 +564,12 @@ public class PloyeeProfileActivity extends BaseActivity implements OnMapReadyCal
         mTextViewAddress.setText(address);
     }
 
-    private void dummyData() {
-        mEditTextProfileWork.setText("workๆๆๆๆ");
-        mEditTextInterest.setText("ก้สนใจยู่อิอิ");
-        mEditTextEducation.setText("เอดูดุ้000");
-        mEditTextAboutMe.setText("หล่อ");
-    }
+//    private void dummyData() {
+//        mEditTextProfileWork.setText("workๆๆๆๆ");
+//        mEditTextInterest.setText("ก้สนใจยู่อิอิ");
+//        mEditTextEducation.setText("เอดูดุ้000");
+//        mEditTextAboutMe.setText("หล่อ");
+//    }
 
     private void showUploadPhotoFragment() {
         AccountInfoLoader.getProfileImage(this, mUserId, false, new Action1<List<ProfileImageGson.Data>>() {
@@ -597,27 +586,6 @@ public class PloyeeProfileActivity extends BaseActivity implements OnMapReadyCal
         );
     }
 
-    @Override
-    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
-    }
-
-    @Override
-    public void onPageSelected(int position) {
-        for (int i = 0; i < mDotsCount; i++) {
-            if (RecyclerUtils.isAvailableData(mImageViewDots, i)) {
-                mImageViewDots.get(i).setImageDrawable(mDrawableNonSelecteddot);
-            }
-        }
-        if (RecyclerUtils.isAvailableData(mImageViewDots, position)) {
-            mImageViewDots.get(position).setImageDrawable(mDrawableSelectedDot);
-        }
-    }
-
-    @Override
-    public void onPageScrollStateChanged(int state) {
-
-    }
 
     @Override
     public void onConnected(@Nullable Bundle bundle) {

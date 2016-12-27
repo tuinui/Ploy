@@ -6,8 +6,10 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.ViewStub;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.nos.ploy.R;
 import com.nos.ploy.base.BaseActivity;
@@ -23,6 +25,10 @@ import butterknife.ButterKnife;
 public class PloyeeListActivity extends BaseActivity {
     @BindView(R.id.toolbar_main)
     Toolbar mToolbar;
+    @BindView(R.id.textview_main_appbar_title)
+    TextView mTextViewTitle;
+    @BindView(R.id.textview_main_appbar_subtitle)
+    TextView mTextViewSubtitle;
     @BindView(R.id.recyclerview_ployee_service_list)
     RecyclerView mRecyclerView;
     @BindView(R.id.imageview_main_footer_more)
@@ -58,8 +64,10 @@ public class PloyeeListActivity extends BaseActivity {
 
 
     private void initToolbar(Toolbar toolbar) {
-        toolbar.setTitle("Aide au Senior");
-        toolbar.setSubtitle("999 Ployees");
+        mTextViewTitle.setText("Aide au Senior");
+        mTextViewSubtitle.setVisibility(View.VISIBLE);
+        mTextViewSubtitle.setText("999 Ployees");
+//        toolbar.setSubtitle("999 Ployees");
         enableBackButton(toolbar);
         toolbar.inflateMenu(R.menu.menu_ployer_home);
         toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {

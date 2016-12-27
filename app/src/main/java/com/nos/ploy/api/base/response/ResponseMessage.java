@@ -8,12 +8,12 @@ import com.google.gson.annotations.SerializedName;
  * Created by Saran on 30/11/2559.
  */
 
-public class ResponseMessage{
+public class ResponseMessage {
     public static final String CODE_SUCCESS = "000";
     public static final String CODE_INTERNAL_ERROR = "001";
     public static final String CODE_DATA_NOT_FOUND = "002";
     public static final String CODE_EXISTING_EMAIL = "101";
-    public static final String CODE_EXISTING_USER_ID= "102";
+    public static final String CODE_EXISTING_USER_ID = "102";
     public static final String CODE_EXISTING_SERVICE_ID = "103";
     public static final String CODE_EXISTING_FACEBOOK_USERID = "104";
     public static final String CODE_EXISTING_INVALID_EMAIL_OR_PASSWORD = "201";
@@ -29,7 +29,7 @@ public class ResponseMessage{
     public ResponseMessage() {
     }
 
-    public ResponseMessage(String messageDescription){
+    public ResponseMessage(String messageDescription) {
         this.messageDescription = messageDescription;
         this.messageCode = CODE_UNKNOWN;
     }
@@ -42,7 +42,7 @@ public class ResponseMessage{
         return messageDescription;
     }
 
-    public boolean isSuccess(){
-        return TextUtils.equals("000",messageCode);
+    public boolean isSuccess() {
+        return TextUtils.equals("000", messageCode);
     }
 }

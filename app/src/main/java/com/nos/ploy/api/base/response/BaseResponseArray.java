@@ -16,14 +16,11 @@ public class BaseResponseArray<E> {
     private List<E> data;
 
 
-
     public BaseResponseArray() {
     }
 
 
-
-
-    public boolean isSuccess(){
+    public boolean isSuccess() {
         return null != responseMessage && responseMessage.isSuccess();
     }
 

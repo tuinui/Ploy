@@ -15,7 +15,7 @@ public class NormalItemAvailabilityVM implements AvailabilityViewModel {
         this.data = data;
     }
 
-    public PloyeeAvailiabilityGson.Data.AvailabilityItem getData(){
+    public PloyeeAvailiabilityGson.Data.AvailabilityItem getData() {
         return data;
     }
 

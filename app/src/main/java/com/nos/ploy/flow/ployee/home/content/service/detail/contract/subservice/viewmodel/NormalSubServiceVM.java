@@ -26,7 +26,7 @@ public class NormalSubServiceVM implements PloyeeServiceDetailSubServiceItemBase
     }
 
     public Boolean isChecked() {
-        return null != checked &&checked;
+        return null != checked && checked;
     }
 
 

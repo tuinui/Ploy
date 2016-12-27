@@ -12,7 +12,7 @@ import java.util.List;
 
 public class PloyeeAvailiabilityGson extends BaseResponse<PloyeeAvailiabilityGson.Data> {
 
-    public  class Data {
+    public class Data {
         @SerializedName("userId")
         private long userId;
         @SerializedName("holidayMode")
@@ -33,13 +33,12 @@ public class PloyeeAvailiabilityGson extends BaseResponse<PloyeeAvailiabilityGso
             this.userId = userId;
         }
 
-        public void setHolidayMode(boolean holidayMode) {
-            this.holidayMode = holidayMode;
-        }
-
-
         public boolean getHolidayMode() {
             return holidayMode;
+        }
+
+        public void setHolidayMode(boolean holidayMode) {
+            this.holidayMode = holidayMode;
         }
 
         public List<AvailabilityItem> getAvailabilityItems() {
@@ -51,10 +50,10 @@ public class PloyeeAvailiabilityGson extends BaseResponse<PloyeeAvailiabilityGso
         }
 
         public Data cloneThis() {
-            return new Data(userId,holidayMode,availabilityItems);
+            return new Data(userId, holidayMode, availabilityItems);
         }
 
-        public  class AvailabilityItem {
+        public class AvailabilityItem {
             @SerializedName("durationId")
             private long durationId;
             @SerializedName("durationValue")
@@ -82,72 +81,72 @@ public class PloyeeAvailiabilityGson extends BaseResponse<PloyeeAvailiabilityGso
                 return durationId;
             }
 
-            public String getDurationValue() {
-                return durationValue;
-            }
-
-            public boolean isSun() {
-                return sun;
-            }
-
             public void setDurationId(Long durationId) {
                 this.durationId = durationId;
+            }
+
+            public String getDurationValue() {
+                return durationValue;
             }
 
             public void setDurationValue(String durationValue) {
                 this.durationValue = durationValue;
             }
 
+            public boolean isSun() {
+                return sun;
+            }
+
             public void setSun(boolean sun) {
                 this.sun = sun;
-            }
-
-            public void setMon(boolean mon) {
-                this.mon = mon;
-            }
-
-            public void setTues(boolean tues) {
-                this.tues = tues;
-            }
-
-            public void setWed(boolean wed) {
-                this.wed = wed;
-            }
-
-            public void setThurs(boolean thurs) {
-                this.thurs = thurs;
-            }
-
-            public void setFri(boolean fri) {
-                this.fri = fri;
-            }
-
-            public void setSat(boolean sat) {
-                this.sat = sat;
             }
 
             public boolean isMon() {
                 return mon;
             }
 
+            public void setMon(boolean mon) {
+                this.mon = mon;
+            }
+
             public boolean isTues() {
                 return tues;
+            }
+
+            public void setTues(boolean tues) {
+                this.tues = tues;
             }
 
             public boolean isWed() {
                 return wed;
             }
 
+            public void setWed(boolean wed) {
+                this.wed = wed;
+            }
+
             public boolean isThurs() {
                 return thurs;
+            }
+
+            public void setThurs(boolean thurs) {
+                this.thurs = thurs;
             }
 
             public boolean isFri() {
                 return fri;
             }
 
+            public void setFri(boolean fri) {
+                this.fri = fri;
+            }
+
             public boolean isSat() {
                 return sat;
+            }
+
+            public void setSat(boolean sat) {
+                this.sat = sat;
             }
         }
 

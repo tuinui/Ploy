@@ -38,7 +38,7 @@ public class PostUpdateProfileGson {
     }
 
     public PostUpdateProfileGson(ProfileGson.Data data, long userId) {
-        if(null != data){
+        if (null != data) {
             userProfileId = data.getUserProfileId();
             this.userId = userId;
             aboutMe = data.getAboutMe();
@@ -46,18 +46,18 @@ public class PostUpdateProfileGson {
             work = data.getWork();
             interest = data.getInterest();
             language.clear();
-            if(null != data.getLanguage()){
-                for(ProfileGson.Data.Language language :  data.getLanguage()){
+            if (null != data.getLanguage()) {
+                for (ProfileGson.Data.Language language : data.getLanguage()) {
                     this.language.add(language.getSpokenLanguageCode());
                 }
             }
-            if(null != data.getTransport()){
-                for(ProfileGson.Data.Transport transport : data.getTransport()){
+            if (null != data.getTransport()) {
+                for (ProfileGson.Data.Transport transport : data.getTransport()) {
                     this.transport.add(transport.getTransportId());
                 }
             }
-            if(null != data.getLocation()){
-                location = new ProfileGson.Data.Location(data.getLocation().getLat(),data.getLocation().getLng());
+            if (null != data.getLocation()) {
+                location = new ProfileGson.Data.Location(data.getLocation().getLat(), data.getLocation().getLng());
             }
             contactPhone = data.isContactPhone();
             contactEmail = data.isContactEmail();
@@ -65,36 +65,8 @@ public class PostUpdateProfileGson {
 
     }
 
-    public void setUserProfileId(Long userProfileId) {
-        this.userProfileId = userProfileId;
-    }
-
-    public void setUserId(long userId) {
-        this.userId = userId;
-    }
-
-    public void setAboutMe(String aboutMe) {
-        this.aboutMe = aboutMe;
-    }
-
-    public void setEducation(String education) {
-        this.education = education;
-    }
-
-    public void setWork(String work) {
-        this.work = work;
-    }
-
-    public void setInterest(String interest) {
-        this.interest = interest;
-    }
-
-    public void setLanguage(ArrayList<String> language) {
-        this.language = language;
-    }
-
-    public void addLanguage(String code){
-        if(language == null){
+    public void addLanguage(String code) {
+        if (language == null) {
             language = new ArrayList<>();
         }
 
@@ -104,64 +76,92 @@ public class PostUpdateProfileGson {
 
     }
 
-    public void setTransport(List<Long> transport) {
-        this.transport = transport;
-    }
-
-    public void setLocation(ProfileGson.Data.Location location) {
-        this.location = location;
-    }
-
-    public void setContactPhone(boolean contactPhone) {
-        this.contactPhone = contactPhone;
-    }
-
-    public void setContactEmail(boolean contactEmail) {
-        this.contactEmail = contactEmail;
-    }
-
     public Long getUserProfileId() {
         return userProfileId;
+    }
+
+    public void setUserProfileId(Long userProfileId) {
+        this.userProfileId = userProfileId;
     }
 
     public long getUserId() {
         return userId;
     }
 
+    public void setUserId(long userId) {
+        this.userId = userId;
+    }
+
     public String getAboutMe() {
         return aboutMe;
+    }
+
+    public void setAboutMe(String aboutMe) {
+        this.aboutMe = aboutMe;
     }
 
     public String getEducation() {
         return education;
     }
 
+    public void setEducation(String education) {
+        this.education = education;
+    }
+
     public String getWork() {
         return work;
+    }
+
+    public void setWork(String work) {
+        this.work = work;
     }
 
     public String getInterest() {
         return interest;
     }
 
+    public void setInterest(String interest) {
+        this.interest = interest;
+    }
+
     public ArrayList<String> getLanguage() {
         return language;
+    }
+
+    public void setLanguage(ArrayList<String> language) {
+        this.language = language;
     }
 
     public List<Long> getTransport() {
         return transport;
     }
 
+    public void setTransport(List<Long> transport) {
+        this.transport = transport;
+    }
+
     public ProfileGson.Data.Location getLocation() {
         return location;
+    }
+
+    public void setLocation(ProfileGson.Data.Location location) {
+        this.location = location;
     }
 
     public boolean isContactPhone() {
         return contactPhone;
     }
 
+    public void setContactPhone(boolean contactPhone) {
+        this.contactPhone = contactPhone;
+    }
+
     public boolean isContactEmail() {
         return contactEmail;
+    }
+
+    public void setContactEmail(boolean contactEmail) {
+        this.contactEmail = contactEmail;
     }
 
 

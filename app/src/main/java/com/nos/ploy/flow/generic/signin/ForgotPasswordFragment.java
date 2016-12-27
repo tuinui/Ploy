@@ -15,7 +15,6 @@ import android.widget.TextView;
 import com.nos.ploy.R;
 import com.nos.ploy.api.authentication.AuthenticationApi;
 import com.nos.ploy.api.authentication.model.PostForgotPasswordGson;
-import com.nos.ploy.api.authentication.model.PostSignupGson;
 import com.nos.ploy.api.base.RetrofitCallUtils;
 import com.nos.ploy.api.base.response.ResponseMessage;
 import com.nos.ploy.base.BaseFragment;
@@ -43,6 +42,8 @@ public class ForgotPasswordFragment extends BaseFragment implements View.OnClick
     TextView mTextViewDescription;
     @BindView(R.id.toolbar_main)
     Toolbar mToolbar;
+    @BindView(R.id.textview_main_appbar_title)
+    TextView mTextViewTitle;
     @BindString(R.string.Password_reset)
     String LPassword_reset;
     @BindString(R.string.This_field_is_required)
@@ -91,7 +92,7 @@ public class ForgotPasswordFragment extends BaseFragment implements View.OnClick
     }
 
     private void initToolbar() {
-        mToolbar.setTitle(LPassword_reset);
+        mTextViewTitle.setText(LPassword_reset);
         enableBackButton(mToolbar);
     }
 

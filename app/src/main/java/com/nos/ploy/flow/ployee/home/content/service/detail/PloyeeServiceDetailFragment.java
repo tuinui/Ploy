@@ -19,8 +19,8 @@ import android.widget.TextView;
 import com.appyvet.rangebar.RangeBar;
 import com.nos.ploy.R;
 import com.nos.ploy.api.ployee.PloyeeApi;
-import com.nos.ploy.api.ployer.model.PloyerServiceDetailGson;
 import com.nos.ploy.api.ployer.PloyerApi;
+import com.nos.ploy.api.ployer.model.PloyerServiceDetailGson;
 import com.nos.ploy.api.ployer.model.PostSavePloyerServiceDetailGson;
 import com.nos.ploy.base.BaseFragment;
 import com.nos.ploy.flow.ployee.home.content.service.detail.contract.PloyeeServiceDetailContract;
@@ -40,6 +40,8 @@ import rx.functions.Action1;
  */
 
 public class PloyeeServiceDetailFragment extends BaseFragment implements PloyeeServiceDetailContract.View, View.OnClickListener {
+    private static final String KEY_SERVICE_ID = "SERVICE_ID";
+    private static final String KEY_TOOLBAR_TITLE = "TOOLBAR_TITLE";
     @BindView(R.id.materialrangebar_ployee_service_rate)
     RangeBar mRangeBar;
     @BindView(R.id.edittext_ployee_service_price_from)
@@ -56,6 +58,10 @@ public class PloyeeServiceDetailFragment extends BaseFragment implements PloyeeS
     MaterialEditText mEditTextEquipmentNeeded;
     @BindView(R.id.toolbar_main)
     Toolbar mToolbar;
+    @BindView(R.id.textview_main_appbar_subtitle)
+    TextView mTextViewSubtitle;
+    @BindView(R.id.textview_main_appbar_title)
+    TextView mTextViewTitle;
     @BindView(R.id.swiprefreshlayout_ployee_service_detail)
     SwipeRefreshLayout mSwipeRefreshLayout;
     @BindView(R.id.recyclerview_ployee_service_sub_service)
@@ -66,7 +72,6 @@ public class PloyeeServiceDetailFragment extends BaseFragment implements PloyeeS
     Button mButtonReset;
     @BindString(R.string.This_field_is_required)
     String LThis_field_is_required;
-
     private RangeBar.OnRangeBarChangeListener mRangeBarListener = new RangeBar.OnRangeBarChangeListener() {
         @Override
         public void onRangeChangeListener(RangeBar rangeBar, int leftPinIndex, int rightPinIndex, String leftPinValue, String rightPinValue) {
@@ -74,18 +79,16 @@ public class PloyeeServiceDetailFragment extends BaseFragment implements PloyeeS
             setPriceText(mEditTextPriceTo, rightPinValue);
         }
     };
+    private PloyeeApi mService;
+    private PloyeeServiceDetailContract.Presenter mPresenter;
     private SwipeRefreshLayout.OnRefreshListener mOnRefreshListener = new SwipeRefreshLayout.OnRefreshListener() {
         @Override
         public void onRefresh() {
             refreshData();
         }
     };
-    private PloyeeApi mService;
-    private PloyeeServiceDetailContract.Presenter mPresenter;
     private PloyeeServiceDetailContract.ViewModel mData;
     private PloyeeServiceDetailSubServiceRecyclerAdapter mAdapter = new PloyeeServiceDetailSubServiceRecyclerAdapter();
-    private static final String KEY_SERVICE_ID = "SERVICE_ID";
-    private static final String KEY_TOOLBAR_TITLE = "TOOLBAR_TITLE";
     private long mUserId;
     private long mServiceId;
     private String mToolbarTitle;
@@ -161,8 +164,9 @@ public class PloyeeServiceDetailFragment extends BaseFragment implements PloyeeS
 
     private void initToolbar() {
         enableBackButton(mToolbar);
-        mToolbar.setTitle(mToolbarTitle);
-        mToolbar.setSubtitle(R.string.Service);
+        mTextViewTitle.setText(mToolbarTitle);
+        mTextViewSubtitle.setVisibility(View.VISIBLE);
+        mTextViewSubtitle.setText(R.string.Service);
         mToolbar.inflateMenu(R.menu.menu_done);
         mToolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
             @Override

@@ -9,7 +9,7 @@ public class WeekAvailabilityVM implements AvailabilityViewModel {
     private WeekAvailabilityVM() {
     }
 
-    public static WeekAvailabilityVM create(){
+    public static WeekAvailabilityVM create() {
         return new WeekAvailabilityVM();
     }
 

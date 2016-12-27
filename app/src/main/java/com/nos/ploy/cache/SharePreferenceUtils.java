@@ -21,15 +21,8 @@ import java.util.List;
 
 public class SharePreferenceUtils {
 
-    @Retention(RetentionPolicy.SOURCE)
-    @IntDef({USER})
-    public @interface FileType {
-    }
-
     public static final int USER = 1;
-
     public static final String SHAREPREF_FILE_USER = "SHAREPREF_FILE_USER";
-
     private static final String KEY_ACCOUNT_GSON = "ACCOUNT_GSON";
     private static final String KEY_PROFILE_IMAGE_GSON = "PROFILE_IMAGE_GSON";
     private static final String KEY_USER_TOKEN_GSON = "USER_TOKEN_GSON";
@@ -71,7 +64,7 @@ public class SharePreferenceUtils {
         with(context, USER).edit().putString(KEY_ACCOUNT_GSON, accountGsonString).apply();
     }
 
-    public static void saveProfileImageGson(Context context, ProfileImageGson data){
+    public static void saveProfileImageGson(Context context, ProfileImageGson data) {
         if (null == context) {
             return;
         }
@@ -79,7 +72,7 @@ public class SharePreferenceUtils {
         with(context, USER).edit().putString(KEY_PROFILE_IMAGE_GSON, accountGsonString).apply();
     }
 
-    public static List<ProfileImageGson.Data> getProfileImages(Context context){
+    public static List<ProfileImageGson.Data> getProfileImages(Context context) {
         List<ProfileImageGson.Data> results = new ArrayList<>();
         if (null == context) {
             return null;
@@ -88,8 +81,8 @@ public class SharePreferenceUtils {
         if (TextUtils.isEmpty(accountGsonString)) {
             return null;
         }
-        ProfileImageGson data=  new Gson().fromJson(accountGsonString, ProfileImageGson.class);
-        if(null != data && null != data.getData()){
+        ProfileImageGson data = new Gson().fromJson(accountGsonString, ProfileImageGson.class);
+        if (null != data && null != data.getData()) {
             results.addAll(data.getData());
         }
         return results;
@@ -115,5 +108,10 @@ public class SharePreferenceUtils {
             default:
                 return null;
         }
+    }
+
+    @Retention(RetentionPolicy.SOURCE)
+    @IntDef({USER})
+    public @interface FileType {
     }
 }

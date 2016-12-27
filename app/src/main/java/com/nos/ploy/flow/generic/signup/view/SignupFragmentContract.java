@@ -13,11 +13,6 @@ public class SignupFragmentContract {
 
 
     public interface ViewModel {
-        @Retention(RetentionPolicy.SOURCE)
-        @IntDef({NONE, ADD_MORE, NORMAL})
-        public @interface ViewType {
-        }
-
         public static final int NONE = -404;
         public static final int ADD_MORE = 1;
         public static final int NORMAL = 2;
@@ -26,5 +21,10 @@ public class SignupFragmentContract {
         int getViewType();
 
         String getImageUri();
+
+        @Retention(RetentionPolicy.SOURCE)
+        @IntDef({NONE, ADD_MORE, NORMAL})
+        public @interface ViewType {
+        }
     }
 }

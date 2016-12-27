@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.design.widget.AppBarLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/appbarlayout_main"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:fitsSystemWindows="true"
     android:animateLayoutChanges="true"
+    android:fitsSystemWindows="true"
     android:focusableInTouchMode="true"
     android:minHeight="?attr/actionBarSize"
     android:orientation="vertical"
@@ -24,7 +25,46 @@
         app:layout_scrollFlags="snap|enterAlways"
         app:paddingStart="0dp"
         app:subtitleTextColor="@android:color/white"
-        app:titleTextColor="@android:color/white" />
+        app:titleTextColor="@android:color/white">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/textview_main_appbar_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:gravity="center_vertical"
+                android:maxLines="1"
+                android:padding="2dp"
+                android:textAppearance="@style/TextAppearance.Widget.AppCompat.Toolbar.Title"
+                android:textColor="@android:color/white"
+                tools:text="@string/lorem_ipsum" />
+
+            <TextView
+                android:id="@+id/textview_main_appbar_subtitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:paddingTop="2dp"
+                android:paddingLeft="2dp"
+                android:paddingRight="2dp"
+                android:paddingBottom="4dp"
+                android:textAppearance="@style/TextAppearance.Widget.AppCompat.Toolbar.Subtitle"
+                android:textColor="@android:color/white"
+                android:visibility="gone"
+                tools:text="@string/lorem_ipsum" />
+
+        </LinearLayout>
+
+
+    </android.support.v7.widget.Toolbar>
 
     <ViewStub
         android:id="@+id/viewstub_main_appbar_searchview"

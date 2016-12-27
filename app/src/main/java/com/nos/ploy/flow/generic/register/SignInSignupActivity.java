@@ -7,6 +7,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
@@ -25,9 +26,9 @@ import com.nos.ploy.api.base.RetrofitCallUtils;
 import com.nos.ploy.api.base.response.ResponseMessage;
 import com.nos.ploy.base.BaseActivity;
 import com.nos.ploy.cache.UserTokenManager;
-import com.nos.ploy.flow.ployee.home.PloyeeHomeActivity;
 import com.nos.ploy.flow.generic.signin.SignInFragment;
 import com.nos.ploy.flow.generic.signup.SignUpFragment;
+import com.nos.ploy.flow.ployee.home.PloyeeHomeActivity;
 import com.nos.ploy.utils.IntentUtils;
 
 import org.json.JSONException;
@@ -44,18 +45,20 @@ import butterknife.ButterKnife;
 
 public class SignInSignupActivity extends BaseActivity implements View.OnClickListener {
 
+    private static final String TAG = "SignInSignupActivity";
     @BindView(R.id.button_signup_signup)
     Button mButtonSignup;
     @BindView(R.id.button_signup_signin)
     Button mButtonSignin;
     @BindView(R.id.toolbar_main)
     Toolbar mToolbar;
+    @BindView(R.id.textview_main_appbar_title)
+    TextView mTextViewTitle;
     @BindView(R.id.loginbutton_signup)
     LoginButton mLoginButton;
     private SignInFragment mFragmentSignIn = SignInFragment.newInstance();
     private SignUpFragment mFragmentSignUp = SignUpFragment.newInstance();
     private CallbackManager mCallbackManager;
-    private static final String TAG = "SignInSignupActivity";
     private AuthenticationApi mService;
     private FacebookCallback<LoginResult> mLoginResultCallback = new FacebookCallback<LoginResult>() {
 

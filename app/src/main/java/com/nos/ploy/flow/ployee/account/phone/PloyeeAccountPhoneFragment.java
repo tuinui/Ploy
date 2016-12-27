@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.hbb20.CountryCodePicker;
 import com.nos.ploy.R;
@@ -23,16 +24,18 @@ import butterknife.ButterKnife;
  */
 
 public class PloyeeAccountPhoneFragment extends BaseFragment {
+    private static final String KEY_DEFAULT_VALUE = "DEFAULT_VALUE";
     @BindView(R.id.countrycodepicker_ployee_account_phone)
     CountryCodePicker mCcpPhone;
     @BindView(R.id.edittext_ployee_account_phone_number)
     MaterialEditText mEditTextPhoneNumber;
     @BindView(R.id.toolbar_main)
     Toolbar mToolbar;
+    @BindView(R.id.textview_main_appbar_title)
+    TextView mTextViewTitle;
     @BindString(R.string.Phone_number)
     String LPhone_number;
     private FragmentInteractionListener listener;
-    private static final String KEY_DEFAULT_VALUE = "DEFAULT_VALUE";
 //    private String mDefaultPhoneNumber;
 
     public static PloyeeAccountPhoneFragment newInstance(String defaultValue, FragmentInteractionListener listener) {
@@ -40,7 +43,7 @@ public class PloyeeAccountPhoneFragment extends BaseFragment {
         Bundle args = new Bundle();
         if (!TextUtils.isEmpty(defaultValue) && defaultValue.contains("+")) {
 //            defaultValue = String.valueOf(TextUtils.replace(defaultValue, new String[]{"+"}, new String[]{""}));
-            defaultValue =  defaultValue.replaceAll("\\+", "");
+            defaultValue = defaultValue.replaceAll("\\+", "");
         }
         args.putString(KEY_DEFAULT_VALUE, defaultValue);
         PloyeeAccountPhoneFragment fragment = new PloyeeAccountPhoneFragment();
@@ -77,7 +80,7 @@ public class PloyeeAccountPhoneFragment extends BaseFragment {
     }
 
     private void initToolbar() {
-        mToolbar.setTitle(LPhone_number);
+        mTextViewTitle.setText(LPhone_number);
         enableBackButton(mToolbar);
         mToolbar.inflateMenu(R.menu.menu_done);
         mToolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
@@ -100,12 +103,12 @@ public class PloyeeAccountPhoneFragment extends BaseFragment {
         return mCcpPhone.getSelectedCountryCodeWithPlus() + extractString(mEditTextPhoneNumber);
     }
 
-    public void setListener(FragmentInteractionListener listener) {
-        this.listener = listener;
-    }
-
     public FragmentInteractionListener getListener() {
         return listener;
+    }
+
+    public void setListener(FragmentInteractionListener listener) {
+        this.listener = listener;
     }
 
     @Override

@@ -33,8 +33,8 @@ public class MyFileUtils {
     }
 
 
-    public static String encodeToBase64(Bitmap image){
-        return encodeToBase64(image, Bitmap.CompressFormat.JPEG,100);
+    public static String encodeToBase64(Bitmap image) {
+        return encodeToBase64(image, Bitmap.CompressFormat.JPEG, 100);
     }
 
 

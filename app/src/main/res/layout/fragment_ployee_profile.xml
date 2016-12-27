@@ -80,12 +80,15 @@
                         android:minHeight="?attr/actionBarSize"
                         android:orientation="horizontal">
 
-                        <android.support.v7.widget.AppCompatImageButton
-                            android:id="@+id/imagebutton_ployee_profile_checkin"
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
+                        <android.support.v7.widget.AppCompatImageView
+                            android:id="@+id/imageview_ployee_profile_checkin"
+                            android:layout_width="80dp"
+                            android:layout_height="wrap_content"
                             android:layout_weight="0"
-                            android:backgroundTint="@color/colorPrimary"
+                            android:maxHeight="120dp"
+                            android:clickable="true"
+                            android:scaleType="centerInside"
+                            android:background="@color/colorPrimary"
                             android:padding="16dp"
                             android:src="@drawable/ic_ployee_location_30dp" />
 
@@ -97,6 +100,7 @@
                             android:ellipsize="end"
                             android:gravity="center"
                             android:padding="4dp"
+                            android:layout_gravity="center"
                             tools:text="@string/lorem_ipsum" />
 
 
@@ -113,10 +117,10 @@
                     android:inputType="text|textMultiLine"
                     android:lines="3"
                     android:maxLines="3"
-                    app:met_floatingLabelTextColor="@color/colorPrimary"
                     app:met_baseColor="@color/colorPrimary"
                     app:met_floatingLabel="highlight"
                     app:met_floatingLabelText="@string/About_me"
+                    app:met_floatingLabelTextColor="@color/colorPrimary"
                     app:met_underlineColor="@android:color/darker_gray" />
 
                 <com.rengwuxian.materialedittext.MaterialEditText
@@ -129,9 +133,9 @@
                     android:lines="3"
                     android:maxLines="3"
                     app:met_baseColor="@color/colorPrimary"
-                    app:met_floatingLabelTextColor="@color/colorPrimary"
                     app:met_floatingLabel="highlight"
                     app:met_floatingLabelText="@string/Education"
+                    app:met_floatingLabelTextColor="@color/colorPrimary"
                     app:met_underlineColor="@android:color/darker_gray" />
 
                 <com.rengwuxian.materialedittext.MaterialEditText
@@ -144,9 +148,9 @@
                     android:lines="3"
                     android:maxLines="3"
                     app:met_baseColor="@color/colorPrimary"
-                    app:met_floatingLabelTextColor="@color/colorPrimary"
                     app:met_floatingLabel="highlight"
                     app:met_floatingLabelText="@string/Work"
+                    app:met_floatingLabelTextColor="@color/colorPrimary"
                     app:met_underlineColor="@android:color/darker_gray" />
 
                 <com.rengwuxian.materialedittext.MaterialEditText
@@ -159,9 +163,9 @@
                     android:lines="3"
                     android:maxLines="3"
                     app:met_baseColor="@color/colorPrimary"
-                    app:met_floatingLabelTextColor="@color/colorPrimary"
                     app:met_floatingLabel="highlight"
                     app:met_floatingLabelText="@string/Interest"
+                    app:met_floatingLabelTextColor="@color/colorPrimary"
                     app:met_underlineColor="@android:color/darker_gray" />
 
 
@@ -226,6 +230,7 @@
                             android:layout_weight="1"
                             android:drawableLeft="@drawable/selector_drawable_phone_gray_blue"
                             android:text="@string/Show_Phone_No"
+                            android:textAllCaps="false"
                             android:textColor="@drawable/selector_color_gray_white"
                             app:backgroundTint="@drawable/selector_color_white_blue" />
 
@@ -237,6 +242,7 @@
                             android:layout_weight="1"
                             android:drawableLeft="@drawable/selector_drawable_email_gray_blue"
                             android:text="@string/Show_Email"
+                            android:textAllCaps="false"
                             android:textColor="@drawable/selector_color_gray_white"
                             app:backgroundTint="@drawable/selector_color_white_blue" />
 

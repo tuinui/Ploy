@@ -36,8 +36,8 @@ public interface AccountApi {
     @POST("/api/user/profile/save")
     Call<Object> postSaveProfileGson(@Body PostUpdateProfileGson data);
 
-    @POST("/api/user/profile/update")
-    Call<Object> postUpdateProfileGson(@Body PostUpdateProfileGson data);
+//    @POST("/api/user/profile/update")
+//    Call<Object> postUpdateProfileGson(@Body PostUpdateProfileGson data);
 
     @POST("/api/user/profileImg/delete")
     Call<Object> postDeleteProfileImage(@Body PostDeleteProfileImageGson data);

@@ -10,16 +10,16 @@ import java.lang.annotation.RetentionPolicy;
  */
 
 public interface AvailabilityViewModel {
-    @Retention(RetentionPolicy.SOURCE)
-    @IntDef({NONE, WEEK, NORMAL})
-    @interface ViewType {
-    }
-
     int NONE = -404;
     int WEEK = 1;
     int NORMAL = 2;
 
     @ViewType
     int getViewType();
+
+    @Retention(RetentionPolicy.SOURCE)
+    @IntDef({NONE, WEEK, NORMAL})
+    @interface ViewType {
+    }
 
 }

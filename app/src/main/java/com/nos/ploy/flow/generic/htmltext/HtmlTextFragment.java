@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.facebook.login.widget.LoginButton;
 import com.nos.ploy.R;
 import com.nos.ploy.api.base.RetrofitCallUtils;
 import com.nos.ploy.api.base.response.ResponseMessage;
@@ -30,19 +31,6 @@ import butterknife.ButterKnife;
  */
 
 public class HtmlTextFragment extends BaseFragment {
-    private MasterApi mApi;
-
-    /*
-        /api/getHtmlApp?lgCode=en&dataId=3
-
-        dataId มีค่าได้ตั้งแต่ 0-5 เรียงลำดับ
-        Privacy Policy, Terms&Conditions, Legal, FAQ, What is Ployee, What is Ployer
-         */
-    @Retention(RetentionPolicy.SOURCE)
-    @IntDef({NONE, POLICY, TERM_AND_CONDITIONS, LEGAL, FAQ, WHAT_IS_PLOYER, WHAT_IS_PLOYEE})
-    public @interface Menu {
-    }
-
     public static final int NONE = -404;
     public static final int POLICY = 0;
     public static final int TERM_AND_CONDITIONS = 1;
@@ -50,12 +38,13 @@ public class HtmlTextFragment extends BaseFragment {
     public static final int FAQ = 3;
     public static final int WHAT_IS_PLOYEE = 4;
     public static final int WHAT_IS_PLOYER = 5;
-
-
+    private static final String KEY_MENU = "MENU";
     @BindView(R.id.textview_html_text)
     TextView mTextviewHtml;
     @BindView(R.id.toolbar_main)
     Toolbar mToolbar;
+    @BindView(R.id.textview_main_appbar_title)
+    TextView mTextViewTitle;
     @BindView(R.id.swiperefreshlayout_html_text)
     SwipeRefreshLayout mSwipeRefreshLayout;
     @BindString(R.string.Privacy_Policy)
@@ -70,11 +59,10 @@ public class HtmlTextFragment extends BaseFragment {
     String LWhat_is_Ployee;
     @BindString(R.string.What_is_Ployer)
     String LWhat_is_Ployer;
-    private static final String KEY_MENU = "MENU";
+    private MasterApi mApi;
     private
     @Menu
     int mMenu;
-
     private HtmlAppGson mData;
     private RetrofitCallUtils.RetrofitCallback<HtmlAppGson> mCallbackLoadData = new RetrofitCallUtils.RetrofitCallback<HtmlAppGson>() {
         @Override
@@ -88,7 +76,6 @@ public class HtmlTextFragment extends BaseFragment {
             dismissRefreshing();
         }
     };
-
 
     public static HtmlTextFragment newInstance(@Menu int menu) {
 
@@ -153,7 +140,7 @@ public class HtmlTextFragment extends BaseFragment {
     }
 
     private void initToolbar() {
-        mToolbar.setTitle(getTitleString());
+        mTextViewTitle.setText(getTitleString());
         enableBackButton(mToolbar);
     }
 
@@ -200,5 +187,16 @@ public class HtmlTextFragment extends BaseFragment {
             default:
                 return "";
         }
+    }
+
+    /*
+        /api/getHtmlApp?lgCode=en&dataId=3
+
+        dataId มีค่าได้ตั้งแต่ 0-5 เรียงลำดับ
+        Privacy Policy, Terms&Conditions, Legal, FAQ, What is Ployee, What is Ployer
+         */
+    @Retention(RetentionPolicy.SOURCE)
+    @IntDef({NONE, POLICY, TERM_AND_CONDITIONS, LEGAL, FAQ, WHAT_IS_PLOYER, WHAT_IS_PLOYEE})
+    public @interface Menu {
     }
 }

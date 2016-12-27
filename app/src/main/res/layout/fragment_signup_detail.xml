@@ -141,10 +141,10 @@
                 android:id="@+id/button_signup_detail_create_account"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:textAllCaps="false"
                 android:layout_marginTop="16dp"
                 android:text="@string/Create_Account"
-                android:textColor="@android:color/black"
-                app:backgroundTint="@android:color/white" />
+                style="@style/PloyButtonTransparentWhiteBorder" />
 
             <TextView
                 android:id="@+id/textview_signup_detail_privacy"

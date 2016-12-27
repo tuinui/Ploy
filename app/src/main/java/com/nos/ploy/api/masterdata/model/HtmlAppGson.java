@@ -11,16 +11,16 @@ public class HtmlAppGson extends BaseResponse<HtmlAppGson.Data> {
 
 
     public static class Data {
-         /*"data": {
-            "lgCode": null,
-            "policy": null,
-            "term": null,
-            "legal": null,
-            "faq": null,
-            "whatIsPloyee": null,
-            "whatIsPloyer": "testsdfa"
-            }
-            */
+        /*"data": {
+           "lgCode": null,
+           "policy": null,
+           "term": null,
+           "legal": null,
+           "faq": null,
+           "whatIsPloyee": null,
+           "whatIsPloyer": "testsdfa"
+           }
+           */
         @SerializedName("lgCode")
         private String lgCode;
         @SerializedName("policy")

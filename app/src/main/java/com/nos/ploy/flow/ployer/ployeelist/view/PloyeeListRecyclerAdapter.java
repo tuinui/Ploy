@@ -14,7 +14,7 @@ import com.nos.ploy.R;
 public abstract class PloyeeListRecyclerAdapter extends RecyclerView.Adapter<PloyeeListRecyclerAdapter.ViewHolder> {
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.view_ployee_list_item,parent,false));
+        return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.view_ployee_list_item, parent, false));
     }
 
 

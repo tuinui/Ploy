@@ -10,11 +10,6 @@ import java.lang.annotation.RetentionPolicy;
  */
 
 public interface PloyeeServiceDetailSubServiceItemBaseViewModel {
-    @Retention(RetentionPolicy.SOURCE)
-    @IntDef({NONE, HEADER, ITEM, SPACE})
-    @interface ViewType {
-    }
-
     int NONE = -404;
     int HEADER = 1;
     int ITEM = 3;
@@ -22,4 +17,9 @@ public interface PloyeeServiceDetailSubServiceItemBaseViewModel {
 
     @ViewType
     int getViewType();
+
+    @Retention(RetentionPolicy.SOURCE)
+    @IntDef({NONE, HEADER, ITEM, SPACE})
+    @interface ViewType {
+    }
 }

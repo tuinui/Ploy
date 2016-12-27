@@ -8,6 +8,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.ViewStub;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.nos.ploy.R;
 import com.nos.ploy.base.BaseActivity;
@@ -21,6 +22,8 @@ import butterknife.ButterKnife;
 public class PloyerHomeActivity extends BaseActivity {
     @BindView(R.id.toolbar_main)
     Toolbar mToolbar;
+    @BindView(R.id.textview_main_appbar_title)
+    TextView mTextViewTitle;
     @BindView(R.id.recyclerview_ployer_home)
     RecyclerView mRecyclerView;
     @BindView(R.id.imageview_main_footer_more)
@@ -61,7 +64,7 @@ public class PloyerHomeActivity extends BaseActivity {
     }
 
     private void initToolbar(Toolbar toolbar) {
-        toolbar.setTitle(R.string.Ployer);
+        mTextViewTitle.setText(R.string.Ployer);
         enableBackButton(toolbar);
 
     }

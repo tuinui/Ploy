@@ -15,13 +15,14 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <android.support.v7.widget.AppCompatButton
+            <Button
                 android:id="@+id/button_ployee_availabality_no_preferences"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="16dp"
+                android:textAllCaps="false"
                 android:text="@string/No_preferences"
-                app:backgroundTint="@android:color/white" />
+                style="@style/PloyButtonTransparentGrayBorder"/>
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/recyclerview_ployee_availability_time_table"

@@ -36,17 +36,26 @@ import rx.functions.Action1;
 public class PloyeeServiceListFragment extends BaseFragment implements SearchView.OnQueryTextListener {
 
 
+    private static final Comparator<PloyeeServiceItemViewModel> ALPHABETICAL_COMPARATOR = new Comparator<PloyeeServiceItemViewModel>() {
+        @Override
+        public int compare(PloyeeServiceItemViewModel a, PloyeeServiceItemViewModel b) {
+            return a.getText().compareTo(b.getText());
+        }
+    };
     @BindView(R.id.recyclerview_ployee_service_list)
     RecyclerView mRecyclerView;
     @BindView(R.id.swiperefreshlayout_ployee_service_list)
     SwipeRefreshLayout mSwipeRefreshLayout;
     private PloyeeApi mService;
-    private SwipeRefreshLayout.OnRefreshListener mOnRefreshListener = new SwipeRefreshLayout.OnRefreshListener() {
+    private List<PloyeeServiceItemViewModel> mDatas = new ArrayList<>();
+    private long mUserId;
+    private Action1<PloyeeServiceItemViewModel> mActionOnClickServiceItem = new Action1<PloyeeServiceItemViewModel>() {
         @Override
-        public void onRefresh() {
-            refreshData();
+        public void call(PloyeeServiceItemViewModel data) {
+            showFragment(PloyeeServiceDetailFragment.newInstance(mUserId, data.getId(), data.getText()));
         }
     };
+    private PloyeeHomeRecyclerAdapter mAdapter;
     private Callback<PloyeeServiceListGson> mCallbackPloyeeService = new Callback<PloyeeServiceListGson>() {
         @Override
         public void onResponse(Call<PloyeeServiceListGson> call, Response<PloyeeServiceListGson> response) {
@@ -65,15 +74,12 @@ public class PloyeeServiceListFragment extends BaseFragment implements SearchVie
             showToast("onFailure");
         }
     };
-    private Action1<PloyeeServiceItemViewModel> mActionOnClickServiceItem = new Action1<PloyeeServiceItemViewModel>() {
+    private SwipeRefreshLayout.OnRefreshListener mOnRefreshListener = new SwipeRefreshLayout.OnRefreshListener() {
         @Override
-        public void call(PloyeeServiceItemViewModel data) {
-            showFragment(PloyeeServiceDetailFragment.newInstance(mUserId, data.getId(), data.getText()));
+        public void onRefresh() {
+            refreshData();
         }
     };
-    private List<PloyeeServiceItemViewModel> mDatas = new ArrayList<>();
-    private long mUserId;
-
 
     public static PloyeeServiceListFragment newInstance(Long userId) {
         Bundle args = new Bundle();
@@ -83,15 +89,18 @@ public class PloyeeServiceListFragment extends BaseFragment implements SearchVie
         return fragment;
     }
 
-    private static final Comparator<PloyeeServiceItemViewModel> ALPHABETICAL_COMPARATOR = new Comparator<PloyeeServiceItemViewModel>() {
-        @Override
-        public int compare(PloyeeServiceItemViewModel a, PloyeeServiceItemViewModel b) {
-            return a.getText().compareTo(b.getText());
+    private static List<PloyeeServiceItemViewModel> filter(List<PloyeeServiceItemViewModel> models, String query) {
+        final String lowerCaseQuery = query.toLowerCase();
+
+        final List<PloyeeServiceItemViewModel> filteredModelList = new ArrayList<>();
+        for (PloyeeServiceItemViewModel model : models) {
+            final String text = model.getText().toLowerCase();
+            if (text.contains(lowerCaseQuery)) {
+                filteredModelList.add(model);
+            }
         }
-    };
-
-    private PloyeeHomeRecyclerAdapter mAdapter;
-
+        return filteredModelList;
+    }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -155,7 +164,6 @@ public class PloyeeServiceListFragment extends BaseFragment implements SearchVie
         recyclerView.setAdapter(mAdapter);
     }
 
-
     private void refreshData() {
         mSwipeRefreshLayout.setRefreshing(true);
         mService.getServiceList("en").enqueue(mCallbackPloyeeService);
@@ -179,18 +187,5 @@ public class PloyeeServiceListFragment extends BaseFragment implements SearchVie
         }
 
         return true;
-    }
-
-    private static List<PloyeeServiceItemViewModel> filter(List<PloyeeServiceItemViewModel> models, String query) {
-        final String lowerCaseQuery = query.toLowerCase();
-
-        final List<PloyeeServiceItemViewModel> filteredModelList = new ArrayList<>();
-        for (PloyeeServiceItemViewModel model : models) {
-            final String text = model.getText().toLowerCase();
-            if (text.contains(lowerCaseQuery)) {
-                filteredModelList.add(model);
-            }
-        }
-        return filteredModelList;
     }
 }

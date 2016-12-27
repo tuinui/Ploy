@@ -14,7 +14,7 @@ public class PloyeeServiceDetailVM implements PloyeeServiceDetailContract.ViewMo
     private String equipmentNeeded;
     private long priceMin = 0;
     private long priceMax = 2;
-    private long serviceId =-1;
+    private long serviceId = -1;
 
 
     public PloyeeServiceDetailVM(PloyerServiceDetailGson.Data data) {
@@ -23,7 +23,7 @@ public class PloyeeServiceDetailVM implements PloyeeServiceDetailContract.ViewMo
             description = data.getDescription();
             certificate = data.getCertificate();
             equipmentNeeded = data.getEquipment();
-            if(data.getPriceMin() > 2){
+            if (data.getPriceMin() > 2) {
                 priceMin = data.getPriceMin();
             }
 

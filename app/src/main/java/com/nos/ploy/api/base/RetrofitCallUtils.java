@@ -23,10 +23,6 @@ public abstract class RetrofitCallUtils<T> {
     private RetrofitCallUtils() {
     }
 
-    public abstract void onDataSuccess(T data);
-
-    public abstract void onDataFailure(ResponseMessage failCause);
-
     public RetrofitCallUtils(Call<T> call) {
         this.mCall = call;
     }
@@ -45,6 +41,19 @@ public abstract class RetrofitCallUtils<T> {
             }
         };
     }
+
+    private static boolean isReadForUiThread(Context context) {
+
+        if (context instanceof BaseActivity) {
+            return ((BaseActivity) context).isReady();
+        } else {
+            return context != null;
+        }
+    }
+
+    public abstract void onDataSuccess(T data);
+
+    public abstract void onDataFailure(ResponseMessage failCause);
 
     public void enqueue(final Context context) {
         if (null != mCall) {
@@ -106,15 +115,6 @@ public abstract class RetrofitCallUtils<T> {
     private void showToast(Context context, String message) {
         if (isReadForUiThread(context)) {
             Toast.makeText(context, message, Toast.LENGTH_LONG).show();
-        }
-    }
-
-    private static boolean isReadForUiThread(Context context) {
-
-        if (context instanceof BaseActivity) {
-            return ((BaseActivity) context).isReady();
-        } else {
-            return context != null;
         }
     }
 

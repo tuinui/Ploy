@@ -1,4 +1,4 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
 
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.NoActionBar">
@@ -19,7 +19,15 @@
 
     <style name="PloyButtonTransparentWhiteBorder">
         <item name="android:textColor">@android:color/white</item>
-        <item name="android:background">@drawable/background_button_transparent</item>
+        <item name="android:background">@drawable/background_button_transparent_white</item>
+        <item name="android:textAppearance">@style/TextAppearance.AppCompat.Medium</item>
+        <item name="android:foreground">?attr/selectableItemBackground</item>
+    </style>
+
+    <style name="PloyButtonTransparentGrayBorder">
+        <item name="android:textColor">?android:attr/textColorPrimary</item>
+        <item name="android:background">@drawable/background_button_transparent_gray</item>
+        <item name="android:textAppearance">@style/TextAppearance.AppCompat.Medium</item>
         <item name="android:foreground">?attr/selectableItemBackground</item>
     </style>
 

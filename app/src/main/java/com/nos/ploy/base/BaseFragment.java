@@ -33,8 +33,8 @@ import retrofit2.Retrofit;
 
 public abstract class BaseFragment extends AppCompatDialogFragment {
 
-    private ProgressDialog mProgressDialog;
     protected static final String KEY_USER_ID = "USER_ID";
+    private ProgressDialog mProgressDialog;
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private SwipeRefreshLayout.OnRefreshListener mOnRefreshListener;
     private SwipeRefreshLayout mRefreshLayout;
