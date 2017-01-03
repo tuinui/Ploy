@@ -22,11 +22,15 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.nos.ploy.R;
 import com.nos.ploy.api.account.AccountApi;
 import com.nos.ploy.api.account.model.PostUpdateProfileGson;
@@ -39,9 +43,9 @@ import com.nos.ploy.api.base.response.ResponseMessage;
 import com.nos.ploy.api.masterdata.MasterApi;
 import com.nos.ploy.api.utils.loader.AccountInfoLoader;
 import com.nos.ploy.base.BaseActivity;
-import com.nos.ploy.flow.generic.maps.PloyeeMapsFragment;
 import com.nos.ploy.flow.ployee.profile.language.SpokenLanguageChooserFragment;
 import com.nos.ploy.flow.ployee.profile.upload.UploadPhotoFragment;
+import com.nos.ploy.utils.FragmentTransactionUtils;
 import com.nos.ploy.utils.GoogleApiAvailabilityUtils;
 import com.nos.ploy.utils.MyLocationUtils;
 import com.nos.ploy.utils.RecyclerUtils;
@@ -60,8 +64,8 @@ import rx.functions.Action1;
  * Created by Saran on 15/12/2559.
  */
 
-public class PloyeeProfileActivity extends BaseActivity implements View.OnClickListener, GoogleApiClient.OnConnectionFailedListener, GoogleApiClient.ConnectionCallbacks {
-
+public class PloyeeProfileActivity_Deprecated extends BaseActivity implements OnMapReadyCallback, View.OnClickListener, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
+    public LatLng mCurrentLatLng;
     @BindView(R.id.button_ployee_profile_show_email)
     Button mButtonEmail;
     @BindView(R.id.button_ployee_profile_show_phone_no)
@@ -84,8 +88,6 @@ public class PloyeeProfileActivity extends BaseActivity implements View.OnClickL
     Toolbar mToolbar;
     @BindView(R.id.textview_main_appbar_title)
     TextView mTextViewTitle;
-    @BindView(R.id.imageview_ployee_profile_static_maps)
-    ImageView mImageViewStaticMaps;
     @BindString(R.string.Profile)
     String LProfile;
     @BindView(R.id.scrollview_ployee_profile)
@@ -104,19 +106,18 @@ public class PloyeeProfileActivity extends BaseActivity implements View.OnClickL
     Drawable mDrawableNonSelecteddot;
     @BindDrawable(R.drawable.selecteditem_dot)
     Drawable mDrawableSelectedDot;
-    //    private GoogleMap mGoogleMap;
-//    private SupportMapFragment mMapFragment = SupportMapFragment.newInstance();
+    private GoogleMap mGoogleMap;
+    private SupportMapFragment mMapFragment = SupportMapFragment.newInstance();
     private AccountApi mAccountApi;
     private PostUpdateProfileGson mData;
     private MasterApi mMasterApi;
     private boolean shouldRequestCallSave = false;
     private ImageSliderPagerAdapter mAdapter;
-    public LatLng mCurrentLatLng;
     private GoogleApiClient mGoogleApiClient;
     private List<TransportGsonVm> mAllDataTransports = new ArrayList<>();
     private TransportRecyclerAdapter mTransportRecyclerAdapter = new TransportRecyclerAdapter() {
         @Override
-        public void onBindViewHolder(final ViewHolder holder, int position) {
+        public void onBindViewHolder(final TransportRecyclerAdapter.ViewHolder holder, int position) {
             if (RecyclerUtils.isAvailableData(mAllDataTransports, position)) {
                 TransportGsonVm data = mAllDataTransports.get(position);
 //                Glide.with(holder.imgTransport.getContext()).load(data.getDrawable()).into(holder.imgTransport);
@@ -216,7 +217,7 @@ public class PloyeeProfileActivity extends BaseActivity implements View.OnClickL
         public void onDataSuccess(Object data) {
             dismissLoading();
             showToastLong("Success");
-            refreshData(PloyeeProfileActivity.this);
+            refreshData(PloyeeProfileActivity_Deprecated.this);
 
         }
 
@@ -329,7 +330,7 @@ public class PloyeeProfileActivity extends BaseActivity implements View.OnClickL
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.fragment_ployee_profile);
+        setContentView(R.layout.fragment_ployee_profile_deprecated);
         ButterKnife.bind(this);
         mAccountApi = getRetrofit().create(AccountApi.class);
         mMasterApi = getRetrofit().create(MasterApi.class);
@@ -340,17 +341,6 @@ public class PloyeeProfileActivity extends BaseActivity implements View.OnClickL
         if (GoogleApiAvailabilityUtils.checkPlayServices(this)) {
             mGoogleApiClient = new GoogleApiClient.Builder(this, this, this).addApi(LocationServices.API).build();
         }
-    }
-
-    private void showStaticMaps(LatLng latLng) {
-        String mapsUrl = "http://maps.googleapis.com/maps/api/staticmap?" +
-                "markers=" + latLng.latitude + "," + latLng.longitude +
-                "&zoom=17" +
-                "&size=640x360" +
-                "&scale=2" +
-                "&maptype=roadmap" +
-                "&sensor=false";
-        Glide.with(mImageViewStaticMaps.getContext()).load(mapsUrl).into(mImageViewStaticMaps);
     }
 
     private void initRecyclerView() {
@@ -479,7 +469,6 @@ public class PloyeeProfileActivity extends BaseActivity implements View.OnClickL
         mButtonPhone.setOnClickListener(this);
         mImageButtonCheckin.setOnClickListener(this);
         mTextViewLanguageSupport.setOnClickListener(this);
-        mImageViewStaticMaps.setOnClickListener(this);
         setRefreshLayout(mSwipeRefreshLayout, new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -494,29 +483,37 @@ public class PloyeeProfileActivity extends BaseActivity implements View.OnClickL
 
     }
 
-//    private void initMap() {
-//        FragmentTransactionUtils.addFragmentToActivity(getSupportFragmentManager(), mMapFragment, R.id.framelayout_ployee_profile_maps_container);
-//        if (null != mMapFragment) {
-//            mMapFragment.getMapAsync(this);
-//            if (null != mMapFragment.getView()) {
-//                mMapFragment.getView().setClickable(false);
-//            }
-//
-//        }
-//
-//    }
+    private void initMap() {
+        FragmentTransactionUtils.addFragmentToActivity(getSupportFragmentManager(), mMapFragment, R.id.framelayout_ployee_profile_maps_container);
+        if (null != mMapFragment) {
+            mMapFragment.getMapAsync(this);
+            if (null != mMapFragment.getView()) {
+                mMapFragment.getView().setClickable(false);
+            }
 
-//    @Override
-//    public void onMapReady(GoogleMap googleMap) {
-//        mGoogleMap = googleMap;
-//        if (mGoogleMap != null) {
-//            mGoogleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
-//        }
-//        if (null == mData) {
-//            refreshData(PloyeeProfileActivity.this);
-//        }
-//    }
+        }
 
+    }
+
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        mGoogleMap = googleMap;
+        if (mGoogleMap != null) {
+            mGoogleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+        }
+        if (null == mData) {
+            refreshData(PloyeeProfileActivity_Deprecated.this);
+        }
+    }
+
+    private void moveCameraToCurrentLocation(LatLng latLng) {
+        if (mGoogleMap != null) {
+            mGoogleMap.clear();
+            mGoogleMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+            mGoogleMap.animateCamera(CameraUpdateFactory.zoomTo(17));
+            mGoogleMap.addMarker(new MarkerOptions().position(latLng));
+        }
+    }
 
     @Override
     public void onClick(View v) {
@@ -531,13 +528,6 @@ public class PloyeeProfileActivity extends BaseActivity implements View.OnClickL
             getLocationAndSetToAddressView();
         } else if (id == mTextViewLanguageSupport.getId()) {
             showLanguageChooser();
-        }else if(id == mImageViewStaticMaps.getId()){
-            showFragment(PloyeeMapsFragment.newInstance(mCurrentLatLng, new PloyeeMapsFragment.OnChooseLocationFinishListener() {
-                @Override
-                public void onFinishChoosingLocation(LatLng latLng) {
-                    setCurrentLatLng(latLng);
-                }
-            }));
         }
     }
 
@@ -548,7 +538,7 @@ public class PloyeeProfileActivity extends BaseActivity implements View.OnClickL
                 mData = gatheredData();
                 mData.setLanguage(datas);
                 bindData(mData);
-                PloyeeProfileActivity.this.onClickDone();
+                PloyeeProfileActivity_Deprecated.this.onClickDone();
             }
         }));
 
@@ -569,8 +559,8 @@ public class PloyeeProfileActivity extends BaseActivity implements View.OnClickL
 
     private void setCurrentLatLng(LatLng latlng) {
         mCurrentLatLng = latlng;
-        showStaticMaps(latlng);
-        String address = MyLocationUtils.getCompleteAddressString(PloyeeProfileActivity.this, mCurrentLatLng.latitude, mCurrentLatLng.longitude);
+        moveCameraToCurrentLocation(mCurrentLatLng);
+        String address = MyLocationUtils.getCompleteAddressString(PloyeeProfileActivity_Deprecated.this, mCurrentLatLng.latitude, mCurrentLatLng.longitude);
         mTextViewAddress.setText(address);
     }
 
@@ -599,8 +589,7 @@ public class PloyeeProfileActivity extends BaseActivity implements View.OnClickL
 
     @Override
     public void onConnected(@Nullable Bundle bundle) {
-//        initMap();
-        refreshData(this);
+        initMap();
     }
 
 

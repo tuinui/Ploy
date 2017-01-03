@@ -32,6 +32,7 @@ import com.nos.ploy.flow.ployee.account.main.PloyeeAccountFragment;
 import com.nos.ploy.flow.ployee.home.content.availability.PloyeeAvailabilityFragment;
 import com.nos.ploy.flow.ployee.home.content.service.list.PloyeeServiceListFragment;
 import com.nos.ploy.flow.ployee.profile.PloyeeProfileActivity;
+import com.nos.ploy.flow.ployee.profile.PloyeeProfileActivity_Deprecated;
 import com.nos.ploy.flow.ployee.settings.PloyeeSettingsFragment;
 import com.nos.ploy.utils.IntentUtils;
 import com.nos.ploy.utils.PopupMenuUtils;
@@ -113,7 +114,7 @@ public class PloyeeHomeActivity extends BaseActivity implements View.OnClickList
             }
         }
     };
-    //    private PloyeeProfileActivity mProfileFragment = PloyeeProfileActivity.newInstance();
+    //    private PloyeeProfileActivity_Deprecated mProfileFragment = PloyeeProfileActivity_Deprecated.newInstance();
     private Action1<AccountGson.Data> mOnLoadAccountFinish = new Action1<AccountGson.Data>() {
         @Override
         public void call(final AccountGson.Data data) {
