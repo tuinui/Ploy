@@ -277,7 +277,18 @@ public class SignUpFragment extends BaseFragment implements View.OnClickListener
         boolean canSubmit = (!TextUtils.isEmpty(birthDay) && !TextUtils.isEmpty(email) && !TextUtils.isEmpty(firstName) && !TextUtils.isEmpty(lastName) && !TextUtils.isEmpty(password) && !TextUtils.isEmpty(rePassword));
         if (!isEmailValid(email)) {
             mEditTextEmail.setError(getString(R.string.Invalid_email_address));
+            mEditTextEmail.requestFocus();
             canSubmit = false;
+        }
+
+        if (mEditTextPassword.length() < mEditTextPassword.getMinCharacters()) {
+            canSubmit = false;
+            mEditTextPassword.requestFocus();
+        }
+
+        if(mEditTextRePassword.length() < mEditTextRePassword.getMinCharacters()){
+            canSubmit = false;
+            mEditTextRePassword.requestFocus();
         }
         if (canSubmit) {
             if (TextUtils.equals(password, rePassword)) {
