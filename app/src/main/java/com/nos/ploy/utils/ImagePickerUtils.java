@@ -74,7 +74,7 @@ public class ImagePickerUtils {
 //        if (file.exists()) {
 //            String mimeType = MyFileUtils.getMimeType(file.getPath());
 //            if (null != mimeType) {
-//                return MultipartBody.Part.createFormData(key, file.getName(), RequestBody.create(MediaType.parse(MyFileUtils.getMimeType(file.getPath())), file));
+//                return MultipartBody.Part.createFormData(key, file.getLanguageName(), RequestBody.create(MediaType.parse(MyFileUtils.getMimeType(file.getPath())), file));
 //            }
 //        }
 //        return null;

@@ -9,6 +9,7 @@ import com.google.gson.Gson;
 import com.nos.ploy.api.account.model.ProfileImageGson;
 import com.nos.ploy.api.authentication.model.AccountGson;
 import com.nos.ploy.api.authentication.model.UserTokenGson;
+import com.nos.ploy.api.masterdata.model.AppLanguageGson;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -21,11 +22,19 @@ import java.util.List;
 
 public class SharePreferenceUtils {
 
+    @Retention(RetentionPolicy.SOURCE)
+    @IntDef({USER, APP_SETTINGS})
+    public @interface FileType {
+    }
     public static final int USER = 1;
+    public static final int APP_SETTINGS = 2;
+
     public static final String SHAREPREF_FILE_USER = "SHAREPREF_FILE_USER";
     private static final String KEY_ACCOUNT_GSON = "ACCOUNT_GSON";
     private static final String KEY_PROFILE_IMAGE_GSON = "PROFILE_IMAGE_GSON";
     private static final String KEY_USER_TOKEN_GSON = "USER_TOKEN_GSON";
+    private static final String KEY_APP_LANGUAGE_GSON = "APP_LANGUAGE_GSON";
+    private static final String KEY_CURRENT_ACTIVE_APP_LANGUAGE = "CURRENT_APP_LANGUAGE";
 
     public static SharedPreferences with(Context context, @FileType int fileType) {
         return context.getSharedPreferences(convertToFileName(fileType), Context.MODE_PRIVATE);
@@ -72,14 +81,59 @@ public class SharePreferenceUtils {
         with(context, USER).edit().putString(KEY_PROFILE_IMAGE_GSON, accountGsonString).apply();
     }
 
+    public static void saveAppLanguageGson(Context context, AppLanguageGson data){
+        if(null == context){
+            return;
+        }
+        String appLanguageGsonString = new Gson().toJson(data,AppLanguageGson.class);
+        with(context, APP_SETTINGS).edit().putString(KEY_APP_LANGUAGE_GSON,appLanguageGsonString).apply();
+    }
+
+    public static ArrayList<AppLanguageGson.Data> getAppLanguageList(Context context){
+        ArrayList<AppLanguageGson.Data> results = new ArrayList<>();
+        if(null == context){
+            return results;
+        }
+
+        String accountGsonString = with(context, APP_SETTINGS).getString(KEY_APP_LANGUAGE_GSON, "");
+        if (TextUtils.isEmpty(accountGsonString)) {
+            return results;
+        }
+
+        AppLanguageGson data = new Gson().fromJson(accountGsonString, AppLanguageGson.class);
+        if (null != data && null != data.getData()) {
+            results.addAll(data.getData());
+        }
+        return results;
+    }
+
+    public static String getCurrentActiveAppLanguageCode(Context context){
+        String languageCode = "en";
+        if(null == context){
+            return languageCode;
+        }
+
+        languageCode = with(context,APP_SETTINGS).getString(KEY_CURRENT_ACTIVE_APP_LANGUAGE,"en");
+
+        return languageCode;
+    }
+
+    public static void setCurrentActiveAppLanguageCode(Context context, String languageCode){
+        if (null == context) {
+            return;
+        }
+
+        with(context,APP_SETTINGS).edit().putString(KEY_CURRENT_ACTIVE_APP_LANGUAGE,languageCode).apply();
+    }
+
     public static List<ProfileImageGson.Data> getProfileImages(Context context) {
         List<ProfileImageGson.Data> results = new ArrayList<>();
         if (null == context) {
-            return null;
+            return results;
         }
         String accountGsonString = with(context, USER).getString(KEY_PROFILE_IMAGE_GSON, "");
         if (TextUtils.isEmpty(accountGsonString)) {
-            return null;
+            return results;
         }
         ProfileImageGson data = new Gson().fromJson(accountGsonString, ProfileImageGson.class);
         if (null != data && null != data.getData()) {
@@ -110,8 +164,4 @@ public class SharePreferenceUtils {
         }
     }
 
-    @Retention(RetentionPolicy.SOURCE)
-    @IntDef({USER})
-    public @interface FileType {
-    }
 }

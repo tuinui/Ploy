@@ -18,6 +18,7 @@ import com.nos.ploy.api.base.response.ResponseMessage;
 import com.nos.ploy.api.masterdata.MasterApi;
 import com.nos.ploy.api.masterdata.model.HtmlAppGson;
 import com.nos.ploy.base.BaseFragment;
+import com.nos.ploy.cache.SharePreferenceUtils;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -136,7 +137,7 @@ public class HtmlTextFragment extends BaseFragment {
 
     private void refreshData() {
         showRefreshing();
-        RetrofitCallUtils.with(mApi.getHtmlApp("en", mMenu), mCallbackLoadData).enqueue(getContext());
+        RetrofitCallUtils.with(mApi.getHtmlApp(SharePreferenceUtils.getCurrentActiveAppLanguageCode(getContext()), mMenu), mCallbackLoadData).enqueue(getContext());
     }
 
     private void initToolbar() {

@@ -1,6 +1,7 @@
 package com.nos.ploy.api.masterdata;
 
 import com.nos.ploy.api.account.model.TransportGson;
+import com.nos.ploy.api.masterdata.model.AppLanguageGson;
 import com.nos.ploy.api.masterdata.model.HtmlAppGson;
 import com.nos.ploy.api.masterdata.model.LanguageGson;
 
@@ -24,4 +25,9 @@ public interface MasterApi {
     ///api/transport
     @GET("/api/transport")
     Call<TransportGson> getTransportList();
+
+
+    ///api/appLanguage/getAppLanguageActiveList
+    @GET("/api/appLanguage/getAppLanguageActiveList")
+    Call<AppLanguageGson> getAppLanguageActiveList();
 }

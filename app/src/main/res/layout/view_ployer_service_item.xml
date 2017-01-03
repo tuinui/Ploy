@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.nos.ploy.custom.view.SquareFrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="2dp"
@@ -13,11 +14,11 @@
         android:layout_height="match_parent">
 
         <ImageView
-            android:id="@+id/imageview_ployee_category"
+            android:id="@+id/imageview_ployer_service_item_image"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scaleType="centerCrop"
-            android:src="@drawable/ic_background_job_kids_480dp" />
+            tools:src="@drawable/ic_background_job_kids_480dp" />
 
         <View
             android:layout_width="match_parent"
@@ -32,24 +33,26 @@
         android:orientation="vertical">
 
         <TextView
+            android:id="@+id/textview_ployer_service_item_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ellipsize="end"
             android:maxLines="2"
             android:padding="4dp"
-            android:text="CHILD &amp; BABYSIT"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-            android:textColor="@android:color/white" />
+            android:textColor="@android:color/white"
+            tools:text="CHILD &amp; BABYSIT" />
 
         <TextView
+            android:id="@+id/textview_ployer_service_item_subtitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ellipsize="end"
             android:maxLines="2"
             android:padding="4dp"
-            android:text="54 PLOYEE"
             android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
-            android:textColor="@android:color/white" />
+            android:textColor="@android:color/white"
+            tools:text="54 PLOYEE" />
     </LinearLayout>
 
 

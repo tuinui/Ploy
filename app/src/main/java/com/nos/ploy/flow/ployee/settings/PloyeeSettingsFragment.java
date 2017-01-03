@@ -12,15 +12,20 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.nos.ploy.R;
+import com.nos.ploy.api.masterdata.model.AppLanguageGson;
+import com.nos.ploy.api.utils.loader.AppLanguageDataLoader;
 import com.nos.ploy.base.BaseFragment;
+import com.nos.ploy.cache.SharePreferenceUtils;
 import com.nos.ploy.cache.UserTokenManager;
 import com.nos.ploy.flow.generic.htmltext.HtmlTextFragment;
 import com.nos.ploy.flow.ployee.profile.language.SpokenLanguageChooserFragment;
+import com.nos.ploy.flow.ployee.settings.language.LanguageChooserFragment;
 
 import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import rx.functions.Action1;
 
 /**
  * Created by Saran on 19/12/2559.
@@ -45,10 +50,10 @@ public class PloyeeSettingsFragment extends BaseFragment implements View.OnClick
     @BindView(R.id.textview_main_appbar_title)
     TextView mTextViewTitle;
     private long mUserId;
-    private SpokenLanguageChooserFragment.OnDataChangedListener mOnChangedListener = new SpokenLanguageChooserFragment.OnDataChangedListener() {
+    private LanguageChooserFragment.OnDataChangedListener mOnChangedListener = new LanguageChooserFragment.OnDataChangedListener() {
         @Override
-        public void onClickDone(ArrayList<String> datas) {
-
+        public void onClickDone(AppLanguageGson.Data data) {
+            SharePreferenceUtils.setCurrentActiveAppLanguageCode(PloyeeSettingsFragment.this.getContext(),data.getCode());
         }
     };
     private ArrayList<String> mDummyAppLanguages = new ArrayList<>();
@@ -130,7 +135,15 @@ public class PloyeeSettingsFragment extends BaseFragment implements View.OnClick
         } else if (id == mTextViewTerm.getId()) {
             showFragment(HtmlTextFragment.newInstance(HtmlTextFragment.TERM_AND_CONDITIONS));
         } else if (id == mLinearLayoutLanguageContainer.getId()) {
-            showFragment(LanguageChooserFragment.newInstance(mUserId, mDummyAppLanguages, mOnChangedListener));
+            showLoading();
+            AppLanguageDataLoader.getAppLanguageList(v.getContext(), false, new Action1<ArrayList<AppLanguageGson.Data>>() {
+                @Override
+                public void call(ArrayList<AppLanguageGson.Data> datas) {
+                    dismissLoading();
+                    showFragment(LanguageChooserFragment.newInstance(mUserId, datas, mOnChangedListener));
+                }
+            });
+
         }
     }
 

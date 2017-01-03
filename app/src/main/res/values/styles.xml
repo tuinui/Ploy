@@ -31,6 +31,8 @@
         <item name="android:foreground">?attr/selectableItemBackground</item>
     </style>
 
+
+
     <style name="DialogAnimation" parent="AppTheme">
         <item name="android:windowEnterAnimation">@anim/slide_up</item>
         <item name="android:windowExitAnimation">@anim/slide_down</item>

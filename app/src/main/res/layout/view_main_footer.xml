@@ -14,14 +14,14 @@
 
         <ImageView
             android:id="@+id/imageview_main_footer_logo1"
-            android:layout_width="wrap_content"
+            android:layout_width="64dp"
             android:layout_height="match_parent"
             android:layout_gravity="center_vertical|start|left"
             android:layout_weight="0"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:clickable="true"
-            android:padding="16dp"
-            android:src="@drawable/ic_logo_p_alphabet_blue_49dp" />
+            android:padding="8dp"
+            android:src="@drawable/ic_geniz_logo_133dp" />
 
         <ImageView
             android:id="@+id/imageview_main_footer_logo2"

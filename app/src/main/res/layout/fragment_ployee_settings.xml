@@ -151,8 +151,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="16dp"
+                android:minHeight="?attr/listPreferredItemHeight"
                 android:text="@string/Log_out"
-                android:textAllCaps="false" />
+                android:textAllCaps="false"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                android:textColor="@android:color/white" />
 
         </LinearLayout>
 
