@@ -198,7 +198,10 @@ public class PopupMenuUtils {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
-                onConfirm.call(editText.getText().toString());
+                if(onConfirm != null){
+                    onConfirm.call(editText.getText().toString());
+                }
+
             }
         });
         alert.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {

@@ -1,11 +1,15 @@
 package com.nos.ploy.flow.ployee.home.content.service.detail;
 
+import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.InputFilter;
 import android.text.InputType;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -16,18 +20,18 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.appyvet.rangebar.RangeBar;
 import com.nos.ploy.R;
 import com.nos.ploy.api.ployee.PloyeeApi;
 import com.nos.ploy.api.ployer.PloyerApi;
 import com.nos.ploy.api.ployer.model.PloyerServiceDetailGson;
 import com.nos.ploy.api.ployer.model.PostSavePloyerServiceDetailGson;
 import com.nos.ploy.base.BaseFragment;
+import com.nos.ploy.custom.view.InputFilterMinMax;
+import com.nos.ploy.custom.view.NumberTextWatcher;
 import com.nos.ploy.flow.ployee.home.content.service.detail.contract.PloyeeServiceDetailContract;
 import com.nos.ploy.flow.ployee.home.content.service.detail.contract.PloyeeServiceDetailPresenter;
 import com.nos.ploy.flow.ployee.home.content.service.detail.contract.PloyeeServiceDetailVM;
 import com.nos.ploy.flow.ployee.home.content.service.detail.contract.subservice.PloyeeServiceDetailSubServiceRecyclerAdapter;
-import com.nos.ploy.utils.PopupMenuUtils;
 import com.rengwuxian.materialedittext.MaterialEditText;
 
 import butterknife.BindString;
@@ -42,8 +46,8 @@ import rx.functions.Action1;
 public class PloyeeServiceDetailFragment extends BaseFragment implements PloyeeServiceDetailContract.View, View.OnClickListener {
     private static final String KEY_SERVICE_ID = "SERVICE_ID";
     private static final String KEY_TOOLBAR_TITLE = "TOOLBAR_TITLE";
-    @BindView(R.id.materialrangebar_ployee_service_rate)
-    RangeBar mRangeBar;
+    //    @BindView(R.id.materialrangebar_ployee_service_rate)
+//    RangeBar mRangeBar;
     @BindView(R.id.edittext_ployee_service_price_from)
     MaterialEditText mEditTextPriceFrom;
     @BindView(R.id.edittext_ployee_service_price_to)
@@ -72,13 +76,13 @@ public class PloyeeServiceDetailFragment extends BaseFragment implements PloyeeS
     Button mButtonReset;
     @BindString(R.string.This_field_is_required)
     String LThis_field_is_required;
-    private RangeBar.OnRangeBarChangeListener mRangeBarListener = new RangeBar.OnRangeBarChangeListener() {
-        @Override
-        public void onRangeChangeListener(RangeBar rangeBar, int leftPinIndex, int rightPinIndex, String leftPinValue, String rightPinValue) {
-            setPriceText(mEditTextPriceFrom, leftPinValue);
-            setPriceText(mEditTextPriceTo, rightPinValue);
-        }
-    };
+    //    private RangeBar.OnRangeBarChangeListener mRangeBarListener = new RangeBar.OnRangeBarChangeListener() {
+//        @Override
+//        public void onRangeChangeListener(RangeBar rangeBar, int leftPinIndex, int rightPinIndex, String leftPinValue, String rightPinValue) {
+//            setPriceText(mEditTextPriceFrom, leftPinValue);
+//            setPriceText(mEditTextPriceTo, rightPinValue);
+//        }
+//    };
     private PloyeeApi mService;
     private PloyeeServiceDetailContract.Presenter mPresenter;
     private SwipeRefreshLayout.OnRefreshListener mOnRefreshListener = new SwipeRefreshLayout.OnRefreshListener() {
@@ -92,6 +96,7 @@ public class PloyeeServiceDetailFragment extends BaseFragment implements PloyeeS
     private long mUserId;
     private long mServiceId;
     private String mToolbarTitle;
+
 
     public static PloyeeServiceDetailFragment newInstance(long userId, long serviceId, String title) {
         Bundle args = new Bundle();
@@ -128,7 +133,6 @@ public class PloyeeServiceDetailFragment extends BaseFragment implements PloyeeS
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         initToolbar();
-        initRangeBar();
         initRecyclerView();
         initView();
     }
@@ -143,12 +147,19 @@ public class PloyeeServiceDetailFragment extends BaseFragment implements PloyeeS
         mRecyclerSubService.setAdapter(mAdapter);
     }
 
+
     private void initView() {
         disableEditable(mEditTextPriceFrom);
         disableEditable(mEditTextPriceTo);
 
         mEditTextPriceFrom.setOnClickListener(this);
+        mEditTextPriceFrom.addTextChangedListener(new NumberTextWatcher(mEditTextPriceFrom));
+//        mEditTextPriceFrom.setFilters(mInputMinMaxFilter);
+
         mEditTextPriceTo.setOnClickListener(this);
+        mEditTextPriceTo.addTextChangedListener(new NumberTextWatcher(mEditTextPriceTo));
+//        mEditTextPriceTo.setFilters(mInputMinMaxFilter);
+
         mButtonReset.setOnClickListener(this);
 
         mSwipeRefreshLayout.setOnRefreshListener(mOnRefreshListener);
@@ -181,54 +192,75 @@ public class PloyeeServiceDetailFragment extends BaseFragment implements PloyeeS
         });
     }
 
-    private void setPriceText(MaterialEditText et, String price) {
-        et.setText(price);
-    }
+//    private void setPriceText(MaterialEditText et, String price) {
+//        et.setText(price);
+//    }
 
-    private void initRangeBar() {
-        setPriceText(mEditTextPriceFrom, mRangeBar.getLeftPinValue());
-        setPriceText(mEditTextPriceTo, mRangeBar.getRightPinValue());
-        mRangeBar.setOnRangeBarChangeListener(mRangeBarListener);
-    }
+//    private void initRangeBar() {
+//        setPriceText(mEditTextPriceFrom, mRangeBar.getLeftPinValue());
+//        setPriceText(mEditTextPriceTo, mRangeBar.getRightPinValue());
+//        mRangeBar.setOnRangeBarChangeListener(mRangeBarListener);
+//    }
 
     @Override
     public void onClick(View view) {
         int id = view.getId();
         if (id == mEditTextPriceFrom.getId()) {
-            PopupMenuUtils.showPopupAlertEditTextFromEditTextMenu(mEditTextPriceFrom, new Action1<String>() {
+            showPopupAlertEditTextMenu(mEditTextPriceFrom.getContext(), String.valueOf(mEditTextPriceFrom.getHint()), String.valueOf(mEditTextPriceFrom.getText()), new Action1<String>() {
                 @Override
                 public void call(String s) {
-                    Integer value = Integer.valueOf(s);
-                    if (null != value && value >= 0 && value < (Integer.valueOf(mRangeBar.getRightPinValue()) - 2)) {
-                        mRangeBar.setRangePinsByValue(value, Float.parseFloat(mRangeBar.getRightPinValue()));
-                        mRangeBar.setTickInterval(5);
-                    }
+                    mEditTextPriceFrom.setText(s);
                 }
-            }, InputType.TYPE_CLASS_NUMBER);
+            });
         } else if (id == mEditTextPriceTo.getId()) {
-            PopupMenuUtils.showPopupAlertEditTextFromEditTextMenu(mEditTextPriceTo, new Action1<String>() {
+            showPopupAlertEditTextMenu(mEditTextPriceTo.getContext(), String.valueOf(mEditTextPriceTo.getHint()), String.valueOf(mEditTextPriceTo.getText()), new Action1<String>() {
                 @Override
                 public void call(String s) {
-                    Integer value = Integer.valueOf(s);
-                    if (null != value && value >= 2 && value > (Integer.valueOf(mRangeBar.getLeftPinValue()) + 2)) {
-                        if (value > 1000) {
-                            if (value >= 9999) {
-                                value = 9999;
-                            }
-                            mRangeBar.setTickEnd(value);
-
-                        } else {
-                            mRangeBar.setTickEnd(1000);
-                        }
-
-                        mRangeBar.setRangePinsByValue(Float.parseFloat(mRangeBar.getLeftPinValue()), value);
-                        mRangeBar.setTickInterval(5);
-                    }
-
+                    mEditTextPriceTo.setText(s);
                 }
-            }, InputType.TYPE_CLASS_NUMBER);
+            });
         } else if (id == mButtonReset.getId()) {
             onClickReset();
+        }
+    }
+
+    private void showPopupAlertEditTextMenu(Context context, String title, String defaultValue, final Action1<String> onConfirm) {
+        if (null == context) {
+            return;
+        }
+        AlertDialog.Builder alert = new AlertDialog.Builder(context);
+        View view = LayoutInflater.from(context).inflate(R.layout.view_edittext_in_alert_dialog, null);
+        final EditText editText = (EditText) view.findViewById(R.id.edittext_in_alert_dialog);
+
+        editText.setInputType(InputType.TYPE_CLASS_NUMBER);
+        if (!TextUtils.isEmpty(defaultValue) && defaultValue.contains(",")) {
+            defaultValue = String.valueOf(defaultValue.replaceAll(",", ""));
+        }
+        editText.setText(defaultValue);
+//        editText.addTextChangedListener(new NumberTextWatcher(editText));
+        editText.setFilters(new InputFilter[]{new InputFilterMinMax(0, Integer.MAX_VALUE, editText)});
+
+        alert.setView(view);
+        alert.setTitle(title);
+        alert.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+                if (onConfirm != null) {
+                    onConfirm.call(editText.getText().toString());
+                }
+
+            }
+        });
+        alert.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        AlertDialog dialog = alert.create();
+        if (null != dialog) {
+            dialog.show();
         }
     }
 
@@ -302,24 +334,25 @@ public class PloyeeServiceDetailFragment extends BaseFragment implements PloyeeS
             mEditTextDescription.setText(data.getDescription());
             mEditTextCertificate.setText(data.getCertificate());
             mEditTextEquipmentNeeded.setText(data.getEquipmentNeeded());
-            if (data.getPriceMin() >= 0 && (data.getPriceMax() - 2) > data.getPriceMin()) {
-
-                if (data.getPriceMax() > 1000) {
-                    long priceMax;
-                    if (data.getPriceMax() >= 9999) {
-                        priceMax = 9999;
-                    } else {
-                        priceMax = data.getPriceMax();
-                    }
-
-                    mRangeBar.setTickEnd(priceMax);
-                    mRangeBar.setRangePinsByValue(data.getPriceMin(), priceMax);
-                } else {
-                    mRangeBar.setTickEnd(1000);
-                    mRangeBar.setRangePinsByValue(data.getPriceMin(), data.getPriceMax());
-                }
-            }
-
+//            if (data.getPriceMin() >= 0 && (data.getPriceMax() - 2) > data.getPriceMin()) {
+//
+//                if (data.getPriceMax() > 1000) {
+//                    long priceMax;
+//                    if (data.getPriceMax() >= 9999) {
+//                        priceMax = 9999;
+//                    } else {
+//                        priceMax = data.getPriceMax();
+//                    }
+//
+//                    mRangeBar.setTickEnd(priceMax);
+//                    mRangeBar.setRangePinsByValue(data.getPriceMin(), priceMax);
+//                } else {
+//                    mRangeBar.setTickEnd(1000);
+//                    mRangeBar.setRangePinsByValue(data.getPriceMin(), data.getPriceMax());
+//                }
+//            }
+            mEditTextPriceFrom.setText(String.valueOf(data.getPriceMin()));
+            mEditTextPriceTo.setText(String.valueOf(data.getPriceMax()));
             if (null != data.getData() && null != data.getData().getSubServices() && !data.getData().getSubServices().isEmpty()) {
                 mAdapter.replaceData(data.getData().getSubServices());
                 mTextViewSubServicesHeader.setVisibility(View.VISIBLE);

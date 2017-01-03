@@ -324,6 +324,9 @@ public abstract class BaseFragment extends AppCompatDialogFragment {
     protected long extractLong(EditText editText) {
         if (null != editText && null != editText.getText() && !TextUtils.isEmpty(editText.getText())) {
             String text = editText.getText().toString();
+            if (text.contains(",")) {
+                text = text.replaceAll(",", "");
+            }
             try {
                 return Long.parseLong(text);
             } catch (NumberFormatException e) {
@@ -338,6 +341,9 @@ public abstract class BaseFragment extends AppCompatDialogFragment {
     protected double extractDouble(EditText editText) {
         if (null != editText && null != editText.getText() && !TextUtils.isEmpty(editText.getText())) {
             String text = editText.getText().toString();
+            if (text.contains(",")) {
+                text = text.replaceAll(",", "");
+            }
             try {
                 return Double.parseDouble(text);
             } catch (NumberFormatException e) {
