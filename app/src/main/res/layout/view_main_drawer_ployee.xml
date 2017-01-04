@@ -57,8 +57,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:fitsSystemWindows="true"
-            android:src="@drawable/ic_logo_splash_215dp" />
+            android:fitsSystemWindows="true" />
 
         <android.support.v7.widget.AppCompatTextView
             android:id="@+id/button_main_drawer_switch_to"
@@ -69,7 +68,7 @@
             android:clickable="true"
             android:gravity="center"
             android:minHeight="?android:attr/listPreferredItemHeightSmall"
-            android:text="Switch to Ployee"
+            android:text="@string/Switch_to_Ployer"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
             android:textColor="@color/colorPrimary" />
 

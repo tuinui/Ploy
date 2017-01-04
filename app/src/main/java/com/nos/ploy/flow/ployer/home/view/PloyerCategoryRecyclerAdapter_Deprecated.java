@@ -9,8 +9,6 @@ import android.widget.TextView;
 
 import com.nos.ploy.R;
 
-import org.w3c.dom.Text;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -18,7 +16,7 @@ import butterknife.ButterKnife;
  * Created by User on 10/11/2559.
  */
 
-public abstract class PloyeeCategoryRecyclerAdapter extends RecyclerView.Adapter<PloyeeCategoryRecyclerAdapter.ViewHolder> {
+public abstract class PloyerCategoryRecyclerAdapter_Deprecated extends RecyclerView.Adapter<PloyerCategoryRecyclerAdapter_Deprecated.ViewHolder> {
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.view_ployer_service_item, parent, false));

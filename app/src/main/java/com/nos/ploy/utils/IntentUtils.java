@@ -1,6 +1,7 @@
 package com.nos.ploy.utils;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 
 import com.nos.ploy.base.BaseActivity;
@@ -16,6 +17,15 @@ public class IntentUtils {
         if (null != activity && !activity.isFinishing() && !activity.isActivityDestroyedCompat()) {
             Intent intent = new Intent(activity, desireClass);
             activity.startActivity(intent);
+        }
+    }
+
+    public static void startActivity(Context context, Class<? extends Activity> desireClass) {
+        if (context instanceof BaseActivity) {
+            startActivity((BaseActivity) context, desireClass);
+        } else if (null != context) {
+            Intent intent = new Intent(context, desireClass);
+            context.startActivity(intent);
         }
     }
 

@@ -1,5 +1,6 @@
 package com.nos.ploy.api.ployer.model;
 
+import com.github.wrdlbrnft.sortedlistadapter.SortedListAdapter;
 import com.google.gson.annotations.SerializedName;
 import com.nos.ploy.api.base.response.BaseResponse;
 
@@ -10,7 +11,7 @@ import java.util.ArrayList;
  */
 
 public class PloyerServicesGson extends BaseResponse<ArrayList<PloyerServicesGson.Data>> {
-    public static class Data {
+    public static class Data implements SortedListAdapter.ViewModel {
         /*
          "id": 1,
       "serviceName": "Children",

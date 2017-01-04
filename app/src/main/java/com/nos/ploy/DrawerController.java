@@ -1,5 +1,7 @@
 package com.nos.ploy;
 
+import android.graphics.Color;
+import android.support.annotation.ColorInt;
 import android.support.annotation.IntDef;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -46,11 +48,15 @@ public class DrawerController {
     }
 
     public static void initDrawer(final BaseActivity activity, final DrawerLayout drawerLayout, RecyclerView recyclerViewMenu, Toolbar toolbar, View toggleButton, final OnMenuItemSelectedListener listener) {
+      initDrawer(activity,drawerLayout,recyclerViewMenu,toolbar,toggleButton, Color.WHITE, listener);
+    }
+
+    public static void initDrawer(final BaseActivity activity, final DrawerLayout drawerLayout, RecyclerView recyclerViewMenu, Toolbar toolbar, View toggleButton,@ColorInt int textColor, final OnMenuItemSelectedListener listener) {
         final ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 activity, drawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
-        DrawerRecyclerAdapter adapter = new DrawerRecyclerAdapter() {
+        DrawerRecyclerAdapter adapter = new DrawerRecyclerAdapter(textColor) {
             @Override
             public void onBindViewHolder(ViewHolder holder, int position) {
                 final String menu = DrawerController.MAP_MENU_NAMES.get(position);
@@ -84,6 +90,7 @@ public class DrawerController {
         });
         recyclerViewMenu.setAdapter(adapter);
     }
+
 
     private
     @DrawerController.Menu

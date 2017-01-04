@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="match_parent"
+    android:layout_gravity="end"
+    android:fillViewport="true"
+    android:fitsSystemWindows="true"
+    android:theme="@style/AppTheme">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/colorPrimary"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        app:theme="@style/AppTheme.Light">
+
+        <android.support.design.internal.ForegroundLinearLayout
+            android:id="@+id/foregroundlinearlayout_main_drawer_header_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:foreground="?attr/selectableItemBackground"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="120dp"
+                android:layout_height="120dp"
+                android:layout_marginTop="24dp"
+                android:layout_weight="0"
+                android:tint="@android:color/white"
+                android:layout_marginBottom="24dp"
+                android:src="@drawable/ic_geniz_logo_133dp"/>
+
+
+        </android.support.design.internal.ForegroundLinearLayout>
+
+
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recyclerview_main_drawer_menu"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@android:color/white"
+            android:fitsSystemWindows="true"
+            android:src="@drawable/ic_logo_splash_215dp" />
+
+        <android.support.v7.widget.AppCompatTextView
+            android:id="@+id/button_main_drawer_switch_to"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:gravity="center"
+            android:minHeight="?android:attr/listPreferredItemHeightSmall"
+            android:text="Switch to Ployee"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            android:textColor="@android:color/white" />
+
+    </LinearLayout>
+</android.support.v4.widget.NestedScrollView>

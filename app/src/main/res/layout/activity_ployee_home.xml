@@ -9,7 +9,7 @@
     <include layout="@layout/view_content_ployee_home" />
 
     <include
-        layout="@layout/view_main_drawer"
+        layout="@layout/view_main_drawer_ployee"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="end"
