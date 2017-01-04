@@ -20,7 +20,6 @@ import com.nos.ploy.api.masterdata.model.AppLanguageGson;
 import com.nos.ploy.base.BaseFragment;
 import com.nos.ploy.cache.SharePreferenceUtils;
 import com.nos.ploy.flow.ployee.profile.language.LanguageChooserRecyclerAdapter;
-import com.nos.ploy.flow.ployee.profile.language.SpokenLanguageChooserFragment;
 import com.nos.ploy.flow.ployee.settings.language.viewmodel.AppLanguageViewModel;
 import com.nos.ploy.utils.RecyclerUtils;
 
@@ -158,7 +157,7 @@ public class LanguageChooserFragment extends BaseFragment {
     }
 
     private void initToolbar() {
-        mTextViewTitle.setText(R.string.Language_spoken);
+        mTextViewTitle.setText(R.string.Language_setting);
         mToolbar.inflateMenu(R.menu.menu_done);
         mToolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
             @Override

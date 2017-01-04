@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="?attr/actionBarSize"
+    xmlns:tools="http://schemas.android.com/tools"
     android:background="@color/white_cc_transparent"
     android:gravity="center_vertical"
     android:orientation="vertical">
@@ -20,12 +21,13 @@
             android:layout_weight="0"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:clickable="true"
-            android:padding="8dp"
-            android:src="@drawable/ic_geniz_logo_133dp" />
+            android:padding="16dp"
+            android:scaleType="fitCenter"
+            tools:src="@drawable/ic_geniz_logo_133dp" />
 
         <ImageView
             android:id="@+id/imageview_main_footer_logo2"
-            android:layout_width="wrap_content"
+            android:layout_width="64dp"
             android:layout_height="match_parent"
             android:layout_gravity="center_vertical|start|left"
             android:layout_weight="0"

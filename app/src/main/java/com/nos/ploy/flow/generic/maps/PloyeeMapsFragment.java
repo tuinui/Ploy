@@ -117,7 +117,10 @@ public class PloyeeMapsFragment extends BaseFragment implements OnMapReadyCallba
             mGoogleMap.setOnMyLocationButtonClickListener(new GoogleMap.OnMyLocationButtonClickListener() {
                 @Override
                 public boolean onMyLocationButtonClick() {
-                    setCurrentLatLng(new LatLng(mGoogleMap.getMyLocation().getLatitude(), mGoogleMap.getMyLocation().getLongitude()));
+                    if(null != mGoogleMap && null != mGoogleMap.getMyLocation()){
+                        mLatlng = new LatLng(mGoogleMap.getMyLocation().getLatitude(),mGoogleMap.getMyLocation().getLongitude());
+                    }
+                    setCurrentLatLng(mLatlng);
                     return false;
                 }
             });

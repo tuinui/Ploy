@@ -13,7 +13,7 @@ public class PloyeeServiceDetailVM implements PloyeeServiceDetailContract.ViewMo
     private String certificate;
     private String equipmentNeeded;
     private long priceMin = 0;
-    private long priceMax = 2;
+    private long priceMax = 1000;
     private long serviceId = -1;
 
 

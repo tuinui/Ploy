@@ -32,7 +32,6 @@ import com.nos.ploy.flow.ployee.account.main.PloyeeAccountFragment;
 import com.nos.ploy.flow.ployee.home.content.availability.PloyeeAvailabilityFragment;
 import com.nos.ploy.flow.ployee.home.content.service.list.PloyeeServiceListFragment;
 import com.nos.ploy.flow.ployee.profile.PloyeeProfileActivity;
-import com.nos.ploy.flow.ployee.profile.PloyeeProfileActivity_Deprecated;
 import com.nos.ploy.flow.ployee.settings.PloyeeSettingsFragment;
 import com.nos.ploy.utils.IntentUtils;
 import com.nos.ploy.utils.PopupMenuUtils;
@@ -223,7 +222,7 @@ public class PloyeeHomeActivity extends BaseActivity implements View.OnClickList
 
     @Override
     public void onBackPressed() {
-//        super.onBackPressed();
+        super.onBackPressed();
     }
 
     private void initToolbar() {

@@ -1,5 +1,6 @@
 package com.nos.ploy.flow.ployer.home;
 
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
@@ -27,6 +28,8 @@ import com.nos.ploy.utils.RecyclerUtils;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.BindDimen;
+import butterknife.BindDrawable;
 import butterknife.BindString;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -34,6 +37,8 @@ import butterknife.ButterKnife;
 public class PloyerHomeActivity extends BaseActivity {
     @BindView(R.id.toolbar_main)
     Toolbar mToolbar;
+    @BindView(R.id.imageview_main_footer_logo1)
+    ImageView mImageViewFooterLogo1;
     @BindView(R.id.textview_main_appbar_title)
     TextView mTextViewTitle;
     @BindView(R.id.recyclerview_ployer_home)
@@ -46,6 +51,12 @@ public class PloyerHomeActivity extends BaseActivity {
     SwipeRefreshLayout mSwipeRefreshLayout;
     @BindString(R.string.PLOYEE)
     String LPLOYEE;
+    @BindDrawable(R.drawable.ic_ployer_item_placeholder)
+    Drawable mDrawableGenizPlaceHolder;
+    @BindDrawable(R.drawable.ic_geniz_logo_133dp)
+    Drawable mDrawableGenizLogo;
+    @BindDimen(R.dimen.dp8)
+    int dp16;
     private List<PloyerServicesGson.Data> mDatas = new ArrayList<>();
     private SearchView mSearchView;
     private PloyeeCategoryRecyclerAdapter mAdapter = new PloyeeCategoryRecyclerAdapter() {
@@ -59,7 +70,7 @@ public class PloyerHomeActivity extends BaseActivity {
                         IntentUtils.startActivity(PloyerHomeActivity.this, PloyeeListActivity.class);
                     }
                 });
-                Glide.with(holder.imgServiceImage.getContext()).load(data.getImgUrl()).into(holder.imgServiceImage);
+                Glide.with(holder.imgServiceImage.getContext()).load(data.getImgUrl()).placeholder(mDrawableGenizPlaceHolder).error(mDrawableGenizPlaceHolder).fallback(mDrawableGenizPlaceHolder).into(holder.imgServiceImage);
                 holder.tvTitle.setText(data.getServiceName());
                 holder.tvSubtitle.setText(data.getPloyeeCount() + " " + LPLOYEE);
             }
@@ -99,11 +110,18 @@ public class PloyerHomeActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ployer_home);
         ButterKnife.bind(this);
+//        mDrawableGenizPlaceHolder = DrawableUtils.changeDrawableColor(mDrawableGenizPlaceHolder,colorWhite);
         mApi = getRetrofit().create(PloyerApi.class);
         mSearchView = (SearchView) mStubSearchView.inflate().findViewById(R.id.searchview_main);
         initToolbar(mToolbar);
         initView();
+        initFooter();
         initRecyclerView(mRecyclerView);
+    }
+
+    private void initFooter() {
+        mImageViewFooterLogo1.setImageDrawable(mDrawableGenizLogo);
+        mImageViewFooterLogo1.setPadding(dp16, dp16, dp16, dp16);
     }
 
     private void initView() {
@@ -118,7 +136,7 @@ public class PloyerHomeActivity extends BaseActivity {
     @Override
     public void onResume() {
         super.onResume();
-        if(mDatas.isEmpty()){
+        if (mDatas.isEmpty()) {
             refreshData();
         }
     }
