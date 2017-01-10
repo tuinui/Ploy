@@ -60,7 +60,7 @@
             android:fitsSystemWindows="true" />
 
         <android.support.v7.widget.AppCompatTextView
-            android:id="@+id/button_main_drawer_switch_to"
+            android:id="@+id/textview_main_drawer_switch_to"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"

@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <FrameLayout
+        android:id="@+id/framelayout_ployer_person_maps_maps_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+
+    <android.support.v4.widget.NestedScrollView
+        android:id="@+id/nestedscrollview_ployer_person_maps_bottomsheet"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:clipToPadding="true"
+        android:minHeight="80dp"
+        app:layout_behavior="android.support.design.widget.BottomSheetBehavior">
+
+        <!--<Linear-->
+        <android.support.v7.widget.CardView
+            android:id="@+id/cardview_ployer_person_maps_bottomsheet_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:foreground="?attr/selectableItemBackground"
+            app:cardBackgroundColor="@android:color/white"
+            app:cardCornerRadius="0dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <com.nos.ploy.custom.view.RatioImageView
+                    android:id="@+id/imageview_ployer_person_maps_bottom_sheet_item_profile_photo"
+                    android:layout_width="120dp"
+                    android:layout_height="match_parent"
+                    android:layout_margin="1dp"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/ic_ployer_item_placeholder"
+                    app:ratioHeight="1"
+                    app:ratioWidth="1" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="?android:attr/listDivider" />
+
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:paddingBottom="4dp"
+                        android:paddingTop="4dp">
+
+                        <TextView
+                            android:id="@+id/textview_ployer_person_maps_bottom_sheet_item_title"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:ellipsize="end"
+                            android:maxLines="1"
+                            android:padding="4dp"
+                            android:paddingLeft="8dp"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                            android:textColor="@android:color/black"
+                            tools:text="Adam levine" />
+
+                        <TextView
+                            android:id="@+id/textview_ployer_maps_bottom_sheet_item_subtitle"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:ellipsize="end"
+                            android:maxLines="1"
+                            android:padding="4dp"
+                            android:paddingLeft="8dp"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                            android:textColor="@android:color/black"
+                            android:visibility="gone"
+                            tools:text="Adam levine" />
+
+                        <TextView
+                            android:id="@+id/textview_ployer_person_maps_bottom_sheet_item_description"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:ellipsize="end"
+                            android:maxLines="1"
+                            android:padding="4dp"
+                            android:paddingLeft="8dp"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                            tools:text="@string/lorem_ipsum" />
+
+
+                        <android.support.v7.widget.ButtonBarLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="4dp"
+                            android:paddingLeft="8dp">
+
+                            <RatingBar
+                                android:id="@+id/ratingbar_ployer_person_maps_bottom_sheet_item_rate"
+                                style="@style/Widget.AppCompat.RatingBar.Small"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginRight="4dp"
+                                android:numStars="5"
+                                android:stepSize="0.1"
+                                tools:rating="3.2" />
+
+                            <TextView
+                                android:id="@+id/textview_ployer_maps_bottom_sheet_item_rate"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginRight="4dp"
+                                tools:text="4.5/5" />
+
+                            <com.nos.ploy.custom.view.TextViewDrawableSize
+                                android:id="@+id/textview_ployer_person_maps_bottom_sheet_item_review_count"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="8dp"
+                                android:drawableLeft="@drawable/ic_format_list_bulleted_gray_24dp"
+                                android:gravity="center_vertical"
+                                app:compoundDrawableHeight="16dp"
+                                app:compoundDrawableWidth="16dp"
+                                tools:text="19" />
+
+                        </android.support.v7.widget.ButtonBarLayout>
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="0.5dp"
+                            android:layout_marginTop="8dp"
+                            android:background="?android:attr/listDivider" />
+
+                        <android.support.v7.widget.ButtonBarLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:paddingLeft="8dp">
+
+                            <com.nos.ploy.custom.view.TextViewDrawableSize
+                                android:id="@+id/textview_ployer_person_maps_bottom_sheet_item_price"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:drawableLeft="@drawable/ic_price_gray_30dp"
+                                android:drawablePadding="4dp"
+                                android:gravity="center_vertical"
+                                app:compoundDrawableHeight="16dp"
+                                app:compoundDrawableWidth="16dp"
+                                tools:text="$300/h" />
+
+                            <com.nos.ploy.custom.view.TextViewDrawableSize
+                                android:id="@+id/textview_ployer_person_maps_bottom_sheet_distance"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:drawableLeft="@drawable/ic_pin_gray_30dp"
+                                android:drawablePadding="4dp"
+                                android:gravity="center_vertical"
+                                app:compoundDrawableHeight="16dp"
+                                app:compoundDrawableWidth="16dp"
+                                tools:text="999 m" />
+
+
+                        </android.support.v7.widget.ButtonBarLayout>
+
+                    </LinearLayout>
+
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </android.support.v7.widget.CardView>
+
+    </android.support.v4.widget.NestedScrollView>
+</android.support.design.widget.CoordinatorLayout>

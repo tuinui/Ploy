@@ -10,16 +10,16 @@ import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.text.TextUtils;
 import android.view.View;
 
 import com.nos.ploy.base.BaseActivity;
 import com.nos.ploy.base.drawer.DrawerRecyclerAdapter;
+import com.nos.ploy.utils.RecyclerUtils;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by User on 13/11/2559.
@@ -30,14 +30,23 @@ public class DrawerController {
     public static final int ACCOUNT = 1;
     public static final int WHAT_IS_PLOYER = 2;
     public static final int WHAT_IS_PLOYEE = 3;
-    public static Map<Integer, String> MAP_MENU_NAMES = new LinkedHashMap<>();
+    public static List<DrawerMenuItem> PLOYEE_MENUS = new ArrayList<>();
+    public static List<DrawerMenuItem> PLOYER_MENUS = new ArrayList<>();
     private static DrawerController INTSTANCE = new DrawerController();
 
     static {
-        MAP_MENU_NAMES.put(SETTINGS, "Settings");
-        MAP_MENU_NAMES.put(ACCOUNT, "Account");
-        MAP_MENU_NAMES.put(WHAT_IS_PLOYER, "What is Ployer");
-        MAP_MENU_NAMES.put(WHAT_IS_PLOYEE, "What is Ployee");
+        DrawerMenuItem settings = new DrawerMenuItem(SETTINGS, "Settings");
+        DrawerMenuItem account = new DrawerMenuItem(ACCOUNT, "Account");
+        DrawerMenuItem whatIsPloyer = new DrawerMenuItem(WHAT_IS_PLOYER, "What is Ployer");
+        DrawerMenuItem whatIsPloyee = new DrawerMenuItem(WHAT_IS_PLOYEE, "What is Ployee");
+        PLOYEE_MENUS.add(settings);
+        PLOYEE_MENUS.add(account);
+        PLOYEE_MENUS.add(whatIsPloyer);
+        PLOYEE_MENUS.add(whatIsPloyee);
+
+        PLOYER_MENUS.add(settings);
+        PLOYER_MENUS.add(whatIsPloyer);
+        PLOYER_MENUS.add(whatIsPloyee);
     }
 
     private DrawerController() {
@@ -47,32 +56,38 @@ public class DrawerController {
         return INTSTANCE;
     }
 
-    public static void initDrawer(final BaseActivity activity, final DrawerLayout drawerLayout, RecyclerView recyclerViewMenu, Toolbar toolbar, View toggleButton, final OnMenuItemSelectedListener listener) {
-      initDrawer(activity,drawerLayout,recyclerViewMenu,toolbar,toggleButton, Color.WHITE, listener);
+    public static void initDrawer(final BaseActivity activity, List<DrawerMenuItem> menus, final DrawerLayout drawerLayout, RecyclerView recyclerViewMenu, Toolbar toolbar, View toggleButton, final OnMenuItemSelectedListener listener) {
+        initDrawer(activity, menus, drawerLayout, recyclerViewMenu, toolbar, toggleButton, Color.WHITE, listener);
     }
 
-    public static void initDrawer(final BaseActivity activity, final DrawerLayout drawerLayout, RecyclerView recyclerViewMenu, Toolbar toolbar, View toggleButton,@ColorInt int textColor, final OnMenuItemSelectedListener listener) {
+    public static void initDrawer(final BaseActivity activity, final List<DrawerMenuItem> menus, final DrawerLayout drawerLayout, RecyclerView recyclerViewMenu, Toolbar toolbar, View toggleButton, @ColorInt int textColor, final OnMenuItemSelectedListener listener) {
         final ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 activity, drawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
         DrawerRecyclerAdapter adapter = new DrawerRecyclerAdapter(textColor) {
             @Override
-            public void onBindViewHolder(ViewHolder holder, int position) {
-                final String menu = DrawerController.MAP_MENU_NAMES.get(position);
-                holder.tvItem.setText(menu);
-                holder.itemView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        listener.onMenuItemSelected(toMenu(menu));
-                        closeDrawer(drawerLayout);
-                    }
-                });
+            public void onBindViewHolder(final ViewHolder holder, int position) {
+                if (RecyclerUtils.isAvailableData(menus, position)) {
+                    final DrawerMenuItem menu = menus.get(position);
+                    holder.tvItem.setText(menu.getMenuTitle());
+                    holder.itemView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            if (RecyclerUtils.isAvailableData(menus, holder.getAdapterPosition())) {
+                                @DrawerController.Menu int menu = menus.get(holder.getAdapterPosition()).getMenu();
+                                listener.onMenuItemSelected(menu);
+                                closeDrawer(drawerLayout);
+                            }
+                        }
+                    });
+                }
+
             }
 
             @Override
             public int getItemCount() {
-                return DrawerController.MAP_MENU_NAMES.size();
+                return RecyclerUtils.getSize(menus);
             }
         };
         recyclerViewMenu.setLayoutManager(new LinearLayoutManager(activity) {
@@ -92,18 +107,18 @@ public class DrawerController {
     }
 
 
-    private
-    @DrawerController.Menu
-    static int toMenu(String menu) {
-        Map<Integer, String> map = DrawerController.MAP_MENU_NAMES;
-        for (Integer index : map.keySet()) {
-            String menuString = map.get(index);
-            if (TextUtils.equals(menu, menuString)) {
-                return index;
-            }
-        }
-        return DrawerController.NONE;
-    }
+//    private
+//    @DrawerController.Menu
+//    static int toMenu(String menu) {
+//        Map<Integer, String> map = DrawerController.PLOYEE_MENUS;
+//        for (Integer index : map.keySet()) {
+//            String menuString = map.get(index);
+//            if (TextUtils.equals(menu, menuString)) {
+//                return index;
+//            }
+//        }
+//        return DrawerController.NONE;
+//    }
 
     private static void toggleDrawer(DrawerLayout dl) {
         if (null != dl) {
@@ -134,5 +149,25 @@ public class DrawerController {
 
     public static interface OnMenuItemSelectedListener {
         void onMenuItemSelected(@DrawerController.Menu int menu);
+    }
+
+    public static class DrawerMenuItem {
+        private String menuTitle;
+        private
+        @DrawerController.Menu
+        int menu;
+
+        public DrawerMenuItem(int menu, String menuTitle) {
+            this.menu = menu;
+            this.menuTitle = menuTitle;
+        }
+
+        public int getMenu() {
+            return menu;
+        }
+
+        public String getMenuTitle() {
+            return menuTitle;
+        }
     }
 }

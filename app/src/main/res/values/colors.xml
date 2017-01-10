@@ -17,4 +17,6 @@
 
     <color name="gray_edittext_header">#52504A</color>
     <color name="gray_edittext_text">#848484</color>
+
+    <color name="orange_pin_maps">#FC5518</color>
 </resources>

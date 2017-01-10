@@ -16,14 +16,11 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.akexorcist.localizationactivity.LocalizationActivity;
-import com.nos.ploy.DrawerController;
 import com.nos.ploy.R;
 import com.nos.ploy.api.base.RetrofitManager;
 import com.nos.ploy.cache.UserTokenManager;
 import com.nos.ploy.utils.FragmentTransactionUtils;
 import com.nos.ploy.utils.NetworkUtils;
-
-import java.util.Map;
 
 import retrofit2.Retrofit;
 
@@ -89,7 +86,7 @@ public class BaseActivity extends LocalizationActivity {
     }
 
     protected void enableBackButton(Toolbar toolbar) {
-        toolbar.setNavigationIcon(R.drawable.ic_chevron_left_white_24dp);
+        toolbar.setNavigationIcon(R.drawable.ic_chevron_left_white_40dp);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -98,18 +95,18 @@ public class BaseActivity extends LocalizationActivity {
         });
     }
 
-    private
-    @DrawerController.Menu
-    int toMenu(String menu) {
-        Map<Integer, String> map = DrawerController.MAP_MENU_NAMES;
-        for (Integer index : map.keySet()) {
-            String menuString = map.get(index);
-            if (TextUtils.equals(menu, menuString)) {
-                return index;
-            }
-        }
-        return DrawerController.NONE;
-    }
+//    private
+//    @DrawerController.Menu
+//    int toMenu(String menu) {
+//        Map<Integer, String> map = DrawerController.PLOYEE_MENUS;
+//        for (Integer index : map.keySet()) {
+//            String menuString = map.get(index);
+//            if (TextUtils.equals(menu, menuString)) {
+//                return index;
+//            }
+//        }
+//        return DrawerController.NONE;
+//    }
 
 
     protected void addFragmentToActivity(BaseFragment fragment, @IdRes int containerId) {

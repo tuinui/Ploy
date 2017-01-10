@@ -29,8 +29,8 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.model.LatLng;
 import com.nos.ploy.R;
 import com.nos.ploy.api.account.AccountApi;
+import com.nos.ploy.api.account.model.PloyeeProfileGson;
 import com.nos.ploy.api.account.model.PostUpdateProfileGson;
-import com.nos.ploy.api.account.model.ProfileGson;
 import com.nos.ploy.api.account.model.ProfileImageGson;
 import com.nos.ploy.api.account.model.TransportGson;
 import com.nos.ploy.api.account.model.TransportGsonVm;
@@ -176,10 +176,10 @@ public class PloyeeProfileActivity extends BaseActivity implements View.OnClickL
             dismissLoading();
         }
     };
-    private ProfileGson.Data mOriginalData;
-    private RetrofitCallUtils.RetrofitCallback<ProfileGson> mCallbackLoadData = new RetrofitCallUtils.RetrofitCallback<ProfileGson>() {
+    private PloyeeProfileGson.Data mOriginalData;
+    private RetrofitCallUtils.RetrofitCallback<PloyeeProfileGson> mCallbackLoadData = new RetrofitCallUtils.RetrofitCallback<PloyeeProfileGson>() {
         @Override
-        public void onDataSuccess(ProfileGson data) {
+        public void onDataSuccess(PloyeeProfileGson data) {
             dismissLoading();
             dismissRefreshing();
             if (null != data && null != data.getData()) {
@@ -194,7 +194,7 @@ public class PloyeeProfileActivity extends BaseActivity implements View.OnClickL
             if (TextUtils.equals(failCause.getMessageCode(), ResponseMessage.CODE_DATA_NOT_FOUND)) {
                 shouldRequestCallSave = true;
             }
-            bindData(new ProfileGson.Data());
+            bindData(new PloyeeProfileGson.Data());
         }
     };
     private Action1<List<ProfileImageGson.Data>> mOnLoadProfileImageFinish = new Action1<List<ProfileImageGson.Data>>() {
@@ -230,7 +230,7 @@ public class PloyeeProfileActivity extends BaseActivity implements View.OnClickL
         }
     };
 
-    private void bindData(ProfileGson.Data data) {
+    private void bindData(PloyeeProfileGson.Data data) {
         mOriginalData = data;
         mData = new PostUpdateProfileGson(data, mUserId);
         requestTransportData();
@@ -247,7 +247,7 @@ public class PloyeeProfileActivity extends BaseActivity implements View.OnClickL
             mButtonPhone.setActivated(data.isContactPhone());
 
 
-            ProfileGson.Data.Location locationData = mData.getLocation();
+            PloyeeProfileGson.Data.Location locationData = mData.getLocation();
             if (null != locationData) {
                 setCurrentLatLng(new LatLng(locationData.getLat(), locationData.getLng()));
             } else {
@@ -260,7 +260,7 @@ public class PloyeeProfileActivity extends BaseActivity implements View.OnClickL
         if (null != mOriginalData) {
             String languageSupports = "";
             if (mOriginalData.getLanguage() != null && !mOriginalData.getLanguage().isEmpty()) {
-                for (ProfileGson.Data.Language language : mOriginalData.getLanguage()) {
+                for (PloyeeProfileGson.Data.Language language : mOriginalData.getLanguage()) {
                     languageSupports += language.getSpokenLanguageValue() + " ,";
                 }
             }
@@ -276,7 +276,7 @@ public class PloyeeProfileActivity extends BaseActivity implements View.OnClickL
                 .enqueue(this);
     }
 
-    private void bindTransportData(List<ProfileGson.Data.Transport> data) {
+    private void bindTransportData(List<PloyeeProfileGson.Data.Transport> data) {
         mAllDataTransports.clear();
         mTransportRecyclerAdapter.notifyDataSetChanged();
 //        for(int i = 0 ;i<10;i++){
@@ -285,9 +285,9 @@ public class PloyeeProfileActivity extends BaseActivity implements View.OnClickL
         mTransportRecyclerAdapter.notifyItemRangeChanged(0, mTransportRecyclerAdapter.getItemCount());
     }
 
-    private List<TransportGsonVm> toVm(List<ProfileGson.Data.Transport> datas) {
+    private List<TransportGsonVm> toVm(List<PloyeeProfileGson.Data.Transport> datas) {
         List<TransportGsonVm> vms = new ArrayList<>();
-        for (ProfileGson.Data.Transport data : datas) {
+        for (PloyeeProfileGson.Data.Transport data : datas) {
             vms.add(new TransportGsonVm(data.getTransportId(), data.getTransportName(), toTransportIcon(data.getTransportId())));
         }
         return vms;
@@ -329,7 +329,7 @@ public class PloyeeProfileActivity extends BaseActivity implements View.OnClickL
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.fragment_ployee_profile);
+        setContentView(R.layout.activity_ployee_profile);
         ButterKnife.bind(this);
         mAccountApi = getRetrofit().create(AccountApi.class);
         mMasterApi = getRetrofit().create(MasterApi.class);
@@ -343,14 +343,7 @@ public class PloyeeProfileActivity extends BaseActivity implements View.OnClickL
     }
 
     private void showStaticMaps(LatLng latLng) {
-        String mapsUrl = "http://maps.googleapis.com/maps/api/staticmap?" +
-                "markers=" + latLng.latitude + "," + latLng.longitude +
-                "&zoom=17" +
-                "&size=640x360" +
-                "&scale=2" +
-                "&maptype=roadmap" +
-                "&sensor=false";
-        Glide.with(mImageViewStaticMaps.getContext()).load(mapsUrl).into(mImageViewStaticMaps);
+        Glide.with(mImageViewStaticMaps.getContext()).load(MyLocationUtils.getStaticMapsUrl(latLng)).into(mImageViewStaticMaps);
     }
 
     private void initRecyclerView() {
@@ -463,7 +456,7 @@ public class PloyeeProfileActivity extends BaseActivity implements View.OnClickL
             mData.setContactEmail(mButtonEmail.isActivated());
             mData.setContactPhone(mButtonPhone.isActivated());
             if (mCurrentLatLng != null) {
-                mData.setLocation(new ProfileGson.Data.Location(mCurrentLatLng.latitude, mCurrentLatLng.longitude));
+                mData.setLocation(new PloyeeProfileGson.Data.Location(mCurrentLatLng.latitude, mCurrentLatLng.longitude));
             }
 
 
@@ -498,8 +491,8 @@ public class PloyeeProfileActivity extends BaseActivity implements View.OnClickL
 //        FragmentTransactionUtils.addFragmentToActivity(getSupportFragmentManager(), mMapFragment, R.id.framelayout_ployee_profile_maps_container);
 //        if (null != mMapFragment) {
 //            mMapFragment.getMapAsync(this);
-//            if (null != mMapFragment.getView()) {
-//                mMapFragment.getView().setClickable(false);
+//            if (null != mMapFragment.getMarkerOptions()) {
+//                mMapFragment.getMarkerOptions().setClickable(false);
 //            }
 //
 //        }
@@ -555,15 +548,10 @@ public class PloyeeProfileActivity extends BaseActivity implements View.OnClickL
     }
 
     private void getLocationAndSetToAddressView() {
-        MyLocationUtils.getLastKnownLocation(this, mGoogleApiClient, true, new Action1<Location>() {
-            @Override
-            public void call(Location location) {
-                if (null != location) {
-                    setCurrentLatLng(new LatLng(location.getLatitude(), location.getLongitude()));
-                }
-            }
-        });
-
+        Location location = MyLocationUtils.getLastKnownLocation(this, mGoogleApiClient, true);
+        if(null != location){
+            setCurrentLatLng(new LatLng(location.getLatitude(), location.getLongitude()));
+        }
     }
 
 

@@ -9,7 +9,7 @@
         android:id="@+id/radiobutton_subservice_item"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="8dp"
+        android:layout_margin="4dp"
         android:gravity="center_vertical"
         android:padding="16dp"
         tools:text="Manage" />

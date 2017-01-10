@@ -28,7 +28,7 @@ public class PostUpdateProfileGson {
     @SerializedName("transport")
     private List<Long> transport = new ArrayList<>();
     @SerializedName("location")
-    private ProfileGson.Data.Location location;
+    private PloyeeProfileGson.Data.Location location;
     @SerializedName("contactPhone")
     private boolean contactPhone;
     @SerializedName("contactEmail")
@@ -37,7 +37,7 @@ public class PostUpdateProfileGson {
     public PostUpdateProfileGson() {
     }
 
-    public PostUpdateProfileGson(ProfileGson.Data data, long userId) {
+    public PostUpdateProfileGson(PloyeeProfileGson.Data data, long userId) {
         if (null != data) {
             userProfileId = data.getUserProfileId();
             this.userId = userId;
@@ -47,17 +47,17 @@ public class PostUpdateProfileGson {
             interest = data.getInterest();
             language.clear();
             if (null != data.getLanguage()) {
-                for (ProfileGson.Data.Language language : data.getLanguage()) {
+                for (PloyeeProfileGson.Data.Language language : data.getLanguage()) {
                     this.language.add(language.getSpokenLanguageCode());
                 }
             }
             if (null != data.getTransport()) {
-                for (ProfileGson.Data.Transport transport : data.getTransport()) {
+                for (PloyeeProfileGson.Data.Transport transport : data.getTransport()) {
                     this.transport.add(transport.getTransportId());
                 }
             }
             if (null != data.getLocation()) {
-                location = new ProfileGson.Data.Location(data.getLocation().getLat(), data.getLocation().getLng());
+                location = new PloyeeProfileGson.Data.Location(data.getLocation().getLat(), data.getLocation().getLng());
             }
             contactPhone = data.isContactPhone();
             contactEmail = data.isContactEmail();
@@ -140,11 +140,11 @@ public class PostUpdateProfileGson {
         this.transport = transport;
     }
 
-    public ProfileGson.Data.Location getLocation() {
+    public PloyeeProfileGson.Data.Location getLocation() {
         return location;
     }
 
-    public void setLocation(ProfileGson.Data.Location location) {
+    public void setLocation(PloyeeProfileGson.Data.Location location) {
         this.location = location;
     }
 

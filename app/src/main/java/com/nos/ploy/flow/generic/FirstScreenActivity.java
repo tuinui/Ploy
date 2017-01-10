@@ -9,7 +9,7 @@ import com.nos.ploy.base.BaseActivity;
 import com.nos.ploy.cache.UserTokenManager;
 import com.nos.ploy.flow.generic.register.SignInSignupActivity;
 import com.nos.ploy.flow.ployee.home.PloyeeHomeActivity;
-import com.nos.ploy.flow.ployer.home.PloyerHomeActivity;
+import com.nos.ploy.flow.ployer.service.PloyerServiceListActivity;
 import com.nos.ploy.utils.IntentUtils;
 
 import butterknife.BindView;
@@ -48,7 +48,7 @@ public class FirstScreenActivity extends BaseActivity implements View.OnClickLis
             }
 
         } else if (id == mButtonSearchServices.getId()) {
-            IntentUtils.startActivity(this, PloyerHomeActivity.class);
+            IntentUtils.startActivity(this, PloyerServiceListActivity.class);
         }
     }
 }

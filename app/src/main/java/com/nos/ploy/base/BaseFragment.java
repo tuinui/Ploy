@@ -76,6 +76,9 @@ public abstract class BaseFragment extends AppCompatDialogFragment {
         return dialog;
     }
 
+    protected boolean isBottomSheetDialog() {
+        return false;
+    }
     @Override
     public void onStart() {
         super.onStart();
@@ -99,7 +102,7 @@ public abstract class BaseFragment extends AppCompatDialogFragment {
         if (isDialog()) {
             toolbar.setNavigationIcon(R.drawable.ic_close_white_24dp);
         } else {
-            toolbar.setNavigationIcon(R.drawable.ic_chevron_left_white_24dp);
+            toolbar.setNavigationIcon(R.drawable.ic_chevron_left_white_40dp);
         }
 
         toolbar.setNavigationOnClickListener(onNavigationClick);

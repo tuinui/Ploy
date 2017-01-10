@@ -38,11 +38,29 @@ public class FragmentTransactionUtils {
      */
     public static void addFragmentToActivity(@NonNull FragmentManager fragmentManager,
                                              @NonNull Fragment fragment, int frameId, String tag) {
+        addFragmentToActivity(fragmentManager, fragment, frameId, tag, false);
+    }
+
+    /**
+     * The {@code fragment} is added to the container view enqueue id {@code frameId}. The operation is
+     * performed by the {@code fragmentManager}.
+     */
+    public static void addFragmentToActivity(@NonNull FragmentManager fragmentManager,
+                                             @NonNull Fragment fragment, int frameId, String tag, boolean addToBackStack) {
         FragmentTransaction transaction = fragmentManager.beginTransaction();
 //        transaction.setCustomAnimations(R.anim.animation_localization_activity_transition_in, R.anim.animation_localization_activity_transition_out);
-        transaction.replace(frameId, fragment, tag);
+        if(addToBackStack){
+            transaction.add(frameId, fragment, tag);
+        }else{
+            transaction.replace(frameId, fragment, tag);
+        }
+
+        if (addToBackStack) {
+            transaction.addToBackStack(null);
+        }
         transaction.commit();
     }
+
 
     public static void showFragment(@NonNull BaseFragment parentFragment, @NonNull BaseFragment fragmentToShow) {
         showFragment(parentFragment, fragmentToShow, null);

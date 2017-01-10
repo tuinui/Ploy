@@ -42,9 +42,9 @@ public class PloyeeServiceListFragment extends BaseFragment implements SearchVie
             return a.getText().compareTo(b.getText());
         }
     };
-    @BindView(R.id.recyclerview_ployee_service_list)
+    @BindView(R.id.recyclerview_swipe_recycler)
     RecyclerView mRecyclerView;
-    @BindView(R.id.swiperefreshlayout_ployee_service_list)
+    @BindView(R.id.swiperefreshlayout_swipe_recycler)
     SwipeRefreshLayout mSwipeRefreshLayout;
     private PloyeeApi mService;
     private List<PloyeeServiceItemViewModel> mDatas = new ArrayList<>();
@@ -115,7 +115,7 @@ public class PloyeeServiceListFragment extends BaseFragment implements SearchVie
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_ployee_service_list, container, false);
+        View v = inflater.inflate(R.layout.fragment_swipe_recycler, container, false);
         ButterKnife.bind(this, v);
         return v;
     }

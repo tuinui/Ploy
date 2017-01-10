@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="4dp"
+    android:clickable="true"
+    android:foreground="?attr/selectableItemBackground"
+    android:orientation="vertical"
+    app:cardCornerRadius="1dp"
+    app:cardElevation="1dp"
+    app:contentPadding="2dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <com.nos.ploy.custom.view.RatioImageView
+            android:id="@+id/imageview_ployer_list_item_profile_photo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:scaleType="centerCrop"
+            android:src="@drawable/ic_ployer_item_placeholder"
+            app:ratioHeight="4"
+            app:ratioWidth="5" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="?android:attr/listDivider" />
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingBottom="4dp"
+            android:paddingTop="4dp">
+
+            <TextView
+                android:id="@+id/textview_ployer_list_item_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:padding="4dp"
+                android:paddingLeft="8dp"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                android:textColor="@android:color/black"
+                tools:text="Adam levine" />
+
+            <TextView
+                android:id="@+id/textview_ployer_list_item_subtitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:padding="4dp"
+                android:paddingLeft="8dp"
+                android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                android:textColor="@android:color/black"
+                android:visibility="gone"
+                tools:text="Adam levine" />
+
+            <TextView
+                android:id="@+id/textview_ployer_list_item_description"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:maxLines="2"
+                android:padding="4dp"
+                android:paddingLeft="8dp"
+                android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                tools:text="Description of experience and blahblahblahblahblahblahb" />
+
+            <android.support.v7.widget.ButtonBarLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:paddingLeft="8dp">
+
+                <RatingBar
+                    android:id="@+id/ratingbar_ployer_list_item_rate"
+                    style="@style/Widget.AppCompat.RatingBar.Small"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="4dp"
+                    android:numStars="5"
+                    android:rating="3.2"
+                    android:stepSize="0.1" />
+
+                <TextView
+                    android:id="@+id/textview_ployer_list_item_rate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="4dp"
+                    tools:text="4.5/5" />
+
+                <com.nos.ploy.custom.view.TextViewDrawableSize
+                    android:id="@+id/textview_ployer_list_item_review_count"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="8dp"
+                    android:drawableLeft="@drawable/ic_format_list_bulleted_gray_24dp"
+                    android:gravity="center_vertical"
+                    app:compoundDrawableHeight="16dp"
+                    app:compoundDrawableWidth="16dp"
+                    tools:text="19" />
+
+            </android.support.v7.widget.ButtonBarLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:layout_marginTop="8dp"
+                android:background="?android:attr/listDivider" />
+
+            <android.support.v7.widget.ButtonBarLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:paddingLeft="8dp">
+
+                <com.nos.ploy.custom.view.TextViewDrawableSize
+                    android:id="@+id/textview_ployer_list_item_price"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:drawableLeft="@drawable/ic_price_gray_30dp"
+                    android:drawablePadding="4dp"
+                    android:gravity="center_vertical"
+                    app:compoundDrawableHeight="16dp"
+                    app:compoundDrawableWidth="16dp"
+                    tools:text="$300/h" />
+
+                <com.nos.ploy.custom.view.TextViewDrawableSize
+                    android:id="@+id/textview_ployer_list_distance"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:drawableLeft="@drawable/ic_pin_gray_30dp"
+                    android:drawablePadding="4dp"
+                    android:gravity="center_vertical"
+                    app:compoundDrawableHeight="16dp"
+                    app:compoundDrawableWidth="16dp"
+                    tools:text="999 m" />
+
+
+            </android.support.v7.widget.ButtonBarLayout>
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+</android.support.v7.widget.CardView>

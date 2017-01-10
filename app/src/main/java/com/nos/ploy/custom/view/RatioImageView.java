@@ -55,6 +55,12 @@ public class RatioImageView extends AppCompatImageView {
             if (heightMode == MeasureSpec.AT_MOST) {
                 height = Math.min(height, MeasureSpec.getSize(heightMeasureSpec));
             }
+            if (height > getMaxHeight()) {
+                height = getMaxHeight();
+            }
+            if (width > getMaxWidth()) {
+                width = getMaxWidth();
+            }
             setMeasuredDimension(width, (int) Math.round(height));
         } else {
             super.onMeasure(widthMeasureSpec, heightMeasureSpec);

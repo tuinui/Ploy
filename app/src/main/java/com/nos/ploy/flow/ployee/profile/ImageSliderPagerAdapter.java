@@ -2,7 +2,6 @@ package com.nos.ploy.flow.ployee.profile;
 
 import android.content.Context;
 import android.support.v4.view.PagerAdapter;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -66,12 +65,7 @@ public class ImageSliderPagerAdapter extends PagerAdapter {
         imageView.setImageDrawable(null);
         if (RecyclerUtils.isAvailableData(mDatas, position)) {
             ProfileImageGson.Data data = mDatas.get(position);
-            if (!TextUtils.isEmpty(data.getImagePath())) {
-                Glide.with(imageView.getContext()).load(data.getImagePath()).into(imageView);
-            } else {
-                imageView.setImageResource(R.drawable.ic_circle_profile_120dp);
-            }
-
+            Glide.with(imageView.getContext()).load(data.getImagePath()).fallback(R.drawable.ic_circle_profile_120dp).error(R.drawable.ic_circle_profile_120dp).placeholder(R.drawable.ic_circle_profile_120dp).into(imageView);
         }
 
 

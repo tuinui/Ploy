@@ -8,6 +8,6 @@ import java.util.List;
  * Created by Saran on 25/12/2559.
  */
 
-public class TransportGson extends BaseResponse<List<ProfileGson.Data.Transport>> {
+public class TransportGson extends BaseResponse<List<PloyeeProfileGson.Data.Transport>> {
 
 }

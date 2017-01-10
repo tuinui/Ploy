@@ -15,7 +15,7 @@ import android.widget.CompoundButton;
 import android.widget.TextView;
 
 import com.nos.ploy.R;
-import com.nos.ploy.api.account.model.ProfileGson;
+import com.nos.ploy.api.account.model.PloyeeProfileGson;
 import com.nos.ploy.api.base.RetrofitCallUtils;
 import com.nos.ploy.api.base.response.ResponseMessage;
 import com.nos.ploy.api.masterdata.MasterApi;
@@ -47,19 +47,19 @@ public class SpokenLanguageChooserFragment extends BaseFragment {
     private ArrayList<String> mSpokenCodes = new ArrayList<>();
     private OnDataChangedListener listener;
     private MasterApi mApi;
-    private List<ProfileGson.Data.Language> mDatas = new ArrayList<>();
+    private List<PloyeeProfileGson.Data.Language> mDatas = new ArrayList<>();
     private LanguageChooserRecyclerAdapter mAdapter = new LanguageChooserRecyclerAdapter() {
         @Override
         public void onBindViewHolder(final LanguageChooserRecyclerAdapter.ViewHolder holder, int position) {
             if (RecyclerUtils.isAvailableData(mDatas, position)) {
-                ProfileGson.Data.Language language = mDatas.get(position);
+                PloyeeProfileGson.Data.Language language = mDatas.get(position);
                 holder.radio.setText(language.getSpokenLanguageValue());
                 holder.radio.setChecked(isLanguageSupported(language.getSpokenLanguageCode()));
                 holder.radio.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                     @Override
                     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                         if (RecyclerUtils.isAvailableData(mDatas, holder.getAdapterPosition())) {
-                            ProfileGson.Data.Language language = mDatas.get(holder.getAdapterPosition());
+                            PloyeeProfileGson.Data.Language language = mDatas.get(holder.getAdapterPosition());
                             if (isChecked) {
                                 if (!mSpokenCodes.contains(language.getSpokenLanguageCode())) {
                                     mSpokenCodes.add(language.getSpokenLanguageCode());
@@ -177,7 +177,7 @@ public class SpokenLanguageChooserFragment extends BaseFragment {
         RetrofitCallUtils.with(mApi.getLanguageList(), mCallbackLoadLanguage).enqueue(getContext());
     }
 
-    private void bindData(List<ProfileGson.Data.Language> data) {
+    private void bindData(List<PloyeeProfileGson.Data.Language> data) {
         if (null != data) {
             mDatas.clear();
             mDatas.addAll(data);

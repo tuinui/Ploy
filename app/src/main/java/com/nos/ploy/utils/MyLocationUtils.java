@@ -16,8 +16,6 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
 
-import rx.functions.Action1;
-
 /**
  * Created by Saran on 24/12/2559.
  */
@@ -39,6 +37,53 @@ public class MyLocationUtils {
         return null;
     }
 
+    public static String getStaticMapsUrl(LatLng latLng) {
+        double lat = 0;
+        double lng = 0;
+        if (null != latLng) {
+            lat = latLng.latitude;
+            lng = latLng.longitude;
+        }
+        return "http://maps.googleapis.com/maps/api/staticmap?" +
+                "markers=" + lat + "," + lng +
+                "&zoom=17" +
+                "&size=640x360" +
+                "&scale=2" +
+                "&maptype=roadmap" +
+                "&sensor=false";
+    }
+
+    public static String getDistance(LatLng current, LatLng destination) {
+        Location l1 = new Location("One");
+        l1.setLatitude(current.latitude);
+        l1.setLongitude(current.longitude);
+
+        Location l2 = new Location("Two");
+        l2.setLatitude(destination.latitude);
+        l2.setLongitude(destination.longitude);
+
+        float distance = l1.distanceTo(l2);
+//        String dist = distance + " M";
+        String dist = String.format(Locale.getDefault(), "%.0f", Math.ceil(distance)) + " m";
+        if (distance > 1000.0f) {
+            distance = distance / 1000.0f;
+            dist = String.format(Locale.getDefault(), "%.1f", Math.ceil(distance)) + " km";
+        }
+        return dist;
+    }
+
+    public static String getDistanceFromCurrentLocation(Context context, GoogleApiClient googleApiClient, LatLng destination) {
+        Location location = getLastKnownLocation(context, googleApiClient);
+        LatLng latLng = null;
+        if (null != location) {
+            latLng = new LatLng(location.getLatitude(), location.getLongitude());
+        } else {
+            latLng = new LatLng(0, 0);
+        }
+
+        return getDistance(latLng, destination);
+    }
+
     public static String getCompleteAddressString(Context context, double lat, double lng) {
         String strAdd = "";
         Geocoder geocoder = new Geocoder(context, Locale.getDefault());
@@ -50,7 +95,7 @@ public class MyLocationUtils {
 
                 for (int i = 0; i < returnedAddress.getMaxAddressLineIndex(); i++) {
                     String addresLineI = returnedAddress.getAddressLine(i);
-                    if(!TextUtils.isEmpty(addresLineI)){
+                    if (!TextUtils.isEmpty(addresLineI)) {
                         strReturnedAddress.append(addresLineI).append("\n");
                     }
                 }
@@ -101,14 +146,17 @@ public class MyLocationUtils {
 //        }
 //    }
 
-    public static void getLastKnownLocation(Context context, GoogleApiClient googleApiClient, final Action1<Location> onFinishLocation) {
-        getLastKnownLocation(context, googleApiClient, false, onFinishLocation);
+    public static Location getLastKnownLocation(Context context, GoogleApiClient googleApiClient) {
+        return getLastKnownLocation(context, googleApiClient, false);
     }
 
-    public static void getLastKnownLocation(Context context, GoogleApiClient googleApiClient, boolean checkGpsEnable, final Action1<Location> onFinishLocation) {
+    public static Location getLastKnownLocation(Context context, GoogleApiClient googleApiClient, boolean checkGpsEnable) {
         if (googleApiClient != null && googleApiClient.isConnected() && LocationServices.FusedLocationApi.getLocationAvailability(googleApiClient).isLocationAvailable()) {
-            CURRENT_LOCATION = LocationServices.FusedLocationApi.getLastLocation(googleApiClient);
-            onFinishLocation.call(CURRENT_LOCATION);
+            if (null != LocationServices.FusedLocationApi.getLastLocation(googleApiClient)) {
+                CURRENT_LOCATION = LocationServices.FusedLocationApi.getLastLocation(googleApiClient);
+            }
+
+            return CURRENT_LOCATION;
         } else {
             Criteria criteria = new Criteria();
             criteria.setAccuracy(Criteria.ACCURACY_FINE);
@@ -118,10 +166,12 @@ public class MyLocationUtils {
                 if (checkGpsEnable) {
                     checkLocationEnabled(context);
                 }
-                onFinishLocation.call(null);
+                return CURRENT_LOCATION;
             } else {
-                CURRENT_LOCATION = manager.getLastKnownLocation(provider);
-                onFinishLocation.call(CURRENT_LOCATION);
+                if (null != manager.getLastKnownLocation(provider)) {
+                    CURRENT_LOCATION = manager.getLastKnownLocation(provider);
+                }
+                return CURRENT_LOCATION;
             }
         }
     }

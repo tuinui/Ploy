@@ -2,13 +2,13 @@ apply plugin: 'com.android.application'
 apply plugin: 'android-apt'
 android {
     compileSdkVersion 25
-    buildToolsVersion '25.0.1'
+    buildToolsVersion '25.0.2'
     defaultConfig {
         applicationId "com.nos.ploy"
         minSdkVersion 17
         targetSdkVersion 22
-        versionCode 106
-        versionName "1.0.6"
+        versionCode 109
+        versionName "1.0.9"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
 

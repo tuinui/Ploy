@@ -6,8 +6,6 @@ import android.support.annotation.ColorInt;
 import android.support.annotation.IntDef;
 import android.support.design.internal.ForegroundLinearLayout;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
@@ -27,12 +25,14 @@ import com.nos.ploy.api.utils.loader.AccountInfoLoader;
 import com.nos.ploy.base.BaseActivity;
 import com.nos.ploy.cache.UserTokenManager;
 import com.nos.ploy.custom.view.CustomViewPager;
+import com.nos.ploy.flow.generic.CommonFragmentStatePagerAdapter;
 import com.nos.ploy.flow.generic.htmltext.HtmlTextFragment;
 import com.nos.ploy.flow.ployee.account.main.PloyeeAccountFragment;
 import com.nos.ploy.flow.ployee.home.content.availability.PloyeeAvailabilityFragment;
 import com.nos.ploy.flow.ployee.home.content.service.list.PloyeeServiceListFragment;
 import com.nos.ploy.flow.ployee.profile.PloyeeProfileActivity;
-import com.nos.ploy.flow.ployee.settings.PloyeeSettingsFragment;
+import com.nos.ploy.flow.generic.settings.SettingsFragment;
+import com.nos.ploy.flow.ployer.service.PloyerServiceListActivity;
 import com.nos.ploy.utils.IntentUtils;
 import com.nos.ploy.utils.PopupMenuUtils;
 
@@ -77,6 +77,8 @@ public class PloyeeHomeActivity extends BaseActivity implements View.OnClickList
     RecyclerView mRecyclerViewDrawer;
     @BindView(R.id.viewpager_ployee_home_content_container)
     CustomViewPager mViewPager;
+    @BindView(R.id.textview_main_drawer_switch_to)
+    TextView mTextViewSwitchToPloyer;
     @BindDrawable(R.drawable.selector_drawable_calendar_gray_blue)
     Drawable mDrawableAvailabilityGray;
     @BindDrawable(R.drawable.selector_drawable_business_gray_blue)
@@ -92,7 +94,7 @@ public class PloyeeHomeActivity extends BaseActivity implements View.OnClickList
     @ColorInt
     int mColorGray;
     private List<Fragment> mContentFragments = new ArrayList<>();
-    private PloyeeHomePagerAdapter mPagerAdapter;
+    private CommonFragmentStatePagerAdapter mPagerAdapter;
     private SearchView mSearchView;
     private
     @BottomMenu
@@ -144,7 +146,7 @@ public class PloyeeHomeActivity extends BaseActivity implements View.OnClickList
                     });
                     break;
                 case DrawerController.SETTINGS:
-                    showFragment(PloyeeSettingsFragment.newInstance(mUserId));
+                    showFragment(SettingsFragment.newInstance(mUserId));
                     break;
                 case DrawerController.WHAT_IS_PLOYEE:
                     showFragment(HtmlTextFragment.newInstance(HtmlTextFragment.WHAT_IS_PLOYEE));
@@ -178,7 +180,7 @@ public class PloyeeHomeActivity extends BaseActivity implements View.OnClickList
         initFragment();
         mSearchView = (SearchView) mViewStubSearchView.inflate().findViewById(R.id.searchview_main);
         mSearchView.setOnQueryTextListener(this);
-        DrawerController.initDrawer(this, mDrawerLayout, mRecyclerViewDrawer, mToolbar, mImageViewMore, mOnMenuItemSelectedListener);
+        DrawerController.initDrawer(this,DrawerController.PLOYEE_MENUS, mDrawerLayout, mRecyclerViewDrawer, mToolbar, mImageViewMore, mOnMenuItemSelectedListener);
         initFooter();
         initToolbar();
     }
@@ -186,6 +188,7 @@ public class PloyeeHomeActivity extends BaseActivity implements View.OnClickList
     private void initView() {
         mViewPager.setPagingEnabled(false);
         mLinearLayoutHeaderContainer.setOnClickListener(this);
+        mTextViewSwitchToPloyer.setOnClickListener(this);
     }
 
 
@@ -203,7 +206,7 @@ public class PloyeeHomeActivity extends BaseActivity implements View.OnClickList
         mContentFragments.add(mListFragment);
         mContentFragments.add(mAvailabilityFragment);
 
-        mPagerAdapter = new PloyeeHomePagerAdapter(getSupportFragmentManager(), mContentFragments);
+        mPagerAdapter = new CommonFragmentStatePagerAdapter(getSupportFragmentManager(), mContentFragments);
         mViewPager.setAdapter(mPagerAdapter);
     }
 
@@ -239,6 +242,9 @@ public class PloyeeHomeActivity extends BaseActivity implements View.OnClickList
             onClickBottomMenu(AVAILABLITY);
         } else if (id == mLinearLayoutHeaderContainer.getId()) {
             IntentUtils.startActivity(this, PloyeeProfileActivity.class);
+        } else if (id == mTextViewSwitchToPloyer.getId()) {
+            IntentUtils.startActivity(PloyeeHomeActivity.this, PloyerServiceListActivity.class);
+            finishThisActivity();
         }
     }
 
@@ -279,29 +285,6 @@ public class PloyeeHomeActivity extends BaseActivity implements View.OnClickList
     @Retention(RetentionPolicy.SOURCE)
     @IntDef({SERVICE_LIST, AVAILABLITY})
     public @interface BottomMenu {
-    }
-
-    public static class PloyeeHomePagerAdapter extends FragmentStatePagerAdapter {
-
-
-        private final List<Fragment> fragments = new ArrayList<>();
-
-        public PloyeeHomePagerAdapter(FragmentManager fm, List<Fragment> fragments) {
-            super(fm);
-            this.fragments.clear();
-            this.fragments.addAll(fragments);
-        }
-
-
-        @Override
-        public Fragment getItem(int position) {
-            return fragments.get(position);
-        }
-
-        @Override
-        public int getCount() {
-            return fragments.size();
-        }
     }
 
 

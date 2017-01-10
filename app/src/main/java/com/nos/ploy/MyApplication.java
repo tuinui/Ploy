@@ -18,7 +18,7 @@ public class MyApplication extends Application {
         // Initialize the SDK before executing any other operations,
         FacebookSdk.sdkInitialize(getApplicationContext());
         AppEventsLogger.activateApp(this);
-        if(BuildConfig.DEBUG){
+        if(!BuildConfig.DEBUG){
             Thread.setDefaultUncaughtExceptionHandler(new UncaughtExceptionHandler(this));
         }
 

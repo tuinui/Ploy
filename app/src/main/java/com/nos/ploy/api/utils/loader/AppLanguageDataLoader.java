@@ -1,6 +1,7 @@
 package com.nos.ploy.api.utils.loader;
 
 import android.content.Context;
+import android.text.TextUtils;
 
 import com.nos.ploy.api.base.RetrofitManager;
 import com.nos.ploy.api.masterdata.MasterApi;
@@ -22,6 +23,9 @@ import rx.functions.Action1;
 public class AppLanguageDataLoader {
 
     public static void getAppLanguageList(final Context context, boolean forceRefresh, final Action1<ArrayList<AppLanguageGson.Data>> onFinish) {
+        if(null == context){
+            return;
+        }
         ArrayList<AppLanguageGson.Data> data = SharePreferenceUtils.getAppLanguageList(context);
         Call<AppLanguageGson> call = RetrofitManager.getRetrofit(context).create(MasterApi.class).getAppLanguageActiveList();
         final Callback<AppLanguageGson> callbackSaveCache = new Callback<AppLanguageGson>() {
@@ -60,5 +64,17 @@ public class AppLanguageDataLoader {
                 }
             });
         }
+    }
+
+    public static String languageCodeToLanguageName(ArrayList<AppLanguageGson.Data> languages,String languageCode){
+        if(null == languages){
+            return languageCode;
+        }
+        for(AppLanguageGson.Data data : languages){
+            if(TextUtils.equals(data.getCode(),languageCode)){
+                return data.getName();
+            }
+        }
+        return languageCode;
     }
 }

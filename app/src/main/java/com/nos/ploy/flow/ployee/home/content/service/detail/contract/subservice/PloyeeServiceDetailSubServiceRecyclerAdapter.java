@@ -28,9 +28,15 @@ import butterknife.ButterKnife;
  */
 
 public class PloyeeServiceDetailSubServiceRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+    private final boolean mDisableMode;
     private List<PloyeeServiceDetailSubServiceItemBaseViewModel> mDatas = new ArrayList<>();
 
     public PloyeeServiceDetailSubServiceRecyclerAdapter() {
+        this.mDisableMode = false;
+    }
+
+    public PloyeeServiceDetailSubServiceRecyclerAdapter(boolean disableMode) {
+        this.mDisableMode = disableMode;
     }
 
     public void replaceData(List<PloyerServiceDetailGson.Data.SubService> datas) {
@@ -77,7 +83,7 @@ public class PloyeeServiceDetailSubServiceRecyclerAdapter extends RecyclerView.A
                 return new HeaderVH(LayoutInflater.from(parent.getContext()).inflate(R.layout.view_subservice_item_header, parent, false));
             }
             case PloyeeServiceDetailSubServiceItemBaseViewModel.ITEM: {
-                return new NormalVH(LayoutInflater.from(parent.getContext()).inflate(R.layout.view_subservice_item, parent, false));
+                return new NormalVH(LayoutInflater.from(parent.getContext()).inflate(R.layout.view_subservice_item, parent, false), mDisableMode);
             }
             case PloyeeServiceDetailSubServiceItemBaseViewModel.NONE:
             case PloyeeServiceDetailSubServiceItemBaseViewModel.SPACE:
@@ -119,12 +125,15 @@ public class PloyeeServiceDetailSubServiceRecyclerAdapter extends RecyclerView.A
     private void bindNormal(final NormalSubServiceVM data, NormalVH holder) {
         holder.radioSubService.setOnCheckedChangeListener(null);
         holder.radioSubService.setChecked(data.isChecked());
-        holder.radioSubService.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                data.setChecked(isChecked);
-            }
-        });
+        if (!mDisableMode) {
+            holder.radioSubService.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    data.setChecked(isChecked);
+                }
+            });
+        }
+
         holder.radioSubService.setText(data.getName());
     }
 
@@ -160,9 +169,14 @@ public class PloyeeServiceDetailSubServiceRecyclerAdapter extends RecyclerView.A
         @BindView(R.id.radiobutton_subservice_item)
         public RadioButton radioSubService;
 
-        public NormalVH(View v) {
+        public NormalVH(View v, boolean disableMode) {
             super(v);
             ButterKnife.bind(this, v);
+            if (disableMode) {
+                radioSubService.setButtonDrawable(null);
+                radioSubService.setClickable(false);
+//                radioSubService.setEnabled(false);
+            }
         }
     }
 }
