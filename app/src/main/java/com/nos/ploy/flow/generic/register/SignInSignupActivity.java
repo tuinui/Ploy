@@ -95,7 +95,7 @@ public class SignInSignupActivity extends BaseActivity implements View.OnClickLi
 
     private void initToolbar(Toolbar toolbar) {
         enableBackButton(toolbar);
-        mTextViewTitle.setText(R.string.Ploy);
+        mTextViewTitle.setText(R.string.Geeniz);
     }
 
     @Override

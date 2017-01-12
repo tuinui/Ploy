@@ -7,6 +7,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.nos.ploy.base.BaseActivity;
 import com.nos.ploy.base.BaseFragment;
 
@@ -49,6 +50,17 @@ public class IntentUtils {
             context.startActivity(intent);
         }
     }
+
+    public static void getDirection(Context context,LatLng latLng1,LatLng latLng2){
+        if(null == context){
+            return;
+        }
+        String uri = "http://maps.google.com/maps?f=d&hl=en&saddr="+latLng1.latitude+","+latLng1.longitude+"&daddr="+latLng2.latitude+","+latLng2.longitude;
+        Intent intent = new Intent(android.content.Intent.ACTION_VIEW, Uri.parse(uri));
+        context.startActivity(Intent.createChooser(intent, "Select an application"));
+    }
+
+
 
 
     public static void sendEmail(Context context, String email){

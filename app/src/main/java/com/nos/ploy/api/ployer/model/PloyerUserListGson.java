@@ -7,6 +7,8 @@ import com.github.wrdlbrnft.sortedlistadapter.SortedListAdapter;
 import com.google.gson.annotations.SerializedName;
 import com.nos.ploy.api.base.response.BaseResponse;
 
+import org.apache.commons.lang3.StringUtils;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -121,7 +123,7 @@ public class PloyerUserListGson extends BaseResponse<PloyerUserListGson.Data> {
             }
 
             public String getFirstName() {
-                return firstName;
+                return StringUtils.capitalize(firstName);
             }
 
             public String getFullName(){

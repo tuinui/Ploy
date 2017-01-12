@@ -59,7 +59,7 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="@string/Temporary_remove_Ployee_offline"
+                        android:text="@string/Temporary_remove_Provider_section_offline"
                         android:textColor="@android:color/white" />
 
                 </LinearLayout>

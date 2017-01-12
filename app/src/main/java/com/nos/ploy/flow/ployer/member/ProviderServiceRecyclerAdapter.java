@@ -27,11 +27,11 @@ import butterknife.ButterKnife;
  * Created by Saran on 10/1/2560.
  */
 
-public class MemberServiceRecyclerAdapter extends RecyclerView.Adapter<MemberServiceRecyclerAdapter.ViewHolder> {
+public class ProviderServiceRecyclerAdapter extends RecyclerView.Adapter<ProviderServiceRecyclerAdapter.ViewHolder> {
 
     private List<PloyerServiceDetailGson.Data> mDatas = new ArrayList<>();
 
-    public MemberServiceRecyclerAdapter() {
+    public ProviderServiceRecyclerAdapter() {
         super();
     }
 

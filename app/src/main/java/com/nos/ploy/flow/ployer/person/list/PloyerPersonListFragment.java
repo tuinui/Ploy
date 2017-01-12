@@ -18,7 +18,7 @@ import com.nos.ploy.api.ployer.PloyerApi;
 import com.nos.ploy.api.ployer.model.PloyerServicesGson;
 import com.nos.ploy.api.ployer.model.PloyerUserListGson;
 import com.nos.ploy.base.BaseFragment;
-import com.nos.ploy.flow.ployer.member.MemberProfileActivity;
+import com.nos.ploy.flow.ployer.member.ProviderProfileActivity;
 import com.nos.ploy.flow.ployer.person.list.view.PloyerPersonListRecyclerAdapter;
 import com.nos.ploy.utils.IntentUtils;
 import com.nos.ploy.utils.MyLocationUtils;
@@ -68,9 +68,9 @@ public class PloyerPersonListFragment extends BaseFragment implements SearchView
                                                    @Override
                                                    public void onClick(View v) {
                                                        Bundle bundle = new Bundle();
-                                                       bundle.putParcelable(MemberProfileActivity.KEY_PLOYEE_USER_SERVICE_DATA, data);
-                                                       bundle.putParcelable(MemberProfileActivity.KEY_SERVICE_DATA,mServiceData);
-                                                       IntentUtils.startActivity(v.getContext(), MemberProfileActivity.class, bundle);
+                                                       bundle.putParcelable(ProviderProfileActivity.KEY_PLOYEE_USER_SERVICE_DATA, data);
+                                                       bundle.putParcelable(ProviderProfileActivity.KEY_SERVICE_DATA,mServiceData);
+                                                       IntentUtils.startActivity(v.getContext(), ProviderProfileActivity.class, bundle);
                                                    }
                                                }
             );

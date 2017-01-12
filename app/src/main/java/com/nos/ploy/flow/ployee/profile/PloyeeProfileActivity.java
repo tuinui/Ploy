@@ -39,7 +39,7 @@ import com.nos.ploy.api.base.response.ResponseMessage;
 import com.nos.ploy.api.masterdata.MasterApi;
 import com.nos.ploy.api.utils.loader.AccountInfoLoader;
 import com.nos.ploy.base.BaseActivity;
-import com.nos.ploy.flow.generic.maps.PloyeeMapsFragment;
+import com.nos.ploy.flow.generic.maps.LocalizationMapsFragment;
 import com.nos.ploy.flow.ployee.profile.language.SpokenLanguageChooserFragment;
 import com.nos.ploy.flow.ployee.profile.upload.UploadPhotoFragment;
 import com.nos.ploy.utils.GoogleApiAvailabilityUtils;
@@ -525,7 +525,7 @@ public class PloyeeProfileActivity extends BaseActivity implements View.OnClickL
         } else if (id == mTextViewLanguageSupport.getId()) {
             showLanguageChooser();
         }else if(id == mImageViewStaticMaps.getId()){
-            showFragment(PloyeeMapsFragment.newInstance(mCurrentLatLng, new PloyeeMapsFragment.OnChooseLocationFinishListener() {
+            showFragment(LocalizationMapsFragment.newInstance(mCurrentLatLng, new LocalizationMapsFragment.OnChooseLocationFinishListener() {
                 @Override
                 public void onFinishChoosingLocation(LatLng latLng) {
                     setCurrentLatLng(latLng);

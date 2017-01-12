@@ -59,7 +59,7 @@
             android:value="@string/ploy_api_key" />
 
         <activity
-            android:name=".flow.ployer.member.MemberProfileActivity"
+            android:name=".flow.ployer.member.ProviderProfileActivity"
             android:screenOrientation="portrait" />
     </application>
 

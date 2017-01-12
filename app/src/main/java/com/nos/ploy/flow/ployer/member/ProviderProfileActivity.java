@@ -35,6 +35,7 @@ import com.nos.ploy.api.ployer.model.PloyerServicesGson;
 import com.nos.ploy.api.ployer.model.PloyerUserListGson;
 import com.nos.ploy.base.BaseActivity;
 import com.nos.ploy.cache.SharePreferenceUtils;
+import com.nos.ploy.flow.generic.maps.LocalizationMapsFragment;
 import com.nos.ploy.flow.ployee.home.content.availability.contract.AvailabilityViewModel;
 import com.nos.ploy.flow.ployee.home.content.availability.contract.NormalItemAvailabilityVM;
 import com.nos.ploy.flow.ployee.home.content.availability.contract.WeekAvailabilityVM;
@@ -53,7 +54,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class MemberProfileActivity extends BaseActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, View.OnClickListener {
+public class ProviderProfileActivity extends BaseActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, View.OnClickListener {
 
 
     public static final String KEY_PLOYEE_USER_SERVICE_DATA = "PLOYEE_USER_SERVICE_DATA";
@@ -109,7 +110,7 @@ public class MemberProfileActivity extends BaseActivity implements GoogleApiClie
     private ImageSliderPagerAdapter mImageSliderAdapter;
     private PloyerApi mApi;
     private MemberProfileGson.Data mData;
-    private MemberServiceRecyclerAdapter mServiceAdapter = new MemberServiceRecyclerAdapter();
+    private ProviderServiceRecyclerAdapter mServiceAdapter = new ProviderServiceRecyclerAdapter();
     private AvailabilityRecyclerAdapter mAvailabilityAdapter = new AvailabilityRecyclerAdapter() {
         @Override
         public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
@@ -252,6 +253,7 @@ public class MemberProfileActivity extends BaseActivity implements GoogleApiClie
         });
         mButtonEmail.setOnClickListener(this);
         mButtonPhone.setOnClickListener(this);
+        mImageViewStaticMaps.setOnClickListener(this);
     }
 
     //userId=1&serviceId=1&lgCode=en
@@ -411,6 +413,20 @@ public class MemberProfileActivity extends BaseActivity implements GoogleApiClie
             if (null != mUserServiceData) {
                 IntentUtils.makeACall(v.getContext(), mUserServiceData.getPhone());
             }
+        } else if (id == mImageViewStaticMaps.getId()) {
+            openLocalizationMaps();
+        }
+    }
+
+    private void openLocalizationMaps() {
+        if (null != mData && null != mData.getUserProfile() && null != mData.getUserProfile().getLocation()) {
+            LatLng latLng = new LatLng(mData.getUserProfile().getLocation().getLat(), mData.getUserProfile().getLocation().getLng());
+            showFragment(LocalizationMapsFragment.newInstance(latLng, false, new LocalizationMapsFragment.OnChooseLocationFinishListener() {
+                @Override
+                public void onFinishChoosingLocation(LatLng latLng) {
+
+                }
+            }));
         }
     }
 }

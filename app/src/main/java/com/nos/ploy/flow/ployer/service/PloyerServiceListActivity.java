@@ -136,7 +136,7 @@ public class PloyerServiceListActivity extends BaseActivity implements SearchVie
     }
 
     private void initToolbar() {
-        mTextViewTitle.setText(R.string.Ployer);
+        mTextViewTitle.setText(R.string.Services);
         mToolbar.setNavigationIcon(R.drawable.ic_chevron_left_white_40dp);
         mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override

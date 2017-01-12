@@ -6,6 +6,8 @@ import android.os.Parcelable;
 import com.google.gson.annotations.SerializedName;
 import com.nos.ploy.api.base.response.BaseResponse;
 
+import org.apache.commons.lang3.StringUtils;
+
 /**
  * Created by Saran on 29/11/2559.
  */
@@ -107,7 +109,7 @@ public class AccountGson extends BaseResponse<AccountGson.Data> {
         }
 
         public String getFirstName() {
-            return firstName;
+            return StringUtils.capitalize(firstName);
         }
 
         public void setFirstName(String firstName) {
@@ -115,7 +117,7 @@ public class AccountGson extends BaseResponse<AccountGson.Data> {
         }
 
         public String getLastName() {
-            return lastName;
+            return StringUtils.capitalize(lastName);
         }
 
         public void setLastName(String lastName) {
@@ -164,6 +166,7 @@ public class AccountGson extends BaseResponse<AccountGson.Data> {
 
         public void setFbUserId(String fbUserId) {
             this.fbUserId = fbUserId;
+
         }
 
         @Override

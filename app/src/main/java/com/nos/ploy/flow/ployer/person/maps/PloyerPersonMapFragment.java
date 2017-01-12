@@ -29,7 +29,7 @@ import com.nos.ploy.api.ployer.PloyerApi;
 import com.nos.ploy.api.ployer.model.PloyerServicesGson;
 import com.nos.ploy.api.ployer.model.PloyerUserListGson;
 import com.nos.ploy.base.BaseFragment;
-import com.nos.ploy.flow.ployer.member.MemberProfileActivity;
+import com.nos.ploy.flow.ployer.member.ProviderProfileActivity;
 import com.nos.ploy.flow.ployer.person.maps.viewmodel.PloyerPersonMapViewModel;
 import com.nos.ploy.utils.DrawableUtils;
 import com.nos.ploy.utils.FragmentTransactionUtils;
@@ -144,14 +144,21 @@ public class PloyerPersonMapFragment extends BaseFragment implements OnMapReadyC
     }
 
 
-    public void bindData(List<PloyerUserListGson.Data.UserService> datas) {
-        mDatas.clear();
-        if (null != datas && !datas.isEmpty()) {
-            for (PloyerUserListGson.Data.UserService data : datas) {
-                mDatas.add(new PloyerPersonMapViewModel(data, intoMarker(data)));
-            }
-        }
-        bindDataToMap();
+    public void bindData(final List<PloyerUserListGson.Data.UserService> datas) {
+        runOnUiThread(new Runnable() {
+                          @Override
+                          public void run() {
+                              mDatas.clear();
+                              if (null != datas && !datas.isEmpty()) {
+                                  for (PloyerUserListGson.Data.UserService data : datas) {
+                                      mDatas.add(new PloyerPersonMapViewModel(data, intoMarker(data)));
+                                  }
+                              }
+                              bindDataToMap();
+                          }
+                      }
+        );
+
     }
 
     private void bindDataToMap() {
@@ -231,9 +238,9 @@ public class PloyerPersonMapFragment extends BaseFragment implements OnMapReadyC
             expandBottomSheet(false);
             if (null != mCurrentSelectedData) {
                 Bundle bundle = new Bundle();
-                bundle.putParcelable(MemberProfileActivity.KEY_SERVICE_DATA, mServiceData);
-                bundle.putParcelable(MemberProfileActivity.KEY_PLOYEE_USER_SERVICE_DATA, mServiceData);
-                IntentUtils.startActivity(getActivity(), MemberProfileActivity.class, bundle);
+                bundle.putParcelable(ProviderProfileActivity.KEY_SERVICE_DATA, mServiceData);
+                bundle.putParcelable(ProviderProfileActivity.KEY_PLOYEE_USER_SERVICE_DATA, mServiceData);
+                IntentUtils.startActivity(getActivity(), ProviderProfileActivity.class, bundle);
             }
 
         }
