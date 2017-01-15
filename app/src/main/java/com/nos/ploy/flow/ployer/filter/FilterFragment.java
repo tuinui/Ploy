@@ -104,7 +104,17 @@ public class FilterFragment extends BaseFragment implements View.OnClickListener
                     public void onClick(View v) {
                         if (RecyclerUtils.isAvailableData(mTransportVms, holder.getAdapterPosition())) {
                             TransportGsonVm data = mTransportVms.get(holder.getAdapterPosition());
-                            data.setCheck(!data.isCheck());
+                            boolean newValue = !data.isCheck();
+                            data.setCheck(newValue);
+                            if(newValue){
+                                if(!mPostData.getTransportIds().contains(data.getId())){
+                                    mPostData.getTransportIds().add(data.getId());
+                                }
+                            }else{
+                                if(mPostData.getTransportIds().contains(data.getId())){
+                                    mPostData.getTransportIds().remove(data.getId());
+                                }
+                            }
                             notifyItemChanged(holder.getAdapterPosition());
                         }
                     }
@@ -400,7 +410,7 @@ public class FilterFragment extends BaseFragment implements View.OnClickListener
     }
 
     private void onClickClear() {
-        bindData(PostProviderFilterGson.EMPTY_DATA);
+        bindData(new PostProviderFilterGson());
     }
 
     private FilterLanguageFragment getLanguageFragment() {

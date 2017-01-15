@@ -14,7 +14,7 @@ import java.util.List;
  */
 
 public class PostProviderFilterGson implements Parcelable {
-    public static final PostProviderFilterGson EMPTY_DATA = new PostProviderFilterGson();
+//    public static final PostProviderFilterGson EMPTY_DATA = new PostProviderFilterGson();
     /*
     {
 	"pageNo":1,
