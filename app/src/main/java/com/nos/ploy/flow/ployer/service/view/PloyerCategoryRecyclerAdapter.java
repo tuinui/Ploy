@@ -79,7 +79,7 @@ public class PloyerCategoryRecyclerAdapter extends SortedListAdapter<PloyerServi
             });
             Glide.with(imgServiceImage.getContext()).load(data.getImgUrl()).placeholder(mDrawableGenizPlaceHolder).error(mDrawableGenizPlaceHolder).fallback(mDrawableGenizPlaceHolder).into(imgServiceImage);
             tvTitle.setText(data.getServiceName());
-            tvSubtitle.setText(data.getPloyeeCount() + " " + LPLOYEE);
+            tvSubtitle.setText(data.getPloyeeCountDisplay());
         }
     }
 }

@@ -223,22 +223,24 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:drawableLeft="@drawable/selector_drawable_phone_gray_blue"
+                            android:drawableLeft="@drawable/selector_drawable_phone_gray_white"
                             android:text="@string/Show_Phone_No"
+                            android:clickable="true"
                             android:textAllCaps="false"
-                            android:textColor="@drawable/selector_color_gray_white"
-                            app:backgroundTint="@drawable/selector_color_white_blue" />
+                            android:textColor="@color/selector_color_gray_white"
+                            app:backgroundTint="@color/selector_color_white_blue" />
 
                         <android.support.v7.widget.AppCompatButton
                             android:id="@+id/button_ployee_profile_show_email"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:drawableLeft="@drawable/selector_drawable_email_gray_blue"
+                            android:drawableLeft="@drawable/selector_drawable_email_gray_white"
                             android:text="@string/Show_Email"
                             android:textAllCaps="false"
-                            android:textColor="@drawable/selector_color_gray_white"
-                            app:backgroundTint="@drawable/selector_color_white_blue" />
+                            android:clickable="true"
+                            android:textColor="@color/selector_color_gray_white"
+                            app:backgroundTint="@color/selector_color_white_blue" />
 
                     </android.support.v7.widget.ButtonBarLayout>
                 </LinearLayout>

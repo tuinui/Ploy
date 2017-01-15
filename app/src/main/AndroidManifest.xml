@@ -59,8 +59,11 @@
             android:value="@string/ploy_api_key" />
 
         <activity
-            android:name=".flow.ployer.member.ProviderProfileActivity"
+            android:name=".flow.ployer.provider.ProviderProfileActivity"
             android:screenOrientation="portrait" />
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="9adced910d30f6ce3185b3905e04102084f705c8" />
     </application>
 
 </manifest>

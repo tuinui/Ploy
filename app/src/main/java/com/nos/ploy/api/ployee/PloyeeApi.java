@@ -21,10 +21,6 @@ public interface PloyeeApi {
     Call<PloyeeServiceListGson> getServiceList(@Query("lgCode") String language);
 
 
-    //{{endpoint_ploy}}/api/avai?userId=1
-    @GET("api/avai")
-    Call<PloyeeAvailiabilityGson> getAvailability(@Query("userId") long userId);
-
 
     @POST("api/avai/save")
     Call<PloyeeAvailiabilityGson> postSaveAvailability(@Body PloyeeAvailiabilityGson.Data data);

@@ -14,6 +14,7 @@ import android.widget.Button;
 import com.nos.ploy.R;
 import com.nos.ploy.api.base.RetrofitCallUtils;
 import com.nos.ploy.api.base.response.ResponseMessage;
+import com.nos.ploy.api.masterdata.MasterApi;
 import com.nos.ploy.api.ployee.PloyeeApi;
 import com.nos.ploy.api.ployee.model.PloyeeAvailiabilityGson;
 import com.nos.ploy.base.BaseFragment;
@@ -41,7 +42,8 @@ public class PloyeeAvailabilityFragment extends BaseFragment implements View.OnC
     Button mButtonNoPref;
     @BindView(R.id.swiperefreshlayout_ployee_availability)
     SwipeRefreshLayout mSwipRefreshlayout;
-    private PloyeeApi mApi;
+    private MasterApi mMasterApi;
+    private PloyeeApi mPloyeeApi;
     private long mUserId;
     private AvailabilityRecyclerAdapter mAdapter = new AvailabilityRecyclerAdapter();
     private PloyeeAvailiabilityGson.Data mData;
@@ -61,7 +63,8 @@ public class PloyeeAvailabilityFragment extends BaseFragment implements View.OnC
         if (getArguments() != null) {
             mUserId = getArguments().getLong(KEY_USER_ID);
         }
-        mApi = getRetrofit().create(PloyeeApi.class);
+        mMasterApi = getRetrofit().create(MasterApi.class);
+        mPloyeeApi = getRetrofit().create(PloyeeApi.class);
     }
 
     @Nullable
@@ -100,7 +103,7 @@ public class PloyeeAvailabilityFragment extends BaseFragment implements View.OnC
 
     private void refreshData() {
         showRefreshing();
-        RetrofitCallUtils.with(mApi.getAvailability(mUserId), new RetrofitCallUtils.RetrofitCallback<PloyeeAvailiabilityGson>() {
+        RetrofitCallUtils.with(mMasterApi.getAvailability(mUserId), new RetrofitCallUtils.RetrofitCallback<PloyeeAvailiabilityGson>() {
             @Override
             public void onDataSuccess(PloyeeAvailiabilityGson data) {
                 dismissRefreshing();
@@ -116,13 +119,18 @@ public class PloyeeAvailabilityFragment extends BaseFragment implements View.OnC
         }).enqueue(getContext());
     }
 
-    private void bindData(PloyeeAvailiabilityGson.Data data) {
+    private void bindData(final PloyeeAvailiabilityGson.Data data) {
         mData = data;
         if (null != mData) {
-            if (null != mData.getAvailabilityItems()) {
-                mAdapter.replaceData(toVm(mData.getAvailabilityItems()));
-            }
-            mSwitchHoliday.setChecked(data.getHolidayMode());
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    if (null != mData.getAvailabilityItems()) {
+                        mAdapter.replaceData(toVm(mData.getAvailabilityItems()));
+                    }
+                    mSwitchHoliday.setChecked(data.getHolidayMode());
+                }
+            });
         }
     }
 
@@ -188,7 +196,7 @@ public class PloyeeAvailabilityFragment extends BaseFragment implements View.OnC
 
     private void requestSaveData(PloyeeAvailiabilityGson.Data data) {
         showLoading();
-        RetrofitCallUtils.with(mApi.postSaveAvailability(data), new RetrofitCallUtils.RetrofitCallback<PloyeeAvailiabilityGson>() {
+        RetrofitCallUtils.with(mPloyeeApi.postSaveAvailability(data), new RetrofitCallUtils.RetrofitCallback<PloyeeAvailiabilityGson>() {
             @Override
             public void onDataSuccess(PloyeeAvailiabilityGson data) {
                 dismissLoading();

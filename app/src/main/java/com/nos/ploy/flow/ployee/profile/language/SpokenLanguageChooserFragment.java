@@ -44,7 +44,7 @@ public class SpokenLanguageChooserFragment extends BaseFragment {
     @BindView(R.id.swiperefreshlayout_language_chooser)
     SwipeRefreshLayout mSwipeRefreshLayout;
     private long mUserId;
-    private ArrayList<String> mSpokenCodes = new ArrayList<>();
+    private ArrayList<String> mSpokenCheckedCodes = new ArrayList<>();
     private OnDataChangedListener listener;
     private MasterApi mApi;
     private List<PloyeeProfileGson.Data.Language> mDatas = new ArrayList<>();
@@ -61,12 +61,12 @@ public class SpokenLanguageChooserFragment extends BaseFragment {
                         if (RecyclerUtils.isAvailableData(mDatas, holder.getAdapterPosition())) {
                             PloyeeProfileGson.Data.Language language = mDatas.get(holder.getAdapterPosition());
                             if (isChecked) {
-                                if (!mSpokenCodes.contains(language.getSpokenLanguageCode())) {
-                                    mSpokenCodes.add(language.getSpokenLanguageCode());
+                                if (!mSpokenCheckedCodes.contains(language.getSpokenLanguageCode())) {
+                                    mSpokenCheckedCodes.add(language.getSpokenLanguageCode());
                                 }
                             } else {
-                                if (mSpokenCodes.contains(language.getSpokenLanguageCode())) {
-                                    mSpokenCodes.remove(language.getSpokenLanguageCode());
+                                if (mSpokenCheckedCodes.contains(language.getSpokenLanguageCode())) {
+                                    mSpokenCheckedCodes.remove(language.getSpokenLanguageCode());
                                 }
                             }
 
@@ -78,7 +78,7 @@ public class SpokenLanguageChooserFragment extends BaseFragment {
         }
 
         private boolean isLanguageSupported(String languageCode) {
-            return null != mSpokenCodes && !mSpokenCodes.isEmpty() && mSpokenCodes.contains(languageCode);
+            return null != mSpokenCheckedCodes && !mSpokenCheckedCodes.isEmpty() && mSpokenCheckedCodes.contains(languageCode);
         }
 
         @Override
@@ -123,7 +123,7 @@ public class SpokenLanguageChooserFragment extends BaseFragment {
         super.onCreate(savedInstanceState);
         if (null != getArguments()) {
             mUserId = getArguments().getLong(KEY_USER_ID, 0);
-            mSpokenCodes = getArguments().getStringArrayList(KEY_SPOKEN_LANGUAGE_DATA);
+            mSpokenCheckedCodes = getArguments().getStringArrayList(KEY_SPOKEN_LANGUAGE_DATA);
         }
         mApi = getRetrofit().create(MasterApi.class);
     }
@@ -174,14 +174,20 @@ public class SpokenLanguageChooserFragment extends BaseFragment {
 
     private void refreshData() {
         showRefreshing();
-        RetrofitCallUtils.with(mApi.getLanguageList(), mCallbackLoadLanguage).enqueue(getContext());
+        RetrofitCallUtils.with(mApi.getSpokenLanguageList(), mCallbackLoadLanguage).enqueue(getContext());
     }
 
     private void bindData(List<PloyeeProfileGson.Data.Language> data) {
         if (null != data) {
             mDatas.clear();
             mDatas.addAll(data);
-            mAdapter.notifyDataSetChanged();
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    mAdapter.notifyDataSetChanged();
+                }
+            });
+
         }
     }
 
@@ -193,7 +199,7 @@ public class SpokenLanguageChooserFragment extends BaseFragment {
             public boolean onMenuItemClick(MenuItem item) {
                 int id = item.getItemId();
                 if (id == R.id.menu_done_item_done) {
-                    getListener().onClickDone(mSpokenCodes);
+                    getListener().onClickDone(mSpokenCheckedCodes);
                     dismiss();
                 }
                 return false;
@@ -201,6 +207,7 @@ public class SpokenLanguageChooserFragment extends BaseFragment {
         });
         enableBackButton(mToolbar);
     }
+
 
     public OnDataChangedListener getListener() {
         return listener;

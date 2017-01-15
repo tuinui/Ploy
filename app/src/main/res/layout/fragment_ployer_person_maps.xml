@@ -108,9 +108,10 @@
                             android:layout_marginTop="4dp"
                             android:paddingLeft="8dp">
 
-                            <RatingBar
+                            <android.support.v7.widget.AppCompatRatingBar
                                 android:id="@+id/ratingbar_ployer_person_maps_bottom_sheet_item_rate"
                                 style="@style/Widget.AppCompat.RatingBar.Small"
+                                android:theme="@style/RatingBar.Orange"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginRight="4dp"

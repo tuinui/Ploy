@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <include layout="@layout/view_main_appbar" />
+
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/swiperefreshlayout_ployer_filter_availability"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@android:color/white">
+
+        <android.support.v4.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <Button
+                    android:id="@+id/button_ployer_filter_availabality_no_preferences"
+                    style="@style/PloyButtonTransparentGrayBorder"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="16dp"
+                    android:text="@string/No_preferences"
+                    android:textAllCaps="false" />
+
+                <!--<RadioButton-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:minHeight="?android:attr/listPreferredItemHeightSmall"-->
+                    <!--android:padding="8dp"-->
+                    <!--android:text="@string/Certificate"-->
+                    <!--android:textColor="@color/colorPrimary"-->
+                    <!--android:textStyle="bold" />-->
+
+                <!--<include layout="@layout/view_vertical_divider" />-->
+
+                <!--<RadioButton-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:minHeight="?android:attr/listPreferredItemHeightSmall"-->
+                    <!--android:padding="8dp"-->
+                    <!--android:text="@string/Equipment_needed"-->
+                    <!--android:textColor="@color/colorPrimary"-->
+                    <!--android:textStyle="bold" />-->
+
+                <!--<include layout="@layout/view_vertical_divider" />-->
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/recyclerview_ployer_filter_availability_time_table"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+            </LinearLayout>
+
+        </android.support.v4.widget.NestedScrollView>
+    </android.support.v4.widget.SwipeRefreshLayout>
+</LinearLayout>

@@ -4,6 +4,7 @@ import com.nos.ploy.api.account.model.TransportGson;
 import com.nos.ploy.api.masterdata.model.AppLanguageGson;
 import com.nos.ploy.api.masterdata.model.HtmlAppGson;
 import com.nos.ploy.api.masterdata.model.LanguageGson;
+import com.nos.ploy.api.ployee.model.PloyeeAvailiabilityGson;
 
 import retrofit2.Call;
 import retrofit2.http.GET;
@@ -16,7 +17,7 @@ import retrofit2.http.Query;
 public interface MasterApi {
 
     @GET("/api/spoken")
-    Call<LanguageGson> getLanguageList();
+    Call<LanguageGson> getSpokenLanguageList();
 
     //api/getHtmlApp?lgCode=en&dataId=5
     @GET("/api/getHtmlApp")
@@ -26,6 +27,11 @@ public interface MasterApi {
     @GET("/api/transport")
     Call<TransportGson> getTransportList();
 
+
+
+    //{{endpoint_ploy}}/api/avai?userId=1
+    @GET("api/avai")
+    Call<PloyeeAvailiabilityGson> getAvailability(@Query("userId") long userId);
 
     ///api/appLanguage/getAppLanguageActiveList
     @GET("/api/appLanguage/getAppLanguageActiveList")

@@ -32,7 +32,8 @@ import com.nos.ploy.api.base.RetrofitCallUtils;
 import com.nos.ploy.api.base.response.ResponseMessage;
 import com.nos.ploy.api.ployer.PloyerApi;
 import com.nos.ploy.api.ployer.model.PloyerServicesGson;
-import com.nos.ploy.api.ployer.model.PloyerUserListGson;
+import com.nos.ploy.api.ployer.model.PostProviderFilterGson;
+import com.nos.ploy.api.ployer.model.ProviderUserListGson;
 import com.nos.ploy.api.utils.loader.AccountInfoLoader;
 import com.nos.ploy.base.BaseActivity;
 import com.nos.ploy.base.BaseFragment;
@@ -42,6 +43,7 @@ import com.nos.ploy.flow.generic.htmltext.HtmlTextFragment;
 import com.nos.ploy.flow.generic.settings.SettingsFragment;
 import com.nos.ploy.flow.ployee.account.main.PloyeeAccountFragment;
 import com.nos.ploy.flow.ployee.home.PloyeeHomeActivity;
+import com.nos.ploy.flow.ployer.filter.FilterFragment;
 import com.nos.ploy.flow.ployer.person.list.PloyerPersonListFragment;
 import com.nos.ploy.flow.ployer.person.maps.PloyerPersonMapFragment;
 import com.nos.ploy.utils.GoogleApiAvailabilityUtils;
@@ -57,6 +59,7 @@ import butterknife.BindDimen;
 import butterknife.BindDrawable;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import retrofit2.Call;
 import rx.functions.Action1;
 
 /**
@@ -69,7 +72,8 @@ public class PloyerPersonActivity extends BaseActivity implements SearchView.OnQ
     private ArrayList<String> mSuggestions = new ArrayList<>();
     private SimpleCursorAdapter mSuggestionAdapter;
     private String mSuggestionFrom = "PloyeeName";
-    private PloyerUserListGson.Data mData;
+    private ProviderUserListGson.Data mData;
+    private PostProviderFilterGson mPostData;
 
     @Retention(RetentionPolicy.SOURCE)
     @IntDef({LIST, MAPS})
@@ -251,18 +255,11 @@ public class PloyerPersonActivity extends BaseActivity implements SearchView.OnQ
     private void initToolbar() {
 
         mTextViewSubTitle.setVisibility(View.VISIBLE);
-        String ployeeCounts = "0 Ployee";
-        String serviceName = "";
         if (null != mParentData) {
-            serviceName = mParentData.getServiceName();
-            if (mParentData.getPloyeeCount() > 1) {
-                ployeeCounts = mParentData.getPloyeeCount() + " Ployees";
-            } else if (mParentData.getPloyeeCount() == 1) {
-                ployeeCounts = "1 Ployee";
-            }
+            mTextViewSubTitle.setText(mParentData.getPloyeeCountDisplay());
+            mTextViewTitle.setText(mParentData.getServiceName());
         }
-        mTextViewTitle.setText(serviceName);
-        mTextViewSubTitle.setText(ployeeCounts);
+
         mToolbar.setNavigationIcon(R.drawable.ic_chevron_left_white_40dp);
         mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
@@ -314,7 +311,13 @@ public class PloyerPersonActivity extends BaseActivity implements SearchView.OnQ
     }
 
     private void onClickFilterMenu() {
-        showToastLong("Show filter dialog");
+        showFragment(FilterFragment.newInstance(mParentData,mPostData, new FilterFragment.OnFilterConfirmListener() {
+            @Override
+            public void onFilterConfirm(PostProviderFilterGson data) {
+                mPostData = data;
+                refreshData();
+            }
+        }));
     }
 
     @Override
@@ -342,9 +345,15 @@ public class PloyerPersonActivity extends BaseActivity implements SearchView.OnQ
         }
         showRefreshing();
         isRequesting = true;
-        RetrofitCallUtils.with(mApi.getPloyerList(mParentData.getId()), new RetrofitCallUtils.RetrofitCallback<PloyerUserListGson>() {
+        Call<ProviderUserListGson> call;
+        if (mPostData == null) {
+            call = mApi.getProviderList(mParentData.getId());
+        } else {
+            call = mApi.postGetFilteredProvider(mPostData);
+        }
+        RetrofitCallUtils.with(call, new RetrofitCallUtils.RetrofitCallback<ProviderUserListGson>() {
             @Override
-            public void onDataSuccess(PloyerUserListGson data) {
+            public void onDataSuccess(ProviderUserListGson data) {
                 isRequesting = false;
                 dismissRefreshing();
                 bindData(data.getData());
@@ -358,39 +367,44 @@ public class PloyerPersonActivity extends BaseActivity implements SearchView.OnQ
         }).enqueue(this);
     }
 
-    private void bindData(PloyerUserListGson.Data data) {
+    private void bindData(final ProviderUserListGson.Data data) {
         if (null != data && null != data.getUserServiceList()) {
-            mData = data;
-            if (null != mPersonListFragment) {
-                mPersonListFragment.bindData(data);
-            }
-
-            if (null != mPersonMapFragment) {
-                mPersonMapFragment.bindData(data.getUserServiceList());
-            }
-
-            mSuggestions = new ArrayList<>();
-            for (PloyerUserListGson.Data.UserService service : data.getUserServiceList()) {
-                if (null != service) {
-                    mSuggestions.add(service.getFullName());
-                }
-            }
-
-            int[] to = new int[]{android.R.id.text1};
-            String[] from = new String[]{mSuggestionFrom};
-            mSuggestionAdapter = new SimpleCursorAdapter(mViewPager.getContext(), R.layout.support_simple_spinner_dropdown_item, null, from, to, CursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER) {
+            runOnUiThread(new Runnable() {
                 @Override
-                public View getView(final int position, View convertView, ViewGroup parent) {
-                    View view = super.getView(position, convertView, parent);
-                    TextView text = (TextView) view.findViewById(android.R.id.text1);
-                    text.setTextColor(Color.BLACK);
-                    text.setBackgroundColor(Color.WHITE);
-                    return view;
+                public void run() {
+                    mData = data;
+                    if (null != mPersonListFragment) {
+                        mPersonListFragment.bindData(data);
+                    }
+
+                    if (null != mPersonMapFragment) {
+                        mPersonMapFragment.bindData(data.getUserServiceList());
+                    }
+
+                    mSuggestions = new ArrayList<>();
+                    for (ProviderUserListGson.Data.UserService service : data.getUserServiceList()) {
+                        if (null != service) {
+                            mSuggestions.add(service.getFullName());
+                        }
+                    }
+
+                    int[] to = new int[]{android.R.id.text1};
+                    String[] from = new String[]{mSuggestionFrom};
+                    mSuggestionAdapter = new SimpleCursorAdapter(mViewPager.getContext(), R.layout.support_simple_spinner_dropdown_item, null, from, to, CursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER) {
+                        @Override
+                        public View getView(final int position, View convertView, ViewGroup parent) {
+                            View view = super.getView(position, convertView, parent);
+                            TextView text = (TextView) view.findViewById(android.R.id.text1);
+                            text.setTextColor(Color.BLACK);
+                            text.setBackgroundColor(Color.WHITE);
+                            return view;
+                        }
+
+
+                    };
+                    mSearchView.setSuggestionsAdapter(mSuggestionAdapter);
                 }
-
-
-            };
-            mSearchView.setSuggestionsAdapter(mSuggestionAdapter);
+            });
         }
     }
 
@@ -428,7 +442,7 @@ public class PloyerPersonActivity extends BaseActivity implements SearchView.OnQ
         initPager();
         if (mData == null) {
             refreshData();
-        }else{
+        } else {
             bindData(mData);
         }
 

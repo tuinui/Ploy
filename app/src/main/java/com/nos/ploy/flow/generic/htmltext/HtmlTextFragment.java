@@ -129,9 +129,15 @@ public class HtmlTextFragment extends BaseFragment {
         }
     }
 
-    private void bindData(HtmlAppGson data) {
+    private void bindData(final HtmlAppGson data) {
         if (null != data && null != data.getData()) {
-            mTextviewHtml.setText(Html.fromHtml(getTextString(data.getData())));
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    mTextviewHtml.setText(Html.fromHtml(getTextString(data.getData())));
+                }
+            });
+
         }
     }
 

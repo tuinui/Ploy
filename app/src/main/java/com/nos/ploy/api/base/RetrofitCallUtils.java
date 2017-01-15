@@ -7,6 +7,7 @@ import android.widget.Toast;
 import com.google.gson.internal.LinkedTreeMap;
 import com.nos.ploy.api.base.response.BaseResponse;
 import com.nos.ploy.api.base.response.ResponseMessage;
+import com.nos.ploy.api.ployer.model.PloyerServiceDetailGson;
 import com.nos.ploy.base.BaseActivity;
 
 import retrofit2.Call;
@@ -117,6 +118,8 @@ public abstract class RetrofitCallUtils<T> {
             Toast.makeText(context, message, Toast.LENGTH_LONG).show();
         }
     }
+
+
 
 
     public static interface RetrofitCallback<T> {

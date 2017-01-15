@@ -15,6 +15,7 @@ import com.nos.ploy.R;
 import com.nos.ploy.api.ployee.PloyeeApi;
 import com.nos.ploy.api.ployee.model.PloyeeServiceListGson;
 import com.nos.ploy.base.BaseFragment;
+import com.nos.ploy.cache.SharePreferenceUtils;
 import com.nos.ploy.flow.ployee.home.content.service.detail.PloyeeServiceDetailFragment;
 import com.nos.ploy.flow.ployee.home.content.service.list.viewmodel.PloyeeServiceItemViewModel;
 
@@ -39,7 +40,7 @@ public class PloyeeServiceListFragment extends BaseFragment implements SearchVie
     private static final Comparator<PloyeeServiceItemViewModel> ALPHABETICAL_COMPARATOR = new Comparator<PloyeeServiceItemViewModel>() {
         @Override
         public int compare(PloyeeServiceItemViewModel a, PloyeeServiceItemViewModel b) {
-            return a.getText().compareTo(b.getText());
+            return a.getId().compareTo(b.getId());
         }
     };
     @BindView(R.id.recyclerview_swipe_recycler)
@@ -52,7 +53,7 @@ public class PloyeeServiceListFragment extends BaseFragment implements SearchVie
     private Action1<PloyeeServiceItemViewModel> mActionOnClickServiceItem = new Action1<PloyeeServiceItemViewModel>() {
         @Override
         public void call(PloyeeServiceItemViewModel data) {
-            showFragment(PloyeeServiceDetailFragment.newInstance(mUserId, data.getId(), data.getText()));
+            showFragment(PloyeeServiceDetailFragment.newInstance(mUserId, data.getId(),SharePreferenceUtils.getCurrentActiveAppLanguageCode(getContext()), data.getText()));
         }
     };
     private PloyeeHomeRecyclerAdapter mAdapter;
@@ -142,9 +143,15 @@ public class PloyeeServiceListFragment extends BaseFragment implements SearchVie
     private void bindData(List<PloyeeServiceListGson.PloyeeServiceItemGson> datas) {
         mDatas.clear();
         mDatas.addAll(toVm(datas));
-        mAdapter.edit()
-                .replaceAll(mDatas)
-                .commit();
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                mAdapter.edit()
+                        .replaceAll(mDatas)
+                        .commit();
+            }
+        });
+
     }
 
     private List<PloyeeServiceItemViewModel> toVm(List<PloyeeServiceListGson.PloyeeServiceItemGson> datas) {
@@ -166,7 +173,7 @@ public class PloyeeServiceListFragment extends BaseFragment implements SearchVie
 
     private void refreshData() {
         mSwipeRefreshLayout.setRefreshing(true);
-        mService.getServiceList("en").enqueue(mCallbackPloyeeService);
+        mService.getServiceList(SharePreferenceUtils.getCurrentActiveAppLanguageCode(getContext())).enqueue(mCallbackPloyeeService);
     }
 
     @Override

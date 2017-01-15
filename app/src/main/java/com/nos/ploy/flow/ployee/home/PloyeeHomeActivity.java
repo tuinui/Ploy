@@ -123,7 +123,7 @@ public class PloyeeHomeActivity extends BaseActivity implements View.OnClickList
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        mTextViewUsername.setText(data.getName());
+                        mTextViewUsername.setText(data.getFullName());
                     }
                 });
             }

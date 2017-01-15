@@ -19,21 +19,23 @@
                 android:layout_width="match_parent"
                 android:layout_height="?attr/listPreferredItemHeightSmall" />
 
-            <include layout="@layout/view_divider" />
+            <include layout="@layout/view_vertical_divider" />
 
             <android.support.design.internal.ForegroundLinearLayout
                 android:id="@+id/linearlayout_ployee_settings_language_container"
                 android:layout_width="match_parent"
-                android:layout_height="?attr/listPreferredItemHeight"
+                android:layout_height="wrap_content"
                 android:background="@android:color/white"
+                android:gravity="center_vertical"
                 android:clickable="true"
+                android:minHeight="?attr/listPreferredItemHeightSmall"
                 android:foreground="?attr/selectableItemBackground"
                 android:orientation="horizontal">
 
                 <TextView
                     android:id="@+id/textview_ployee_settings_language_label"
                     android:layout_width="0dp"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:background="@android:color/white"
                     android:gravity="center_vertical"
@@ -50,7 +52,6 @@
                     android:background="@android:color/white"
                     android:drawableRight="@drawable/ic_chevron_right_gray_32dp"
                     android:gravity="center_vertical"
-                    android:minHeight="?attr/listPreferredItemHeight"
                     android:paddingLeft="16dp"
                     android:paddingRight="8dp"
                     android:text="English"
@@ -59,7 +60,7 @@
 
             </android.support.design.internal.ForegroundLinearLayout>
 
-            <include layout="@layout/view_divider" />
+            <include layout="@layout/view_vertical_divider" />
 
             <Space
                 android:layout_width="match_parent"
@@ -72,7 +73,7 @@
                 android:background="@android:color/white"
                 android:orientation="vertical">
 
-                <include layout="@layout/view_divider" />
+                <include layout="@layout/view_vertical_divider" />
 
                 <TextView
                     android:id="@+id/textview_ployee_settings_privacy_policy"
@@ -82,13 +83,13 @@
                     android:clickable="true"
                     android:drawableRight="@drawable/ic_chevron_right_gray_32dp"
                     android:gravity="center_vertical"
-                    android:minHeight="?attr/listPreferredItemHeight"
+                    android:minHeight="?attr/listPreferredItemHeightSmall"
                     android:paddingLeft="16dp"
                     android:paddingRight="8dp"
                     android:text="Privacy Policy"
                     android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium" />
 
-                <include layout="@layout/view_divider" />
+                <include layout="@layout/view_vertical_divider" />
 
                 <TextView
                     android:id="@+id/textview_ployee_settings_term_conditions"
@@ -98,13 +99,13 @@
                     android:clickable="true"
                     android:drawableRight="@drawable/ic_chevron_right_gray_32dp"
                     android:gravity="center_vertical"
-                    android:minHeight="?attr/listPreferredItemHeight"
+                    android:minHeight="?attr/listPreferredItemHeightSmall"
                     android:paddingLeft="16dp"
                     android:paddingRight="8dp"
                     android:text="Term&amp;Conditions"
                     android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium" />
 
-                <include layout="@layout/view_divider" />
+                <include layout="@layout/view_vertical_divider" />
 
                 <TextView
                     android:id="@+id/textview_ployee_settings_legal"
@@ -114,13 +115,13 @@
                     android:clickable="true"
                     android:drawableRight="@drawable/ic_chevron_right_gray_32dp"
                     android:gravity="center_vertical"
-                    android:minHeight="?attr/listPreferredItemHeight"
+                    android:minHeight="?attr/listPreferredItemHeightSmall"
                     android:paddingLeft="16dp"
                     android:paddingRight="8dp"
                     android:text="Legal"
                     android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium" />
 
-                <include layout="@layout/view_divider" />
+                <include layout="@layout/view_vertical_divider" />
 
                 <TextView
                     android:id="@+id/textview_ployee_settings_faq"
@@ -130,13 +131,13 @@
                     android:clickable="true"
                     android:drawableRight="@drawable/ic_chevron_right_gray_32dp"
                     android:gravity="center_vertical"
-                    android:minHeight="?attr/listPreferredItemHeight"
+                    android:minHeight="?attr/listPreferredItemHeightSmall"
                     android:paddingLeft="16dp"
                     android:paddingRight="8dp"
                     android:text="FAQ"
                     android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium" />
 
-                <include layout="@layout/view_divider" />
+                <include layout="@layout/view_vertical_divider" />
 
             </LinearLayout>
 

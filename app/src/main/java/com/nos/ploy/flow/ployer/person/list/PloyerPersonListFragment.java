@@ -16,10 +16,10 @@ import com.google.android.gms.maps.model.LatLng;
 import com.nos.ploy.R;
 import com.nos.ploy.api.ployer.PloyerApi;
 import com.nos.ploy.api.ployer.model.PloyerServicesGson;
-import com.nos.ploy.api.ployer.model.PloyerUserListGson;
+import com.nos.ploy.api.ployer.model.ProviderUserListGson;
 import com.nos.ploy.base.BaseFragment;
-import com.nos.ploy.flow.ployer.member.ProviderProfileActivity;
 import com.nos.ploy.flow.ployer.person.list.view.PloyerPersonListRecyclerAdapter;
+import com.nos.ploy.flow.ployer.provider.ProviderProfileActivity;
 import com.nos.ploy.utils.IntentUtils;
 import com.nos.ploy.utils.MyLocationUtils;
 
@@ -46,15 +46,15 @@ public class PloyerPersonListFragment extends BaseFragment implements SearchView
     private PloyerServicesGson.Data mServiceData;
     private PloyerApi mApi;
     private PloyerPersonListRecyclerAdapter mAdapter;
-    private Comparator<PloyerUserListGson.Data.UserService> USER_ID_COMPARATOR = new Comparator<PloyerUserListGson.Data.UserService>() {
+    private Comparator<ProviderUserListGson.Data.UserService> USER_ID_COMPARATOR = new Comparator<ProviderUserListGson.Data.UserService>() {
         @Override
-        public int compare(PloyerUserListGson.Data.UserService o1, PloyerUserListGson.Data.UserService o2) {
+        public int compare(ProviderUserListGson.Data.UserService o1, ProviderUserListGson.Data.UserService o2) {
             return o1.getUserId().compareTo(o2.getUserId());
         }
     };
     private PloyerPersonListRecyclerAdapter.OnDataBindListener mOnDataBindListener = new PloyerPersonListRecyclerAdapter.OnDataBindListener() {
         @Override
-        public void onDataBind(PloyerPersonListRecyclerAdapter.ViewHolder holder, final PloyerUserListGson.Data.UserService data) {
+        public void onDataBind(PloyerPersonListRecyclerAdapter.ViewHolder holder, final ProviderUserListGson.Data.UserService data) {
             Glide.with(holder.imgPhoto.getContext()).load(data.getImagePath()).error(R.drawable.ic_ployer_item_placeholder).into(holder.imgPhoto);
             holder.tvTitle.setText(data.getFullName());
             holder.tvDescription.setText(data.getDescription());
@@ -69,7 +69,7 @@ public class PloyerPersonListFragment extends BaseFragment implements SearchView
                                                    public void onClick(View v) {
                                                        Bundle bundle = new Bundle();
                                                        bundle.putParcelable(ProviderProfileActivity.KEY_PLOYEE_USER_SERVICE_DATA, data);
-                                                       bundle.putParcelable(ProviderProfileActivity.KEY_SERVICE_DATA,mServiceData);
+                                                       bundle.putParcelable(ProviderProfileActivity.KEY_SERVICE_DATA, mServiceData);
                                                        IntentUtils.startActivity(v.getContext(), ProviderProfileActivity.class, bundle);
                                                    }
                                                }
@@ -78,7 +78,7 @@ public class PloyerPersonListFragment extends BaseFragment implements SearchView
     };
 
     private GoogleApiClient mGoogleApiClient;
-    private List<PloyerUserListGson.Data.UserService> mDatas = new ArrayList<>();
+    private List<ProviderUserListGson.Data.UserService> mDatas = new ArrayList<>();
     private OnFragmentInteractionListener listener;
 
 
@@ -132,7 +132,7 @@ public class PloyerPersonListFragment extends BaseFragment implements SearchView
         });
     }
 
-    public void bindData(PloyerUserListGson.Data data) {
+    public void bindData(ProviderUserListGson.Data data) {
         if (null != data && null != data.getUserServiceList()) {
             mDatas.clear();
             mDatas.addAll(data.getUserServiceList());
@@ -157,7 +157,7 @@ public class PloyerPersonListFragment extends BaseFragment implements SearchView
 
     @Override
     public boolean onQueryTextChange(String query) {
-        final List<PloyerUserListGson.Data.UserService> filteredModelList = filter(mDatas, query);
+        final List<ProviderUserListGson.Data.UserService> filteredModelList = filter(mDatas, query);
         if (null != mAdapter) {
             mAdapter.edit()
                     .replaceAll(filteredModelList)
@@ -170,11 +170,11 @@ public class PloyerPersonListFragment extends BaseFragment implements SearchView
         return true;
     }
 
-    private static List<PloyerUserListGson.Data.UserService> filter(List<PloyerUserListGson.Data.UserService> models, String query) {
+    private static List<ProviderUserListGson.Data.UserService> filter(List<ProviderUserListGson.Data.UserService> models, String query) {
         final String lowerCaseQuery = query.toLowerCase();
 
-        final List<PloyerUserListGson.Data.UserService> filteredModelList = new ArrayList<>();
-        for (PloyerUserListGson.Data.UserService model : models) {
+        final List<ProviderUserListGson.Data.UserService> filteredModelList = new ArrayList<>();
+        for (ProviderUserListGson.Data.UserService model : models) {
             final String text = model.getFullName().toLowerCase();
             if (text.contains(lowerCaseQuery)) {
                 filteredModelList.add(model);

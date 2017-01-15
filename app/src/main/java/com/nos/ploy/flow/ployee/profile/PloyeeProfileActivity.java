@@ -119,7 +119,6 @@ public class PloyeeProfileActivity extends BaseActivity implements View.OnClickL
         public void onBindViewHolder(final ViewHolder holder, int position) {
             if (RecyclerUtils.isAvailableData(mAllDataTransports, position)) {
                 TransportGsonVm data = mAllDataTransports.get(position);
-//                Glide.with(holder.imgTransport.getContext()).load(data.getDrawable()).into(holder.imgTransport);
                 holder.imgTransport.setImageResource(data.getDrawable());
                 holder.tvTitle.setText(data.getTitle());
 
@@ -237,34 +236,47 @@ public class PloyeeProfileActivity extends BaseActivity implements View.OnClickL
         bindData(mData);
     }
 
-    private void bindData(PostUpdateProfileGson data) {
+    private void bindData(final PostUpdateProfileGson data) {
         if (null != data) {
-            mEditTextAboutMe.setText(data.getAboutMe());
-            mEditTextEducation.setText(data.getEducation());
-            mEditTextInterest.setText(data.getInterest());
-            mEditTextProfileWork.setText(data.getWork());
-            mButtonEmail.setActivated(data.isContactEmail());
-            mButtonPhone.setActivated(data.isContactPhone());
+            runOnUiThread(new Runnable() {
+                              @Override
+                              public void run() {
+                                  mEditTextAboutMe.setText(data.getAboutMe());
+                                  mEditTextEducation.setText(data.getEducation());
+                                  mEditTextInterest.setText(data.getInterest());
+                                  mEditTextProfileWork.setText(data.getWork());
+                                  mButtonEmail.setActivated(data.isContactEmail());
+                                  mButtonPhone.setActivated(data.isContactPhone());
 
 
-            PloyeeProfileGson.Data.Location locationData = mData.getLocation();
-            if (null != locationData) {
-                setCurrentLatLng(new LatLng(locationData.getLat(), locationData.getLng()));
-            } else {
-                getLocationAndSetToAddressView();
-            }
+                                  PloyeeProfileGson.Data.Location locationData = mData.getLocation();
+                                  if (null != locationData) {
+                                      setCurrentLatLng(new LatLng(locationData.getLat(), locationData.getLng()));
+                                  } else {
+                                      getLocationAndSetToAddressView();
+                                  }
+
+                              }
+                          }
+            );
 
 
         }
 
         if (null != mOriginalData) {
-            String languageSupports = "";
-            if (mOriginalData.getLanguage() != null && !mOriginalData.getLanguage().isEmpty()) {
-                for (PloyeeProfileGson.Data.Language language : mOriginalData.getLanguage()) {
-                    languageSupports += language.getSpokenLanguageValue() + " ,";
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    String languageSupports = "";
+                    if (mOriginalData.getLanguage() != null && !mOriginalData.getLanguage().isEmpty()) {
+                        for (PloyeeProfileGson.Data.Language language : mOriginalData.getLanguage()) {
+                            languageSupports += language.getSpokenLanguageValue() + " ,";
+                        }
+                    }
+                    mTextViewLanguageSupport.setText(languageSupports);
                 }
-            }
-            mTextViewLanguageSupport.setText(languageSupports);
+            });
+
         }
 
     }
@@ -524,7 +536,7 @@ public class PloyeeProfileActivity extends BaseActivity implements View.OnClickL
             getLocationAndSetToAddressView();
         } else if (id == mTextViewLanguageSupport.getId()) {
             showLanguageChooser();
-        }else if(id == mImageViewStaticMaps.getId()){
+        } else if (id == mImageViewStaticMaps.getId()) {
             showFragment(LocalizationMapsFragment.newInstance(mCurrentLatLng, new LocalizationMapsFragment.OnChooseLocationFinishListener() {
                 @Override
                 public void onFinishChoosingLocation(LatLng latLng) {
@@ -549,7 +561,7 @@ public class PloyeeProfileActivity extends BaseActivity implements View.OnClickL
 
     private void getLocationAndSetToAddressView() {
         Location location = MyLocationUtils.getLastKnownLocation(this, mGoogleApiClient, true);
-        if(null != location){
+        if (null != location) {
             setCurrentLatLng(new LatLng(location.getLatitude(), location.getLongitude()));
         }
     }

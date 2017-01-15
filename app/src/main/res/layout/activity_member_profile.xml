@@ -140,9 +140,12 @@
                 </FrameLayout>
 
                 <android.support.v7.widget.CardView
+                    android:id="@+id/cardview_member_profile_review"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="bottom|center_horizontal"
+                    android:clickable="true"
+                    android:foreground="?attr/selectableItemBackground"
                     android:minHeight="48dp"
                     app:cardBackgroundColor="@android:color/white"
                     app:cardCornerRadius="0dp"
@@ -155,7 +158,7 @@
                         android:layout_marginLeft="8dp"
                         android:layout_marginRight="8dp">
 
-                        <RatingBar
+                        <android.support.v7.widget.AppCompatRatingBar
                             android:id="@+id/ratingbar_member_profile_rate"
                             style="@style/Widget.AppCompat.RatingBar.Small"
                             android:layout_width="wrap_content"
@@ -165,7 +168,8 @@
                             android:layout_weight="0"
                             android:numStars="5"
                             android:rating="3.2"
-                            android:stepSize="0.1" />
+                            android:stepSize="0.1"
+                            android:theme="@style/RatingBar.Orange" />
 
                         <TextView
                             android:id="@+id/textview_member_profile_rate_title"

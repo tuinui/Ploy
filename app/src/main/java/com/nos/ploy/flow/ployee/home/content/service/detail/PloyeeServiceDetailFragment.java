@@ -26,6 +26,7 @@ import com.nos.ploy.api.ployer.PloyerApi;
 import com.nos.ploy.api.ployer.model.PloyerServiceDetailGson;
 import com.nos.ploy.api.ployer.model.PostSavePloyerServiceDetailGson;
 import com.nos.ploy.base.BaseFragment;
+import com.nos.ploy.cache.SharePreferenceUtils;
 import com.nos.ploy.custom.view.InputFilterMinMax;
 import com.nos.ploy.custom.view.NumberTextWatcher;
 import com.nos.ploy.flow.ployee.home.content.service.detail.contract.PloyeeServiceDetailContract;
@@ -98,7 +99,7 @@ public class PloyeeServiceDetailFragment extends BaseFragment implements PloyeeS
     private String mToolbarTitle;
 
 
-    public static PloyeeServiceDetailFragment newInstance(long userId, long serviceId, String title) {
+    public static PloyeeServiceDetailFragment newInstance(long userId, long serviceId,String currentActiveLanguageCode, String title) {
         Bundle args = new Bundle();
         args.putLong(KEY_USER_ID, userId);
         args.putLong(KEY_SERVICE_ID, serviceId);
@@ -106,7 +107,7 @@ public class PloyeeServiceDetailFragment extends BaseFragment implements PloyeeS
         PloyeeServiceDetailFragment fragment = new PloyeeServiceDetailFragment();
         fragment.setArguments(args);
         PloyerApi service = fragment.getRetrofit().create(PloyerApi.class);
-        PloyeeServiceDetailPresenter.inject(service, userId, "en", serviceId, fragment);
+        PloyeeServiceDetailPresenter.inject(service, userId, currentActiveLanguageCode, serviceId, fragment);
         return fragment;
     }
 
@@ -329,46 +330,35 @@ public class PloyeeServiceDetailFragment extends BaseFragment implements PloyeeS
 
     }
 
-    private void bindDataToView(PloyeeServiceDetailContract.ViewModel data) {
+    private void bindDataToView(final PloyeeServiceDetailContract.ViewModel data) {
         if (null != data) {
-            mEditTextDescription.setText(data.getDescription());
-            mEditTextCertificate.setText(data.getCertificate());
-            mEditTextEquipmentNeeded.setText(data.getEquipmentNeeded());
-//            if (data.getPriceMin() >= 0 && (data.getPriceMax() - 2) > data.getPriceMin()) {
-//
-//                if (data.getPriceMax() > 1000) {
-//                    long priceMax;
-//                    if (data.getPriceMax() >= 9999) {
-//                        priceMax = 9999;
-//                    } else {
-//                        priceMax = data.getPriceMax();
-//                    }
-//
-//                    mRangeBar.setTickEnd(priceMax);
-//                    mRangeBar.setRangePinsByValue(data.getPriceMin(), priceMax);
-//                } else {
-//                    mRangeBar.setTickEnd(1000);
-//                    mRangeBar.setRangePinsByValue(data.getPriceMin(), data.getPriceMax());
-//                }
-//            }
-            mEditTextPriceFrom.setText(String.valueOf(data.getPriceMin()));
-            mEditTextPriceTo.setText(String.valueOf(data.getPriceMax()));
-            if (null != data.getData() && null != data.getData().getSubServices() && !data.getData().getSubServices().isEmpty()) {
-                mAdapter.replaceData(data.getData().getSubServices());
-                mTextViewSubServicesHeader.setVisibility(View.VISIBLE);
-                mRecyclerSubService.setVisibility(View.VISIBLE);
-            } else {
-                mTextViewSubServicesHeader.setVisibility(View.GONE);
-                mRecyclerSubService.setVisibility(View.GONE);
-            }
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    mEditTextDescription.setText(data.getDescription());
+                    mEditTextCertificate.setText(data.getCertificate());
+                    mEditTextEquipmentNeeded.setText(data.getEquipmentNeeded());
+                    mEditTextPriceFrom.setText(String.valueOf(data.getPriceMin()));
+                    mEditTextPriceTo.setText(String.valueOf(data.getPriceMax()));
+                    if (null != data.getData() && null != data.getData().getSubServices() && !data.getData().getSubServices().isEmpty()) {
+                        mAdapter.replaceData(data.getData().getSubServices());
+                        mTextViewSubServicesHeader.setVisibility(View.VISIBLE);
+                        mRecyclerSubService.setVisibility(View.VISIBLE);
+                    } else {
+                        mTextViewSubServicesHeader.setVisibility(View.GONE);
+                        mRecyclerSubService.setVisibility(View.GONE);
+                    }
 
-            if (mServiceId == -1) {
-                mEditTextOthers.setVisibility(View.VISIBLE);
-                mEditTextOthers.setText(data.getServiceOthersName());
+                    if (mServiceId == -1) {
+                        mEditTextOthers.setVisibility(View.VISIBLE);
+                        mEditTextOthers.setText(data.getServiceOthersName());
 
-            } else {
-                mEditTextOthers.setVisibility(View.GONE);
-            }
+                    } else {
+                        mEditTextOthers.setVisibility(View.GONE);
+                    }
+                }
+            });
+
         }
     }
 

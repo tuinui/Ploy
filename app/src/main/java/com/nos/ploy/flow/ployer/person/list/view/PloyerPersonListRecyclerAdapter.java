@@ -10,7 +10,7 @@ import android.widget.TextView;
 
 import com.github.wrdlbrnft.sortedlistadapter.SortedListAdapter;
 import com.nos.ploy.R;
-import com.nos.ploy.api.ployer.model.PloyerUserListGson;
+import com.nos.ploy.api.ployer.model.ProviderUserListGson;
 
 import java.util.Comparator;
 
@@ -21,11 +21,11 @@ import butterknife.ButterKnife;
  * Created by User on 10/11/2559.
  */
 
-public class PloyerPersonListRecyclerAdapter extends SortedListAdapter<PloyerUserListGson.Data.UserService> {
+public class PloyerPersonListRecyclerAdapter extends SortedListAdapter<ProviderUserListGson.Data.UserService> {
     private OnDataBindListener mListener;
 
-    public PloyerPersonListRecyclerAdapter(Context context, Comparator<PloyerUserListGson.Data.UserService> comparator, OnDataBindListener listener) {
-        super(context, PloyerUserListGson.Data.UserService.class, comparator);
+    public PloyerPersonListRecyclerAdapter(Context context, Comparator<ProviderUserListGson.Data.UserService> comparator, OnDataBindListener listener) {
+        super(context, ProviderUserListGson.Data.UserService.class, comparator);
         mListener = listener;
     }
 
@@ -34,21 +34,21 @@ public class PloyerPersonListRecyclerAdapter extends SortedListAdapter<PloyerUse
 //        return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.view_ployee_list_item, parent, false));
 //    }
     @Override
-    protected SortedListAdapter.ViewHolder<? extends PloyerUserListGson.Data.UserService> onCreateViewHolder(LayoutInflater inflater, ViewGroup parent, int viewType) {
+    protected SortedListAdapter.ViewHolder<? extends ProviderUserListGson.Data.UserService> onCreateViewHolder(LayoutInflater inflater, ViewGroup parent, int viewType) {
         return new PloyerPersonListRecyclerAdapter.ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.view_ployer_list_item, parent, false));
     }
 
     @Override
-    protected boolean areItemContentsTheSame(PloyerUserListGson.Data.UserService data, PloyerUserListGson.Data.UserService t1) {
+    protected boolean areItemContentsTheSame(ProviderUserListGson.Data.UserService data, ProviderUserListGson.Data.UserService t1) {
         return data.getUserId() == t1.getUserId();
     }
 
     @Override
-    protected boolean areItemsTheSame(PloyerUserListGson.Data.UserService data, PloyerUserListGson.Data.UserService t1) {
+    protected boolean areItemsTheSame(ProviderUserListGson.Data.UserService data, ProviderUserListGson.Data.UserService t1) {
         return data.equals(t1);
     }
 
-    public class ViewHolder extends SortedListAdapter.ViewHolder<PloyerUserListGson.Data.UserService> {
+    public class ViewHolder extends SortedListAdapter.ViewHolder<ProviderUserListGson.Data.UserService> {
         @BindView(R.id.textview_ployer_list_item_price)
         public TextView tvPrice;
         @BindView(R.id.imageview_ployer_list_item_profile_photo)
@@ -73,7 +73,7 @@ public class PloyerPersonListRecyclerAdapter extends SortedListAdapter<PloyerUse
         }
 
         @Override
-        protected void performBind(PloyerUserListGson.Data.UserService data) {
+        protected void performBind(ProviderUserListGson.Data.UserService data) {
             if(null != mListener){
                 mListener.onDataBind(this,data);
             }
@@ -84,7 +84,7 @@ public class PloyerPersonListRecyclerAdapter extends SortedListAdapter<PloyerUse
 
 
     public static interface OnDataBindListener {
-        public void onDataBind(ViewHolder holder,PloyerUserListGson.Data.UserService data);
+        public void onDataBind(ViewHolder holder,ProviderUserListGson.Data.UserService data);
     }
 
 }

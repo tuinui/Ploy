@@ -32,7 +32,6 @@
     </style>
 
 
-
     <style name="DialogAnimation" parent="AppTheme">
         <item name="android:windowEnterAnimation">@anim/slide_up</item>
         <item name="android:windowExitAnimation">@anim/slide_down</item>
@@ -59,4 +58,13 @@
         <!-- Error message appearance here -->
     </style>
 
+    <style name="RatingBar.Orange" parent="Theme.AppCompat">
+        <item name="colorControlNormal">@color/gray_edittext_header</item>
+        <item name="colorControlActivated">@color/orange_stars</item>
+    </style>
+
+    <style name="RatingBar.White" parent="Theme.AppCompat">
+        <item name="colorControlNormal">@color/gray_edittext_header</item>
+        <item name="colorControlActivated">@android:color/white</item>
+    </style>
 </resources>

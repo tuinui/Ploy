@@ -97,11 +97,16 @@ public class SettingsFragment extends BaseFragment implements View.OnClickListen
 //    }
 
     private void bindData(final String languageCode){
-        SharePreferenceUtils.setCurrentActiveAppLanguageCode(mTextViewLanguageValue.getContext(),languageCode);
-        AppLanguageDataLoader.getAppLanguageList(mTextViewLanguageValue.getContext(), false, new Action1<ArrayList<AppLanguageGson.Data>>() {
+        runOnUiThread(new Runnable() {
             @Override
-            public void call(ArrayList<AppLanguageGson.Data> datas) {
-                mTextViewLanguageValue.setText(AppLanguageDataLoader.languageCodeToLanguageName(datas,languageCode));
+            public void run() {
+                SharePreferenceUtils.setCurrentActiveAppLanguageCode(mTextViewLanguageValue.getContext(),languageCode);
+                AppLanguageDataLoader.getAppLanguageList(mTextViewLanguageValue.getContext(), false, new Action1<ArrayList<AppLanguageGson.Data>>() {
+                    @Override
+                    public void call(ArrayList<AppLanguageGson.Data> datas) {
+                        mTextViewLanguageValue.setText(AppLanguageDataLoader.languageCodeToLanguageName(datas,languageCode));
+                    }
+                });
             }
         });
     }

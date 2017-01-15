@@ -2,6 +2,7 @@ package com.nos.ploy.api.authentication.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.text.TextUtils;
 
 import com.google.gson.annotations.SerializedName;
 import com.nos.ploy.api.base.response.BaseResponse;
@@ -124,8 +125,12 @@ public class AccountGson extends BaseResponse<AccountGson.Data> {
             this.lastName = lastName;
         }
 
-        public String getName() {
-            return firstName + " " + lastName;
+        public String getFullName() {
+            String lastNameToDisplay = "";
+            if(!TextUtils.isEmpty(getLastName())){
+                lastNameToDisplay = getLastName().substring(0,1) +".";
+            }
+            return getFirstName() + " " + lastNameToDisplay;
         }
 
         public String getPassword() {

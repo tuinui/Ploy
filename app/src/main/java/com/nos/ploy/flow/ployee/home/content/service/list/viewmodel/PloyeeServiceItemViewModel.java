@@ -8,7 +8,7 @@ import com.nos.ploy.api.ployee.model.PloyeeServiceListGson;
  */
 
 public class PloyeeServiceItemViewModel implements SortedListAdapter.ViewModel {
-    private long mId;
+    private Long mId;
     private String mText;
     private String mImageUrl;
 
@@ -21,8 +21,8 @@ public class PloyeeServiceItemViewModel implements SortedListAdapter.ViewModel {
 
     }
 
-    public long getId() {
-        return mId;
+    public Long getId() {
+        return null == mId ? 0 : mId;
     }
 
     public String getText() {

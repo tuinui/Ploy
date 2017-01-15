@@ -1,4 +1,4 @@
-package com.nos.ploy.flow.ployer.member;
+package com.nos.ploy.flow.ployer.provider;
 
 import android.os.Bundle;
 import android.support.annotation.DrawableRes;
@@ -7,6 +7,7 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -32,7 +33,7 @@ import com.nos.ploy.api.ployee.model.PloyeeAvailiabilityGson;
 import com.nos.ploy.api.ployer.PloyerApi;
 import com.nos.ploy.api.ployer.model.PloyerServiceDetailGson;
 import com.nos.ploy.api.ployer.model.PloyerServicesGson;
-import com.nos.ploy.api.ployer.model.PloyerUserListGson;
+import com.nos.ploy.api.ployer.model.ProviderUserListGson;
 import com.nos.ploy.base.BaseActivity;
 import com.nos.ploy.cache.SharePreferenceUtils;
 import com.nos.ploy.flow.generic.maps.LocalizationMapsFragment;
@@ -42,6 +43,7 @@ import com.nos.ploy.flow.ployee.home.content.availability.contract.WeekAvailabil
 import com.nos.ploy.flow.ployee.home.content.availability.view.AvailabilityRecyclerAdapter;
 import com.nos.ploy.flow.ployee.profile.ImageSliderPagerAdapter;
 import com.nos.ploy.flow.ployee.profile.TransportRecyclerAdapter;
+import com.nos.ploy.flow.ployer.provider.review.ProviderReviewFragment;
 import com.nos.ploy.utils.GoogleApiAvailabilityUtils;
 import com.nos.ploy.utils.IntentUtils;
 import com.nos.ploy.utils.MyLocationUtils;
@@ -59,7 +61,7 @@ public class ProviderProfileActivity extends BaseActivity implements GoogleApiCl
 
     public static final String KEY_PLOYEE_USER_SERVICE_DATA = "PLOYEE_USER_SERVICE_DATA";
     public static final String KEY_SERVICE_DATA = "SERVICE_DATA";
-    private PloyerUserListGson.Data.UserService mUserServiceData;
+    private ProviderUserListGson.Data.UserService mUserServiceData;
     @BindView(R.id.viewpager_profile_image_slider)
     ViewPager mViewPagerSlider;
     @BindView(R.id.tablayout_profile_image_slider_indicator)
@@ -100,6 +102,8 @@ public class ProviderProfileActivity extends BaseActivity implements GoogleApiCl
     Toolbar mToolbar;
     @BindView(R.id.textview_main_appbar_title)
     TextView mTextViewTitle;
+    @BindView(R.id.cardview_member_profile_review)
+    CardView mCardViewReview;
     private PloyerServicesGson.Data mServiceData;
 
     @OnClick(R.id.view_activity_member_profile_availability_block)
@@ -254,12 +258,13 @@ public class ProviderProfileActivity extends BaseActivity implements GoogleApiCl
         mButtonEmail.setOnClickListener(this);
         mButtonPhone.setOnClickListener(this);
         mImageViewStaticMaps.setOnClickListener(this);
+        mCardViewReview.setOnClickListener(this);
     }
 
     //userId=1&serviceId=1&lgCode=en
     private void refreshData() {
         showRefreshing();
-        RetrofitCallUtils.with(mApi.getMemberProfileGson(mUserServiceData.getUserId(), mServiceData.getId(), SharePreferenceUtils.getCurrentActiveAppLanguageCode(this)), mCallbackRefreshData).enqueue(this);
+        RetrofitCallUtils.with(mApi.getProviderProfileGson(mUserServiceData.getUserId(), mServiceData.getId(), SharePreferenceUtils.getCurrentActiveAppLanguageCode(this)), mCallbackRefreshData).enqueue(this);
     }
 
 
@@ -278,30 +283,36 @@ public class ProviderProfileActivity extends BaseActivity implements GoogleApiCl
     }
 
 
-    private void bindData(MemberProfileGson.Data data) {
+    private void bindData(final MemberProfileGson.Data data) {
         if (null == data) {
             return;
         }
         mData = data;
-        if (null != data.getUserProfile()) {
-            bindUserProfile(data.getUserProfile());
-        }
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if (null != data.getUserProfile()) {
+                    bindUserProfile(data.getUserProfile());
+                }
 
-        if (null != data.getAvailability()) {
-            bindAvailability(data.getAvailability());
-        }
+                if (null != data.getAvailability()) {
+                    bindAvailability(data.getAvailability());
+                }
 
-        if (null != data.getImages()) {
-            bindProfileImages(data.getImages());
-        }
+                if (null != data.getImages()) {
+                    bindProfileImages(data.getImages());
+                }
 
-        if (null != data.getServiceDetails()) {
-            bindServices(data.getServiceDetails());
-        }
+                if (null != data.getServiceDetails()) {
+                    bindServices(data.getServiceDetails());
+                }
+            }
+        });
     }
 
     private void bindUserProfile(PloyeeProfileGson.Data data) {
         if (null != data) {
+
             mTransportDatas.clear();
             mTransportDatas.addAll(toTransportVm(data.getTransport()));
             mTransportRecyclerAdapter.notifyDataSetChanged();
@@ -415,6 +426,10 @@ public class ProviderProfileActivity extends BaseActivity implements GoogleApiCl
             }
         } else if (id == mImageViewStaticMaps.getId()) {
             openLocalizationMaps();
+        } else if (id == mCardViewReview.getId()) {
+            if(null != mData && null != mData.getUserProfile() && null != mData.getUserProfile().getUserId()){
+                showFragment(ProviderReviewFragment.newInstance(mData.getUserProfile().getUserId()));
+            }
         }
     }
 

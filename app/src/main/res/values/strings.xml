@@ -89,5 +89,17 @@
     <string name="Switch_to_Ployer">Switch to Ployer</string>
     <string name="Email">Email</string>
     <string name="Localization">Localization</string>
+    <string name="Overall">Overall</string>
+    <string name="Competence">Competence</string>
+    <string name="Punctuality">Punctuality</string>
+    <string name="Politeness">Politeness</string>
+    <string name="Professionalism">Professionalism</string>
+    <string name="Leave_a_review">Leave a review</string>
+    <string name="Review">Review</string>
+    <string name="Reviews">Reviews</string>
+    <string name="Tell_others_about_this_person">Tell others about this person</string>
+    <string name="Filter">Filter</string>
+    <string name="Clear">Clear</string>
+    <string name="Rating">Rating</string>
 
 </resources>

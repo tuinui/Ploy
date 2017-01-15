@@ -27,10 +27,10 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.nos.ploy.R;
 import com.nos.ploy.api.ployer.PloyerApi;
 import com.nos.ploy.api.ployer.model.PloyerServicesGson;
-import com.nos.ploy.api.ployer.model.PloyerUserListGson;
+import com.nos.ploy.api.ployer.model.ProviderUserListGson;
 import com.nos.ploy.base.BaseFragment;
-import com.nos.ploy.flow.ployer.member.ProviderProfileActivity;
 import com.nos.ploy.flow.ployer.person.maps.viewmodel.PloyerPersonMapViewModel;
+import com.nos.ploy.flow.ployer.provider.ProviderProfileActivity;
 import com.nos.ploy.utils.DrawableUtils;
 import com.nos.ploy.utils.FragmentTransactionUtils;
 import com.nos.ploy.utils.IntentUtils;
@@ -79,7 +79,7 @@ public class PloyerPersonMapFragment extends BaseFragment implements OnMapReadyC
     private PloyerApi mApi;
     private boolean isRequesting;
     private GoogleApiClient mGoogleApiClient;
-    private PloyerUserListGson.Data.UserService mCurrentSelectedData;
+    private ProviderUserListGson.Data.UserService mCurrentSelectedData;
 
     public static PloyerPersonMapFragment newInstance(PloyerServicesGson.Data data, GoogleApiClient googleApiClient) {
 
@@ -144,13 +144,13 @@ public class PloyerPersonMapFragment extends BaseFragment implements OnMapReadyC
     }
 
 
-    public void bindData(final List<PloyerUserListGson.Data.UserService> datas) {
+    public void bindData(final List<ProviderUserListGson.Data.UserService> datas) {
         runOnUiThread(new Runnable() {
                           @Override
                           public void run() {
                               mDatas.clear();
                               if (null != datas && !datas.isEmpty()) {
-                                  for (PloyerUserListGson.Data.UserService data : datas) {
+                                  for (ProviderUserListGson.Data.UserService data : datas) {
                                       mDatas.add(new PloyerPersonMapViewModel(data, intoMarker(data)));
                                   }
                               }
@@ -176,7 +176,7 @@ public class PloyerPersonMapFragment extends BaseFragment implements OnMapReadyC
 
     }
 
-    private MarkerOptions intoMarker(final PloyerUserListGson.Data.UserService data) {
+    private MarkerOptions intoMarker(final ProviderUserListGson.Data.UserService data) {
         if (null == data) {
             return null;
         }
@@ -189,7 +189,7 @@ public class PloyerPersonMapFragment extends BaseFragment implements OnMapReadyC
         return marker;
     }
 
-    private void onClickMarker(PloyerUserListGson.Data.UserService data) {
+    private void onClickMarker(ProviderUserListGson.Data.UserService data) {
         if (null != data) {
             mCurrentSelectedData = data;
             Glide.with(mImageViewProfilePhoto.getContext()).load(data.getImagePath()).error(R.drawable.ic_ployer_item_placeholder).into(mImageViewProfilePhoto);
@@ -210,8 +210,8 @@ public class PloyerPersonMapFragment extends BaseFragment implements OnMapReadyC
     @Override
     public boolean onMarkerClick(Marker marker) {
         if (null != marker) {
-            if (null != marker.getTag() && marker.getTag() instanceof PloyerUserListGson.Data.UserService) {
-                PloyerUserListGson.Data.UserService data = (PloyerUserListGson.Data.UserService) marker.getTag();
+            if (null != marker.getTag() && marker.getTag() instanceof ProviderUserListGson.Data.UserService) {
+                ProviderUserListGson.Data.UserService data = (ProviderUserListGson.Data.UserService) marker.getTag();
                 onClickMarker(data);
             }
         }
@@ -239,10 +239,9 @@ public class PloyerPersonMapFragment extends BaseFragment implements OnMapReadyC
             if (null != mCurrentSelectedData) {
                 Bundle bundle = new Bundle();
                 bundle.putParcelable(ProviderProfileActivity.KEY_SERVICE_DATA, mServiceData);
-                bundle.putParcelable(ProviderProfileActivity.KEY_PLOYEE_USER_SERVICE_DATA, mServiceData);
+                bundle.putParcelable(ProviderProfileActivity.KEY_PLOYEE_USER_SERVICE_DATA, mCurrentSelectedData);
                 IntentUtils.startActivity(getActivity(), ProviderProfileActivity.class, bundle);
             }
-
         }
     }
 

@@ -1,9 +1,7 @@
 package com.nos.ploy.flow.ployer.person.maps.viewmodel;
 
-import android.view.View;
-
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.nos.ploy.api.ployer.model.PloyerUserListGson;
+import com.nos.ploy.api.ployer.model.ProviderUserListGson;
 
 /**
  * Created by Saran on 8/1/2560.
@@ -11,15 +9,15 @@ import com.nos.ploy.api.ployer.model.PloyerUserListGson;
 
 public class PloyerPersonMapViewModel {
 
-    private PloyerUserListGson.Data.UserService data;
+    private ProviderUserListGson.Data.UserService data;
     private MarkerOptions view;
 
-    public PloyerPersonMapViewModel(PloyerUserListGson.Data.UserService data, MarkerOptions view) {
+    public PloyerPersonMapViewModel(ProviderUserListGson.Data.UserService data, MarkerOptions view) {
         this.data = data;
         this.view = view;
     }
 
-    public PloyerUserListGson.Data.UserService getData() {
+    public ProviderUserListGson.Data.UserService getData() {
         return data;
     }
 

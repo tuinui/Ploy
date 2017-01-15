@@ -373,4 +373,16 @@ public abstract class BaseFragment extends AppCompatDialogFragment {
             return 0;
         }
     }
+
+    protected long extractLong(String s) {
+        if (!TextUtils.isEmpty(s)) {
+            try {
+                return Long.parseLong(s);
+            } catch (NumberFormatException e) {
+                return 0;
+            }
+        } else {
+            return 0;
+        }
+    }
 }

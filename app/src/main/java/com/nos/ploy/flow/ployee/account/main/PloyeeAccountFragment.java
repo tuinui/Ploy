@@ -196,16 +196,22 @@ public class PloyeeAccountFragment extends BaseFragment implements View.OnClickL
     private void bindData(AccountGson.Data data) {
         mData = data;
         if (null != mData) {
-            mEditTextFirstname.setText(mData.getFirstName());
-            mEditTextLastName.setText(mData.getLastName());
-            mEditTextPhone.setText(mData.getPhone());
-            mEditTextEmail.setText(mData.getEmail());
-            mEditTextBirthday.setText(mData.getBirthDay());
-            if (TextUtils.isEmpty(mData.getFbUserId())) {
-                mLoginButtonFacebook.setVisibility(View.GONE);
-            } else {
-                mLoginButtonFacebook.setVisibility(View.VISIBLE);
-            }
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    mEditTextFirstname.setText(mData.getFirstName());
+                    mEditTextLastName.setText(mData.getLastName());
+                    mEditTextPhone.setText(mData.getPhone());
+                    mEditTextEmail.setText(mData.getEmail());
+                    mEditTextBirthday.setText(mData.getBirthDay());
+                    if (TextUtils.isEmpty(mData.getFbUserId())) {
+                        mLoginButtonFacebook.setVisibility(View.GONE);
+                    } else {
+                        mLoginButtonFacebook.setVisibility(View.VISIBLE);
+                    }
+                }
+            });
+
         }
     }
 

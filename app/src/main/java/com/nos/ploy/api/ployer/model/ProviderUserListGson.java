@@ -2,6 +2,7 @@ package com.nos.ploy.api.ployer.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.text.TextUtils;
 
 import com.github.wrdlbrnft.sortedlistadapter.SortedListAdapter;
 import com.google.gson.annotations.SerializedName;
@@ -16,7 +17,7 @@ import java.util.List;
  * Created by Saran on 6/1/2560.
  */
 
-public class PloyerUserListGson extends BaseResponse<PloyerUserListGson.Data> {
+public class ProviderUserListGson extends BaseResponse<ProviderUserListGson.Data> {
 
 
     public static class Data implements SortedListAdapter.ViewModel {
@@ -126,8 +127,12 @@ public class PloyerUserListGson extends BaseResponse<PloyerUserListGson.Data> {
                 return StringUtils.capitalize(firstName);
             }
 
-            public String getFullName(){
-                return firstName +" "+lastName;
+            public String getFullName() {
+                String lastNameToDisplay = "";
+                if (!TextUtils.isEmpty(getLastName())) {
+                    lastNameToDisplay = getLastName().substring(0, 1) + ".";
+                }
+                return getFirstName() + " " + lastNameToDisplay;
             }
 
             public String getImagePath() {
@@ -139,7 +144,7 @@ public class PloyerUserListGson extends BaseResponse<PloyerUserListGson.Data> {
             }
 
             public String getLastName() {
-                return lastName;
+                return StringUtils.capitalize(lastName);
             }
 
             public Double getLocationLat() {

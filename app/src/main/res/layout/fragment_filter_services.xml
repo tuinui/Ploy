@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <include layout="@layout/view_main_appbar"/>
+    <android.support.v4.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <Button
+                android:id="@+id/button_filter_services_no_pref"
+                style="@style/PloyButtonTransparentGrayBorder"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="16dp"
+                android:text="@string/No_preferences"
+                android:textAllCaps="false" />
+
+            <include layout="@layout/view_vertical_divider" />
+
+            <com.nos.ploy.custom.view.ToggleableRadioButton
+                android:id="@+id/radiobutton_filter_services_certificate"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                android:paddingLeft="8dp"
+                android:text="@string/Certificate"
+                android:textColor="@color/colorPrimary"
+                android:textStyle="bold" />
+
+            <include layout="@layout/view_vertical_divider" />
+
+            <com.nos.ploy.custom.view.ToggleableRadioButton
+                android:id="@+id/radiobutton_filter_services_equipment_needed"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                android:paddingLeft="8dp"
+                android:text="@string/Equipment_needed"
+                android:textColor="@color/colorPrimary"
+                android:textStyle="bold" />
+
+            <include layout="@layout/view_vertical_divider" />
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recyclerview_filter_services"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+        </LinearLayout>
+    </android.support.v4.widget.NestedScrollView>
+
+</LinearLayout>

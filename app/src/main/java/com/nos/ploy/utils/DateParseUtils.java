@@ -72,7 +72,7 @@ public class DateParseUtils {
 
 
     public static String parseDateString(String dateString, String desirePattern) {
-        return parseDateString(dateString, ISO8601_DATE_TIME_PATTERN_FROM_API, desirePattern);
+        return parseDateString(dateString, DATE_PATTERN_FROM_API, desirePattern);
     }
 
 

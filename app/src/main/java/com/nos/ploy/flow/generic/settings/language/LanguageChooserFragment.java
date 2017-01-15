@@ -152,7 +152,13 @@ public class LanguageChooserFragment extends BaseFragment {
 
     private void bindData() {
         if (!mDatas.isEmpty()) {
-            mAdapter.notifyDataSetChanged();
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    mAdapter.notifyDataSetChanged();
+                }
+            });
+
         }
     }
 

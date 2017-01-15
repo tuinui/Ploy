@@ -1,10 +1,14 @@
 package com.nos.ploy.api.ployee.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.gson.annotations.SerializedName;
 import com.nos.ploy.api.base.response.BaseResponse;
 
+import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Collections;
 
 /**
  * Created by Saran on 21/12/2559.
@@ -12,21 +16,22 @@ import java.util.List;
 
 public class PloyeeAvailiabilityGson extends BaseResponse<PloyeeAvailiabilityGson.Data> {
 
-    public class Data {
+    public static class Data {
         @SerializedName("userId")
         private long userId;
         @SerializedName("holidayMode")
         private boolean holidayMode;
         @SerializedName("avaiItems")
-        private List<AvailabilityItem> availabilityItems = new ArrayList<>();
+        private ArrayList<AvailabilityItem> availabilityItems = new ArrayList<>();
 
         public Data() {
         }
 
-        private Data(long userId, boolean holidayMode, List<AvailabilityItem> availabilityItems) {
+        private Data(long userId, boolean holidayMode, ArrayList<AvailabilityItem> availabilityItems) {
             this.userId = userId;
             this.holidayMode = holidayMode;
-            this.availabilityItems = availabilityItems;
+            this.availabilityItems.clear();
+            this.availabilityItems.addAll(availabilityItems);
         }
 
         public void setUserId(long userId) {
@@ -41,11 +46,12 @@ public class PloyeeAvailiabilityGson extends BaseResponse<PloyeeAvailiabilityGso
             this.holidayMode = holidayMode;
         }
 
-        public List<AvailabilityItem> getAvailabilityItems() {
+        public ArrayList<AvailabilityItem> getAvailabilityItems() {
             return availabilityItems;
+
         }
 
-        public void setAvailabilityItems(List<AvailabilityItem> availabilityItems) {
+        public void setAvailabilityItems(ArrayList<AvailabilityItem> availabilityItems) {
             this.availabilityItems = availabilityItems;
         }
 
@@ -53,7 +59,7 @@ public class PloyeeAvailiabilityGson extends BaseResponse<PloyeeAvailiabilityGso
             return new Data(userId, holidayMode, availabilityItems);
         }
 
-        public class AvailabilityItem {
+        public static class AvailabilityItem implements Parcelable,Serializable {
             @SerializedName("durationId")
             private long durationId;
             @SerializedName("durationValue")
@@ -74,6 +80,19 @@ public class PloyeeAvailiabilityGson extends BaseResponse<PloyeeAvailiabilityGso
             private boolean sat;
 
             public AvailabilityItem() {
+            }
+
+            public AvailabilityItem(AvailabilityItem clone) {
+                setFri(clone.isFri());
+                setMon(clone.isMon());
+                setTues(clone.isTues());
+                setThurs(clone.isThurs());
+                setWed(clone.isWed());
+                setFri(clone.isFri());
+                setSat(clone.isSat());
+                setSun(clone.isSun());
+                setDurationId(clone.getDurationId());
+                setDurationValue(clone.getDurationValue());
             }
 
 
@@ -148,6 +167,48 @@ public class PloyeeAvailiabilityGson extends BaseResponse<PloyeeAvailiabilityGso
             public void setSat(boolean sat) {
                 this.sat = sat;
             }
+
+            @Override
+            public int describeContents() {
+                return 0;
+            }
+
+            @Override
+            public void writeToParcel(Parcel dest, int flags) {
+                dest.writeLong(this.durationId);
+                dest.writeString(this.durationValue);
+                dest.writeByte(this.sun ? (byte) 1 : (byte) 0);
+                dest.writeByte(this.mon ? (byte) 1 : (byte) 0);
+                dest.writeByte(this.tues ? (byte) 1 : (byte) 0);
+                dest.writeByte(this.wed ? (byte) 1 : (byte) 0);
+                dest.writeByte(this.thurs ? (byte) 1 : (byte) 0);
+                dest.writeByte(this.fri ? (byte) 1 : (byte) 0);
+                dest.writeByte(this.sat ? (byte) 1 : (byte) 0);
+            }
+
+            protected AvailabilityItem(Parcel in) {
+                this.durationId = in.readLong();
+                this.durationValue = in.readString();
+                this.sun = in.readByte() != 0;
+                this.mon = in.readByte() != 0;
+                this.tues = in.readByte() != 0;
+                this.wed = in.readByte() != 0;
+                this.thurs = in.readByte() != 0;
+                this.fri = in.readByte() != 0;
+                this.sat = in.readByte() != 0;
+            }
+
+            public static final Parcelable.Creator<AvailabilityItem> CREATOR = new Parcelable.Creator<AvailabilityItem>() {
+                @Override
+                public AvailabilityItem createFromParcel(Parcel source) {
+                    return new AvailabilityItem(source);
+                }
+
+                @Override
+                public AvailabilityItem[] newArray(int size) {
+                    return new AvailabilityItem[size];
+                }
+            };
         }
 
 
