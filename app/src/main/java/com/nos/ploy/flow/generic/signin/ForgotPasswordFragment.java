@@ -16,7 +16,8 @@ import com.nos.ploy.R;
 import com.nos.ploy.api.authentication.AuthenticationApi;
 import com.nos.ploy.api.authentication.model.PostForgotPasswordGson;
 import com.nos.ploy.api.base.RetrofitCallUtils;
-import com.nos.ploy.api.base.response.ResponseMessage;
+import com.nos.ploy.api.base.response.BaseResponse;
+import com.nos.ploy.api.masterdata.model.LanguageAppLabelGson;
 import com.nos.ploy.base.BaseFragment;
 import com.rengwuxian.materialedittext.MaterialEditText;
 
@@ -51,16 +52,16 @@ public class ForgotPasswordFragment extends BaseFragment implements View.OnClick
     @BindString(R.string.Password_does_not_match_the_confirm_password)
     String LPassword_does_not_match_the_confirm_password;
 
-    private RetrofitCallUtils.RetrofitCallback<Object> mCallbackForgotPassword = new RetrofitCallUtils.RetrofitCallback<Object>() {
+    private RetrofitCallUtils.RetrofitCallback<BaseResponse> mCallbackForgotPassword = new RetrofitCallUtils.RetrofitCallback<BaseResponse>() {
         @Override
-        public void onDataSuccess(Object data) {
+        public void onDataSuccess(BaseResponse data) {
             dismissLoading();
             showToast("Success , Please check email");
             dismiss();
         }
 
         @Override
-        public void onDataFailure(ResponseMessage failCause) {
+        public void onDataFailure(String failCause) {
             dismissLoading();
 
         }
@@ -81,6 +82,19 @@ public class ForgotPasswordFragment extends BaseFragment implements View.OnClick
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mApi = getRetrofit().create(AuthenticationApi.class);
+    }
+
+    @Override
+    protected void bindLanguage(LanguageAppLabelGson.Data data) {
+        super.bindLanguage(data);
+        mEditTextEmail.setHint(data.passResetScreenEmail);
+        mEditTextEmail.setFloatingLabelText(data.passResetScreenEmail);
+        mTextViewTitle.setText(data.passResetScreenHeader);
+        mTextViewDescription.setText(data.passResetScreenDescript);
+        mEditTextPassword.setHint(data.passResetScreenNewpass);
+        mEditTextPassword.setFloatingLabelText(data.passResetScreenNewpass);
+        mEditTextRePassword.setHint(data.passResetScreenRepass);
+        mEditTextRePassword.setFloatingLabelText(data.passResetScreenNewpass);
     }
 
     @Nullable

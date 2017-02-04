@@ -13,18 +13,18 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.nos.ploy.R;
-import com.nos.ploy.api.account.model.ProfileImageGson;
-import com.nos.ploy.api.authentication.model.AccountGson;
+import com.nos.ploy.api.base.RetrofitCallUtils;
+import com.nos.ploy.api.masterdata.model.LanguageAppLabelGson;
 import com.nos.ploy.api.ployer.PloyerApi;
+import com.nos.ploy.api.ployer.model.ProviderUserListGson;
 import com.nos.ploy.api.ployer.model.ReviewGson;
-import com.nos.ploy.api.utils.loader.AccountInfoLoader;
+import com.nos.ploy.api.ployer.model.SaveReviewResponseGson;
 import com.nos.ploy.base.BaseFragment;
-
-import java.util.List;
+import com.nos.ploy.cache.UserTokenManager;
+import com.rengwuxian.materialedittext.MaterialEditText;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import rx.functions.Action1;
 
 /**
  * Created by Saran on 13/1/2560.
@@ -47,6 +47,19 @@ public class LeaveReviewFragment extends BaseFragment implements View.OnClickLis
     RatingBar mRatingBarProfessional;
     @BindView(R.id.ratingbar_ployee_leave_review_punctuality)
     RatingBar mRatingBarPunctuality;
+    @BindView(R.id.edittext_ployee_leave_a_review)
+    MaterialEditText mEditTextReview;
+    @BindView(R.id.textview_ployee_leave_review_competence_title)
+    TextView mTextViewCompetence;
+    @BindView(R.id.textview_ployee_leave_review_politeness_title)
+    TextView mTextViewPoliteness;
+    @BindView(R.id.textview_ployee_leave_review_communication_title)
+    TextView mTextViewCommunication;
+    @BindView(R.id.textview_ployee_leave_review_professionalism_title)
+    TextView mTextViewProfessionalism;
+    @BindView(R.id.textview_ployee_leave_review_punctuality_title)
+    TextView mTextViewPunctuality;
+
     @BindView(R.id.toolbar_main)
     Toolbar mToolbarMain;
     @BindView(R.id.button_ployee_leave_a_review_post)
@@ -54,19 +67,23 @@ public class LeaveReviewFragment extends BaseFragment implements View.OnClickLis
     @BindView(R.id.textview_main_appbar_title)
     TextView mTextViewTitle;
 
-    private static final String KEY_REVIEWER_GSON = "REVIEWER_GSON";
+    private static final String KEY_USER_SERVICE_DATA = "REVIEWER_GSON";
     private static final String KEY_PROVIDER_GSON = "PROVIDER_GSON";
-    private AccountGson.Data mReviewerData;
-    private ReviewGson.Data.ReviewAverage mProviderData;
+    private static final String KEY_USER_ID_TO_REVIEW = "USER_ID_TO_REVIEW";
     private PloyerApi mApi;
+    private Long mReviewerUserId;
+    private long mUserIdToReview;
+    private ProviderUserListGson.Data.UserService mUserServiceData;
+    private OnReviewFinishListener listener;
 
-    public static LeaveReviewFragment newInstance(AccountGson.Data reviewerData, ReviewGson.Data.ReviewAverage providerData) {
+    public static LeaveReviewFragment newInstance(long userIdToReview, ProviderUserListGson.Data.UserService userData, OnReviewFinishListener listener) {
 
         Bundle args = new Bundle();
-        args.putParcelable(KEY_REVIEWER_GSON, reviewerData);
-        args.putParcelable(KEY_PROVIDER_GSON, providerData);
+        args.putParcelable(KEY_USER_SERVICE_DATA, userData);
+        args.putLong(KEY_USER_ID_TO_REVIEW, userIdToReview);
         LeaveReviewFragment fragment = new LeaveReviewFragment();
         fragment.setArguments(args);
+        fragment.setListener(listener);
         return fragment;
     }
 
@@ -74,8 +91,12 @@ public class LeaveReviewFragment extends BaseFragment implements View.OnClickLis
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (null != getArguments()) {
-            mReviewerData = getArguments().getParcelable(KEY_REVIEWER_GSON);
-            mProviderData = getArguments().getParcelable(KEY_PROVIDER_GSON);
+            mUserServiceData = getArguments().getParcelable(KEY_USER_SERVICE_DATA);
+            mUserIdToReview = getArguments().getLong(KEY_USER_ID_TO_REVIEW);
+            if (null != UserTokenManager.getToken(getContext())) {
+                mReviewerUserId = UserTokenManager.getToken(getContext()).getUserId();
+            }
+
         }
         mApi = getRetrofit().create(PloyerApi.class);
     }
@@ -88,6 +109,17 @@ public class LeaveReviewFragment extends BaseFragment implements View.OnClickLis
         return v;
     }
 
+    @Override
+    protected void bindLanguage(LanguageAppLabelGson.Data data) {
+        super.bindLanguage(data);
+        mTextViewTitle.setText(data.reviewScreenHeader);
+        mTextViewCompetence.setText(data.reviewScreenCompetence);
+        mTextViewCommunication.setText(data.reviewScreenCommunication);
+        mTextViewPoliteness.setText(data.reviewScreenPoliteness);
+        mTextViewPunctuality.setText(data.reviewScreenPunctuality);
+        mTextViewProfessionalism.setText(data.reviewScreenProfession);
+        mButtonPost.setText(data.reivewScreenPost);
+    }
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
@@ -98,18 +130,11 @@ public class LeaveReviewFragment extends BaseFragment implements View.OnClickLis
     }
 
     private void bindData() {
-        if (mReviewerData != null) {
-//            mTextViewName.setText(mProviderData.getFullName());
+        if (mReviewerUserId != null) {
+            mTextViewName.setText(mUserServiceData.getFullName());
+            Glide.with(mImageViewProfileImage.getContext()).load(mUserServiceData.getImagePath()).error(R.drawable.ic_circle_profile_120dp).into(mImageViewProfileImage);
         }
 
-        AccountInfoLoader.getProfileImage(getContext(), mReviewerData.getUserId(), new Action1<List<ProfileImageGson.Data>>() {
-            @Override
-            public void call(List<ProfileImageGson.Data> datas) {
-                if (null != datas && !datas.isEmpty()) {
-                    Glide.with(mImageViewProfileImage.getContext()).load(datas.get(0).getImagePath()).error(R.drawable.ic_circle_profile_120dp).into(mImageViewProfileImage);
-                }
-            }
-        });
     }
 
     private void initToolbar() {
@@ -129,11 +154,42 @@ public class LeaveReviewFragment extends BaseFragment implements View.OnClickLis
         }
     }
 
+    //    long userId, long reviewerUserId, long competence, long punctuality, long politeness, long communication, long professionalism, String reviewText
     private void requestPostReview() {
-        if (null != mReviewerData) {
+        if (null != mReviewerUserId) {
             showLoading();
-//            mApi.postSaveReview(new ReviewGson.Data.ReviewData.Review(mU))
+
+            RetrofitCallUtils.with(mApi.postSaveReview(gatheredCurrentData()), new RetrofitCallUtils.RetrofitCallback<SaveReviewResponseGson>() {
+                @Override
+                public void onDataSuccess(SaveReviewResponseGson data) {
+                    dismissLoading();
+                    getListener().onReviewFinish();
+                    dismiss();
+                }
+
+                @Override
+                public void onDataFailure(String failCause) {
+                    getListener().onReviewFinish();
+                    dismissLoading();
+                }
+            }).enqueue(getContext());
         }
 
+    }
+
+    private ReviewGson.Data.ReviewData.Review gatheredCurrentData() {
+        return new ReviewGson.Data.ReviewData.Review(mUserIdToReview, mReviewerUserId, mRatingBarCompetence.getNumStars(), mRatingBarPunctuality.getNumStars(), mRatingBarPoliteness.getNumStars(), mRatingCommunication.getNumStars(), mRatingBarProfessional.getNumStars(), extractString(mEditTextReview));
+    }
+
+    public void setListener(OnReviewFinishListener listener) {
+        this.listener = listener;
+    }
+
+    public OnReviewFinishListener getListener() {
+        return listener;
+    }
+
+    public static interface OnReviewFinishListener{
+        public void onReviewFinish();
     }
 }

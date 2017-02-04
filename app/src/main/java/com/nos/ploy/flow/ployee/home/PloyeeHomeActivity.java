@@ -1,5 +1,6 @@
 package com.nos.ploy.flow.ployee.home;
 
+import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.ColorInt;
@@ -21,18 +22,20 @@ import com.nos.ploy.DrawerController;
 import com.nos.ploy.R;
 import com.nos.ploy.api.account.model.ProfileImageGson;
 import com.nos.ploy.api.authentication.model.AccountGson;
+import com.nos.ploy.api.masterdata.model.LanguageAppLabelGson;
 import com.nos.ploy.api.utils.loader.AccountInfoLoader;
 import com.nos.ploy.base.BaseActivity;
 import com.nos.ploy.cache.UserTokenManager;
 import com.nos.ploy.custom.view.CustomViewPager;
 import com.nos.ploy.flow.generic.CommonFragmentStatePagerAdapter;
 import com.nos.ploy.flow.generic.htmltext.HtmlTextFragment;
+import com.nos.ploy.flow.generic.intro.IntroductionFragment;
+import com.nos.ploy.flow.generic.settings.SettingsFragment;
 import com.nos.ploy.flow.ployee.account.main.PloyeeAccountFragment;
 import com.nos.ploy.flow.ployee.home.content.availability.PloyeeAvailabilityFragment;
 import com.nos.ploy.flow.ployee.home.content.service.list.PloyeeServiceListFragment;
 import com.nos.ploy.flow.ployee.profile.PloyeeProfileActivity;
-import com.nos.ploy.flow.generic.settings.SettingsFragment;
-import com.nos.ploy.flow.ployer.service.PloyerServiceListActivity;
+import com.nos.ploy.flow.ployer.service.PloyerHomeActivity;
 import com.nos.ploy.utils.IntentUtils;
 import com.nos.ploy.utils.PopupMenuUtils;
 
@@ -79,6 +82,8 @@ public class PloyeeHomeActivity extends BaseActivity implements View.OnClickList
     CustomViewPager mViewPager;
     @BindView(R.id.textview_main_drawer_switch_to)
     TextView mTextViewSwitchToPloyer;
+    @BindView(R.id.foregroundlinearlayout_main_drawer_switch_container)
+    ForegroundLinearLayout mForeGroundLinearLayoutSwitchToContainer;
     @BindDrawable(R.drawable.selector_drawable_calendar_gray_blue)
     Drawable mDrawableAvailabilityGray;
     @BindDrawable(R.drawable.selector_drawable_business_gray_blue)
@@ -154,6 +159,20 @@ public class PloyeeHomeActivity extends BaseActivity implements View.OnClickList
                 case DrawerController.WHAT_IS_PLOYER:
                     showFragment(HtmlTextFragment.newInstance(HtmlTextFragment.WHAT_IS_PLOYER));
                     break;
+                case DrawerController.INTRODUCTION:
+                    showFragment(IntroductionFragment.newInstance(new IntroductionFragment.FragmentInteractionListener() {
+                        @Override
+                        public void onClickFindServices(Context context) {
+                            IntentUtils.startActivity(context, PloyerHomeActivity.class);
+                            finishThisActivity();
+                        }
+
+                        @Override
+                        public void onClickOfferServices(Context context) {
+
+                        }
+                    },true));
+                    break;
             }
         }
     };
@@ -185,10 +204,16 @@ public class PloyeeHomeActivity extends BaseActivity implements View.OnClickList
         initToolbar();
     }
 
+    @Override
+    protected void bindLanguage(LanguageAppLabelGson.Data data) {
+        super.bindLanguage(data);
+
+    }
+
     private void initView() {
         mViewPager.setPagingEnabled(false);
         mLinearLayoutHeaderContainer.setOnClickListener(this);
-        mTextViewSwitchToPloyer.setOnClickListener(this);
+        mForeGroundLinearLayoutSwitchToContainer.setOnClickListener(this);
     }
 
 
@@ -242,9 +267,14 @@ public class PloyeeHomeActivity extends BaseActivity implements View.OnClickList
             onClickBottomMenu(AVAILABLITY);
         } else if (id == mLinearLayoutHeaderContainer.getId()) {
             IntentUtils.startActivity(this, PloyeeProfileActivity.class);
-        } else if (id == mTextViewSwitchToPloyer.getId()) {
-            IntentUtils.startActivity(PloyeeHomeActivity.this, PloyerServiceListActivity.class);
-            finishThisActivity();
+        } else if (id == mForeGroundLinearLayoutSwitchToContainer.getId()) {
+            if(UserTokenManager.isLogin(view.getContext())){
+                IntentUtils.startActivity(PloyeeHomeActivity.this, PloyerHomeActivity.class);
+                finishThisActivity();
+            }else{
+
+            }
+
         }
     }
 
@@ -253,6 +283,8 @@ public class PloyeeHomeActivity extends BaseActivity implements View.OnClickList
             mAvailabilityFragment.onClickDone();
         }
     }
+
+
 
     private void onClickBottomMenu(@BottomMenu int menu) {
         if (menu == AVAILABLITY) {

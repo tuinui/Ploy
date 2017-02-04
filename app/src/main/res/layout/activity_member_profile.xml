@@ -166,10 +166,10 @@
                             android:layout_gravity="center_vertical"
                             android:layout_marginRight="4dp"
                             android:layout_weight="0"
-                            android:numStars="5"
                             android:rating="3.2"
                             android:stepSize="0.1"
-                            android:theme="@style/RatingBar.Orange" />
+                            android:theme="@style/RatingBar.Orange"
+                            tools:numStars="5" />
 
                         <TextView
                             android:id="@+id/textview_member_profile_rate_title"
@@ -177,7 +177,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="8dp"
                             android:layout_weight="0"
-                            android:text="4.8/5" />
+                            tools:text="4.8/5" />
 
                         <TextView
                             android:id="@+id/textview_member_profile_rate_count"
@@ -187,7 +187,7 @@
                             android:layout_weight="1"
                             android:drawableRight="@drawable/ic_chevron_right_gray_24dp"
                             android:gravity="right|center_vertical"
-                            android:text="19 reviews" />
+                            tools:text="19 reviews" />
 
 
                     </LinearLayout>
@@ -209,6 +209,7 @@
                     android:orientation="vertical">
 
                     <TextView
+                        android:id="@+id/textview_member_profile_about_me_header"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="About me"
@@ -231,6 +232,7 @@
                     android:orientation="vertical">
 
                     <TextView
+                        android:id="@+id/textview_member_profile_languages_header"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Languages "
@@ -253,6 +255,7 @@
                     android:orientation="vertical">
 
                     <TextView
+                        android:id="@+id/textview_member_profile_education_header"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Education"
@@ -276,6 +279,7 @@
                     android:orientation="vertical">
 
                     <TextView
+                        android:id="@+id/textview_member_profile_work_header"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Work"
@@ -298,6 +302,7 @@
                     android:orientation="vertical">
 
                     <TextView
+                        android:id="@+id/textview_member_profile_interests_header"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Interests "
@@ -324,6 +329,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:padding="8dp"
+                        android:id="@+id/textview_member_profile_transportation_header"
                         android:text="@string/Transport"
                         android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
                         android:textColor="@color/colorPrimary"

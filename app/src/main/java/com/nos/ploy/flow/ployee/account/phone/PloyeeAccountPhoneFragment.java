@@ -10,9 +10,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.google.i18n.phonenumbers.NumberParseException;
+import com.google.i18n.phonenumbers.PhoneNumberUtil;
+import com.google.i18n.phonenumbers.Phonenumber;
 import com.hbb20.CountryCodePicker;
 import com.nos.ploy.R;
+import com.nos.ploy.api.masterdata.model.LanguageAppLabelGson;
 import com.nos.ploy.base.BaseFragment;
+import com.nos.ploy.utils.PopupMenuUtils;
 import com.rengwuxian.materialedittext.MaterialEditText;
 
 import butterknife.BindString;
@@ -33,6 +38,10 @@ public class PloyeeAccountPhoneFragment extends BaseFragment {
     Toolbar mToolbar;
     @BindView(R.id.textview_main_appbar_title)
     TextView mTextViewTitle;
+    @BindView(R.id.textview_ployee_account_phone_description)
+    TextView mTextViewDescription;
+    @BindView(R.id.textview_ployee_account_phone_label)
+    TextView mTextViewPhoneLabel;
     @BindString(R.string.Phone_number)
     String LPhone_number;
     private FragmentInteractionListener listener;
@@ -75,6 +84,16 @@ public class PloyeeAccountPhoneFragment extends BaseFragment {
 //        bindData();
     }
 
+    @Override
+    protected void bindLanguage(LanguageAppLabelGson.Data data) {
+        super.bindLanguage(data);
+        mTextViewTitle.setText(data.phoneScreenHeader);
+        mTextViewDescription.setText(data.phoneScreenDescript);
+        mTextViewPhoneLabel.setText(data.phoneScreenHint);
+        mEditTextPhoneNumber.setHint(data.phoneScreenHint);
+        PopupMenuUtils.setMenuTitle(mToolbar.getMenu(),R.id.menu_done_item_done,data.doneLabel);
+    }
+
     private void bindData() {
 //        mEditTextPhoneNumber.setText(mDefaultPhoneNumber);
     }
@@ -100,7 +119,15 @@ public class PloyeeAccountPhoneFragment extends BaseFragment {
     }
 
     private String gatheredData() {
-        return mCcpPhone.getSelectedCountryCodeWithPlus() + extractString(mEditTextPhoneNumber);
+        PhoneNumberUtil phoneUtil = PhoneNumberUtil.getInstance();
+        String number =mCcpPhone.getSelectedCountryCodeWithPlus() + extractString(mEditTextPhoneNumber);
+        try {
+            Phonenumber.PhoneNumber swissNumberProto = phoneUtil.parse(extractString(mEditTextPhoneNumber), mCcpPhone.getSelectedCountryNameCode());
+            number = phoneUtil.format(swissNumberProto, PhoneNumberUtil.PhoneNumberFormat.INTERNATIONAL);
+        } catch (NumberParseException e) {
+            System.err.println("NumberParseException was thrown: " + e.toString());
+        }
+        return number;
     }
 
     public FragmentInteractionListener getListener() {

@@ -15,7 +15,8 @@
         android:gravity="center"
         android:padding="16dp"
         android:text="@string/Please_select_your_country_and_enter_your_phone_number"
-        android:textAppearance="@style/TextAppearance.AppCompat.Caption" />
+        android:textAppearance="@style/TextAppearance.AppCompat.Caption"
+        android:id="@+id/textview_ployee_account_phone_description" />
 
 
     <LinearLayout
@@ -26,6 +27,7 @@
 
         <TextView
             android:layout_width="match_parent"
+            android:id="@+id/textview_ployee_account_phone_label"
             android:layout_height="wrap_content"
             android:text="@string/Phone_number"
             android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium" />

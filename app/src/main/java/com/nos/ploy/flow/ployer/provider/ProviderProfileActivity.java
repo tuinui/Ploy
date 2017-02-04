@@ -28,12 +28,12 @@ import com.nos.ploy.api.account.model.PloyeeProfileGson;
 import com.nos.ploy.api.account.model.ProfileImageGson;
 import com.nos.ploy.api.account.model.TransportGsonVm;
 import com.nos.ploy.api.base.RetrofitCallUtils;
-import com.nos.ploy.api.base.response.ResponseMessage;
+import com.nos.ploy.api.masterdata.model.LanguageAppLabelGson;
 import com.nos.ploy.api.ployee.model.PloyeeAvailiabilityGson;
 import com.nos.ploy.api.ployer.PloyerApi;
 import com.nos.ploy.api.ployer.model.PloyerServiceDetailGson;
-import com.nos.ploy.api.ployer.model.PloyerServicesGson;
 import com.nos.ploy.api.ployer.model.ProviderUserListGson;
+import com.nos.ploy.api.ployer.model.ReviewGson;
 import com.nos.ploy.base.BaseActivity;
 import com.nos.ploy.cache.SharePreferenceUtils;
 import com.nos.ploy.flow.generic.maps.LocalizationMapsFragment;
@@ -43,10 +43,12 @@ import com.nos.ploy.flow.ployee.home.content.availability.contract.WeekAvailabil
 import com.nos.ploy.flow.ployee.home.content.availability.view.AvailabilityRecyclerAdapter;
 import com.nos.ploy.flow.ployee.profile.ImageSliderPagerAdapter;
 import com.nos.ploy.flow.ployee.profile.TransportRecyclerAdapter;
+import com.nos.ploy.flow.ployer.provider.leavereview.LeaveReviewFragment;
 import com.nos.ploy.flow.ployer.provider.review.ProviderReviewFragment;
 import com.nos.ploy.utils.GoogleApiAvailabilityUtils;
 import com.nos.ploy.utils.IntentUtils;
 import com.nos.ploy.utils.MyLocationUtils;
+import com.nos.ploy.utils.PopupMenuUtils;
 import com.nos.ploy.utils.RecyclerUtils;
 
 import java.util.ArrayList;
@@ -60,7 +62,7 @@ public class ProviderProfileActivity extends BaseActivity implements GoogleApiCl
 
 
     public static final String KEY_PLOYEE_USER_SERVICE_DATA = "PLOYEE_USER_SERVICE_DATA";
-    public static final String KEY_SERVICE_DATA = "SERVICE_DATA";
+    public static final String KEY_PLOYEEPROFILEGSON_DATA = "PLOYEEPROFILEGSON_DATA";
     private ProviderUserListGson.Data.UserService mUserServiceData;
     @BindView(R.id.viewpager_profile_image_slider)
     ViewPager mViewPagerSlider;
@@ -76,20 +78,28 @@ public class ProviderProfileActivity extends BaseActivity implements GoogleApiCl
     TextView mTextViewAddress;
     @BindView(R.id.textview_member_profile_addresss_distance)
     TextView mTextViewDistance;
-    @BindView(R.id.ratingbar_member_profile_rate)
-    RatingBar mRatingBar;
-    @BindView(R.id.textview_member_profile_rate_title)
-    TextView mTextViewRateTitle;
-    @BindView(R.id.textview_member_profile_rate_count)
-    TextView mTextViewRateCount;
     @BindView(R.id.textview_member_profile_about_me)
     TextView mTextViewAboutMe;
+    @BindView(R.id.textview_member_profile_about_me_header)
+    TextView mTextViewAboutMeHeader;
     @BindView(R.id.textview_member_profile_education)
     TextView mTextViewEducation;
+    @BindView(R.id.textview_member_profile_education_header)
+    TextView mTextViewEducationHeader;
     @BindView(R.id.textview_member_profile_languages)
     TextView mTextViewLanguages;
+    @BindView(R.id.textview_member_profile_languages_header)
+    TextView mTextViewLanguagesHeader;
     @BindView(R.id.textview_member_profile_work)
     TextView mTextViewWork;
+    @BindView(R.id.textview_member_profile_work_header)
+    TextView mTextViewWorkHeader;
+    @BindView(R.id.textview_member_profile_interests)
+    TextView mTextViewInterests;
+    @BindView(R.id.textview_member_profile_interests_header)
+    TextView mTextViewInterestsHeader;
+    @BindView(R.id.textview_member_profile_transportation_header)
+    TextView mTextViewTransportationheader;
     @BindView(R.id.recyclerview_member_profile_transportation)
     RecyclerView mRecyclerViewTransportation;
     @BindView(R.id.recyclerview_member_profile_services)
@@ -104,7 +114,14 @@ public class ProviderProfileActivity extends BaseActivity implements GoogleApiCl
     TextView mTextViewTitle;
     @BindView(R.id.cardview_member_profile_review)
     CardView mCardViewReview;
-    private PloyerServicesGson.Data mServiceData;
+    @BindView(R.id.ratingbar_member_profile_rate)
+    RatingBar mRatingBarRate;
+    @BindView(R.id.textview_member_profile_rate_title)
+    TextView mTextViewRatingPoint;
+    @BindView(R.id.textview_member_profile_rate_count)
+    TextView mTextViewRatingCount;
+    private boolean mIsPreviewMode;
+    private PloyeeProfileGson.Data mPreviewData;
 
     @OnClick(R.id.view_activity_member_profile_availability_block)
     public void onClickAvailabilityBlock(View view) {
@@ -136,7 +153,6 @@ public class ProviderProfileActivity extends BaseActivity implements GoogleApiCl
 
         }
 
-
         @Override
         public int getItemCount() {
             return RecyclerUtils.getSize(mTransportDatas);
@@ -153,7 +169,7 @@ public class ProviderProfileActivity extends BaseActivity implements GoogleApiCl
 
 
         @Override
-        public void onDataFailure(ResponseMessage failCause) {
+        public void onDataFailure(String failCause) {
             dismissRefreshing();
         }
     };
@@ -170,8 +186,8 @@ public class ProviderProfileActivity extends BaseActivity implements GoogleApiCl
         if (GoogleApiAvailabilityUtils.checkPlayServices(this)) {
             mGoogleApiClient = new GoogleApiClient.Builder(this, this, this).addApi(LocationServices.API).build();
         }
-        initData();
 
+        initData();
         initToolbar();
         initView();
         initRecyclerView();
@@ -182,7 +198,50 @@ public class ProviderProfileActivity extends BaseActivity implements GoogleApiCl
         enableBackButton(mToolbar);
         if (null != mUserServiceData) {
             mTextViewTitle.setText(mUserServiceData.getFullName());
+            mRatingBarRate.setRating(mUserServiceData.getReviewPoint());
+            mTextViewRatingPoint.setText(mUserServiceData.getReviewPoint() + "/5");
+            mTextViewRatingCount.setText(mUserServiceData.getReviewCount() + " " + mLanguageData.profileScreenReviews);
         }
+    }
+
+    @Override
+    protected void bindLanguage(LanguageAppLabelGson.Data data) {
+        super.bindLanguage(data);
+        PopupMenuUtils.setMenuTitle(mToolbar.getMenu(), R.id.menu_done_item_done, data.doneLabel);
+        mTextViewTitle.setText(data.profileScreenHeader);
+        mButtonEmail.setText(data.profileScreenEmail);
+        mTextViewAboutMeHeader.setText(data.profileScreenAboutMe);
+        mTextViewLanguagesHeader.setText(data.profileScreenLanguage);
+        mTextViewEducationHeader.setText(data.profileScreenEducation);
+        mTextViewWorkHeader.setText(data.profileScreenWork);
+        mTextViewInterestsHeader.setText(data.profileScreenInterest);
+        mTextViewTransportationheader.setText(data.profileScreenTransport);
+        mButtonPhone.setText(data.profileScreenPhone);
+        mButtonEmail.setText(data.profileScreenEmail);
+
+    }
+
+    private void requestReviewData() {
+        RetrofitCallUtils.with(mApi.getReviewByUserId(mUserId), new RetrofitCallUtils.RetrofitCallback<ReviewGson>() {
+            @Override
+            public void onDataSuccess(ReviewGson data) {
+                if (null != data && null != data.getData()) {
+                    if (null != data.getData().getReviewDataList()) {
+                        mUserServiceData.setReviewCount((long) data.getData().getReviewDataList().size());
+                    }
+                    if (null != data.getData().getReviewAverage() && null != data.getData().getReviewAverage().getAll()) {
+                        mUserServiceData.setReviewPoint(data.getData().getReviewAverage().getAll());
+                    }
+                    initToolbar();
+                }
+
+            }
+
+            @Override
+            public void onDataFailure(String failCause) {
+
+            }
+        }).enqueue(this);
     }
 
     @Override
@@ -264,16 +323,21 @@ public class ProviderProfileActivity extends BaseActivity implements GoogleApiCl
     //userId=1&serviceId=1&lgCode=en
     private void refreshData() {
         showRefreshing();
-        RetrofitCallUtils.with(mApi.getProviderProfileGson(mUserServiceData.getUserId(), mServiceData.getId(), SharePreferenceUtils.getCurrentActiveAppLanguageCode(this)), mCallbackRefreshData).enqueue(this);
+        RetrofitCallUtils.with(mApi.getProviderProfileGson(mUserServiceData.getUserId(), SharePreferenceUtils.getCurrentActiveAppLanguageCode(this)), mCallbackRefreshData).enqueue(this);
     }
 
 
     private void initData() {
         if (null != getIntent() && null != getIntent().getExtras()) {
             mUserServiceData = getIntent().getExtras().getParcelable(KEY_PLOYEE_USER_SERVICE_DATA);
-            mServiceData = getIntent().getExtras().getParcelable(KEY_SERVICE_DATA);
+            mPreviewData = getIntent().getExtras().getParcelable(KEY_PLOYEEPROFILEGSON_DATA);
+            if (null != mPreviewData) {
+                mIsPreviewMode = true;
+                bindUserProfile(mPreviewData);
+            }
         }
     }
+
 
     private void initSlider() {
         mImageSliderAdapter = new ImageSliderPagerAdapter(this);
@@ -312,7 +376,6 @@ public class ProviderProfileActivity extends BaseActivity implements GoogleApiCl
 
     private void bindUserProfile(PloyeeProfileGson.Data data) {
         if (null != data) {
-
             mTransportDatas.clear();
             mTransportDatas.addAll(toTransportVm(data.getTransport()));
             mTransportRecyclerAdapter.notifyDataSetChanged();
@@ -363,6 +426,10 @@ public class ProviderProfileActivity extends BaseActivity implements GoogleApiCl
     public void onConnected(@Nullable Bundle bundle) {
         if (mData == null) {
             refreshData();
+        }
+
+        if (mUserServiceData == null || mUserServiceData.getReviewPoint() == 0) {
+            requestReviewData();
         }
     }
 
@@ -427,11 +494,17 @@ public class ProviderProfileActivity extends BaseActivity implements GoogleApiCl
         } else if (id == mImageViewStaticMaps.getId()) {
             openLocalizationMaps();
         } else if (id == mCardViewReview.getId()) {
-            if(null != mData && null != mData.getUserProfile() && null != mData.getUserProfile().getUserId()){
-                showFragment(ProviderReviewFragment.newInstance(mData.getUserProfile().getUserId()));
+            if (null != mData && null != mData.getUserProfile() && null != mData.getUserProfile().getUserId()) {
+                showFragment(ProviderReviewFragment.newInstance(mData.getUserProfile().getUserId(), mUserServiceData, new LeaveReviewFragment.OnReviewFinishListener() {
+                    @Override
+                    public void onReviewFinish() {
+                        refreshData();
+                    }
+                }));
             }
         }
     }
+
 
     private void openLocalizationMaps() {
         if (null != mData && null != mData.getUserProfile() && null != mData.getUserProfile().getLocation()) {

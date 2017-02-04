@@ -52,7 +52,10 @@ public class ProviderReviewRecyclerAdapter extends RecyclerView.Adapter<Provider
             }
             if(null != data.getReview()){
                 holder.tvMessage.setText(data.getReview().getReviewText());
-                holder.tvName.setText(""+data.getReview().getUserId());
+                if(data.getUserReview() != null){
+                    holder.tvName.setText(data.getUserReview().getFullName());
+                }
+
                 if(null != data.getReview().getCreatedDate()){
                     holder.tvDate.setText(DateParseUtils.parseDateString(data.getReview().getCreatedDate(),"MMM dd, yyyy"));
                 }

@@ -23,12 +23,14 @@ import com.nos.ploy.api.authentication.AuthenticationApi;
 import com.nos.ploy.api.authentication.model.PostLoginFacebookGson;
 import com.nos.ploy.api.authentication.model.UserTokenGson;
 import com.nos.ploy.api.base.RetrofitCallUtils;
-import com.nos.ploy.api.base.response.ResponseMessage;
+import com.nos.ploy.api.masterdata.model.LanguageAppLabelGson;
 import com.nos.ploy.base.BaseActivity;
 import com.nos.ploy.cache.UserTokenManager;
+import com.nos.ploy.flow.generic.intro.IntroductionFragment;
 import com.nos.ploy.flow.generic.signin.SignInFragment;
 import com.nos.ploy.flow.generic.signup.SignUpFragment;
 import com.nos.ploy.flow.ployee.home.PloyeeHomeActivity;
+import com.nos.ploy.flow.ployer.service.PloyerHomeActivity;
 import com.nos.ploy.utils.IntentUtils;
 
 import org.json.JSONException;
@@ -107,6 +109,14 @@ public class SignInSignupActivity extends BaseActivity implements View.OnClickLi
         }
     }
 
+    @Override
+    protected void bindLanguage(LanguageAppLabelGson.Data data) {
+        super.bindLanguage(data);
+        mTextViewTitle.setText(data.appName);
+        mButtonSignin.setText(data.loginSingupScreenLogin);
+        mButtonSignup.setText(data.loginSingupScreenSignup);
+    }
+
     private void requestSigninWithFacebook(final Context context, String email, String firstName, String lastName, String fUserId) {
         showLoading();
         RetrofitCallUtils
@@ -116,15 +126,32 @@ public class SignInSignupActivity extends BaseActivity implements View.OnClickLi
                             public void onDataSuccess(UserTokenGson data) {
                                 dismissLoading();
                                 UserTokenManager.saveToken(context, data.getData());
-                                goToPloyeeHome();
+                                showIntroductionFragment();
                             }
 
                             @Override
-                            public void onDataFailure(ResponseMessage failCause) {
+                            public void onDataFailure(String failCause) {
                                 dismissLoading();
                             }
                         })
                 .enqueue(context);
+    }
+
+    private void showIntroductionFragment() {
+        showFragment(IntroductionFragment.newInstance(new IntroductionFragment.FragmentInteractionListener() {
+            @Override
+            public void onClickFindServices(Context context) {
+                IntentUtils.startActivity(context, PloyerHomeActivity.class);
+                finishThisActivity();
+            }
+
+            @Override
+            public void onClickOfferServices(Context context) {
+                goToPloyeeHome();
+
+            }
+        },false));
+
     }
 
     private void goToPloyeeHome() {

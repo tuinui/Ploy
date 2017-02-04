@@ -69,7 +69,6 @@ public class PloyerPersonListFragment extends BaseFragment implements SearchView
                                                    public void onClick(View v) {
                                                        Bundle bundle = new Bundle();
                                                        bundle.putParcelable(ProviderProfileActivity.KEY_PLOYEE_USER_SERVICE_DATA, data);
-                                                       bundle.putParcelable(ProviderProfileActivity.KEY_SERVICE_DATA, mServiceData);
                                                        IntentUtils.startActivity(v.getContext(), ProviderProfileActivity.class, bundle);
                                                    }
                                                }

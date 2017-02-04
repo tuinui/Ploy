@@ -6,7 +6,6 @@ import android.os.Parcelable;
 import com.nos.ploy.api.base.response.BaseResponse;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by Saran on 3/1/2560.

@@ -238,7 +238,6 @@ public class PloyerPersonMapFragment extends BaseFragment implements OnMapReadyC
             expandBottomSheet(false);
             if (null != mCurrentSelectedData) {
                 Bundle bundle = new Bundle();
-                bundle.putParcelable(ProviderProfileActivity.KEY_SERVICE_DATA, mServiceData);
                 bundle.putParcelable(ProviderProfileActivity.KEY_PLOYEE_USER_SERVICE_DATA, mCurrentSelectedData);
                 IntentUtils.startActivity(getActivity(), ProviderProfileActivity.class, bundle);
             }

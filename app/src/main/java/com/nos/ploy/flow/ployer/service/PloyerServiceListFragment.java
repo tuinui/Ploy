@@ -13,7 +13,6 @@ import android.view.ViewGroup;
 
 import com.nos.ploy.R;
 import com.nos.ploy.api.base.RetrofitCallUtils;
-import com.nos.ploy.api.base.response.ResponseMessage;
 import com.nos.ploy.api.ployer.PloyerApi;
 import com.nos.ploy.api.ployer.model.PloyerServicesGson;
 import com.nos.ploy.base.BaseFragment;
@@ -51,7 +50,7 @@ public class PloyerServiceListFragment extends BaseFragment implements SearchVie
         }
 
         @Override
-        public void onDataFailure(ResponseMessage failCause) {
+        public void onDataFailure(String failCause) {
             dismissRefreshing();
         }
     };

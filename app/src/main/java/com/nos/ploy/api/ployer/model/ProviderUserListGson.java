@@ -5,7 +5,9 @@ import android.os.Parcelable;
 import android.text.TextUtils;
 
 import com.github.wrdlbrnft.sortedlistadapter.SortedListAdapter;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.annotations.SerializedName;
+import com.nos.ploy.api.authentication.model.AccountGson;
 import com.nos.ploy.api.base.response.BaseResponse;
 
 import org.apache.commons.lang3.StringUtils;
@@ -61,7 +63,7 @@ public class ProviderUserListGson extends BaseResponse<ProviderUserListGson.Data
 
         public static class UserService implements SortedListAdapter.ViewModel, Parcelable {
             @SerializedName("userId")
-            private Long userId;
+            private Long userId = 0L;
             @SerializedName("firstName")
             private String firstName;
             @SerializedName("lastName")
@@ -83,24 +85,50 @@ public class ProviderUserListGson extends BaseResponse<ProviderUserListGson.Data
             @SerializedName("description")
             private String description;
             @SerializedName("minPrice")
-            private Long minPrice;
+            private Long minPrice = 0L;
             @SerializedName("maxPrice")
-            private Long maxPrice;
+            private Long maxPrice = 0L;
             @SerializedName("locationLat")
             private Double locationLat;
             @SerializedName("locationLng")
             private Double locationLng;
             @SerializedName("imagePath")
             private String imagePath;
+
+
             @SerializedName("reviewPoint")
-            private Float reviewPoint;
+            private Float reviewPoint = 0F;
             @SerializedName("reviewCount")
-            private Long reviewCount;
+            private Long reviewCount = 0L;
             @SerializedName("serviceCount")
-            private Long serviceCount;
+            private Long serviceCount = 0L;
 
 
             public UserService() {
+            }
+            public void setReviewCount(Long reviewCount) {
+                this.reviewCount = reviewCount;
+            }
+
+            public void setReviewPoint(Float reviewPoint) {
+                this.reviewPoint = reviewPoint;
+            }
+            public UserService(long userId, AccountGson.Data accountGson, LatLng latLng) {
+                this.userId = userId;
+                if (null != accountGson) {
+                    this.firstName = accountGson.getFirstName();
+                    this.lastName = accountGson.getLastName();
+                    this.email = accountGson.getEmail();
+                    this.password = accountGson.getPassword();
+                    this.phone = accountGson.getPhone();
+                    this.fbUserId = accountGson.getFbUserId();
+                }
+
+                if (null != latLng) {
+                    this.locationLat = latLng.latitude;
+                    this.locationLng = latLng.longitude;
+                }
+
             }
 
             public Long getUserId() {
@@ -249,6 +277,8 @@ public class ProviderUserListGson extends BaseResponse<ProviderUserListGson.Data
                     return new UserService[size];
                 }
             };
+
+
         }
     }
 }

@@ -203,7 +203,7 @@
                             android:layout_marginTop="20dp">
 
                             <TextView
-                                android:id="@+id/textview_ployee_review_communitation_title"
+                                android:id="@+id/textview_ployee_review_communication_title"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
@@ -212,7 +212,7 @@
                                 android:textStyle="bold" />
 
                             <android.support.v7.widget.AppCompatRatingBar
-                                android:id="@+id/ratingbar_ployee_review_communitation"
+                                android:id="@+id/ratingbar_ployee_review_communication"
                                 style="@style/Widget.AppCompat.RatingBar.Small"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
@@ -223,7 +223,7 @@
                                 tools:stepSize="0.1" />
 
                             <TextView
-                                android:id="@+id/textview_ployee_review_communitation_point"
+                                android:id="@+id/textview_ployee_review_communication_point"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="0"

@@ -18,8 +18,8 @@ import android.widget.TextView;
 import com.nos.ploy.R;
 import com.nos.ploy.api.account.model.PloyeeProfileGson;
 import com.nos.ploy.api.base.RetrofitCallUtils;
-import com.nos.ploy.api.base.response.ResponseMessage;
 import com.nos.ploy.api.masterdata.MasterApi;
+import com.nos.ploy.api.masterdata.model.LanguageAppLabelGson;
 import com.nos.ploy.api.masterdata.model.LanguageGson;
 import com.nos.ploy.api.ployer.model.PloyerServicesGson;
 import com.nos.ploy.base.BaseFragment;
@@ -98,7 +98,7 @@ public class FilterLanguageFragment extends BaseFragment implements View.OnClick
         }
 
         @Override
-        public void onDataFailure(ResponseMessage failCause) {
+        public void onDataFailure(String failCause) {
             dismissRefreshing();
         }
     };
@@ -210,6 +210,13 @@ public class FilterLanguageFragment extends BaseFragment implements View.OnClick
             }
         });
         enableBackButton(mToolbar);
+    }
+
+    @Override
+    protected void bindLanguage(LanguageAppLabelGson.Data data) {
+        super.bindLanguage(data);
+        mTextViewTitle.setText(data.profileScreenLanguageHeader);
+        mButtonNoPref.setText(data.avaliabilityScreenNoPrefer);
     }
 
     @Override

@@ -2,7 +2,7 @@ package com.nos.ploy.flow.ployer.filter.services;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
@@ -15,7 +15,7 @@ import android.widget.TextView;
 
 import com.nos.ploy.R;
 import com.nos.ploy.api.base.RetrofitCallUtils;
-import com.nos.ploy.api.base.response.ResponseMessage;
+import com.nos.ploy.api.masterdata.model.LanguageAppLabelGson;
 import com.nos.ploy.api.ployer.PloyerApi;
 import com.nos.ploy.api.ployer.model.PloyerServiceDetailGson;
 import com.nos.ploy.api.ployer.model.PloyerServicesGson;
@@ -24,6 +24,7 @@ import com.nos.ploy.api.ployer.model.PostProviderFilterGson;
 import com.nos.ploy.base.BaseFragment;
 import com.nos.ploy.cache.SharePreferenceUtils;
 import com.nos.ploy.flow.ployee.home.content.service.detail.contract.subservice.PloyeeServiceDetailSubServiceRecyclerAdapter;
+import com.nos.ploy.flow.ployee.home.content.service.detail.contract.subservice.viewmodel.PloyeeServiceDetailSubServiceItemBaseViewModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -65,13 +66,14 @@ public class FilterServicesFragment extends BaseFragment implements View.OnClick
         public void onDataSuccess(PloyerServiceDetailGson data) {
             dismissRefreshing();
             if (null != data && null != data.getData() && null != data.getData().getSubServices()) {
+                mTextViewSubtitle.setText(mServiceData.getPloyeeCountDisplay());
                 bindData(data.getData().getSubServices());
             }
         }
 
 
         @Override
-        public void onDataFailure(ResponseMessage failCause) {
+        public void onDataFailure(String failCause) {
             dismissRefreshing();
         }
     };
@@ -95,6 +97,14 @@ public class FilterServicesFragment extends BaseFragment implements View.OnClick
         View v = inflater.inflate(R.layout.fragment_filter_services, container, false);
         ButterKnife.bind(this, v);
         return v;
+    }
+
+    @Override
+    protected void bindLanguage(LanguageAppLabelGson.Data data) {
+        super.bindLanguage(data);
+        mRadioButtonCertificate.setText(data.serviceScreenCertificateLabel);
+        mRadioButtonEquipment.setText(data.serviceScreenEquipmentLabel);
+        mButtonNoPref.setText(data.avaliabilityScreenNoPrefer);
     }
 
     @Override
@@ -150,7 +160,23 @@ public class FilterServicesFragment extends BaseFragment implements View.OnClick
     }
 
     private void initRecyclerView() {
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(),2) {
+            @Override
+            public boolean canScrollVertically() {
+                return false;
+            }
+        };
+        gridLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
+            @Override
+            public int getSpanSize(int position) {
+                @PloyeeServiceDetailSubServiceItemBaseViewModel.ViewType int viewType  = mAdapter.getItemViewType(position);
+                if(viewType == PloyeeServiceDetailSubServiceItemBaseViewModel.ITEM || viewType == PloyeeServiceDetailSubServiceItemBaseViewModel.SPACE_ONE_ELEMENT){
+                    return 1;
+                }
+                return 2;
+            }
+        });
+        mRecyclerView.setLayoutManager(gridLayoutManager);
         mRecyclerView.setAdapter(mAdapter);
     }
 

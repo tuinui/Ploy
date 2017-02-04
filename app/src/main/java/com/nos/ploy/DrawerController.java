@@ -25,11 +25,17 @@ import java.util.List;
  * Created by User on 13/11/2559.
  */
 public class DrawerController {
+
+    @Retention(RetentionPolicy.SOURCE)
+    @IntDef({NONE, ACCOUNT, SETTINGS, WHAT_IS_PLOYER, WHAT_IS_PLOYEE,INTRODUCTION})
+    public @interface Menu {
+    }
     public static final int NONE = -404;
     public static final int SETTINGS = 0;
     public static final int ACCOUNT = 1;
     public static final int WHAT_IS_PLOYER = 2;
     public static final int WHAT_IS_PLOYEE = 3;
+    public static final int INTRODUCTION = 4;
     public static List<DrawerMenuItem> PLOYEE_MENUS = new ArrayList<>();
     public static List<DrawerMenuItem> PLOYER_MENUS = new ArrayList<>();
     private static DrawerController INTSTANCE = new DrawerController();
@@ -37,16 +43,19 @@ public class DrawerController {
     static {
         DrawerMenuItem settings = new DrawerMenuItem(SETTINGS, "Settings");
         DrawerMenuItem account = new DrawerMenuItem(ACCOUNT, "Account");
-        DrawerMenuItem whatIsPloyer = new DrawerMenuItem(WHAT_IS_PLOYER, "What is Ployer");
-        DrawerMenuItem whatIsPloyee = new DrawerMenuItem(WHAT_IS_PLOYEE, "What is Ployee");
+//        DrawerMenuItem whatIsPloyer = new DrawerMenuItem(WHAT_IS_PLOYER, "What is Ployer");
+//        DrawerMenuItem whatIsPloyee = new DrawerMenuItem(WHAT_IS_PLOYEE, "What is Ployee");
+        DrawerMenuItem introduction = new DrawerMenuItem(INTRODUCTION, "Introduction");
         PLOYEE_MENUS.add(settings);
         PLOYEE_MENUS.add(account);
-        PLOYEE_MENUS.add(whatIsPloyer);
-        PLOYEE_MENUS.add(whatIsPloyee);
+        PLOYEE_MENUS.add(introduction);
+//        PLOYEE_MENUS.add(whatIsPloyer);
+//        PLOYEE_MENUS.add(whatIsPloyee);
 
         PLOYER_MENUS.add(settings);
-        PLOYER_MENUS.add(whatIsPloyer);
-        PLOYER_MENUS.add(whatIsPloyee);
+        PLOYER_MENUS.add(introduction);
+//        PLOYER_MENUS.add(whatIsPloyer);
+//        PLOYER_MENUS.add(whatIsPloyee);
     }
 
     private DrawerController() {
@@ -142,10 +151,6 @@ public class DrawerController {
         }
     }
 
-    @Retention(RetentionPolicy.SOURCE)
-    @IntDef({NONE, ACCOUNT, SETTINGS, WHAT_IS_PLOYER, WHAT_IS_PLOYEE})
-    public @interface Menu {
-    }
 
     public static interface OnMenuItemSelectedListener {
         void onMenuItemSelected(@DrawerController.Menu int menu);
@@ -162,12 +167,16 @@ public class DrawerController {
             this.menuTitle = menuTitle;
         }
 
-        public int getMenu() {
+        public @DrawerController.Menu int getMenu() {
             return menu;
         }
 
         public String getMenuTitle() {
             return menuTitle;
+        }
+
+        public void setMenuTitle(String menuTitle){
+            this.menuTitle = menuTitle;
         }
     }
 }

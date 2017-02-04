@@ -7,6 +7,6 @@ package com.nos.ploy.flow.ployee.home.content.service.detail.contract.subservice
 public class SpaceFullSpanSubServiceVM implements PloyeeServiceDetailSubServiceItemBaseViewModel {
     @Override
     public int getViewType() {
-        return SPACE;
+        return SPACE_FULL;
     }
 }

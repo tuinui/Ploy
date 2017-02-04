@@ -2,7 +2,7 @@ package com.nos.ploy.flow.ployer.provider;
 
 import android.animation.LayoutTransition;
 import android.graphics.drawable.Drawable;
-import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
@@ -14,6 +14,7 @@ import android.widget.TextView;
 import com.nos.ploy.R;
 import com.nos.ploy.api.ployer.model.PloyerServiceDetailGson;
 import com.nos.ploy.flow.ployee.home.content.service.detail.contract.subservice.PloyeeServiceDetailSubServiceRecyclerAdapter;
+import com.nos.ploy.flow.ployee.home.content.service.detail.contract.subservice.viewmodel.PloyeeServiceDetailSubServiceItemBaseViewModel;
 import com.nos.ploy.utils.RecyclerUtils;
 
 import java.util.ArrayList;
@@ -56,10 +57,13 @@ public class ProviderServiceRecyclerAdapter extends RecyclerView.Adapter<Provide
         }
     }
 
+
     @Override
     public int getItemCount() {
         return RecyclerUtils.getSize(mDatas);
     }
+
+
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
@@ -87,8 +91,7 @@ public class ProviderServiceRecyclerAdapter extends RecyclerView.Adapter<Provide
         public ViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
-
-            recyclerViewSubService.setLayoutManager(new LinearLayoutManager(recyclerViewSubService.getContext()) {
+            GridLayoutManager gridLayoutManager = new GridLayoutManager(itemView.getContext(),2) {
                 @Override
                 public boolean isAutoMeasureEnabled() {
                     return true;
@@ -98,7 +101,21 @@ public class ProviderServiceRecyclerAdapter extends RecyclerView.Adapter<Provide
                 public boolean canScrollVertically() {
                     return false;
                 }
+            };
+            gridLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
+                @Override
+                public int getSpanSize(int position) {
+                    if(null != recyclerViewSubService.getAdapter()){
+                        @PloyeeServiceDetailSubServiceItemBaseViewModel.ViewType int viewType  = recyclerViewSubService.getAdapter().getItemViewType(position);
+                        if(viewType == PloyeeServiceDetailSubServiceItemBaseViewModel.ITEM || viewType == PloyeeServiceDetailSubServiceItemBaseViewModel.SPACE_ONE_ELEMENT){
+                            return 1;
+                        }
+                        return 2;
+                    }
+                    return 2;
+                }
             });
+            recyclerViewSubService.setLayoutManager(gridLayoutManager);
         }
 
 

@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.nos.ploy.R;
+import com.nos.ploy.api.base.RetrofitCallUtils;
 import com.nos.ploy.api.ployee.PloyeeApi;
 import com.nos.ploy.api.ployee.model.PloyeeServiceListGson;
 import com.nos.ploy.base.BaseFragment;
@@ -57,24 +58,24 @@ public class PloyeeServiceListFragment extends BaseFragment implements SearchVie
         }
     };
     private PloyeeHomeRecyclerAdapter mAdapter;
-    private Callback<PloyeeServiceListGson> mCallbackPloyeeService = new Callback<PloyeeServiceListGson>() {
-        @Override
-        public void onResponse(Call<PloyeeServiceListGson> call, Response<PloyeeServiceListGson> response) {
-            mSwipeRefreshLayout.setRefreshing(false);
-            if (response.isSuccessful() && response.body().isSuccess()) {
-                bindData(response.body().getData());
-            } else {
-                showToast("isNotSuccessful");
-            }
-        }
-
-
-        @Override
-        public void onFailure(Call<PloyeeServiceListGson> call, Throwable t) {
-            mSwipeRefreshLayout.setRefreshing(false);
-            showToast("onFailure");
-        }
-    };
+//    private Callback<PloyeeServiceListGson> mCallbackPloyeeService = new Callback<PloyeeServiceListGson>() {
+//        @Override
+//        public void onResponse(Call<PloyeeServiceListGson> call, Response<PloyeeServiceListGson> response) {
+//            mSwipeRefreshLayout.setRefreshing(false);
+//            if (response.isSuccessful() && response.body().isSuccess()) {
+//                bindData(response.body().getData());
+//            } else {
+//                showToast("isNotSuccessful");
+//            }
+//        }
+//
+//
+//        @Override
+//        public void onFailure(Call<PloyeeServiceListGson> call, Throwable t) {
+//            mSwipeRefreshLayout.setRefreshing(false);
+//            showToast("onFailure");
+//        }
+//    };
     private SwipeRefreshLayout.OnRefreshListener mOnRefreshListener = new SwipeRefreshLayout.OnRefreshListener() {
         @Override
         public void onRefresh() {
@@ -173,7 +174,18 @@ public class PloyeeServiceListFragment extends BaseFragment implements SearchVie
 
     private void refreshData() {
         mSwipeRefreshLayout.setRefreshing(true);
-        mService.getServiceList(SharePreferenceUtils.getCurrentActiveAppLanguageCode(getContext())).enqueue(mCallbackPloyeeService);
+        RetrofitCallUtils.with(mService.getServiceList(SharePreferenceUtils.getCurrentActiveAppLanguageCode(getContext())), new RetrofitCallUtils.RetrofitCallback<PloyeeServiceListGson>() {
+            @Override
+            public void onDataSuccess(PloyeeServiceListGson data) {
+                mSwipeRefreshLayout.setRefreshing(false);
+                bindData(data.getData());
+            }
+
+            @Override
+            public void onDataFailure(String failCause) {
+                mSwipeRefreshLayout.setRefreshing(false);
+            }
+        }).enqueue(getContext());
     }
 
     @Override

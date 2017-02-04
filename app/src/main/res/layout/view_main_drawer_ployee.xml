@@ -59,18 +59,49 @@
             android:layout_weight="1"
             android:fitsSystemWindows="true" />
 
-        <android.support.v7.widget.AppCompatTextView
-            android:id="@+id/textview_main_drawer_switch_to"
+        <!--<android.support.v7.widget.AppCompatTextView-->
+        <!--android:id="@+id/textview_main_drawer_switch_to"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_marginTop="8dp"-->
+        <!--android:background="@android:color/white"-->
+        <!--android:clickable="true"-->
+        <!--android:gravity="center"-->
+        <!--android:minHeight="?android:attr/listPreferredItemHeightSmall"-->
+        <!--android:text="@string/Search_Services"-->
+        <!--android:textAppearance="@style/TextAppearance.AppCompat.Medium"-->
+        <!--android:textColor="@color/colorPrimary" />-->
+        <android.support.design.internal.ForegroundLinearLayout
+            android:id="@+id/foregroundlinearlayout_main_drawer_switch_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
+            android:foreground="?attr/selectableItemBackground"
             android:background="@android:color/white"
-            android:clickable="true"
-            android:gravity="center"
-            android:minHeight="?android:attr/listPreferredItemHeightSmall"
-            android:text="@string/Switch_to_Ployer"
-            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-            android:textColor="@color/colorPrimary" />
+            android:clickable="true">
+
+            <ImageView
+                android:id="@+id/imageview_main_drawer_switch_icon"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginBottom="1dp"
+                android:layout_marginLeft="4dp"
+                android:layout_marginRight="4dp"
+                android:src="@drawable/ic_geniz_logo_133dp" />
+
+            <android.support.v7.widget.AppCompatTextView
+                android:id="@+id/textview_main_drawer_switch_to"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:minHeight="?android:attr/listPreferredItemHeightSmall"
+                android:text="@string/Search_Services"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                android:textColor="@color/colorPrimary" />
+
+        </android.support.design.internal.ForegroundLinearLayout>
+
 
     </LinearLayout>
 </android.support.v4.widget.NestedScrollView>

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/background_gradient_color_primary"
@@ -32,12 +33,13 @@
                 app:civ_fill_color="#FFF" />
 
             <TextView
+                android:id="@+id/textview_signup_detail_description"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:padding="8dp"
-                android:text="@string/Let_others_see_who_they_are_talking_to_you_can_upload_up_to_3_photos"
-                android:textColor="@android:color/white" />
+                android:textColor="@android:color/white"
+                tools:text="@string/Let_others_see_who_they_are_talking_to_you_can_upload_up_to_3_photos" />
 
             <com.rengwuxian.materialedittext.MaterialEditText
                 android:id="@+id/edittext_signup_detail_firstname"
@@ -45,7 +47,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:hint="@string/First_Name_asterisk"
-                android:inputType="textPersonName"
+                android:inputType="textPersonName|textCapWords"
                 app:met_baseColor="@android:color/white"
                 app:met_floatingLabel="normal"
                 app:met_floatingLabelText="@string/First_Name_asterisk"
@@ -60,7 +62,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:hint="@string/Last_Name_asterisk"
-                android:inputType="textPersonName"
+                android:inputType="textPersonName|textCapWords"
                 app:met_baseColor="@android:color/white"
                 app:met_floatingLabel="normal"
                 app:met_floatingLabelText="@string/Last_Name_asterisk"
@@ -69,20 +71,20 @@
                 app:met_textColorHint="@android:color/white"
                 app:met_underlineColor="@android:color/white" />
 
-            <com.rengwuxian.materialedittext.MaterialEditText
-                android:id="@+id/edittext_signup_detail_birthday"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:hint="@string/Birthday_asterisk"
-                android:inputType="date"
-                app:met_baseColor="@android:color/white"
-                app:met_floatingLabel="normal"
-                app:met_floatingLabelText="@string/Birthday_asterisk"
-                app:met_floatingLabelTextColor="@android:color/white"
-                app:met_primaryColor="@android:color/white"
-                app:met_textColorHint="@android:color/white"
-                app:met_underlineColor="@android:color/white" />
+            <!--<com.rengwuxian.materialedittext.MaterialEditText-->
+            <!--android:id="@+id/edittext_signup_detail_birthday"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_marginTop="8dp"-->
+            <!--android:hint="@string/Birthday_asterisk"-->
+            <!--android:inputType="date"-->
+            <!--app:met_baseColor="@android:color/white"-->
+            <!--app:met_floatingLabel="normal"-->
+            <!--app:met_floatingLabelText="@string/Birthday_asterisk"-->
+            <!--app:met_floatingLabelTextColor="@android:color/white"-->
+            <!--app:met_primaryColor="@android:color/white"-->
+            <!--app:met_textColorHint="@android:color/white"-->
+            <!--app:met_underlineColor="@android:color/white" />-->
 
 
             <com.rengwuxian.materialedittext.MaterialEditText
@@ -139,12 +141,12 @@
 
             <android.support.v7.widget.AppCompatButton
                 android:id="@+id/button_signup_detail_create_account"
+                style="@style/PloyButtonTransparentWhiteBorder"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textAllCaps="false"
                 android:layout_marginTop="16dp"
                 android:text="@string/Create_Account"
-                style="@style/PloyButtonTransparentWhiteBorder" />
+                android:textAllCaps="false" />
 
             <TextView
                 android:id="@+id/textview_signup_detail_privacy"

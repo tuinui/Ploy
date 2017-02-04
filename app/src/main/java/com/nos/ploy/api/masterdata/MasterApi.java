@@ -6,6 +6,7 @@ import com.nos.ploy.api.masterdata.model.HtmlAppGson;
 import com.nos.ploy.api.masterdata.model.LanguageGson;
 import com.nos.ploy.api.ployee.model.PloyeeAvailiabilityGson;
 
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Query;
@@ -36,4 +37,8 @@ public interface MasterApi {
     ///api/appLanguage/getAppLanguageActiveList
     @GET("/api/appLanguage/getAppLanguageActiveList")
     Call<AppLanguageGson> getAppLanguageActiveList();
+
+    //{{endpoint_ploy}}/api/appLabel/getByLgCode?lgCode=en
+    @GET("api/appLabel/getByLgCode")
+    Call<ResponseBody> getLanguageAppLabel(@Query("lgCode") String lgCode);
 }

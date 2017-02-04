@@ -25,7 +25,8 @@ import com.nos.ploy.api.account.model.PostDeleteProfileImageGson;
 import com.nos.ploy.api.account.model.PostUploadProfileImageGson;
 import com.nos.ploy.api.account.model.ProfileImageGson;
 import com.nos.ploy.api.base.RetrofitCallUtils;
-import com.nos.ploy.api.base.response.ResponseMessage;
+import com.nos.ploy.api.base.response.BaseResponse;
+import com.nos.ploy.api.masterdata.model.LanguageAppLabelGson;
 import com.nos.ploy.api.utils.loader.AccountInfoLoader;
 import com.nos.ploy.base.BaseFragment;
 import com.nos.ploy.flow.ployee.profile.upload.view.UploadPhotoRecyclerAdapter;
@@ -87,13 +88,13 @@ public class UploadPhotoFragment extends BaseFragment {
         }
 
         @Override
-        public void onDataFailure(ResponseMessage failCause) {
+        public void onDataFailure(String failCause) {
             dismissLoading();
         }
     };
-    private RetrofitCallUtils.RetrofitCallback<Object> mCallbackDelete = new RetrofitCallUtils.RetrofitCallback<Object>() {
+    private RetrofitCallUtils.RetrofitCallback<BaseResponse> mCallbackDelete = new RetrofitCallUtils.RetrofitCallback<BaseResponse>() {
         @Override
-        public void onDataSuccess(Object data) {
+        public void onDataSuccess(BaseResponse data) {
             dismissLoading();
             showToast("Success");
             mOnDataChangeListener.onDataChange();
@@ -101,10 +102,17 @@ public class UploadPhotoFragment extends BaseFragment {
         }
 
         @Override
-        public void onDataFailure(ResponseMessage failCause) {
+        public void onDataFailure(String failCause) {
             dismissLoading();
         }
     };
+
+    @Override
+    protected void bindLanguage(LanguageAppLabelGson.Data data) {
+        super.bindLanguage(data);
+        mTextViewTitle.setText(data.profileScreenUploadHeader);
+    }
+
     private UploadPhotoRecyclerAdapter mAdapter = new UploadPhotoRecyclerAdapter() {
 
         @Override

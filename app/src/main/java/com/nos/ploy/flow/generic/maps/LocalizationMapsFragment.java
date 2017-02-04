@@ -19,6 +19,7 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.nos.ploy.R;
+import com.nos.ploy.api.masterdata.model.LanguageAppLabelGson;
 import com.nos.ploy.base.BaseFragment;
 import com.nos.ploy.utils.FragmentTransactionUtils;
 import com.nos.ploy.utils.IntentUtils;
@@ -67,6 +68,11 @@ public class LocalizationMapsFragment extends BaseFragment implements OnMapReady
         return fragment;
     }
 
+    @Override
+    protected void bindLanguage(LanguageAppLabelGson.Data data) {
+        super.bindLanguage(data);
+        mTextViewToolbarTitle.setText(data.profileScreenLocalization);
+    }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {

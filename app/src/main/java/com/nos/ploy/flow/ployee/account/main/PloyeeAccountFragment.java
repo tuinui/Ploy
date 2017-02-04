@@ -1,14 +1,19 @@
 package com.nos.ploy.flow.ployee.account.main;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.Toolbar;
+import android.telephony.PhoneNumberFormattingTextWatcher;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.facebook.CallbackManager;
@@ -23,11 +28,12 @@ import com.nos.ploy.api.authentication.AuthenticationApi;
 import com.nos.ploy.api.authentication.model.AccountGson;
 import com.nos.ploy.api.authentication.model.PostFacebookMapUser;
 import com.nos.ploy.api.base.RetrofitCallUtils;
-import com.nos.ploy.api.base.response.ResponseMessage;
+import com.nos.ploy.api.base.response.BaseResponse;
+import com.nos.ploy.api.masterdata.model.LanguageAppLabelGson;
 import com.nos.ploy.api.utils.loader.AccountInfoLoader;
 import com.nos.ploy.base.BaseFragment;
+import com.nos.ploy.cache.UserTokenManager;
 import com.nos.ploy.flow.ployee.account.phone.PloyeeAccountPhoneFragment;
-import com.nos.ploy.utils.DatePickerUtils;
 import com.rengwuxian.materialedittext.MaterialEditText;
 
 import java.util.Arrays;
@@ -45,8 +51,8 @@ public class PloyeeAccountFragment extends BaseFragment implements View.OnClickL
     private static final String KEY_ACCOUNT_GSON = "ACCOUNT_GSON";
     @BindView(R.id.edittext_ployee_account_main_first_name)
     MaterialEditText mEditTextFirstname;
-    @BindView(R.id.edittext_ployee_account_main_birthday)
-    MaterialEditText mEditTextBirthday;
+    //    @BindView(R.id.edittext_ployee_account_main_birthday)
+//    MaterialEditText mEditTextBirthday;
     @BindView(R.id.edittext_ployee_account_main_email)
     MaterialEditText mEditTextEmail;
     @BindView(R.id.edittext_ployee_account_main_last_name)
@@ -55,6 +61,8 @@ public class PloyeeAccountFragment extends BaseFragment implements View.OnClickL
     MaterialEditText mEditTextPhone;
     @BindView(R.id.loginbutton_ployee_account_main_facebook)
     LoginButton mLoginButtonFacebook;
+    @BindView(R.id.button_ployee_account_main_facebook_fake)
+    Button mButtonFacebookFake;
     @BindView(R.id.toolbar_main)
     Toolbar mToolbar;
     @BindView(R.id.textview_main_appbar_title)
@@ -63,12 +71,15 @@ public class PloyeeAccountFragment extends BaseFragment implements View.OnClickL
     SwipeRefreshLayout mSwipeRefreshLayout;
     @BindView(R.id.edittext_ployee_account_main_password)
     MaterialEditText mEdittextPassword;
-    @BindString(R.string.Account)
-    String LAccount;
+    @BindView(R.id.button_ployee_account_logout)
+    Button mButtonLogout;
+    @BindView(R.id.textview_ployee_account_notices)
+    TextView mTextViewNotices;
     private AccountGson.Data mData;
     private CallbackManager mCallbackManager;
     private AuthenticationApi mAuthenApi;
     private AccountApi mAccountApi;
+    private static final String TAG = "PloyeeAccountFragment";
     private Long mUserId;
     private Action1<AccountGson.Data> mOnLoadAccountFinish = new Action1<AccountGson.Data>() {
         @Override
@@ -79,16 +90,16 @@ public class PloyeeAccountFragment extends BaseFragment implements View.OnClickL
             }
         }
     };
-    private RetrofitCallUtils.RetrofitCallback<Object> mCallbackUpdateData = new RetrofitCallUtils.RetrofitCallback<Object>() {
+    private RetrofitCallUtils.RetrofitCallback<BaseResponse> mCallbackUpdateData = new RetrofitCallUtils.RetrofitCallback<BaseResponse>() {
         @Override
-        public void onDataSuccess(Object data) {
+        public void onDataSuccess(BaseResponse data) {
             dismissLoading();
             showToast("Success");
             refreshData();
         }
 
         @Override
-        public void onDataFailure(ResponseMessage failCause) {
+        public void onDataFailure(String failCause) {
             dismissLoading();
         }
     };
@@ -101,13 +112,13 @@ public class PloyeeAccountFragment extends BaseFragment implements View.OnClickL
 
         @Override
         public void onCancel() {
-
+            Log.i(TAG, "onCancel");
         }
 
 
         @Override
         public void onError(FacebookException error) {
-
+            Log.i(TAG, error.toString());
         }
     };
 
@@ -149,6 +160,26 @@ public class PloyeeAccountFragment extends BaseFragment implements View.OnClickL
         bindData(mData);
     }
 
+    @Override
+    protected void bindLanguage(LanguageAppLabelGson.Data data) {
+        super.bindLanguage(data);
+        mTextViewTitle.setText(data.accountScreenHeader);
+        mEditTextFirstname.setHint(data.accountScreenFirstName);
+        mEditTextFirstname.setFloatingLabelText(data.accountScreenFirstName);
+        mEditTextLastName.setHint(data.accountScreenLastName);
+        mEditTextLastName.setFloatingLabelText(data.accountScreenLastName);
+        mEditTextEmail.setHint(data.accountScreenEmail);
+        mEditTextEmail.setFloatingLabelText(data.accountScreenEmail);
+        mEditTextPhone.setHint(data.accountScreenPhone);
+        mEditTextPhone.setFloatingLabelText(data.accountScreenPhone);
+        mButtonLogout.setText(data.accountScreenLogout);
+        mButtonFacebookFake.setText(data.accountScreenConnectFacebook);
+        mEdittextPassword.setHint(data.accountScreenChangepass);
+        mEdittextPassword.setFloatingLabelText(data.accountScreenChangepass);
+        mTextViewNotices.setText(data.accountScreenDescript);
+
+    }
+
     private void initFacebookButton() {
         mCallbackManager = CallbackManager.Factory.create();
         LoginManager.getInstance().registerCallback(mCallbackManager, mLoginResultCallback);
@@ -156,37 +187,42 @@ public class PloyeeAccountFragment extends BaseFragment implements View.OnClickL
                 "public_profile", "email"));
         mLoginButtonFacebook.setFragment(this);
         mLoginButtonFacebook.registerCallback(mCallbackManager, mLoginResultCallback);
+
     }
 
     private void initView() {
         disableEditable(mEditTextPhone);
         disableEditable(mEditTextEmail);
-        disableEditable(mEditTextBirthday);
+//        disableEditable(mEditTextBirthday);
         setRefreshLayout(mSwipeRefreshLayout, new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 refreshData();
             }
         });
+        mEditTextPhone.addTextChangedListener(new PhoneNumberFormattingTextWatcher());
         mEditTextPhone.setOnClickListener(this);
-        mEditTextBirthday.setOnClickListener(this);
+//        mEditTextBirthday.setOnClickListener(this);
+        mButtonLogout.setOnClickListener(this);
+        mButtonFacebookFake.setOnClickListener(this);
+
         mEditTextFirstname.setFocusFraction(1f);
         mEditTextEmail.setFocusFraction(1f);
         mEditTextPhone.setFocusFraction(1f);
         mEditTextLastName.setFocusFraction(1f);
-        mEditTextBirthday.setFocusFraction(1f);
+//        mEditTextBirthday.setFocusFraction(1f);
         mEdittextPassword.setFocusFraction(1f);
     }
 
     private void initToolbar() {
-        mTextViewTitle.setText(LAccount);
+
         enableBackButton(mToolbar);
         mToolbar.inflateMenu(R.menu.menu_done);
         mToolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
                 if (item.getItemId() == R.id.menu_done_item_done) {
-                    requestUpdateAccount();
+                    attemptUpdateAccount();
                 }
                 return false;
             }
@@ -203,11 +239,10 @@ public class PloyeeAccountFragment extends BaseFragment implements View.OnClickL
                     mEditTextLastName.setText(mData.getLastName());
                     mEditTextPhone.setText(mData.getPhone());
                     mEditTextEmail.setText(mData.getEmail());
-                    mEditTextBirthday.setText(mData.getBirthDay());
                     if (TextUtils.isEmpty(mData.getFbUserId())) {
-                        mLoginButtonFacebook.setVisibility(View.GONE);
+                        mButtonFacebookFake.setVisibility(View.VISIBLE);
                     } else {
-                        mLoginButtonFacebook.setVisibility(View.VISIBLE);
+                        mButtonFacebookFake.setVisibility(View.GONE);
                     }
                 }
             });
@@ -215,12 +250,32 @@ public class PloyeeAccountFragment extends BaseFragment implements View.OnClickL
         }
     }
 
+    private void attemptUpdateAccount(){
+        boolean canUpdate = true;
+        String firstName = extractString(mEditTextFirstname);
+        String lastName = extractString(mEditTextLastName);
+        if(TextUtils.isEmpty(firstName)){
+            canUpdate = false;
+            mEditTextFirstname.setText(mLanguageData.accountScreenNameCantEmpty);
+            mEditTextFirstname.requestFocus();
+        }
+
+        if(TextUtils.isEmpty(lastName)){
+            canUpdate = false;
+            mEditTextLastName.setText(mLanguageData.accountScreenNameCantEmpty);
+            mEditTextLastName.requestFocus();
+        }
+
+        if(canUpdate){
+            requestUpdateAccount();
+        }
+
+    }
+
     private void requestUpdateAccount() {
         AccountGson.Data data = mData.cloneThis();
         data.setFirstName(extractString(mEditTextFirstname));
         data.setLastName(extractString(mEditTextLastName));
-        data.setBirthDay(extractString(mEditTextBirthday));
-//        data.setEmail(extractString(mEditTextEmail));
         data.setPhone(extractString(mEditTextPhone));
         data.setPassword(extractString(mEdittextPassword));
         showLoading();
@@ -232,7 +287,7 @@ public class PloyeeAccountFragment extends BaseFragment implements View.OnClickL
             showLoading();
             RetrofitCallUtils
                     .with(mAuthenApi.postFacebookMapUser(new PostFacebookMapUser(loginResult.getAccessToken().getUserId(), mUserId))
-                            , mCallbackUpdateData);
+                            , mCallbackUpdateData).enqueue(getContext());
         }
 
     }
@@ -244,22 +299,37 @@ public class PloyeeAccountFragment extends BaseFragment implements View.OnClickL
 
 
     @Override
-    public void onClick(View view) {
-        int id = view.getId();
+    public void onClick(View v) {
+        int id = v.getId();
         if (id == mEditTextPhone.getId()) {
             showFragment(PloyeeAccountPhoneFragment.newInstance(extractString(mEditTextPhone), new PloyeeAccountPhoneFragment.FragmentInteractionListener() {
                 @Override
                 public void onConfirmData(String phoneNumber) {
+
                     mEditTextPhone.setText(phoneNumber);
+
                 }
             }));
-        } else if (id == mEditTextBirthday.getId()) {
+        }/* else if (id == mEditTextBirthday.getId()) {
             DatePickerUtils.chooseDate(mEditTextBirthday.getContext(), new Action1<String>() {
                 @Override
                 public void call(String s) {
                     mEditTextBirthday.setText(s);
                 }
             });
+        }*/ else if (id == mButtonLogout.getId()) {
+            UserTokenManager.clearData(v.getContext());
+            ActivityCompat.finishAfterTransition(getActivity());
+        } else if (id == mButtonFacebookFake.getId()) {
+            mLoginButtonFacebook.callOnClick();
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (null != mCallbackManager) {
+            mCallbackManager.onActivityResult(requestCode, resultCode, data);
         }
     }
 }

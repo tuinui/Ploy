@@ -17,12 +17,12 @@
 
             <Button
                 android:id="@+id/button_ployee_availabality_no_preferences"
+                style="@style/PloyButtonTransparentGrayBorder"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="16dp"
-                android:textAllCaps="false"
                 android:text="@string/No_preferences"
-                style="@style/PloyButtonTransparentGrayBorder"/>
+                android:textAllCaps="false" />
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/recyclerview_ployee_availability_time_table"
@@ -49,6 +49,7 @@
                     android:orientation="vertical">
 
                     <TextView
+                        android:id="@+id/textview_ployee_availability_holiday_mode_label"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/Holiday_mode"
@@ -58,6 +59,7 @@
 
                     <TextView
                         android:layout_width="match_parent"
+                        android:id="@+id/textview_ployee_availability_holiday_mode_description"
                         android:layout_height="wrap_content"
                         android:text="@string/Temporary_remove_Provider_section_offline"
                         android:textColor="@android:color/white" />

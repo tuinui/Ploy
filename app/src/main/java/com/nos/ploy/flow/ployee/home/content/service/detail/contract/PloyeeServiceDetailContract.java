@@ -40,6 +40,8 @@ public class PloyeeServiceDetailContract {
 
         String getServiceOthersName();
 
+        String getPriceUnit();
+
 
     }
 }

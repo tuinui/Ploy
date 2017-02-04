@@ -24,8 +24,8 @@ import com.nos.ploy.api.account.model.PloyeeProfileGson;
 import com.nos.ploy.api.account.model.TransportGson;
 import com.nos.ploy.api.account.model.TransportGsonVm;
 import com.nos.ploy.api.base.RetrofitCallUtils;
-import com.nos.ploy.api.base.response.ResponseMessage;
 import com.nos.ploy.api.masterdata.MasterApi;
+import com.nos.ploy.api.masterdata.model.LanguageAppLabelGson;
 import com.nos.ploy.api.ployee.model.PloyeeAvailiabilityGson;
 import com.nos.ploy.api.ployer.PloyerApi;
 import com.nos.ploy.api.ployer.model.PloyerServicesGson;
@@ -82,6 +82,12 @@ public class FilterFragment extends BaseFragment implements View.OnClickListener
     Button mButtonClear;
     @BindView(R.id.button_filter_filter)
     Button mButtonFilter;
+    @BindView(R.id.textview_filter_rating_label)
+    TextView mTextViewRatingLabel;
+    @BindView(R.id.textview_filter_contact_method_label)
+    TextView mTextViewContactMethod;
+    @BindView(R.id.textview_filter_transport_label)
+    TextView mTextViewTransport;
 
 
     private PostProviderFilterGson mPostData = new PostProviderFilterGson();
@@ -106,12 +112,12 @@ public class FilterFragment extends BaseFragment implements View.OnClickListener
                             TransportGsonVm data = mTransportVms.get(holder.getAdapterPosition());
                             boolean newValue = !data.isCheck();
                             data.setCheck(newValue);
-                            if(newValue){
-                                if(!mPostData.getTransportIds().contains(data.getId())){
+                            if (newValue) {
+                                if (!mPostData.getTransportIds().contains(data.getId())) {
                                     mPostData.getTransportIds().add(data.getId());
                                 }
-                            }else{
-                                if(mPostData.getTransportIds().contains(data.getId())){
+                            } else {
+                                if (mPostData.getTransportIds().contains(data.getId())) {
                                     mPostData.getTransportIds().remove(data.getId());
                                 }
                             }
@@ -139,7 +145,7 @@ public class FilterFragment extends BaseFragment implements View.OnClickListener
         }
 
         @Override
-        public void onDataFailure(ResponseMessage failCause) {
+        public void onDataFailure(String failCause) {
             dismissLoading();
         }
     };
@@ -190,6 +196,23 @@ public class FilterFragment extends BaseFragment implements View.OnClickListener
     }
 
     @Override
+    protected void bindLanguage(LanguageAppLabelGson.Data data) {
+        super.bindLanguage(data);
+        mTextViewServices.setText(data.servicesLabel);
+        mTextViewAvailability.setText(data.avaliabilityScreenHeader);
+        mTextViewLanguage.setText(data.profileScreenLanguage);
+        mButtonEmail.setText(data.profileScreenEmail);
+        mButtonFilter.setText(data.filterScreenBtn);
+        mButtonClear.setText(data.filterScreenClear);
+        mEditTextFrom.setHint(data.serviceScreenFrom);
+        mEditTextTo.setHint(data.serviceScreenTo);
+        mTextViewContactMethod.setText(data.profileScreenContactMethod);
+        mTextViewRatingLabel.setText(data.filterScreenRating);
+        mTextViewTransport.setText(data.profileScreenTransport);
+        mTextViewSubTitle.setText(mData.getPloyeeCount() + " " + data.providersLabel);
+    }
+
+    @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         initToolbar();
@@ -201,7 +224,8 @@ public class FilterFragment extends BaseFragment implements View.OnClickListener
     private void initToolbar() {
         if (null != mData) {
             mTextViewTitle.setText(mData.getServiceName());
-            mTextViewSubTitle.setText(mData.getPloyeeCountDisplay());
+            mTextViewSubTitle.setVisibility(View.VISIBLE);
+//            mTextViewSubTitle.setText(mData.getPloyeeCountDisplay());
         }
         enableBackButton(mToolbar);
     }
@@ -440,7 +464,7 @@ public class FilterFragment extends BaseFragment implements View.OnClickListener
         return FilterAvailabilityFragment.newInstance(mData, mPostData.cloneThis().getAvailabilityItems(), new FilterAvailabilityFragment.OnClickDoneListener() {
             @Override
             public void onClickDone(PloyeeAvailiabilityGson.Data data) {
-                    mPostData.addAllAvailabilityItem(data.getAvailabilityItems());
+                mPostData.addAllAvailabilityItem(data.getAvailabilityItems());
 
                 bindData(mPostData);
             }

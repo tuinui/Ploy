@@ -7,6 +7,7 @@ import com.nos.ploy.api.authentication.model.PostLoginFacebookGson;
 import com.nos.ploy.api.authentication.model.PostLoginGson;
 import com.nos.ploy.api.authentication.model.PostSignupGson;
 import com.nos.ploy.api.authentication.model.UserTokenGson;
+import com.nos.ploy.api.base.response.BaseResponse;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
@@ -29,11 +30,11 @@ public interface AuthenticationApi {
 
     ///api/auth/facebookMappingUser
     @POST("/api/auth/facebookMappingUser")
-    Call<Object> postFacebookMapUser(@Body PostFacebookMapUser data);
+    Call<BaseResponse> postFacebookMapUser(@Body PostFacebookMapUser data);
 
     //    /api/user/forgotPassword
     @POST("/api/user/forgotPassword")
-    Call<Object> postForgotPassword(@Body PostForgotPasswordGson data);
+    Call<BaseResponse> postForgotPassword(@Body PostForgotPasswordGson data);
 
 
 }

@@ -27,11 +27,14 @@ import com.nos.ploy.api.authentication.model.PostLoginFacebookGson;
 import com.nos.ploy.api.authentication.model.PostLoginGson;
 import com.nos.ploy.api.authentication.model.UserTokenGson;
 import com.nos.ploy.api.base.RetrofitCallUtils;
-import com.nos.ploy.api.base.response.ResponseMessage;
+import com.nos.ploy.api.masterdata.model.LanguageAppLabelGson;
 import com.nos.ploy.base.BaseFragment;
 import com.nos.ploy.cache.UserTokenManager;
+import com.nos.ploy.flow.generic.intro.IntroductionFragment;
 import com.nos.ploy.flow.ployee.home.PloyeeHomeActivity;
+import com.nos.ploy.flow.ployer.service.PloyerHomeActivity;
 import com.nos.ploy.utils.IntentUtils;
+import com.rengwuxian.materialedittext.MaterialEditText;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -51,9 +54,9 @@ public class SignInFragment extends BaseFragment implements View.OnClickListener
     @BindView(R.id.textview_signin_forgot_password)
     TextView mTextViewForgotPassword;
     @BindView(R.id.edittext_signin_email_address)
-    EditText mEditTextEmail;
+    MaterialEditText mEditTextEmail;
     @BindView(R.id.edittext_signin_password)
-    EditText mEditTextPassword;
+    MaterialEditText mEditTextPassword;
     @BindView(R.id.toolbar_main)
     Toolbar mToolbar;
     @BindView(R.id.textview_main_appbar_title)
@@ -125,11 +128,6 @@ public class SignInFragment extends BaseFragment implements View.OnClickListener
         enableBackButton(mToolbar);
     }
 
-    private void dummyData() {
-        mEditTextEmail.setText("nuitest@gmail.com");
-        mEditTextPassword.setText("123456");
-    }
-
     private void initView() {
         mButtonSignin.setOnClickListener(this);
         mTextViewForgotPassword.setOnClickListener(this);
@@ -154,16 +152,33 @@ public class SignInFragment extends BaseFragment implements View.OnClickListener
                             public void onDataSuccess(UserTokenGson data) {
                                 dismissLoading();
                                 UserTokenManager.saveToken(context, data.getData());
-                                dismiss();
-                                goToPloyeeHome();
+                                showIntroductionFragment();
                             }
 
                             @Override
-                            public void onDataFailure(ResponseMessage failCause) {
+                            public void onDataFailure(String failCause) {
                                 dismissLoading();
                             }
                         })
                 .enqueue(context);
+    }
+
+    private void showIntroductionFragment() {
+        showFragment(IntroductionFragment.newInstance(new IntroductionFragment.FragmentInteractionListener() {
+            @Override
+            public void onClickFindServices(Context context) {
+                dismiss();
+                IntentUtils.startActivity(context, PloyerHomeActivity.class);
+                finishThisActivity();
+            }
+
+            @Override
+            public void onClickOfferServices(Context context) {
+                dismiss();
+                goToPloyeeHome();
+            }
+        },false));
+
     }
 
     private void setFacebookData(final LoginResult loginResult) {
@@ -201,14 +216,26 @@ public class SignInFragment extends BaseFragment implements View.OnClickListener
             public void onDataSuccess(UserTokenGson data) {
                 dismissLoading();
                 UserTokenManager.saveToken(context, data.getData());
-                goToPloyeeHome();
+                showIntroductionFragment();
             }
 
             @Override
-            public void onDataFailure(ResponseMessage failCause) {
+            public void onDataFailure(String failCause) {
                 dismissLoading();
             }
         }).enqueue(context);
+    }
+
+    @Override
+    protected void bindLanguage(LanguageAppLabelGson.Data data) {
+        super.bindLanguage(data);
+        mTextViewTitle.setText(data.loginScreenHeader);
+        mTextViewForgotPassword.setText(data.loginScreenForgotpass);
+        mEditTextEmail.setHint(data.loginScreenEmail+"*");
+        mEditTextEmail.setFloatingLabelText(data.loginScreenEmail+"*");
+        mEditTextPassword.setHint(data.loginScreenPassword+"*");
+        mEditTextPassword.setFloatingLabelText(data.loginScreenPassword+"*");
+        mButtonSignin.setText(data.loginScreenBtnLogin);
     }
 
     private String extractAndCheckError(EditText editText) {

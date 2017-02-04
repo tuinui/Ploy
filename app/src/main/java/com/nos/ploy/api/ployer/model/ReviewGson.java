@@ -5,6 +5,7 @@ import android.os.Parcelable;
 
 import com.google.gson.annotations.SerializedName;
 import com.nos.ploy.api.account.model.ProfileImageGson;
+import com.nos.ploy.api.authentication.model.AccountGson;
 import com.nos.ploy.api.base.response.BaseResponse;
 
 import java.util.ArrayList;
@@ -156,11 +157,19 @@ public class ReviewGson extends BaseResponse<ReviewGson.Data> {
             @SerializedName("userProfileImage")
             private ProfileImageGson.Data userProfileImage;
 
+
+            @SerializedName("userReview")
+            private AccountGson.Data userReview;
+
             public ReviewData() {
             }
 
             public Review getReview() {
                 return review;
+            }
+
+            public AccountGson.Data getUserReview() {
+                return userReview;
             }
 
             public ProfileImageGson.Data getUserProfileImage() {

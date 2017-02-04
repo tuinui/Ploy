@@ -17,10 +17,12 @@ import android.widget.TextView;
 import com.nos.ploy.R;
 import com.nos.ploy.api.masterdata.MasterApi;
 import com.nos.ploy.api.masterdata.model.AppLanguageGson;
+import com.nos.ploy.api.masterdata.model.LanguageAppLabelGson;
 import com.nos.ploy.base.BaseFragment;
 import com.nos.ploy.cache.SharePreferenceUtils;
-import com.nos.ploy.flow.ployee.profile.language.LanguageChooserRecyclerAdapter;
 import com.nos.ploy.flow.generic.settings.language.viewmodel.AppLanguageViewModel;
+import com.nos.ploy.flow.ployee.profile.language.LanguageChooserRecyclerAdapter;
+import com.nos.ploy.utils.PopupMenuUtils;
 import com.nos.ploy.utils.RecyclerUtils;
 
 import java.util.ArrayList;
@@ -138,6 +140,13 @@ public class LanguageChooserFragment extends BaseFragment {
         bindData();
     }
 
+    @Override
+    protected void bindLanguage(LanguageAppLabelGson.Data data) {
+        super.bindLanguage(data);
+        mTextViewTitle.setText(data.settingLangHeader);
+        PopupMenuUtils.setMenuTitle(mToolbar.getMenu(),R.id.menu_done_item_done,data.doneLabel);
+    }
+
     private void initRecyclerView() {
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()) {
             @Override
@@ -162,9 +171,11 @@ public class LanguageChooserFragment extends BaseFragment {
         }
     }
 
+
     private void initToolbar() {
         mTextViewTitle.setText(R.string.Language_setting);
         mToolbar.inflateMenu(R.menu.menu_done);
+
         mToolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {

@@ -1,9 +1,10 @@
 package com.nos.ploy.flow.ployer.service;
 
-import android.content.Intent;
+import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.design.internal.ForegroundLinearLayout;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
@@ -16,11 +17,15 @@ import android.widget.TextView;
 import com.nos.ploy.DrawerController;
 import com.nos.ploy.R;
 import com.nos.ploy.api.authentication.model.AccountGson;
+import com.nos.ploy.api.masterdata.model.LanguageAppLabelGson;
 import com.nos.ploy.api.ployer.PloyerApi;
 import com.nos.ploy.api.ployer.model.PloyerServicesGson;
 import com.nos.ploy.api.utils.loader.AccountInfoLoader;
 import com.nos.ploy.base.BaseActivity;
+import com.nos.ploy.cache.UserTokenManager;
 import com.nos.ploy.flow.generic.htmltext.HtmlTextFragment;
+import com.nos.ploy.flow.generic.intro.IntroductionFragment;
+import com.nos.ploy.flow.generic.register.SignInSignupActivity;
 import com.nos.ploy.flow.generic.settings.SettingsFragment;
 import com.nos.ploy.flow.ployee.account.main.PloyeeAccountFragment;
 import com.nos.ploy.flow.ployee.home.PloyeeHomeActivity;
@@ -34,15 +39,13 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import rx.functions.Action1;
 
-public class PloyerServiceListActivity extends BaseActivity implements SearchView.OnQueryTextListener {
+public class PloyerHomeActivity extends BaseActivity implements SearchView.OnQueryTextListener {
     @BindView(R.id.toolbar_main)
     Toolbar mToolbar;
     @BindView(R.id.imageview_main_footer_logo1)
     ImageView mImageViewFooterLogo1;
     @BindView(R.id.textview_main_appbar_title)
     TextView mTextViewTitle;
-    @BindView(R.id.textview_main_appbar_subtitle)
-    TextView mTextViewSubTitle;
     @BindView(R.id.imageview_main_footer_more)
     ImageView mImageViewMore;
     @BindView(R.id.viewstub_main_appbar_searchview)
@@ -57,6 +60,8 @@ public class PloyerServiceListActivity extends BaseActivity implements SearchVie
     int dp16;
     @BindView(R.id.textview_main_drawer_switch_to)
     TextView mTextViewSwitchToPloyee;
+    @BindView(R.id.foregroundlinearlayout_main_drawer_switch_container)
+    ForegroundLinearLayout mForeGroundLinearLayoutSwitchToContainer;
     private SearchView mSearchView;
 
     @Override
@@ -86,23 +91,43 @@ public class PloyerServiceListActivity extends BaseActivity implements SearchVie
                 case DrawerController.NONE:
                     break;
                 case DrawerController.ACCOUNT:
-                    AccountInfoLoader.getAccountGson(PloyerServiceListActivity.this, mUserId, new Action1<AccountGson.Data>() {
-                        @Override
-                        public void call(AccountGson.Data accountData) {
-                            if (null != accountData) {
-                                showFragment(PloyeeAccountFragment.newInstance(accountData));
+                    if (mUserId != -404) {
+                        AccountInfoLoader.getAccountGson(PloyerHomeActivity.this, mUserId, new Action1<AccountGson.Data>() {
+                            @Override
+                            public void call(AccountGson.Data accountData) {
+                                if (null != accountData) {
+                                    showFragment(PloyeeAccountFragment.newInstance(accountData));
+                                }
                             }
-                        }
-                    });
+                        });
+                    }
                     break;
                 case DrawerController.SETTINGS:
-                    showFragment(SettingsFragment.newInstance(mUserId));
+                    if (null != mUserId) {
+                        showFragment(SettingsFragment.newInstance(mUserId));
+                    }
+
                     break;
                 case DrawerController.WHAT_IS_PLOYEE:
                     showFragment(HtmlTextFragment.newInstance(HtmlTextFragment.WHAT_IS_PLOYEE));
                     break;
                 case DrawerController.WHAT_IS_PLOYER:
                     showFragment(HtmlTextFragment.newInstance(HtmlTextFragment.WHAT_IS_PLOYER));
+                    break;
+                case DrawerController.INTRODUCTION:
+                    showFragment(IntroductionFragment.newInstance(new IntroductionFragment.FragmentInteractionListener() {
+                        @Override
+                        public void onClickFindServices(Context context) {
+
+                        }
+
+                        @Override
+                        public void onClickOfferServices(Context context) {
+                            IntentUtils.startActivity(context, PloyeeHomeActivity.class);
+                            finishThisActivity();
+                        }
+                    },true));
+
                     break;
             }
         }
@@ -125,12 +150,34 @@ public class PloyerServiceListActivity extends BaseActivity implements SearchVie
         initToolbar();
     }
 
+    @Override
+    protected void bindLanguage(LanguageAppLabelGson.Data data) {
+        super.bindLanguage(data);
+        mTextViewTitle.setText(data.ployerHomeSearchService);
+        mSearchView.setQueryHint(data.providerScreenSearch);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (UserTokenManager.isLogin(this)) {
+            mTextViewSwitchToPloyee.setText(R.string.Offer_services);
+        } else {
+            mTextViewSwitchToPloyee.setText(R.string.Login_or_Signup);
+        }
+    }
+
     private void initView() {
-        mTextViewSwitchToPloyee.setOnClickListener(new View.OnClickListener() {
+        mForeGroundLinearLayoutSwitchToContainer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                IntentUtils.startActivity(PloyerServiceListActivity.this, PloyeeHomeActivity.class);
-                finishThisActivity();
+                if (UserTokenManager.isLogin(v.getContext())) {
+                    IntentUtils.startActivity(PloyerHomeActivity.this, PloyeeHomeActivity.class);
+                    finishThisActivity();
+                } else {
+                    IntentUtils.startActivity(v.getContext(), SignInSignupActivity.class);
+                }
+
             }
         });
     }
@@ -167,7 +214,7 @@ public class PloyerServiceListActivity extends BaseActivity implements SearchVie
     private void goToPersonMenu(PloyerServicesGson.Data data) {
         Bundle bundle = new Bundle();
         bundle.putParcelable(PloyerPersonActivity.KEY_SERVICE_DATA, data);
-        IntentUtils.startActivity(this, PloyerPersonActivity.class,bundle);
+        IntentUtils.startActivity(this, PloyerPersonActivity.class, bundle);
     }
 
 }

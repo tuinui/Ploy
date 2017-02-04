@@ -27,9 +27,8 @@ import com.nos.ploy.api.authentication.AuthenticationApi;
 import com.nos.ploy.api.authentication.model.AccountGson;
 import com.nos.ploy.api.authentication.model.PostSignupGson;
 import com.nos.ploy.api.base.RetrofitCallUtils;
-import com.nos.ploy.api.base.response.ResponseMessage;
+import com.nos.ploy.api.masterdata.model.LanguageAppLabelGson;
 import com.nos.ploy.base.BaseFragment;
-import com.nos.ploy.utils.DatePickerUtils;
 import com.nos.ploy.utils.ImagePickerUtils;
 import com.nos.ploy.utils.MyFileUtils;
 import com.rengwuxian.materialedittext.MaterialEditText;
@@ -60,8 +59,8 @@ public class SignUpFragment extends BaseFragment implements View.OnClickListener
     MaterialEditText mEditTextPassword;
     @BindView(R.id.edittext_signup_detail_re_password)
     MaterialEditText mEditTextRePassword;
-    @BindView(R.id.edittext_signup_detail_birthday)
-    MaterialEditText mEditTextBirthDay;
+    //    @BindView(R.id.edittext_signup_detail_birthday)
+//    MaterialEditText mEditTextBirthDay;
     @BindView(R.id.edittext_signup_detail_firstname)
     MaterialEditText mEditTextFirstName;
     @BindView(R.id.edittext_signup_detail_lastname)
@@ -76,89 +75,13 @@ public class SignUpFragment extends BaseFragment implements View.OnClickListener
     String LPassword_does_not_match_the_confirm_password;
     @BindDrawable(R.drawable.ic_circle_profile_120dp)
     Drawable mDrawableProfile;
+    @BindView(R.id.textview_signup_detail_description)
+    TextView mTextViewDescription;
+    @BindView(R.id.textview_signup_detail_privacy)
+    TextView mTextViewPrivacy;
     private AuthenticationApi mAuthenApi;
     private AccountApi mAccountApi;
     private Bitmap mBitmapToUpload;
-//    private List<SignupFragmentContract.ViewModel> mDatas = new ArrayList<>();
-//    private SignupFragmentContract.ViewModel mAddMoreVm = new SignupFragmentContract.ViewModel() {
-//        @Override
-//        public int getViewType() {
-//            return SignupFragmentContract.ViewModel.ADD_MORE;
-//        }
-//
-//        @Override
-//        public String getImageUri() {
-//            return "";
-//        }
-//    };
-//    private Picker.PickListener mOnPickImageListener = new Picker.PickListener() {
-//        @Override
-//        public void onPickedSuccessfully(ArrayList<ImageEntry> images) {
-//            if (null != images && !images.isEmpty()) {
-//                List<String> imageUrls = new ArrayList<>();
-//                for (ImageEntry imageEntry : images) {
-//                    imageUrls.add(imageEntry.path);
-//                }
-//                addPhotoDatas(imageUrls);
-//            }
-//
-//        }
-//
-//        @Override
-//        public void onCancel() {
-//
-//        }
-//    };
-
-//    private SignupProfileImageRecyclerAdapter mProfileImageAdapter = new SignupProfileImageRecyclerAdapter() {
-//        @Override
-//        public void onBindViewHolder(final SignupProfileImageRecyclerAdapter.ViewHolder holder, int position) {
-//            if (RecyclerUtils.isAvailableData(mDatas, position)) {
-//                SignupFragmentContract.ViewModel data = mDatas.get(position);
-//                if (data.getViewType() == SignupFragmentContract.ViewModel.ADD_MORE) {
-//                    holder.imgProfile.setImageDrawable(mDrawableProfile);
-//                    holder.imgProfile.setOnClickListener(new View.OnClickListener() {
-//                        @Override
-//                        public void onClick(View v) {
-//                            ImagePickerUtils.pickImage(v.getContext(), 3, mOnPickImageListener);
-//                        }
-//                    });
-//                    holder.fabCancel.setVisibility(View.GONE);
-//                    holder.fabCancel.setOnClickListener(null);
-//                } else {
-//                    Glide.with(holder.imgProfile.getContext()).load(data.getImageUri()).into(holder.imgProfile);
-//                    holder.fabCancel.setVisibility(View.VISIBLE);
-//                    holder.fabCancel.setOnClickListener(new View.OnClickListener() {
-//                        @Override
-//                        public void onClick(View v) {
-//                            int position = holder.getAdapterPosition();
-//                            if (RecyclerUtils.isAvailableData(mDatas, position)) {
-//                                mDatas.remove(position);
-//                                notifyItemRemoved(position);
-//                                notifyPhotoDataSetChanged();
-//                            }
-//                        }
-//                    });
-//                }
-//            }
-//        }
-//
-//        @Override
-//        public
-//        @SignupFragmentContract.ViewModel.ViewType
-//        int getItemViewType(int position) {
-//            if (RecyclerUtils.isAvailableData(mDatas, position)) {
-//                return mDatas.get(position).getViewType();
-//            }
-//            return SignupFragmentContract.ViewModel.NONE;
-//        }
-//
-//        @Override
-//        public int getItemCount() {
-//            return RecyclerUtils.getSize(mDatas);
-//        }
-//    };
-
 
     public static SignUpFragment newInstance() {
         Bundle args = new Bundle();
@@ -166,41 +89,6 @@ public class SignUpFragment extends BaseFragment implements View.OnClickListener
         fragment.setArguments(args);
         return fragment;
     }
-
-//    private void addPhotoDatas(List<String> imageUrls) {
-//        if (mDatas.contains(mAddMoreVm)) {
-//            mDatas.remove(mAddMoreVm);
-//        }
-//        for (final String imageUri : imageUrls) {
-//            mDatas.add(new SignupFragmentContract.ViewModel() {
-//                @Override
-//                public int getViewType() {
-//                    return NORMAL;
-//                }
-//
-//                @Override
-//                public String getImageUri() {
-//                    return imageUri;
-//                }
-//            });
-//        }
-//        mProfileImageAdapter.notifyDataSetChanged();
-//        notifyPhotoDataSetChanged();
-//    }
-
-//    private void notifyPhotoDataSetChanged() {
-//        if (mProfileImageAdapter.getItemCount() < 3 && !mDatas.contains(mAddMoreVm)) {
-//            mDatas.add(mAddMoreVm);
-//            int addIndex = mDatas.indexOf(mAddMoreVm);
-//            if (addIndex >= 0 && addIndex < mProfileImageAdapter.getItemCount()) {
-//                mProfileImageAdapter.notifyItemInserted(mDatas.indexOf(mAddMoreVm));
-//            }
-//        }
-//
-//        if (mProfileImageAdapter.getItemCount() >= 0) {
-//            mImageViewProfile.smoothScrollToPosition(mProfileImageAdapter.getItemCount() - 1);
-//        }
-//    }
 
 
     @Override
@@ -221,24 +109,15 @@ public class SignUpFragment extends BaseFragment implements View.OnClickListener
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-//        dummyData();
         initView();
         initToolbar(mToolbar);
     }
 
-    private void dummyData() {
-        mEditTextEmail.setText("nuitest20@gmail.com");
-        mEditTextFirstName.setText("nuifirst");
-        mEditTextLastName.setText("nuilast");
-        mEditTextPassword.setText("123456");
-        mEditTextRePassword.setText("123456");
-        mEditTextBirthDay.setText("2016-02-02");
-    }
 
     private void initView() {
-        disableEditable(mEditTextBirthDay);
+//        disableEditable(mEditTextBirthDay);
         mImageViewProfile.setOnClickListener(this);
-        mEditTextBirthDay.setOnClickListener(this);
+//        mEditTextBirthDay.setOnClickListener(this);
         mButtonCreateAccount.setOnClickListener(this);
     }
 
@@ -261,20 +140,20 @@ public class SignUpFragment extends BaseFragment implements View.OnClickListener
 
     private void attempSubmit() {
 
-        mEditTextBirthDay.setError(null);
+//        mEditTextBirthDay.setError(null);
         mEditTextEmail.setError(null);
         mEditTextFirstName.setError(null);
         mEditTextLastName.setError(null);
         mEditTextPassword.setError(null);
         mEditTextRePassword.setError(null);
 
-        String birthDay = extractAndCheckError(mEditTextBirthDay);
+//        String birthDay = extractAndCheckError(mEditTextBirthDay);
         String email = extractAndCheckError(mEditTextEmail);
         String firstName = extractAndCheckError(mEditTextFirstName);
         String lastName = extractAndCheckError(mEditTextLastName);
         String password = extractAndCheckError(mEditTextPassword);
         String rePassword = extractAndCheckError(mEditTextRePassword);
-        boolean canSubmit = (!TextUtils.isEmpty(birthDay) && !TextUtils.isEmpty(email) && !TextUtils.isEmpty(firstName) && !TextUtils.isEmpty(lastName) && !TextUtils.isEmpty(password) && !TextUtils.isEmpty(rePassword));
+        boolean canSubmit = (/*!TextUtils.isEmpty(birthDay) &&*/ !TextUtils.isEmpty(email) && !TextUtils.isEmpty(firstName) && !TextUtils.isEmpty(lastName) && !TextUtils.isEmpty(password) && !TextUtils.isEmpty(rePassword));
         if (!isEmailValid(email)) {
             mEditTextEmail.setError(getString(R.string.Invalid_email_address));
             mEditTextEmail.requestFocus();
@@ -286,13 +165,13 @@ public class SignUpFragment extends BaseFragment implements View.OnClickListener
             mEditTextPassword.requestFocus();
         }
 
-        if(mEditTextRePassword.length() < mEditTextRePassword.getMinCharacters()){
+        if (mEditTextRePassword.length() < mEditTextRePassword.getMinCharacters()) {
             canSubmit = false;
             mEditTextRePassword.requestFocus();
         }
         if (canSubmit) {
             if (TextUtils.equals(password, rePassword)) {
-                PostSignupGson data = new PostSignupGson(birthDay, email, firstName, lastName, password);
+                PostSignupGson data = new PostSignupGson(null, email, firstName, lastName, password);
                 requestPostSignup(data, mEditTextPassword.getContext());
                 mEditTextPassword.setError(null);
                 mEditTextRePassword.setError(null);
@@ -317,14 +196,13 @@ public class SignUpFragment extends BaseFragment implements View.OnClickListener
                     public void call(Boolean success) {
                         if (success) {
                             goBackToLoginFragment();
-
                         }
                     }
                 });
             }
 
             @Override
-            public void onDataFailure(ResponseMessage failCause) {
+            public void onDataFailure(String failCause) {
                 dismissLoading();
             }
         }).enqueue(context);
@@ -337,6 +215,24 @@ public class SignUpFragment extends BaseFragment implements View.OnClickListener
         } else {
             onFinishUpload.call(true);
         }
+    }
+
+    @Override
+    protected void bindLanguage(LanguageAppLabelGson.Data data) {
+        super.bindLanguage(data);
+        mTextViewTitle.setText(data.signupScreenHeader);
+        mEditTextFirstName.setHint(data.signupScreenFirstName);
+        mEditTextFirstName.setFloatingLabelText(data.signupScreenFirstName);
+        mEditTextLastName.setHint(data.signupScreenLastName);
+        mEditTextLastName.setFloatingLabelText(data.signupScreenLastName);
+        mEditTextEmail.setHint(data.signupScreenEmail);
+        mEditTextEmail.setFloatingLabelText(data.signupScreenEmail);
+        mEditTextPassword.setHint(data.signupScreenPass);
+        mEditTextPassword.setFloatingLabelText(data.signupScreenPass);
+        mEditTextRePassword.setHint(data.signupScreenRepass);
+        mEditTextRePassword.setFloatingLabelText(data.signupScreenRepass);
+        mTextViewDescription.setText(data.signupScreenDescript1 + "\n" + data.signupScreenDescript2);
+        mTextViewPrivacy.setText(data.signupScreenDescript3 + " " + data.signupScreenDescript4 + " " + data.signupScreenDescript5 + " " + data.signupScreenDescript6);
     }
 
     private void requestPostUploadProfileImage(Long userId, String imgBase64, final Action1<Boolean> onFinishUpload) {
@@ -354,7 +250,7 @@ public class SignUpFragment extends BaseFragment implements View.OnClickListener
                     }
 
                     @Override
-                    public void onDataFailure(ResponseMessage failCause) {
+                    public void onDataFailure(String failCause) {
                         dismissLoading();
                         onFinishUpload.call(false);
                     }
@@ -371,14 +267,14 @@ public class SignUpFragment extends BaseFragment implements View.OnClickListener
         int id = view.getId();
         if (id == mButtonCreateAccount.getId()) {
             attempSubmit();
-        } else if (id == mEditTextBirthDay.getId()) {
+        } /*else if (id == mEditTextBirthDay.getId()) {
             DatePickerUtils.chooseDate(view.getContext(), new Action1<String>() {
                 @Override
                 public void call(String s) {
                     mEditTextBirthDay.setText(s);
                 }
             });
-        } else if (id == mImageViewProfile.getId()) {
+        }*/ else if (id == mImageViewProfile.getId()) {
             chooseImage(view.getContext());
         }
     }
@@ -403,4 +299,5 @@ public class SignUpFragment extends BaseFragment implements View.OnClickListener
         });
 
     }
+
 }

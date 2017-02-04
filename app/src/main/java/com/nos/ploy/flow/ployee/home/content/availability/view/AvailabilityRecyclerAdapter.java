@@ -8,6 +8,7 @@ import android.widget.Space;
 import android.widget.TextView;
 
 import com.nos.ploy.R;
+import com.nos.ploy.api.masterdata.model.LanguageAppLabelGson;
 import com.nos.ploy.api.ployee.model.PloyeeAvailiabilityGson;
 import com.nos.ploy.flow.ployee.home.content.availability.contract.AvailabilityViewModel;
 import com.nos.ploy.flow.ployee.home.content.availability.contract.NormalItemAvailabilityVM;
@@ -26,6 +27,7 @@ import butterknife.ButterKnife;
 public class AvailabilityRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private List<AvailabilityViewModel> mDatas = new ArrayList<>();
+    private LanguageAppLabelGson.Data language;
 
 
     public AvailabilityRecyclerAdapter() {
@@ -172,6 +174,10 @@ public class AvailabilityRecyclerAdapter extends RecyclerView.Adapter<RecyclerVi
         return RecyclerUtils.getSize(mDatas);
     }
 
+    public void setLanguage(LanguageAppLabelGson.Data language) {
+        this.language = language;
+    }
+
     public static class NormalVH extends RecyclerView.ViewHolder {
         @BindView(R.id.textview_availability_item_monday)
         public TextView tvMon;
@@ -196,7 +202,7 @@ public class AvailabilityRecyclerAdapter extends RecyclerView.Adapter<RecyclerVi
         }
     }
 
-    public static class WeekVH extends RecyclerView.ViewHolder {
+    public class WeekVH extends RecyclerView.ViewHolder {
         @BindView(R.id.textview_availability_day_monday)
         public TextView tvMon;
         @BindView(R.id.textview_availability_day_tuesday)
@@ -215,6 +221,13 @@ public class AvailabilityRecyclerAdapter extends RecyclerView.Adapter<RecyclerVi
         public WeekVH(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
+            tvMon.setText(language.avaliabilityScreenMonday);
+            tvTues.setText(language.avaliabilityScreenTuesday);
+            tvWednes.setText(language.avaliabilityScreenWednesday);
+            tvThurs.setText(language.avaliabilityScreenThursday);
+            tvFri.setText(language.avaliabilityScreenFriday);
+            tvSatur.setText(language.avaliabilityScreenSaturday);
+            tvSun.setText(language.avaliabilityScreenSunday);
         }
     }
 }

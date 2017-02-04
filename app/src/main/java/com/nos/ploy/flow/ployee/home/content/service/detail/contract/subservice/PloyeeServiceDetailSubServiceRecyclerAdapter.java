@@ -14,7 +14,8 @@ import com.nos.ploy.api.ployer.model.PloyerServiceDetailGson;
 import com.nos.ploy.flow.ployee.home.content.service.detail.contract.subservice.viewmodel.HeaderSubServiceVM;
 import com.nos.ploy.flow.ployee.home.content.service.detail.contract.subservice.viewmodel.NormalSubServiceVM;
 import com.nos.ploy.flow.ployee.home.content.service.detail.contract.subservice.viewmodel.PloyeeServiceDetailSubServiceItemBaseViewModel;
-import com.nos.ploy.flow.ployee.home.content.service.detail.contract.subservice.viewmodel.SpaceSubServiceVM;
+import com.nos.ploy.flow.ployee.home.content.service.detail.contract.subservice.viewmodel.SpaceFullSpanSubServiceVM;
+import com.nos.ploy.flow.ployee.home.content.service.detail.contract.subservice.viewmodel.SpaceOneElementSpanSubServiceVM;
 import com.nos.ploy.utils.RecyclerUtils;
 
 import java.util.ArrayList;
@@ -71,8 +72,11 @@ public class PloyeeServiceDetailSubServiceRecyclerAdapter extends RecyclerView.A
             for (PloyerServiceDetailGson.Data.SubService.SubServiceLv2 sub2 : subServicesLv2) {
                 results.add(new NormalSubServiceVM(sub2));
             }
+            if (subServicesLv2.size() % 2 != 0) {
+                results.add(new SpaceOneElementSpanSubServiceVM());
+            }
         }
-        results.add(new SpaceSubServiceVM());
+        results.add(new SpaceFullSpanSubServiceVM());
         return results;
     }
 
@@ -85,8 +89,11 @@ public class PloyeeServiceDetailSubServiceRecyclerAdapter extends RecyclerView.A
             case PloyeeServiceDetailSubServiceItemBaseViewModel.ITEM: {
                 return new NormalVH(LayoutInflater.from(parent.getContext()).inflate(R.layout.view_subservice_item, parent, false), mDisableMode);
             }
+            case PloyeeServiceDetailSubServiceItemBaseViewModel.SPACE_ONE_ELEMENT:
+                return new SpaceVH(LayoutInflater.from(parent.getContext()).inflate(R.layout.view_subservice_space_item, parent, false));
             case PloyeeServiceDetailSubServiceItemBaseViewModel.NONE:
-            case PloyeeServiceDetailSubServiceItemBaseViewModel.SPACE:
+            case PloyeeServiceDetailSubServiceItemBaseViewModel.SPACE_FULL:
+
                 return new SpaceVH(LayoutInflater.from(parent.getContext()).inflate(R.layout.view_space_item, parent, false));
             default:
                 return new RecyclerView.ViewHolder(new Space(parent.getContext())) {
@@ -95,11 +102,23 @@ public class PloyeeServiceDetailSubServiceRecyclerAdapter extends RecyclerView.A
     }
 
     @Override
-    public int getItemViewType(int position) {
+    public
+    @PloyeeServiceDetailSubServiceItemBaseViewModel.ViewType
+    int getItemViewType(int position) {
         if (RecyclerUtils.isAvailableData(mDatas, position)) {
             return mDatas.get(position).getViewType();
         }
         return PloyeeServiceDetailSubServiceItemBaseViewModel.NONE;
+    }
+
+    public int getNormalItemCount() {
+        int count = 0;
+        for (int i = 0; i < mDatas.size(); i++) {
+            if (getItemViewType(i) == PloyeeServiceDetailSubServiceItemBaseViewModel.ITEM) {
+                count++;
+            }
+        }
+        return count;
     }
 
     @Override
@@ -116,13 +135,14 @@ public class PloyeeServiceDetailSubServiceRecyclerAdapter extends RecyclerView.A
                     break;
                 case PloyeeServiceDetailSubServiceItemBaseViewModel.NONE:
                     break;
-                case PloyeeServiceDetailSubServiceItemBaseViewModel.SPACE:
+                case PloyeeServiceDetailSubServiceItemBaseViewModel.SPACE_FULL:
                     break;
             }
         }
     }
 
     private void bindNormal(final NormalSubServiceVM data, NormalVH holder) {
+
         holder.radioSubService.setOnCheckedChangeListener(null);
         holder.radioSubService.setChecked(data.isChecked());
         if (!mDisableMode) {
@@ -157,8 +177,6 @@ public class PloyeeServiceDetailSubServiceRecyclerAdapter extends RecyclerView.A
     }
 
     public static class SpaceVH extends RecyclerView.ViewHolder {
-        @BindView(R.id.space_space_item)
-        public Space space;
 
         public SpaceVH(View itemView) {
             super(itemView);

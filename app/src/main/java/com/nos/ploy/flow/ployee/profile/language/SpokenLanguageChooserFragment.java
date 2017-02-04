@@ -17,8 +17,8 @@ import android.widget.TextView;
 import com.nos.ploy.R;
 import com.nos.ploy.api.account.model.PloyeeProfileGson;
 import com.nos.ploy.api.base.RetrofitCallUtils;
-import com.nos.ploy.api.base.response.ResponseMessage;
 import com.nos.ploy.api.masterdata.MasterApi;
+import com.nos.ploy.api.masterdata.model.LanguageAppLabelGson;
 import com.nos.ploy.api.masterdata.model.LanguageGson;
 import com.nos.ploy.base.BaseFragment;
 import com.nos.ploy.utils.RecyclerUtils;
@@ -96,7 +96,7 @@ public class SpokenLanguageChooserFragment extends BaseFragment {
         }
 
         @Override
-        public void onDataFailure(ResponseMessage failCause) {
+        public void onDataFailure(String failCause) {
             dismissRefreshing();
         }
     };
@@ -126,6 +126,12 @@ public class SpokenLanguageChooserFragment extends BaseFragment {
             mSpokenCheckedCodes = getArguments().getStringArrayList(KEY_SPOKEN_LANGUAGE_DATA);
         }
         mApi = getRetrofit().create(MasterApi.class);
+    }
+
+    @Override
+    protected void bindLanguage(LanguageAppLabelGson.Data data) {
+        super.bindLanguage(data);
+        mTextViewTitle.setText(data.profileScreenLanguage);
     }
 
     @Nullable

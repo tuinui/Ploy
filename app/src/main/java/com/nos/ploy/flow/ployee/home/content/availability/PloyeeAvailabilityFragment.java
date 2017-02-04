@@ -10,11 +10,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.nos.ploy.R;
 import com.nos.ploy.api.base.RetrofitCallUtils;
-import com.nos.ploy.api.base.response.ResponseMessage;
 import com.nos.ploy.api.masterdata.MasterApi;
+import com.nos.ploy.api.masterdata.model.LanguageAppLabelGson;
 import com.nos.ploy.api.ployee.PloyeeApi;
 import com.nos.ploy.api.ployee.model.PloyeeAvailiabilityGson;
 import com.nos.ploy.base.BaseFragment;
@@ -40,8 +41,12 @@ public class PloyeeAvailabilityFragment extends BaseFragment implements View.OnC
     SwitchCompat mSwitchHoliday;
     @BindView(R.id.button_ployee_availabality_no_preferences)
     Button mButtonNoPref;
+    @BindView(R.id.textview_ployee_availability_holiday_mode_label)
+    TextView mTextViewHolidayModeLabel;
     @BindView(R.id.swiperefreshlayout_ployee_availability)
     SwipeRefreshLayout mSwipRefreshlayout;
+    @BindView(R.id.textview_ployee_availability_holiday_mode_description)
+    TextView mTextViewHolidayDescription;
     private MasterApi mMasterApi;
     private PloyeeApi mPloyeeApi;
     private long mUserId;
@@ -73,6 +78,16 @@ public class PloyeeAvailabilityFragment extends BaseFragment implements View.OnC
         View v = inflater.inflate(R.layout.fragment_ployee_availability, container, false);
         ButterKnife.bind(this, v);
         return v;
+    }
+
+
+    @Override
+    protected void bindLanguage(LanguageAppLabelGson.Data data) {
+        super.bindLanguage(data);
+        mTextViewHolidayModeLabel.setText(data.avaliabilityScreenHolidayMode);
+        mTextViewHolidayDescription.setText(data.avaliabilityScreenHolidayDescript);
+        mButtonNoPref.setText(data.avaliabilityScreenNoPrefer);
+        mAdapter.setLanguage(data);
     }
 
     @Override
@@ -113,7 +128,7 @@ public class PloyeeAvailabilityFragment extends BaseFragment implements View.OnC
             }
 
             @Override
-            public void onDataFailure(ResponseMessage failCause) {
+            public void onDataFailure(String failCause) {
                 dismissRefreshing();
             }
         }).enqueue(getContext());
@@ -205,7 +220,7 @@ public class PloyeeAvailabilityFragment extends BaseFragment implements View.OnC
             }
 
             @Override
-            public void onDataFailure(ResponseMessage failCause) {
+            public void onDataFailure(String failCause) {
                 dismissLoading();
                 refreshData();
             }

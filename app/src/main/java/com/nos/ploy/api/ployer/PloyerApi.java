@@ -4,10 +4,10 @@ import com.nos.ploy.api.account.model.MemberProfileGson;
 import com.nos.ploy.api.base.response.BaseResponse;
 import com.nos.ploy.api.ployer.model.PloyerServiceDetailGson;
 import com.nos.ploy.api.ployer.model.PloyerServicesGson;
-import com.nos.ploy.api.ployer.model.PostProviderFilterGson;
-import com.nos.ploy.api.ployer.model.ProviderUserListGson;
 import com.nos.ploy.api.ployer.model.PostGetPloyerServiceDetailGson;
+import com.nos.ploy.api.ployer.model.PostProviderFilterGson;
 import com.nos.ploy.api.ployer.model.PostSavePloyerServiceDetailGson;
+import com.nos.ploy.api.ployer.model.ProviderUserListGson;
 import com.nos.ploy.api.ployer.model.ReviewGson;
 import com.nos.ploy.api.ployer.model.SaveReviewResponseGson;
 
@@ -46,7 +46,7 @@ public interface PloyerApi {
 
     ///api/ployer/profile?userId=1&serviceId=1&lgCode=en
     @GET("/api/ployer/profile")
-    Call<MemberProfileGson> getProviderProfileGson(@Query("userId") long userId, @Query("serviceId") long serviceId, @Query("lgCode") String languageCode);
+    Call<MemberProfileGson> getProviderProfileGson(@Query("userId") long userId, @Query("lgCode") String languageCode);
 
     //{{endpoint_ploy}}/api/review/getReviewByUserId?userId=1
     @GET("/api/review/getReviewByUserId")

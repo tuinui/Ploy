@@ -1,12 +1,13 @@
 package com.nos.ploy;
 
-import android.app.Application;
 import android.support.multidex.MultiDexApplication;
 
 import com.crashlytics.android.Crashlytics;
 import com.facebook.FacebookSdk;
 import com.facebook.appevents.AppEventsLogger;
+import com.nos.ploy.cache.LanguageAppLabelManager;
 import com.nos.ploy.custom.UncaughtExceptionHandler;
+
 import io.fabric.sdk.android.Fabric;
 
 /**
@@ -26,6 +27,6 @@ public class MyApplication extends MultiDexApplication {
             Thread.setDefaultUncaughtExceptionHandler(new UncaughtExceptionHandler(this));
             Fabric.with(this, new Crashlytics());
         }
-
+        LanguageAppLabelManager.forceRefreshLanguageLabel(this, null);
     }
 }

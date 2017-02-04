@@ -23,9 +23,12 @@ import android.widget.Toast;
 
 import com.nos.ploy.R;
 import com.nos.ploy.api.base.RetrofitManager;
+import com.nos.ploy.api.masterdata.model.LanguageAppLabelGson;
+import com.nos.ploy.cache.LanguageAppLabelManager;
 import com.nos.ploy.utils.FragmentTransactionUtils;
 
 import retrofit2.Retrofit;
+import rx.functions.Action1;
 
 /**
  * Created by User on 1/10/2559.
@@ -39,6 +42,11 @@ public abstract class BaseFragment extends AppCompatDialogFragment {
     private SwipeRefreshLayout.OnRefreshListener mOnRefreshListener;
     private SwipeRefreshLayout mRefreshLayout;
     private boolean isRefreshing;
+    protected LanguageAppLabelGson.Data mLanguageData = new LanguageAppLabelGson.Data();
+
+    protected void bindLanguage(LanguageAppLabelGson.Data data){
+        mLanguageData = data;
+    }
 
     protected boolean isDialog() {
         return false;
@@ -85,6 +93,20 @@ public abstract class BaseFragment extends AppCompatDialogFragment {
         if (null != getDialog() && null != getDialog().getWindow() && null != getContext() && isDialog()) {
             getDialog().getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.WRAP_CONTENT);
         }
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                LanguageAppLabelManager.getLanguageLabel(getContext(), new Action1<LanguageAppLabelGson.Data>() {
+                    @Override
+                    public void call(LanguageAppLabelGson.Data data) {
+                        if(null != data){
+                            bindLanguage(data);
+                        }
+                    }
+                });
+            }
+        });
+
     }
 
     @Override

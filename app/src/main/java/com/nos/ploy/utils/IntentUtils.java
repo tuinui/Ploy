@@ -76,7 +76,14 @@ public class IntentUtils {
         if (!TextUtils.isEmpty(numberToCall) && null != context) {
             Uri number = Uri.parse("tel:" + numberToCall);
             Intent callIntent = new Intent(Intent.ACTION_CALL, number);
-            context.startActivity(callIntent);
+//            context.startActivity(callIntent);
+
+
+
+            Intent smsIntent = new Intent(Intent.ACTION_VIEW, Uri.fromParts("sms", numberToCall, null));
+            Intent chooserIntent = Intent.createChooser(callIntent, "Contact...");
+            chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, new Intent[] { smsIntent });
+            context.startActivity(chooserIntent);
         }
     }
     public static void startActivity(BaseFragment fragment, Class<? extends Activity> desireClass) {

@@ -1,13 +1,11 @@
 package com.nos.ploy.api.base;
 
 import android.content.Context;
-import android.text.TextUtils;
 import android.widget.Toast;
 
-import com.google.gson.internal.LinkedTreeMap;
+import com.google.gson.Gson;
 import com.nos.ploy.api.base.response.BaseResponse;
-import com.nos.ploy.api.base.response.ResponseMessage;
-import com.nos.ploy.api.ployer.model.PloyerServiceDetailGson;
+import com.nos.ploy.api.base.response.BaseResponseArray;
 import com.nos.ploy.base.BaseActivity;
 
 import retrofit2.Call;
@@ -37,7 +35,7 @@ public abstract class RetrofitCallUtils<T> {
             }
 
             @Override
-            public void onDataFailure(ResponseMessage failCause) {
+            public void onDataFailure(String failCause) {
                 callback.onDataFailure(failCause);
             }
         };
@@ -54,7 +52,7 @@ public abstract class RetrofitCallUtils<T> {
 
     public abstract void onDataSuccess(T data);
 
-    public abstract void onDataFailure(ResponseMessage failCause);
+    public abstract void onDataFailure(String failCause);
 
     public void enqueue(final Context context) {
         if (null != mCall) {
@@ -64,48 +62,68 @@ public abstract class RetrofitCallUtils<T> {
                     if (null != response
                             && response.isSuccessful()
                             && null != response.body()) {
-
+//                        if (response.isSuccessful()) {
+//                            BaseResponse<T> baseResponse = (BaseResponse<T>) response.body();
+//                            if (null != baseResponse.getData()) {
+//                                T result = (T) response.body();
+//                                if (null != result) {
+//                                    onDataSuccess(result);
+//                                }
+//
+//                            } else {
+//                                onDataFailure("null data");
+//                                showToast(context, "null data");
+//                            }
+//
+//                        } else {
                         if (response.body() instanceof BaseResponse) {
                             BaseResponse<T> baseResponse = (BaseResponse<T>) response.body();
-                            if (baseResponse.isSuccess()) {
+                            if (null != baseResponse.getData()) {
+                                T result = (T) response.body();
+                                if (null != result) {
+                                    onDataSuccess(result);
+                                }
 
-                                if (null != baseResponse.getData()) {
-                                    T result = (T) response.body();
-                                    if (null != result) {
-                                        onDataSuccess(result);
-                                    }
+                            } else {
+                                onDataFailure("null data");
+                                showToast(context, "null data");
+                            }
 
-                                } else {
-                                    onDataFailure(new ResponseMessage("null data"));
-                                    showToast(context, "null data");
+                        } else if (response.body() instanceof BaseResponseArray) {
+                            BaseResponseArray<T> baseResponse = (BaseResponseArray<T>) response.body();
+
+                            if (null != baseResponse.getData()) {
+                                T result = (T) response.body();
+                                if (null != result) {
+                                    onDataSuccess(result);
                                 }
                             } else {
-                                onDataFailure(baseResponse.getResponseMessage());
-                                showToast(context, baseResponse.getErrorMessage());
+                                onDataFailure("null data");
+                                showToast(context, "null data");
                             }
-                        } else if (response.body() instanceof LinkedTreeMap) {
-                            LinkedTreeMap data = (LinkedTreeMap) response.body();
-                            if (null != data.get("responseMsg") && data.get("responseMsg") instanceof LinkedTreeMap && ((LinkedTreeMap) data.get("responseMsg")).get("msgCode") instanceof String) {
-                                String messageCode = (String) ((LinkedTreeMap) data.get("responseMsg")).get("msgCode");
-                                if (TextUtils.equals(messageCode, "000")) {
-                                    onDataSuccess(null);
-                                } else {
-                                    showToast(context, "isNotSuccessful");
-                                    onDataFailure(new ResponseMessage("isNotSuccessful"));
-                                }
-                            }
-                        }
 
+                        }
+                    } else if (null != response && null != response.errorBody()) {
+                        try {
+                            String myError = response.errorBody().string();
+                            BaseResponse baseErrorResponse = new Gson().fromJson(myError, BaseResponse.class);
+                            if (null != baseErrorResponse) {
+                                showToast(context, baseErrorResponse.getUserMessage());
+                                onDataFailure(baseErrorResponse.getUserMessage());
+                            }
+
+                        } catch (Exception ignored) {
+                        }
                     } else {
                         showToast(context, "isNotSuccessful");
-                        onDataFailure(new ResponseMessage("isNotSuccessful"));
+                        onDataFailure("isNotSuccessful");
                     }
                 }
 
                 @Override
                 public void onFailure(Call call, Throwable t) {
                     if (null != t && null != t.getMessage()) {
-                        onDataFailure(new ResponseMessage());
+                        onDataFailure(t.getMessage());
                         showToast(context, t.getMessage());
                     }
                 }
@@ -120,12 +138,10 @@ public abstract class RetrofitCallUtils<T> {
     }
 
 
-
-
     public static interface RetrofitCallback<T> {
         void onDataSuccess(T data);
 
-        void onDataFailure(ResponseMessage failCause);
+        void onDataFailure(String failCause);
     }
 
 

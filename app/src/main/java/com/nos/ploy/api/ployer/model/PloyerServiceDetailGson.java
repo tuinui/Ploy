@@ -89,6 +89,8 @@ public class PloyerServiceDetailGson extends BaseResponse<PloyerServiceDetailGso
         private String equipment;
         @SerializedName("subService")
         private List<SubService> subServices = new ArrayList<>();
+        @SerializedName("priceUnit")
+        private String priceUnit;
 
         public Data() {
         }
@@ -188,6 +190,10 @@ public class PloyerServiceDetailGson extends BaseResponse<PloyerServiceDetailGso
 
         public Data closeThis() {
             return new Data(serviceId, userId, serviceMappingId, serviceNameOthers, description, priceMin, priceMax, certificate, equipment, subServices);
+        }
+
+        public String getPriceUnit() {
+            return priceUnit;
         }
 
         public static class SubService {

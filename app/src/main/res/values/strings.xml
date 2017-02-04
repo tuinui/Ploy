@@ -101,5 +101,12 @@
     <string name="Filter">Filter</string>
     <string name="Clear">Clear</string>
     <string name="Rating">Rating</string>
+    <string name="By_default_your_contact_information_is_not">*By default, your contact information is not shown to others. You can choose to show them in Profile Setting</string>
+    <string name="Login_or_Signup">Login / Signup</string>
+    <string name="Find_Services">Find Services</string>
+    <string name="Need_Service">Need Service ?</string>
+    <string name="Close">Close</string>
+    <string name="Introduction">Introduction</string>
+    <string name="Preview">Preview</string>
 
 </resources>

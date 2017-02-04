@@ -15,6 +15,7 @@ public class PloyeeServiceDetailVM implements PloyeeServiceDetailContract.ViewMo
     private long priceMin = 0;
     private long priceMax = 1000;
     private long serviceId = -1;
+    private String priceUnit;
 
 
     public PloyeeServiceDetailVM(PloyerServiceDetailGson.Data data) {
@@ -32,6 +33,7 @@ public class PloyeeServiceDetailVM implements PloyeeServiceDetailContract.ViewMo
             }
             serviceId = data.getServiceId();
             name = data.getServiceNameOthers();
+            priceUnit = data.getPriceUnit();
         }
 
     }
@@ -74,5 +76,10 @@ public class PloyeeServiceDetailVM implements PloyeeServiceDetailContract.ViewMo
     @Override
     public String getServiceOthersName() {
         return name;
+    }
+
+    @Override
+    public String getPriceUnit() {
+        return null;
     }
 }

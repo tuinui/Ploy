@@ -6,7 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.InputFilter;
@@ -21,18 +21,19 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.nos.ploy.R;
+import com.nos.ploy.api.masterdata.model.LanguageAppLabelGson;
 import com.nos.ploy.api.ployee.PloyeeApi;
 import com.nos.ploy.api.ployer.PloyerApi;
 import com.nos.ploy.api.ployer.model.PloyerServiceDetailGson;
 import com.nos.ploy.api.ployer.model.PostSavePloyerServiceDetailGson;
 import com.nos.ploy.base.BaseFragment;
-import com.nos.ploy.cache.SharePreferenceUtils;
 import com.nos.ploy.custom.view.InputFilterMinMax;
 import com.nos.ploy.custom.view.NumberTextWatcher;
 import com.nos.ploy.flow.ployee.home.content.service.detail.contract.PloyeeServiceDetailContract;
 import com.nos.ploy.flow.ployee.home.content.service.detail.contract.PloyeeServiceDetailPresenter;
 import com.nos.ploy.flow.ployee.home.content.service.detail.contract.PloyeeServiceDetailVM;
 import com.nos.ploy.flow.ployee.home.content.service.detail.contract.subservice.PloyeeServiceDetailSubServiceRecyclerAdapter;
+import com.nos.ploy.flow.ployee.home.content.service.detail.contract.subservice.viewmodel.PloyeeServiceDetailSubServiceItemBaseViewModel;
 import com.rengwuxian.materialedittext.MaterialEditText;
 
 import butterknife.BindString;
@@ -55,6 +56,8 @@ public class PloyeeServiceDetailFragment extends BaseFragment implements PloyeeS
     MaterialEditText mEditTextPriceTo;
     @BindView(R.id.edittext_ployee_service_others)
     MaterialEditText mEditTextOthers;
+    @BindView(R.id.textview_ployee_service_price_per_hour)
+    TextView mTextViewPricePerHour;
     @BindView(R.id.edittext_ployee_service_description)
     MaterialEditText mEditTextDescription;
     @BindView(R.id.edittext_ployee_service_certificate)
@@ -99,7 +102,7 @@ public class PloyeeServiceDetailFragment extends BaseFragment implements PloyeeS
     private String mToolbarTitle;
 
 
-    public static PloyeeServiceDetailFragment newInstance(long userId, long serviceId,String currentActiveLanguageCode, String title) {
+    public static PloyeeServiceDetailFragment newInstance(long userId, long serviceId, String currentActiveLanguageCode, String title) {
         Bundle args = new Bundle();
         args.putLong(KEY_USER_ID, userId);
         args.putLong(KEY_SERVICE_ID, serviceId);
@@ -138,13 +141,41 @@ public class PloyeeServiceDetailFragment extends BaseFragment implements PloyeeS
         initView();
     }
 
+    @Override
+    protected void bindLanguage(LanguageAppLabelGson.Data data) {
+        super.bindLanguage(data);
+        mTextViewSubtitle.setText(data.serviceScreenHeader);
+        mEditTextOthers.setFloatingLabelText(data.serviceScreenServicesHint);
+        mEditTextOthers.setHint(data.serviceScreenServicesHint);
+        mEditTextDescription.setFloatingLabelText(data.serviceScreenDescriptLabel);
+        mEditTextDescription.setHint(data.serviceScreenDescriptHint);
+        mEditTextCertificate.setFloatingLabelText(data.serviceScreenCertificateLabel);
+        mEditTextCertificate.setHint(data.serviceScreenCertificateHint);
+        mEditTextEquipmentNeeded.setFloatingLabelText(data.serviceScreenEquipmentLabel);
+        mEditTextEquipmentNeeded.setHint(data.serviceScreenEquipmentHint);
+        mTextViewPricePerHour.setText(data.serviceScreenPriceHour);
+        mEditTextPriceFrom.setHint(data.serviceScreenFrom);
+        mEditTextPriceTo.setText(data.serviceScreenTo);
+    }
+
     private void initRecyclerView() {
-        mRecyclerSubService.setLayoutManager(new LinearLayoutManager(getContext()) {
+        final GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), 2) {
             @Override
             public boolean canScrollVertically() {
                 return false;
             }
+        };
+        gridLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
+            @Override
+            public int getSpanSize(int position) {
+                @PloyeeServiceDetailSubServiceItemBaseViewModel.ViewType int viewType = mAdapter.getItemViewType(position);
+                if (viewType == PloyeeServiceDetailSubServiceItemBaseViewModel.ITEM || viewType == PloyeeServiceDetailSubServiceItemBaseViewModel.SPACE_ONE_ELEMENT) {
+                    return 1;
+                }
+                return 2;
+            }
         });
+        mRecyclerSubService.setLayoutManager(gridLayoutManager);
         mRecyclerSubService.setAdapter(mAdapter);
     }
 
@@ -335,6 +366,9 @@ public class PloyeeServiceDetailFragment extends BaseFragment implements PloyeeS
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
+                    mEditTextPriceFrom.setHint(mLanguageData.serviceScreenFrom + " (" + data.getPriceUnit() + ") ");
+                    mEditTextPriceTo.setText(mLanguageData.serviceScreenTo + " (" + data.getPriceUnit() + ") ");
+
                     mEditTextDescription.setText(data.getDescription());
                     mEditTextCertificate.setText(data.getCertificate());
                     mEditTextEquipmentNeeded.setText(data.getEquipmentNeeded());

@@ -15,7 +15,6 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.text.TextUtils;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -34,16 +33,22 @@ import com.nos.ploy.api.account.model.PostUpdateProfileGson;
 import com.nos.ploy.api.account.model.ProfileImageGson;
 import com.nos.ploy.api.account.model.TransportGson;
 import com.nos.ploy.api.account.model.TransportGsonVm;
+import com.nos.ploy.api.authentication.model.AccountGson;
 import com.nos.ploy.api.base.RetrofitCallUtils;
-import com.nos.ploy.api.base.response.ResponseMessage;
+import com.nos.ploy.api.base.response.BaseResponse;
 import com.nos.ploy.api.masterdata.MasterApi;
+import com.nos.ploy.api.masterdata.model.LanguageAppLabelGson;
+import com.nos.ploy.api.ployer.model.ProviderUserListGson;
 import com.nos.ploy.api.utils.loader.AccountInfoLoader;
 import com.nos.ploy.base.BaseActivity;
 import com.nos.ploy.flow.generic.maps.LocalizationMapsFragment;
 import com.nos.ploy.flow.ployee.profile.language.SpokenLanguageChooserFragment;
 import com.nos.ploy.flow.ployee.profile.upload.UploadPhotoFragment;
+import com.nos.ploy.flow.ployer.provider.ProviderProfileActivity;
 import com.nos.ploy.utils.GoogleApiAvailabilityUtils;
+import com.nos.ploy.utils.IntentUtils;
 import com.nos.ploy.utils.MyLocationUtils;
+import com.nos.ploy.utils.PopupMenuUtils;
 import com.nos.ploy.utils.RecyclerUtils;
 import com.rengwuxian.materialedittext.MaterialEditText;
 
@@ -74,8 +79,12 @@ public class PloyeeProfileActivity extends BaseActivity implements View.OnClickL
     MaterialEditText mEditTextEducation;
     @BindView(R.id.edittext_ployee_profile_work)
     MaterialEditText mEditTextProfileWork;
+    @BindView(R.id.textview_ployee_profile_language_label)
+    TextView mTextViewLanguageLabel;
     @BindView(R.id.edittext_ployee_profile_interest)
     MaterialEditText mEditTextInterest;
+    @BindView(R.id.textview_ployee_profile_transport_label)
+    TextView mTextViewTransportLabel;
     @BindView(R.id.textview_ployee_profile_language_support)
     TextView mTextViewLanguageSupport;
     @BindView(R.id.recyclerview_ployee_profile_tranportation)
@@ -98,6 +107,8 @@ public class PloyeeProfileActivity extends BaseActivity implements View.OnClickL
     TabLayout mTabLayoutSliderIndicator;
     @BindView(R.id.swiperefreshlayout_ployee_profile)
     SwipeRefreshLayout mSwipeRefreshLayout;
+    @BindView(R.id.button_ployee_profile_preview)
+    Button mButtonPreview;
     @BindView(R.id.imageview_ployee_profile_checkin)
     ImageView mImageButtonCheckin;
     @BindDrawable(R.drawable.nonselecteditem_dot)
@@ -109,7 +120,6 @@ public class PloyeeProfileActivity extends BaseActivity implements View.OnClickL
     private AccountApi mAccountApi;
     private PostUpdateProfileGson mData;
     private MasterApi mMasterApi;
-    private boolean shouldRequestCallSave = false;
     private ImageSliderPagerAdapter mAdapter;
     public LatLng mCurrentLatLng;
     private GoogleApiClient mGoogleApiClient;
@@ -171,7 +181,7 @@ public class PloyeeProfileActivity extends BaseActivity implements View.OnClickL
         }
 
         @Override
-        public void onDataFailure(ResponseMessage failCause) {
+        public void onDataFailure(String failCause) {
             dismissLoading();
         }
     };
@@ -187,12 +197,9 @@ public class PloyeeProfileActivity extends BaseActivity implements View.OnClickL
         }
 
         @Override
-        public void onDataFailure(ResponseMessage failCause) {
+        public void onDataFailure(String failCause) {
             dismissLoading();
             dismissRefreshing();
-            if (TextUtils.equals(failCause.getMessageCode(), ResponseMessage.CODE_DATA_NOT_FOUND)) {
-                shouldRequestCallSave = true;
-            }
             bindData(new PloyeeProfileGson.Data());
         }
     };
@@ -210,9 +217,9 @@ public class PloyeeProfileActivity extends BaseActivity implements View.OnClickL
             }
         }
     };
-    private RetrofitCallUtils.RetrofitCallback<Object> mCallbackUpdateData = new RetrofitCallUtils.RetrofitCallback<Object>() {
+    private RetrofitCallUtils.RetrofitCallback<BaseResponse> mCallbackUpdateData = new RetrofitCallUtils.RetrofitCallback<BaseResponse>() {
         @Override
-        public void onDataSuccess(Object data) {
+        public void onDataSuccess(BaseResponse data) {
             dismissLoading();
             showToastLong("Success");
             refreshData(PloyeeProfileActivity.this);
@@ -220,12 +227,8 @@ public class PloyeeProfileActivity extends BaseActivity implements View.OnClickL
         }
 
         @Override
-        public void onDataFailure(ResponseMessage failCause) {
+        public void onDataFailure(String failCause) {
             dismissLoading();
-            if (TextUtils.equals(failCause.getMessageCode(), ResponseMessage.CODE_DATA_NOT_FOUND)) {
-                shouldRequestCallSave = true;
-            }
-
         }
     };
 
@@ -234,6 +237,26 @@ public class PloyeeProfileActivity extends BaseActivity implements View.OnClickL
         mData = new PostUpdateProfileGson(data, mUserId);
         requestTransportData();
         bindData(mData);
+    }
+
+    @Override
+    protected void bindLanguage(LanguageAppLabelGson.Data data) {
+        super.bindLanguage(data);
+        PopupMenuUtils.setMenuTitle(mToolbar.getMenu(), R.id.menu_done_item_done, data.doneLabel);
+        mTextViewTitle.setText(data.profileScreenHeader);
+        mButtonEmail.setText(data.profileScreenEmail);
+        mEditTextAboutMe.setFloatingLabelText(data.profileScreenAboutMe);
+        mEditTextAboutMe.setHint(data.profileScreenAboutMeHint);
+        mTextViewLanguageLabel.setText(data.profileScreenLanguage);
+        mEditTextEducation.setFloatingLabelText(data.profileScreenEducation);
+        mEditTextEducation.setHint(data.profileScreenEducationHint);
+        mEditTextProfileWork.setFloatingLabelText(data.profileScreenWork);
+        mEditTextProfileWork.setHint(data.profileScreenWorkHint);
+        mEditTextInterest.setFloatingLabelText(data.profileScreenInterest);
+        mEditTextInterest.setHint(data.profileScreenInterestHint);
+        mTextViewTransportLabel.setText(data.profileScreenTransport);
+        mButtonPhone.setText(data.profileScreenPhone);
+        mButtonEmail.setText(data.profileScreenEmail);
     }
 
     private void bindData(final PostUpdateProfileGson data) {
@@ -451,11 +474,8 @@ public class PloyeeProfileActivity extends BaseActivity implements View.OnClickL
 
     private void onClickDone() {
         showLoading();
-        if (shouldRequestCallSave) {
-            RetrofitCallUtils.with(mAccountApi.postSaveProfileGson(gatheredData()), mCallbackUpdateData).enqueue(this);
-        } else {
-            RetrofitCallUtils.with(mAccountApi.postSaveProfileGson(gatheredData()), mCallbackUpdateData).enqueue(this);
-        }
+        RetrofitCallUtils.with(mAccountApi.postSaveProfileGson(gatheredData()), mCallbackUpdateData).enqueue(this);
+
     }
 
     private PostUpdateProfileGson gatheredData() {
@@ -485,6 +505,7 @@ public class PloyeeProfileActivity extends BaseActivity implements View.OnClickL
         mImageButtonCheckin.setOnClickListener(this);
         mTextViewLanguageSupport.setOnClickListener(this);
         mImageViewStaticMaps.setOnClickListener(this);
+        mButtonPreview.setOnClickListener(this);
         setRefreshLayout(mSwipeRefreshLayout, new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -543,7 +564,23 @@ public class PloyeeProfileActivity extends BaseActivity implements View.OnClickL
                     setCurrentLatLng(latLng);
                 }
             }));
+        } else if (id == mButtonPreview.getId()) {
+            onClickPreview(v.getContext());
         }
+    }
+
+
+    private void onClickPreview(final Context context) {
+        AccountInfoLoader.getAccountGson(this, mUserId, new Action1<AccountGson.Data>() {
+            @Override
+            public void call(AccountGson.Data data) {
+                Bundle bundle = new Bundle();
+                ProviderUserListGson.Data.UserService mockUserService = new ProviderUserListGson.Data.UserService(mUserId, data, mCurrentLatLng);
+                bundle.putParcelable(ProviderProfileActivity.KEY_PLOYEE_USER_SERVICE_DATA, mockUserService);
+                IntentUtils.startActivity(context, ProviderProfileActivity.class, bundle);
+            }
+        });
+
     }
 
     private void showLanguageChooser() {

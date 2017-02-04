@@ -50,12 +50,11 @@ public class PloyerServicesGson extends BaseResponse<ArrayList<PloyerServicesGso
         }
 
         public String getPloyeeCountDisplay() {
-            String ployeeCounts = "0 Ployee";
-            String serviceName = "";
-            if (ployeeCount > 1) {
-                ployeeCounts = ployeeCount + " Ployees";
-            } else if (ployeeCount == 1) {
-                ployeeCounts = "1 Ployee";
+            String ployeeCounts = "0 Provider";
+            if (ployeeCount == 1) {
+                ployeeCounts = "1 Provider";
+            } else if (ployeeCount > 1) {
+                ployeeCounts = ployeeCount + " Providers";
             }
             return ployeeCounts;
         }

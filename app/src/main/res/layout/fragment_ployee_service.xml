@@ -93,6 +93,7 @@
                                 app:met_floatingLabelText="@string/From" />
 
                             <TextView
+                                android:id="@+id/textview_ployee_service_price_per_hour"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"

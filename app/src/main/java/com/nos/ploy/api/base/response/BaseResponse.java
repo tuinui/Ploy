@@ -7,8 +7,13 @@ import com.google.gson.annotations.SerializedName;
  */
 
 public class BaseResponse<T> {
-    @SerializedName("responseMsg")
-    private ResponseMessage responseMessage;
+//    @SerializedName("responseMsg")
+//    private ResponseMessage responseMessage;
+    @SerializedName("isSucesss")
+    private Boolean isSuccess;
+
+    @SerializedName("userMessage")
+    private String userMessage;
 
     @SerializedName("data")
     private T data;
@@ -17,24 +22,32 @@ public class BaseResponse<T> {
     public BaseResponse() {
     }
 
-    public boolean isSuccess() {
-        return null != responseMessage && responseMessage.isSuccess();
-    }
+//    public boolean isSuccess() {
+//        return null != responseMessage && responseMessage.isSuccess();
+//    }
 
-    public String getErrorMessage() {
-        if (null != responseMessage && null != responseMessage.getMessageDescription()) {
-            return responseMessage.getMessageDescription();
-        } else {
-            return "error";
-        }
-    }
 
-    public ResponseMessage getResponseMessage() {
-        return responseMessage;
-    }
+//    public String getErrorMessage() {
+//        if (null != responseMessage && null != responseMessage.getMessageDescription()) {
+//            return responseMessage.getMessageDescription();
+//        } else {
+//            return "error";
+//        }
+//    }
+
+//    public ResponseMessage getResponseMessage() {
+//        return responseMessage;
+//    }
 
     public T getData() {
         return data;
     }
 
+    public boolean isSuccess() {
+        return null != isSuccess && isSuccess;
+    }
+
+    public String getUserMessage() {
+        return userMessage;
+    }
 }

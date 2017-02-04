@@ -1,5 +1,6 @@
 package com.nos.ploy.flow.ployer.person;
 
+import android.content.Context;
 import android.database.Cursor;
 import android.database.MatrixCursor;
 import android.graphics.Color;
@@ -9,6 +10,7 @@ import android.provider.BaseColumns;
 import android.support.annotation.IntDef;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.internal.ForegroundLinearLayout;
 import android.support.v4.widget.CursorAdapter;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SimpleCursorAdapter;
@@ -29,7 +31,6 @@ import com.nos.ploy.DrawerController;
 import com.nos.ploy.R;
 import com.nos.ploy.api.authentication.model.AccountGson;
 import com.nos.ploy.api.base.RetrofitCallUtils;
-import com.nos.ploy.api.base.response.ResponseMessage;
 import com.nos.ploy.api.ployer.PloyerApi;
 import com.nos.ploy.api.ployer.model.PloyerServicesGson;
 import com.nos.ploy.api.ployer.model.PostProviderFilterGson;
@@ -37,9 +38,12 @@ import com.nos.ploy.api.ployer.model.ProviderUserListGson;
 import com.nos.ploy.api.utils.loader.AccountInfoLoader;
 import com.nos.ploy.base.BaseActivity;
 import com.nos.ploy.base.BaseFragment;
+import com.nos.ploy.cache.UserTokenManager;
 import com.nos.ploy.custom.view.CustomViewPager;
 import com.nos.ploy.flow.generic.CommonFragmentStatePagerAdapter;
 import com.nos.ploy.flow.generic.htmltext.HtmlTextFragment;
+import com.nos.ploy.flow.generic.intro.IntroductionFragment;
+import com.nos.ploy.flow.generic.register.SignInSignupActivity;
 import com.nos.ploy.flow.generic.settings.SettingsFragment;
 import com.nos.ploy.flow.ployee.account.main.PloyeeAccountFragment;
 import com.nos.ploy.flow.ployee.home.PloyeeHomeActivity;
@@ -106,6 +110,8 @@ public class PloyerPersonActivity extends BaseActivity implements SearchView.OnQ
     int dp16;
     @BindView(R.id.textview_main_drawer_switch_to)
     TextView mTextViewSwitchToPloyee;
+    @BindView(R.id.foregroundlinearlayout_main_drawer_switch_container)
+    ForegroundLinearLayout mForeGroundLinearLayoutSwitchToContainer;
     public static final String KEY_SERVICE_DATA = "SERVICE_DATA";
     private SearchView mSearchView;
     private CommonFragmentStatePagerAdapter mPagerAdapter;
@@ -177,23 +183,43 @@ public class PloyerPersonActivity extends BaseActivity implements SearchView.OnQ
                 case DrawerController.NONE:
                     break;
                 case DrawerController.ACCOUNT:
-                    AccountInfoLoader.getAccountGson(PloyerPersonActivity.this, mUserId, new Action1<AccountGson.Data>() {
-                        @Override
-                        public void call(AccountGson.Data accountData) {
-                            if (null != accountData) {
-                                showFragment(PloyeeAccountFragment.newInstance(accountData));
+                    if (mUserId != -404) {
+                        AccountInfoLoader.getAccountGson(PloyerPersonActivity.this, mUserId, new Action1<AccountGson.Data>() {
+                            @Override
+                            public void call(AccountGson.Data accountData) {
+                                if (null != accountData) {
+                                    showFragment(PloyeeAccountFragment.newInstance(accountData));
+                                }
                             }
-                        }
-                    });
+                        });
+
+                    }
                     break;
                 case DrawerController.SETTINGS:
-                    showFragment(SettingsFragment.newInstance(mUserId));
+                    if (null != mUserId) {
+                        showFragment(SettingsFragment.newInstance(mUserId));
+                    }
                     break;
                 case DrawerController.WHAT_IS_PLOYEE:
                     showFragment(HtmlTextFragment.newInstance(HtmlTextFragment.WHAT_IS_PLOYEE));
                     break;
                 case DrawerController.WHAT_IS_PLOYER:
                     showFragment(HtmlTextFragment.newInstance(HtmlTextFragment.WHAT_IS_PLOYER));
+                    break;
+                case DrawerController.INTRODUCTION:
+                    showFragment(IntroductionFragment.newInstance(new IntroductionFragment.FragmentInteractionListener() {
+                        @Override
+                        public void onClickFindServices(Context context) {
+
+                        }
+
+                        @Override
+                        public void onClickOfferServices(Context context) {
+                            IntentUtils.startActivity(context, PloyeeHomeActivity.class);
+                            finishThisActivity();
+                        }
+                    },true));
+
                     break;
             }
         }
@@ -243,11 +269,16 @@ public class PloyerPersonActivity extends BaseActivity implements SearchView.OnQ
     }
 
     private void initView() {
-        mTextViewSwitchToPloyee.setOnClickListener(new View.OnClickListener() {
+        mForeGroundLinearLayoutSwitchToContainer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                IntentUtils.startActivity(PloyerPersonActivity.this, PloyeeHomeActivity.class);
-                finishThisActivity();
+                if (UserTokenManager.isLogin(v.getContext())) {
+                    IntentUtils.startActivity(v.getContext(), PloyeeHomeActivity.class);
+                    finishThisActivity();
+                } else {
+                    IntentUtils.startActivity(v.getContext(), SignInSignupActivity.class);
+                }
+
             }
         });
     }
@@ -311,7 +342,7 @@ public class PloyerPersonActivity extends BaseActivity implements SearchView.OnQ
     }
 
     private void onClickFilterMenu() {
-        showFragment(FilterFragment.newInstance(mParentData,mPostData, new FilterFragment.OnFilterConfirmListener() {
+        showFragment(FilterFragment.newInstance(mParentData, mPostData, new FilterFragment.OnFilterConfirmListener() {
             @Override
             public void onFilterConfirm(PostProviderFilterGson data) {
                 mPostData = data;
@@ -360,7 +391,7 @@ public class PloyerPersonActivity extends BaseActivity implements SearchView.OnQ
             }
 
             @Override
-            public void onDataFailure(ResponseMessage failCause) {
+            public void onDataFailure(String failCause) {
                 isRequesting = false;
                 dismissRefreshing();
             }
@@ -451,6 +482,16 @@ public class PloyerPersonActivity extends BaseActivity implements SearchView.OnQ
     @Override
     public void onConnectionSuspended(int i) {
 
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (UserTokenManager.isLogin(this)) {
+            mTextViewSwitchToPloyee.setText(R.string.Offer_services);
+        } else {
+            mTextViewSwitchToPloyee.setText(R.string.Login_or_Signup);
+        }
     }
 
     @Override

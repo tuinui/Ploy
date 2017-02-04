@@ -3,24 +3,25 @@ package com.nos.ploy.flow.generic.settings;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.internal.ForegroundLinearLayout;
-import android.support.v4.app.ActivityCompat;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.TextView;
 
+import com.akexorcist.localizationactivity.LocalizationActivity;
 import com.nos.ploy.R;
 import com.nos.ploy.api.masterdata.model.AppLanguageGson;
+import com.nos.ploy.api.masterdata.model.LanguageAppLabelGson;
 import com.nos.ploy.api.utils.loader.AppLanguageDataLoader;
 import com.nos.ploy.base.BaseFragment;
 import com.nos.ploy.cache.SharePreferenceUtils;
-import com.nos.ploy.cache.UserTokenManager;
 import com.nos.ploy.flow.generic.htmltext.HtmlTextFragment;
 import com.nos.ploy.flow.generic.settings.language.LanguageChooserFragment;
 
 import java.util.ArrayList;
+import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -32,8 +33,8 @@ import rx.functions.Action1;
 
 public class SettingsFragment extends BaseFragment implements View.OnClickListener {
 
-    @BindView(R.id.button_ployee_settings_logout)
-    Button mButtonLogout;
+//    @BindView(R.id.button_ployee_settings_logout)
+//    Button mButtonLogout;
     @BindView(R.id.linearlayout_ployee_settings_language_container)
     ForegroundLinearLayout mLinearLayoutLanguageContainer;
     @BindView(R.id.textview_ployee_settings_privacy_policy)
@@ -50,6 +51,8 @@ public class SettingsFragment extends BaseFragment implements View.OnClickListen
     TextView mTextViewTitle;
     @BindView(R.id.textview_ployee_settings_language_value)
     TextView mTextViewLanguageValue;
+    @BindView(R.id.textview_ployee_settings_language_label)
+    TextView mTextViewLanguageLabel;
     private long mUserId;
     private LanguageChooserFragment.OnDataChangedListener mOnChangedListener = new LanguageChooserFragment.OnDataChangedListener() {
         @Override
@@ -101,6 +104,7 @@ public class SettingsFragment extends BaseFragment implements View.OnClickListen
             @Override
             public void run() {
                 SharePreferenceUtils.setCurrentActiveAppLanguageCode(mTextViewLanguageValue.getContext(),languageCode);
+                invalidateLanguage();
                 AppLanguageDataLoader.getAppLanguageList(mTextViewLanguageValue.getContext(), false, new Action1<ArrayList<AppLanguageGson.Data>>() {
                     @Override
                     public void call(ArrayList<AppLanguageGson.Data> datas) {
@@ -109,6 +113,13 @@ public class SettingsFragment extends BaseFragment implements View.OnClickListen
                 });
             }
         });
+    }
+    private void invalidateLanguage() {
+        String currentLgCode = SharePreferenceUtils.getCurrentActiveAppLanguageCode(getContext());
+        if (!TextUtils.equals(currentLgCode, ((LocalizationActivity)getActivity()).getLanguage())) {
+            Locale.setDefault(new Locale(currentLgCode));
+            ((LocalizationActivity)getActivity()).setLanguage(Locale.getDefault().getLanguage());
+        }
     }
     @Nullable
     @Override
@@ -127,7 +138,7 @@ public class SettingsFragment extends BaseFragment implements View.OnClickListen
     }
 
     private void initView() {
-        mButtonLogout.setOnClickListener(this);
+//        mButtonLogout.setOnClickListener(this);
         mTextViewPolicy.setOnClickListener(this);
         mTextViewFaq.setOnClickListener(this);
         mTextViewLegal.setOnClickListener(this);
@@ -143,10 +154,7 @@ public class SettingsFragment extends BaseFragment implements View.OnClickListen
     @Override
     public void onClick(View v) {
         int id = v.getId();
-        if (id == mButtonLogout.getId()) {
-            UserTokenManager.clearData(v.getContext());
-            ActivityCompat.finishAfterTransition(getActivity());
-        } else if (id == mTextViewPolicy.getId()) {
+    if (id == mTextViewPolicy.getId()) {
             showFragment(HtmlTextFragment.newInstance(HtmlTextFragment.POLICY));
         } else if (id == mTextViewFaq.getId()) {
             showFragment(HtmlTextFragment.newInstance(HtmlTextFragment.FAQ));
@@ -166,5 +174,17 @@ public class SettingsFragment extends BaseFragment implements View.OnClickListen
 
         }
     }
+
+    @Override
+    protected void bindLanguage(LanguageAppLabelGson.Data data) {
+        super.bindLanguage(data);
+        mTextViewTitle.setText(data.settingHeader);
+        mTextViewLanguageLabel.setText(data.settingLang);
+        mTextViewPolicy.setText(data.settingPrivacy);
+        mTextViewTerm.setText(data.settingTerms);
+        mTextViewLegal.setText(data.settingLagal);
+        mTextViewFaq.setText(data.settingFaq);
+    }
+
 
 }

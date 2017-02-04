@@ -173,6 +173,7 @@
                     android:minHeight="?attr/actionBarSize">
 
                     <TextView
+                        android:id="@+id/textview_ployee_profile_language_label"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:layout_weight="0"
@@ -223,9 +224,9 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
+                            android:clickable="true"
                             android:drawableLeft="@drawable/selector_drawable_phone_gray_white"
                             android:text="@string/Show_Phone_No"
-                            android:clickable="true"
                             android:textAllCaps="false"
                             android:textColor="@color/selector_color_gray_white"
                             app:backgroundTint="@color/selector_color_white_blue" />
@@ -235,10 +236,10 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
+                            android:clickable="true"
                             android:drawableLeft="@drawable/selector_drawable_email_gray_white"
                             android:text="@string/Show_Email"
                             android:textAllCaps="false"
-                            android:clickable="true"
                             android:textColor="@color/selector_color_gray_white"
                             app:backgroundTint="@color/selector_color_white_blue" />
 
@@ -252,6 +253,7 @@
                     android:orientation="vertical">
 
                     <TextView
+                        android:id="@+id/textview_ployee_profile_transport_label"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:padding="8dp"
@@ -262,6 +264,16 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content" />
                 </LinearLayout>
+
+                <Button
+                    android:id="@+id/button_ployee_profile_preview"
+                    style="@style/PloyButtonTransparentGrayBorder"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="32dp"
+                    android:layout_marginLeft="32dp"
+                    android:layout_marginRight="32dp"
+                    android:text="@string/Preview" />
 
             </LinearLayout>
 

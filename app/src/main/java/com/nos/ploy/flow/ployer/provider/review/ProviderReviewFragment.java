@@ -14,14 +14,12 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.nos.ploy.R;
-import com.nos.ploy.api.authentication.model.AccountGson;
 import com.nos.ploy.api.base.RetrofitCallUtils;
-import com.nos.ploy.api.base.response.ResponseMessage;
+import com.nos.ploy.api.masterdata.model.LanguageAppLabelGson;
 import com.nos.ploy.api.ployer.PloyerApi;
+import com.nos.ploy.api.ployer.model.ProviderUserListGson;
 import com.nos.ploy.api.ployer.model.ReviewGson;
-import com.nos.ploy.api.utils.loader.AccountInfoLoader;
 import com.nos.ploy.base.BaseFragment;
-import com.nos.ploy.cache.SharePreferenceUtils;
 import com.nos.ploy.cache.UserTokenManager;
 import com.nos.ploy.flow.ployer.provider.leavereview.LeaveReviewFragment;
 import com.nos.ploy.utils.LanguageFormatter;
@@ -29,7 +27,6 @@ import com.nos.ploy.utils.LanguageFormatter;
 import butterknife.BindString;
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import rx.functions.Action1;
 
 /**
  * Created by Saran on 13/1/2560.
@@ -48,9 +45,9 @@ public class ProviderReviewFragment extends BaseFragment implements View.OnClick
     RatingBar mRatingCompetence;
     @BindView(R.id.textview_ployee_review_competence_point)
     TextView mTextViewCompetencePoint;
-    @BindView(R.id.ratingbar_ployee_review_communitation)
+    @BindView(R.id.ratingbar_ployee_review_communication)
     RatingBar mRatingCommunication;
-    @BindView(R.id.textview_ployee_review_communitation_point)
+    @BindView(R.id.textview_ployee_review_communication_point)
     TextView mTextViewCommunicationPoint;
     @BindView(R.id.ratingbar_ployee_review_politeness)
     RatingBar mRatingPolite;
@@ -74,24 +71,40 @@ public class ProviderReviewFragment extends BaseFragment implements View.OnClick
     TextView mTextViewTitle;
     @BindView(R.id.textview_main_appbar_subtitle)
     TextView mTextViewSubtitle;
+
+    @BindView(R.id.textview_ployee_review_competence_title)
+    TextView mTextViewCompetenceTitle;
+    @BindView(R.id.textview_ployee_review_politeness_title)
+    TextView mTextViewPolitenessTitle;
+    @BindView(R.id.textview_ployee_review_communication_title)
+    TextView mTextViewCommunicationTitle;
+    @BindView(R.id.textview_ployee_review_professionalism_title)
+    TextView mTextViewProfessionalismTitle;
+    @BindView(R.id.textview_ployee_review_punctuality_title)
+    TextView mTextViewPunctualityTitle;
+
     @BindString(R.string.Overall)
     String LOverall;
     @BindString(R.string.Review)
     String LReview;
     @BindString(R.string.Reviews)
     String LReviews;
-    private long mUserId;
+    private long mUserIdToReview;
     private PloyerApi mApi;
-
+    private static final String KEY_USER_SERVICE_DATA = "USER_SERVICE_DATA";
     private ProviderReviewRecyclerAdapter mAdapter = new ProviderReviewRecyclerAdapter();
     private ReviewGson.Data mData;
+    private ProviderUserListGson.Data.UserService mUserServiceData;
+    private LeaveReviewFragment.OnReviewFinishListener listener;
 
-    public static ProviderReviewFragment newInstance(long userId) {
+    public static ProviderReviewFragment newInstance(long userId, ProviderUserListGson.Data.UserService userData, LeaveReviewFragment.OnReviewFinishListener listener) {
 
         Bundle args = new Bundle();
         args.putLong(KEY_USER_ID, userId);
+        args.putParcelable(KEY_USER_SERVICE_DATA, userData);
         ProviderReviewFragment fragment = new ProviderReviewFragment();
         fragment.setArguments(args);
+        fragment.setListener(listener);
         return fragment;
     }
 
@@ -99,7 +112,8 @@ public class ProviderReviewFragment extends BaseFragment implements View.OnClick
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (null != getArguments()) {
-            mUserId = getArguments().getLong(KEY_USER_ID, 0);
+            mUserIdToReview = getArguments().getLong(KEY_USER_ID, 0);
+            mUserServiceData = getArguments().getParcelable(KEY_USER_SERVICE_DATA);
         }
         mApi = getRetrofit().create(PloyerApi.class);
     }
@@ -128,6 +142,19 @@ public class ProviderReviewFragment extends BaseFragment implements View.OnClick
         initToolbar();
     }
 
+    @Override
+    protected void bindLanguage(LanguageAppLabelGson.Data data) {
+        super.bindLanguage(data);
+        mTextViewTitle.setText(data.reviewScreenHeader);
+        mTextViewCompetenceTitle.setText(data.reviewScreenCompetence);
+        mTextViewCommunicationTitle.setText(data.reviewScreenCommunication);
+        mTextViewPolitenessTitle.setText(data.reviewScreenPoliteness);
+        mTextViewPunctualityTitle.setText(data.reviewScreenPunctuality);
+        mTextViewProfessionalismTitle.setText(data.reviewScreenProfession);
+        mButtonLeaveAReview.setText(data.reivewScreenLeaveReview);
+        mTextViewOverAllTitle.setText(data.reviewScreenOverall);
+    }
+
     private void initToolbar() {
         enableBackButton(mToolbar);
         mTextViewTitle.setText(LReview);
@@ -140,6 +167,13 @@ public class ProviderReviewFragment extends BaseFragment implements View.OnClick
                 refreshData();
             }
         });
+        if (null != UserTokenManager.getToken(getContext())) {
+            long reviewerUserId = UserTokenManager.getToken(getContext()).getUserId();
+            if (mUserIdToReview == reviewerUserId) {
+                mButtonLeaveAReview.setVisibility(View.GONE);
+            }
+        }
+
         mButtonLeaveAReview.setOnClickListener(this);
     }
 
@@ -153,14 +187,14 @@ public class ProviderReviewFragment extends BaseFragment implements View.OnClick
         }
 
         @Override
-        public void onDataFailure(ResponseMessage failCause) {
+        public void onDataFailure(String failCause) {
             dismissRefreshing();
         }
     };
 
     private void refreshData() {
         showRefreshing();
-        RetrofitCallUtils.with(mApi.getReviewByUserId(mUserId), mCallbackRefresh).enqueue(getContext());
+        RetrofitCallUtils.with(mApi.getReviewByUserId(mUserIdToReview), mCallbackRefresh).enqueue(getContext());
     }
 
     private void bindData(ReviewGson.Data data) {
@@ -215,18 +249,23 @@ public class ProviderReviewFragment extends BaseFragment implements View.OnClick
     public void onClick(View v) {
         int id = v.getId();
         if (id == mButtonLeaveAReview.getId()) {
-            if(UserTokenManager.isLogin(v.getContext())){
-                AccountInfoLoader.getAccountGson(v.getContext(), mUserId, new Action1<AccountGson.Data>() {
+            if (UserTokenManager.isLogin(v.getContext())) {
+                showFragment(LeaveReviewFragment.newInstance(mUserIdToReview, mUserServiceData, new LeaveReviewFragment.OnReviewFinishListener() {
                     @Override
-                    public void call(AccountGson.Data data) {
-                        if (null != data && null != mData) {
-                            showFragment(LeaveReviewFragment.newInstance(data,mData.getReviewAverage()));
-                        }
-
+                    public void onReviewFinish() {
+                        getListener().onReviewFinish();
+                        refreshData();
                     }
-                });
-
+                }));
             }
         }
+    }
+
+    public void setListener(LeaveReviewFragment.OnReviewFinishListener listener) {
+        this.listener = listener;
+    }
+
+    public LeaveReviewFragment.OnReviewFinishListener getListener() {
+        return listener;
     }
 }

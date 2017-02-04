@@ -16,13 +16,19 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.akexorcist.localizationactivity.LocalizationActivity;
+import com.nos.ploy.DrawerController;
 import com.nos.ploy.R;
 import com.nos.ploy.api.base.RetrofitManager;
+import com.nos.ploy.api.masterdata.model.LanguageAppLabelGson;
+import com.nos.ploy.cache.LanguageAppLabelManager;
 import com.nos.ploy.cache.UserTokenManager;
 import com.nos.ploy.utils.FragmentTransactionUtils;
 import com.nos.ploy.utils.NetworkUtils;
 
+import java.util.List;
+
 import retrofit2.Retrofit;
+import rx.functions.Action1;
 
 /**
  * Created by User on 1/10/2559.
@@ -35,6 +41,11 @@ public class BaseActivity extends LocalizationActivity {
     private ProgressDialog mProgressDialog;
     private SwipeRefreshLayout mRefreshLayout;
     private boolean isRefreshing;
+    protected LanguageAppLabelGson.Data mLanguageData;
+
+    protected void bindLanguage(LanguageAppLabelGson.Data data) {
+
+    }
 
     @Override
     protected void onDestroy() {
@@ -43,10 +54,61 @@ public class BaseActivity extends LocalizationActivity {
     }
 
     @Override
+    protected void onStart() {
+        super.onStart();
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                LanguageAppLabelManager.getLanguageLabel(BaseActivity.this, new Action1<LanguageAppLabelGson.Data>() {
+                    @Override
+                    public void call(LanguageAppLabelGson.Data data) {
+                        if (null != data) {
+                            mLanguageData = data;
+                            bindLanguage(data);
+                            changeRightMenuLabel(data,DrawerController.PLOYEE_MENUS);
+                            changeRightMenuLabel(data,DrawerController.PLOYER_MENUS);
+                        }
+                    }
+                });
+            }
+        });
+    }
+
+    private void changeRightMenuLabel(LanguageAppLabelGson.Data data, List<DrawerController.DrawerMenuItem> items){
+        if(null != items){
+            for(DrawerController.DrawerMenuItem item : items){
+                @DrawerController.Menu int menu = item.getMenu();
+                switch (menu) {
+
+                    case DrawerController.ACCOUNT:
+                        item.setMenuTitle(data.sidemenuAccount);
+                        break;
+                    case DrawerController.INTRODUCTION:
+                        item.setMenuTitle(data.sidemenuIntro);
+                        break;
+                    case DrawerController.NONE:
+                        break;
+                    case DrawerController.SETTINGS:
+                        item.setMenuTitle(data.sidemenuSetting);
+                        break;
+                    case DrawerController.WHAT_IS_PLOYEE:
+                        item.setMenuTitle("What is ployee");
+                        break;
+                    case DrawerController.WHAT_IS_PLOYER:
+                        item.setMenuTitle("What is ployer");
+                        break;
+                }
+            }
+        }
+    }
+
+    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (UserTokenManager.isLogin(this)) {
             mUserId = UserTokenManager.getToken(this).getUserId();
+        } else {
+            mUserId = -404L;
         }
 
     }

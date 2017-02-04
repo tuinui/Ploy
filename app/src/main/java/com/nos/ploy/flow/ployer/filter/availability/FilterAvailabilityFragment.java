@@ -15,8 +15,8 @@ import android.widget.TextView;
 
 import com.nos.ploy.R;
 import com.nos.ploy.api.base.RetrofitCallUtils;
-import com.nos.ploy.api.base.response.ResponseMessage;
 import com.nos.ploy.api.masterdata.MasterApi;
+import com.nos.ploy.api.masterdata.model.LanguageAppLabelGson;
 import com.nos.ploy.api.ployee.model.PloyeeAvailiabilityGson;
 import com.nos.ploy.api.ployer.model.PloyerServicesGson;
 import com.nos.ploy.base.BaseFragment;
@@ -148,10 +148,16 @@ public class FilterAvailabilityFragment extends BaseFragment implements View.OnC
             }
 
             @Override
-            public void onDataFailure(ResponseMessage failCause) {
+            public void onDataFailure(String failCause) {
                 dismissRefreshing();
             }
         }).enqueue(getContext());
+    }
+
+    @Override
+    protected void bindLanguage(LanguageAppLabelGson.Data data) {
+        super.bindLanguage(data);
+        mButtonNoPref.setText(data.avaliabilityScreenNoPrefer);
     }
 
     @Override

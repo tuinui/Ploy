@@ -11,10 +11,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.facebook.login.widget.LoginButton;
 import com.nos.ploy.R;
 import com.nos.ploy.api.base.RetrofitCallUtils;
-import com.nos.ploy.api.base.response.ResponseMessage;
 import com.nos.ploy.api.masterdata.MasterApi;
 import com.nos.ploy.api.masterdata.model.HtmlAppGson;
 import com.nos.ploy.base.BaseFragment;
@@ -73,7 +71,7 @@ public class HtmlTextFragment extends BaseFragment {
         }
 
         @Override
-        public void onDataFailure(ResponseMessage failCause) {
+        public void onDataFailure(String failCause) {
             dismissRefreshing();
         }
     };
@@ -196,12 +194,6 @@ public class HtmlTextFragment extends BaseFragment {
         }
     }
 
-    /*
-        /api/getHtmlApp?lgCode=en&dataId=3
-
-        dataId มีค่าได้ตั้งแต่ 0-5 เรียงลำดับ
-        Privacy Policy, Terms&Conditions, Legal, FAQ, What is Ployee, What is Ployer
-         */
     @Retention(RetentionPolicy.SOURCE)
     @IntDef({NONE, POLICY, TERM_AND_CONDITIONS, LEGAL, FAQ, WHAT_IS_PLOYER, WHAT_IS_PLOYEE})
     public @interface Menu {

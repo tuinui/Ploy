@@ -51,7 +51,7 @@
             android:name=".flow.ployer.person.PloyerPersonActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".flow.ployer.service.PloyerServiceListActivity"
+            android:name=".flow.ployer.service.PloyerHomeActivity"
             android:screenOrientation="portrait" />
 
         <meta-data
