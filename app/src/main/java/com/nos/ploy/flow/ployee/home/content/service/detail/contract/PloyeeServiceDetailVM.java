@@ -31,6 +31,10 @@ public class PloyeeServiceDetailVM implements PloyeeServiceDetailContract.ViewMo
             if (data.getPriceMax() > 2) {
                 priceMax = data.getPriceMax();
             }
+
+//            if (Math.abs(data.getPriceMax() - data.getPriceMin()) <= 2) {
+//                priceMax += 2;
+//            }
             serviceId = data.getServiceId();
             name = data.getServiceNameOthers();
             priceUnit = data.getPriceUnit();

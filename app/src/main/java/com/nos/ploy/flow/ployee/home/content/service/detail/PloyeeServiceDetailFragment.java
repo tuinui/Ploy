@@ -20,6 +20,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.appyvet.rangebar.RangeBar;
 import com.nos.ploy.R;
 import com.nos.ploy.api.masterdata.model.LanguageAppLabelGson;
 import com.nos.ploy.api.ployee.PloyeeApi;
@@ -48,8 +49,8 @@ import rx.functions.Action1;
 public class PloyeeServiceDetailFragment extends BaseFragment implements PloyeeServiceDetailContract.View, View.OnClickListener {
     private static final String KEY_SERVICE_ID = "SERVICE_ID";
     private static final String KEY_TOOLBAR_TITLE = "TOOLBAR_TITLE";
-    //    @BindView(R.id.materialrangebar_ployee_service_rate)
-//    RangeBar mRangeBar;
+    @BindView(R.id.materialrangebar_ployee_service_rate)
+    RangeBar mRangeBar;
     @BindView(R.id.edittext_ployee_service_price_from)
     MaterialEditText mEditTextPriceFrom;
     @BindView(R.id.edittext_ployee_service_price_to)
@@ -80,13 +81,13 @@ public class PloyeeServiceDetailFragment extends BaseFragment implements PloyeeS
     Button mButtonReset;
     @BindString(R.string.This_field_is_required)
     String LThis_field_is_required;
-    //    private RangeBar.OnRangeBarChangeListener mRangeBarListener = new RangeBar.OnRangeBarChangeListener() {
-//        @Override
-//        public void onRangeChangeListener(RangeBar rangeBar, int leftPinIndex, int rightPinIndex, String leftPinValue, String rightPinValue) {
-//            setPriceText(mEditTextPriceFrom, leftPinValue);
-//            setPriceText(mEditTextPriceTo, rightPinValue);
-//        }
-//    };
+    private RangeBar.OnRangeBarChangeListener mRangeBarListener = new RangeBar.OnRangeBarChangeListener() {
+        @Override
+        public void onRangeChangeListener(RangeBar rangeBar, int leftPinIndex, int rightPinIndex, String leftPinValue, String rightPinValue) {
+            setPriceText(mEditTextPriceFrom, leftPinValue);
+            setPriceText(mEditTextPriceTo, rightPinValue);
+        }
+    };
     private PloyeeApi mService;
     private PloyeeServiceDetailContract.Presenter mPresenter;
     private SwipeRefreshLayout.OnRefreshListener mOnRefreshListener = new SwipeRefreshLayout.OnRefreshListener() {
@@ -139,6 +140,7 @@ public class PloyeeServiceDetailFragment extends BaseFragment implements PloyeeS
         initToolbar();
         initRecyclerView();
         initView();
+        initRangeBar();
     }
 
     @Override
@@ -155,7 +157,7 @@ public class PloyeeServiceDetailFragment extends BaseFragment implements PloyeeS
         mEditTextEquipmentNeeded.setHint(data.serviceScreenEquipmentHint);
         mTextViewPricePerHour.setText(data.serviceScreenPriceHour);
         mEditTextPriceFrom.setHint(data.serviceScreenFrom);
-        mEditTextPriceTo.setText(data.serviceScreenTo);
+        mEditTextPriceTo.setHint(data.serviceScreenTo);
     }
 
     private void initRecyclerView() {
@@ -224,15 +226,15 @@ public class PloyeeServiceDetailFragment extends BaseFragment implements PloyeeS
         });
     }
 
-//    private void setPriceText(MaterialEditText et, String price) {
-//        et.setText(price);
-//    }
+    private void setPriceText(MaterialEditText et, String price) {
+        et.setText(price);
+    }
 
-//    private void initRangeBar() {
+    private void initRangeBar() {
 //        setPriceText(mEditTextPriceFrom, mRangeBar.getLeftPinValue());
 //        setPriceText(mEditTextPriceTo, mRangeBar.getRightPinValue());
-//        mRangeBar.setOnRangeBarChangeListener(mRangeBarListener);
-//    }
+        mRangeBar.setOnRangeBarChangeListener(mRangeBarListener);
+    }
 
     @Override
     public void onClick(View view) {
@@ -241,14 +243,23 @@ public class PloyeeServiceDetailFragment extends BaseFragment implements PloyeeS
             showPopupAlertEditTextMenu(mEditTextPriceFrom.getContext(), String.valueOf(mEditTextPriceFrom.getHint()), String.valueOf(mEditTextPriceFrom.getText()), new Action1<String>() {
                 @Override
                 public void call(String s) {
-                    mEditTextPriceFrom.setText(s);
+                    if (Long.valueOf(s) >= 1000) {
+                        setLeftPinValue(1000);
+                    } else {
+                        setLeftPinValue(Long.parseLong(s));
+                    }
+
                 }
             });
         } else if (id == mEditTextPriceTo.getId()) {
             showPopupAlertEditTextMenu(mEditTextPriceTo.getContext(), String.valueOf(mEditTextPriceTo.getHint()), String.valueOf(mEditTextPriceTo.getText()), new Action1<String>() {
                 @Override
                 public void call(String s) {
-                    mEditTextPriceTo.setText(s);
+                    if (Long.valueOf(s) >= 1000) {
+                        setRightPinValue(1000);
+                    } else {
+                        setRightPinValue(Long.parseLong(s));
+                    }
                 }
             });
         } else if (id == mButtonReset.getId()) {
@@ -361,19 +372,44 @@ public class PloyeeServiceDetailFragment extends BaseFragment implements PloyeeS
 
     }
 
+    private void setLeftPinValue(long min) {
+        int minValueToSet;
+        if (min >= 1000) {
+            minValueToSet = 1000;
+        } else {
+            minValueToSet = (int) min;
+        }
+        mEditTextPriceFrom.setText(String.valueOf(minValueToSet));
+        mRangeBar.setLeft((int) minValueToSet);
+        mRangeBar.setRangePinsByValue(minValueToSet, Float.parseFloat(mRangeBar.getRightPinValue()));
+    }
+
+    private void setRightPinValue(long max) {
+        int maxValueToSet;
+        if (max >= 1000) {
+            maxValueToSet = 1000;
+        } else {
+            maxValueToSet = (int) max;
+        }
+        mEditTextPriceTo.setText(String.valueOf(maxValueToSet));
+        mRangeBar.setRangePinsByValue(Float.parseFloat(mRangeBar.getLeftPinValue()), maxValueToSet);
+
+    }
+
     private void bindDataToView(final PloyeeServiceDetailContract.ViewModel data) {
         if (null != data) {
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
                     mEditTextPriceFrom.setHint(mLanguageData.serviceScreenFrom + " (" + data.getPriceUnit() + ") ");
-                    mEditTextPriceTo.setText(mLanguageData.serviceScreenTo + " (" + data.getPriceUnit() + ") ");
+                    mEditTextPriceTo.setHint(mLanguageData.serviceScreenTo + " (" + data.getPriceUnit() + ") ");
 
                     mEditTextDescription.setText(data.getDescription());
                     mEditTextCertificate.setText(data.getCertificate());
                     mEditTextEquipmentNeeded.setText(data.getEquipmentNeeded());
-                    mEditTextPriceFrom.setText(String.valueOf(data.getPriceMin()));
-                    mEditTextPriceTo.setText(String.valueOf(data.getPriceMax()));
+
+                    setLeftPinValue(data.getPriceMin());
+                    setRightPinValue(data.getPriceMax());
                     if (null != data.getData() && null != data.getData().getSubServices() && !data.getData().getSubServices().isEmpty()) {
                         mAdapter.replaceData(data.getData().getSubServices());
                         mTextViewSubServicesHeader.setVisibility(View.VISIBLE);

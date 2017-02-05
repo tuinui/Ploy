@@ -120,14 +120,14 @@
 
                         </LinearLayout>
 
-                        <!--<com.appyvet.rangebar.RangeBar-->
-                            <!--android:id="@+id/materialrangebar_ployee_service_rate"-->
-                            <!--android:layout_width="match_parent"-->
-                            <!--android:layout_height="wrap_content"-->
-                            <!--app:rangeBarPaddingBottom="8dp"-->
-                            <!--app:tickEnd="1000"-->
-                            <!--app:tickInterval="5"-->
-                            <!--app:tickStart="0" />-->
+                        <com.appyvet.rangebar.RangeBar
+                            android:id="@+id/materialrangebar_ployee_service_rate"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            app:rangeBarPaddingBottom="8dp"
+                            app:tickEnd="1000"
+                            app:tickInterval="5"
+                            app:tickStart="0" />
 
                         <!--<com.edmodo.rangebar.RangeBar-->
                         <!--android:id="@+id/rangebar_ployee_service_rate"-->
