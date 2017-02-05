@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -150,28 +151,38 @@ public class HtmlTextFragment extends BaseFragment {
     }
 
     private String getTextString(HtmlAppGson.Data data) {
+        String result = "";
         if (null != data) {
             switch (mMenu) {
                 case FAQ:
-                    return data.getFaq();
+                    result = data.getFaq();
+                    break;
                 case LEGAL:
-                    return data.getLegal();
+                    result = data.getLegal();
+                    break;
                 case POLICY:
-                    return data.getPolicy();
+                    result = data.getPolicy();
+                    break;
                 case TERM_AND_CONDITIONS:
-                    return data.getTerm();
+                    result = data.getTerm();
+                    break;
                 case WHAT_IS_PLOYEE:
-                    return data.getWhatIsPloyee();
+                    result = data.getWhatIsPloyee();
+                    break;
                 case WHAT_IS_PLOYER:
-                    return data.getWhatIsPloyer();
+                    result = data.getWhatIsPloyer();
+                    break;
                 case NONE:
                 default:
-                    return "";
+                    result = "";
+                    break;
             }
-
-        } else {
-            return "";
         }
+
+        if (TextUtils.isEmpty(result)) {
+            result = "";
+        }
+        return result;
     }
 
     private String getTitleString() {

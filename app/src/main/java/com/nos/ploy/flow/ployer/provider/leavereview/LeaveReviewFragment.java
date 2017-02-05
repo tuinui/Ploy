@@ -118,6 +118,8 @@ public class LeaveReviewFragment extends BaseFragment implements View.OnClickLis
         mTextViewPoliteness.setText(data.reviewScreenPoliteness);
         mTextViewPunctuality.setText(data.reviewScreenPunctuality);
         mTextViewProfessionalism.setText(data.reviewScreenProfession);
+        mEditTextReview.setHint(data.reviewScreenHintMsg);
+        mEditTextReview.setFloatingLabelText(data.reviewScreenHintMsg);
         mButtonPost.setText(data.reivewScreenPost);
     }
 

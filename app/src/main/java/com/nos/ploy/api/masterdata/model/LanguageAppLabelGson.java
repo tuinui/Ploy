@@ -401,43 +401,51 @@ public class LanguageAppLabelGson extends BaseResponse<LanguageAppLabelGson.Data
          
         public String closeLabel;
         @SerializedName("ok_label")
-         
         public String okLabel;
+
         @SerializedName("introduction_screen_header")
-         
         public String introductionScreenHeader;
+
         @SerializedName("introduction_screen_title1")
-         
         public String introductionScreenTitle1;
+
         @SerializedName("introduction_screen_title2")
-         
         public String introductionScreenTitle2;
+
         @SerializedName("introduction_screen_title3")
-         
         public String introductionScreenTitle3;
+
         @SerializedName("introduction_screen_descript1")
-        
         public String introductionScreenDescript1;
+
         @SerializedName("introduction_screen_descript2")
-         
         public String introductionScreenDescript2;
+
         @SerializedName("introduction_screen_descript3")
-         
         public String introductionScreenDescript3;
+
         @SerializedName("account_screen_obligatory")
-       
         public String accountScreenObligatory;
+
         @SerializedName("account_screen_name_cant_empty")
         public String accountScreenNameCantEmpty;
+
         @SerializedName("account_screen_lastname_cant_empty")
         public String accountScreenLastnameCantEmpty;
+
         @SerializedName("account_screen_confirm_before_back")
         public String accountScreenConfirmBeforeBack;
+
         @SerializedName("cancel_label")
         public String cancelLabel;
+
         @SerializedName("service_screen_alert")
         public String serviceScreenAlert;
+
         @SerializedName("account_screen_resetpass_header")
         public String accountScreenResetpassHeader;
+
+        @SerializedName("review_screen_hint_msg")
+        public String reviewScreenHintMsg;
     }
 }
