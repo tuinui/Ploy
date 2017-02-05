@@ -92,4 +92,8 @@ public class PostSavePloyerServiceDetailGson {
         this.subServiceLv2IdList.clear();
         this.subServiceLv2IdList.addAll(ids);
     }
+
+    public List<Long> getSubServiceLv2IdList(){
+        return subServiceLv2IdList;
+    }
 }

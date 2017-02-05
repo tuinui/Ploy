@@ -35,6 +35,7 @@ import com.nos.ploy.flow.ployee.home.content.service.detail.contract.PloyeeServi
 import com.nos.ploy.flow.ployee.home.content.service.detail.contract.PloyeeServiceDetailVM;
 import com.nos.ploy.flow.ployee.home.content.service.detail.contract.subservice.PloyeeServiceDetailSubServiceRecyclerAdapter;
 import com.nos.ploy.flow.ployee.home.content.service.detail.contract.subservice.viewmodel.PloyeeServiceDetailSubServiceItemBaseViewModel;
+import com.nos.ploy.utils.PopupMenuUtils;
 import com.rengwuxian.materialedittext.MaterialEditText;
 
 import butterknife.BindString;
@@ -464,9 +465,16 @@ public class PloyeeServiceDetailFragment extends BaseFragment implements PloyeeS
             canRequest = false;
         }
 
+        if (gatheredData().getSubServiceLv2IdList().size() == 0) {
+            canRequest = false;
+            PopupMenuUtils.showConfirmationAlertMenu(getContext(), null, mLanguageData.serviceScreenAlert, mLanguageData.okLabel, null, null);
+        }
+
+
         if (canRequest) {
             requestUpdateServiceDetail();
         }
+
 
     }
 

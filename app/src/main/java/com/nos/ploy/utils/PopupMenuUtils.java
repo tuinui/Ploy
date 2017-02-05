@@ -94,25 +94,30 @@ public class PopupMenuUtils {
             builder.setMessage(message);
         }
 
-        builder.setPositiveButton(positive, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                if (null != onConfirm) {
-                    onConfirm.call(true);
+        if (!TextUtils.isEmpty(positive)) {
+            builder.setPositiveButton(positive, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    if (null != onConfirm) {
+                        onConfirm.call(true);
+                    }
+                    dialog.dismiss();
                 }
-                dialog.dismiss();
-            }
-        });
-        builder.setNegativeButton(negative, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                if (null != onConfirm) {
-                    onConfirm.call(false);
-                }
+            });
+        }
 
-                dialog.dismiss();
-            }
-        });
+        if (!TextUtils.isEmpty(negative)) {
+            builder.setNegativeButton(negative, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    if (null != onConfirm) {
+                        onConfirm.call(false);
+                    }
+
+                    dialog.dismiss();
+                }
+            });
+        }
         Dialog dialog = builder.create();
         if (null != dialog) {
             dialog.show();
@@ -198,7 +203,7 @@ public class PopupMenuUtils {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
-                if(onConfirm != null){
+                if (onConfirm != null) {
                     onConfirm.call(editText.getText().toString());
                 }
 
