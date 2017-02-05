@@ -16,6 +16,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.facebook.CallbackManager;
@@ -80,6 +81,8 @@ public class PloyeeAccountFragment extends BaseFragment implements View.OnClickL
     TextView mTextViewNotices;
     @BindView(R.id.textview_ployee_account_main_obligatory)
     TextView mTextViewObligatory;
+    @BindView(R.id.framelayout_ployee_account_main_connect_facebook_container)
+    FrameLayout mFrameLayoutFacebookContainer;
     private AccountGson.Data mData;
     private CallbackManager mCallbackManager;
     private AuthenticationApi mAuthenApi;
@@ -171,6 +174,7 @@ public class PloyeeAccountFragment extends BaseFragment implements View.OnClickL
     @Override
     protected void bindLanguage(LanguageAppLabelGson.Data data) {
         super.bindLanguage(data);
+        PopupMenuUtils.setMenuTitle(mToolbar.getMenu(),R.id.menu_done_item_done,data.doneLabel);
         mTextViewTitle.setText(data.accountScreenHeader);
         mEditTextFirstname.setHint(data.accountScreenFirstName);
         mEditTextFirstname.setFloatingLabelText(data.accountScreenFirstName);
@@ -310,8 +314,10 @@ public class PloyeeAccountFragment extends BaseFragment implements View.OnClickL
                     mEditTextEmail.setText(mData.getEmail());
                     if (TextUtils.isEmpty(mData.getFbUserId())) {
                         mButtonFacebookFake.setVisibility(View.VISIBLE);
+                        mFrameLayoutFacebookContainer.setVisibility(View.VISIBLE);
                     } else {
                         mButtonFacebookFake.setVisibility(View.GONE);
+                        mFrameLayoutFacebookContainer.setVisibility(View.GONE);
                     }
                     addTextWatcher();
                 }

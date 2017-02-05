@@ -147,6 +147,7 @@ public class PloyeeServiceDetailFragment extends BaseFragment implements PloyeeS
     @Override
     protected void bindLanguage(LanguageAppLabelGson.Data data) {
         super.bindLanguage(data);
+        PopupMenuUtils.setMenuTitle(mToolbar.getMenu(), R.id.menu_done_item_done, data.doneLabel);
         mTextViewSubtitle.setText(data.serviceScreenHeader);
         mEditTextOthers.setFloatingLabelText(data.serviceScreenServicesHint);
         mEditTextOthers.setHint(data.serviceScreenServicesHint);
@@ -156,9 +157,11 @@ public class PloyeeServiceDetailFragment extends BaseFragment implements PloyeeS
         mEditTextCertificate.setHint(data.serviceScreenCertificateHint);
         mEditTextEquipmentNeeded.setFloatingLabelText(data.serviceScreenEquipmentLabel);
         mEditTextEquipmentNeeded.setHint(data.serviceScreenEquipmentHint);
-        mTextViewPricePerHour.setText(data.serviceScreenPriceHour);
+        mAdapter.setLanguage(data);
         mEditTextPriceFrom.setHint(data.serviceScreenFrom);
+        mTextViewSubServicesHeader.setText(data.servicesLabel);
         mEditTextPriceTo.setHint(data.serviceScreenTo);
+        mButtonReset.setText(data.serviceScreenReset);
     }
 
     private void initRecyclerView() {
@@ -381,8 +384,12 @@ public class PloyeeServiceDetailFragment extends BaseFragment implements PloyeeS
             minValueToSet = (int) min;
         }
         mEditTextPriceFrom.setText(String.valueOf(minValueToSet));
-        mRangeBar.setLeft((int) minValueToSet);
-        mRangeBar.setRangePinsByValue(minValueToSet, Float.parseFloat(mRangeBar.getRightPinValue()));
+        if (minValueToSet > Integer.valueOf(mRangeBar.getRightPinValue())) {
+            mRangeBar.setRangePinsByValue(Float.parseFloat(mRangeBar.getRightPinValue()), minValueToSet);
+        } else {
+            mRangeBar.setRangePinsByValue(minValueToSet, Float.parseFloat(mRangeBar.getRightPinValue()));
+        }
+
     }
 
     private void setRightPinValue(long max) {
@@ -394,7 +401,11 @@ public class PloyeeServiceDetailFragment extends BaseFragment implements PloyeeS
         }
         mEditTextPriceTo.setText(String.valueOf(maxValueToSet));
         mRangeBar.setRangePinsByValue(Float.parseFloat(mRangeBar.getLeftPinValue()), maxValueToSet);
-
+        if (Integer.valueOf(mRangeBar.getLeftPinValue()) > maxValueToSet) {
+            mRangeBar.setRangePinsByValue(maxValueToSet, Float.parseFloat(mRangeBar.getLeftPinValue()));
+        } else {
+            mRangeBar.setRangePinsByValue(Float.parseFloat(mRangeBar.getLeftPinValue()), maxValueToSet);
+        }
     }
 
     private void bindDataToView(final PloyeeServiceDetailContract.ViewModel data) {
@@ -402,8 +413,11 @@ public class PloyeeServiceDetailFragment extends BaseFragment implements PloyeeS
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    mEditTextPriceFrom.setHint(mLanguageData.serviceScreenFrom + " (" + data.getPriceUnit() + ") ");
-                    mEditTextPriceTo.setHint(mLanguageData.serviceScreenTo + " (" + data.getPriceUnit() + ") ");
+                    mTextViewPricePerHour.setText(data.getPriceUnit());
+                    mEditTextPriceFrom.setHint(mLanguageData.serviceScreenFrom + " ($)");
+                    mEditTextPriceTo.setHint(mLanguageData.serviceScreenTo + " ($)");
+                    mEditTextPriceFrom.setFloatingLabelText(mLanguageData.serviceScreenFrom + " ($)");
+                    mEditTextPriceTo.setFloatingLabelText(mLanguageData.serviceScreenTo + " ($)");
 
                     mEditTextDescription.setText(data.getDescription());
                     mEditTextCertificate.setText(data.getCertificate());

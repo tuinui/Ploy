@@ -5,6 +5,7 @@ import android.graphics.drawable.Drawable;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +13,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.nos.ploy.R;
+import com.nos.ploy.api.masterdata.model.LanguageAppLabelGson;
 import com.nos.ploy.api.ployer.model.PloyerServiceDetailGson;
 import com.nos.ploy.flow.ployee.home.content.service.detail.contract.subservice.PloyeeServiceDetailSubServiceRecyclerAdapter;
 import com.nos.ploy.flow.ployee.home.content.service.detail.contract.subservice.viewmodel.PloyeeServiceDetailSubServiceItemBaseViewModel;
@@ -31,6 +33,7 @@ import butterknife.ButterKnife;
 public class ProviderServiceRecyclerAdapter extends RecyclerView.Adapter<ProviderServiceRecyclerAdapter.ViewHolder> {
 
     private List<PloyerServiceDetailGson.Data> mDatas = new ArrayList<>();
+    private LanguageAppLabelGson.Data language;
 
     public ProviderServiceRecyclerAdapter() {
         super();
@@ -39,7 +42,7 @@ public class ProviderServiceRecyclerAdapter extends RecyclerView.Adapter<Provide
     public void replaceData(List<PloyerServiceDetailGson.Data> datas) {
         mDatas.clear();
 //        for (int i = 0; i < 2; i++) {
-            mDatas.addAll(datas);
+        mDatas.addAll(datas);
 //        }
 
         notifyDataSetChanged();
@@ -63,6 +66,9 @@ public class ProviderServiceRecyclerAdapter extends RecyclerView.Adapter<Provide
         return RecyclerUtils.getSize(mDatas);
     }
 
+    public void setLanguage(LanguageAppLabelGson.Data language) {
+        this.language = language;
+    }
 
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -71,10 +77,18 @@ public class ProviderServiceRecyclerAdapter extends RecyclerView.Adapter<Provide
         public Toolbar toolbar;
         @BindView(R.id.textview_member_profile_service_item_price)
         public TextView tvPrice;
+        @BindView(R.id.textview_member_profile_service_item_description_label)
+        public TextView tvDescriptionLabel;
         @BindView(R.id.textview_member_profile_service_item_description)
         public TextView tvDescription;
+        @BindView(R.id.textview_member_profile_service_item_certificate_label)
+        public TextView tvCertificateLabel;
         @BindView(R.id.textview_member_profile_service_item_certificate)
         public TextView tvCertificate;
+        @BindView(R.id.textview_member_profile_service_item_equipment_needed_label)
+        public TextView tvEquipmentLabel;
+        @BindView(R.id.textview_sub_services_header)
+        public TextView tvSubServicesHeader;
         @BindView(R.id.textview_member_profile_service_item_equipment)
         public TextView tvEquipment;
         @BindView(R.id.recyclerview_ployee_service_sub_service)
@@ -91,7 +105,7 @@ public class ProviderServiceRecyclerAdapter extends RecyclerView.Adapter<Provide
         public ViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
-            GridLayoutManager gridLayoutManager = new GridLayoutManager(itemView.getContext(),2) {
+            GridLayoutManager gridLayoutManager = new GridLayoutManager(itemView.getContext(), 2) {
                 @Override
                 public boolean isAutoMeasureEnabled() {
                     return true;
@@ -105,9 +119,9 @@ public class ProviderServiceRecyclerAdapter extends RecyclerView.Adapter<Provide
             gridLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
                 @Override
                 public int getSpanSize(int position) {
-                    if(null != recyclerViewSubService.getAdapter()){
-                        @PloyeeServiceDetailSubServiceItemBaseViewModel.ViewType int viewType  = recyclerViewSubService.getAdapter().getItemViewType(position);
-                        if(viewType == PloyeeServiceDetailSubServiceItemBaseViewModel.ITEM || viewType == PloyeeServiceDetailSubServiceItemBaseViewModel.SPACE_ONE_ELEMENT){
+                    if (null != recyclerViewSubService.getAdapter()) {
+                        @PloyeeServiceDetailSubServiceItemBaseViewModel.ViewType int viewType = recyclerViewSubService.getAdapter().getItemViewType(position);
+                        if (viewType == PloyeeServiceDetailSubServiceItemBaseViewModel.ITEM || viewType == PloyeeServiceDetailSubServiceItemBaseViewModel.SPACE_ONE_ELEMENT) {
                             return 1;
                         }
                         return 2;
@@ -118,11 +132,23 @@ public class ProviderServiceRecyclerAdapter extends RecyclerView.Adapter<Provide
             recyclerViewSubService.setLayoutManager(gridLayoutManager);
         }
 
+        private void bindLanguage(){
+            tvDescriptionLabel.setText(language.serviceScreenDescriptLabel);
+            tvCertificateLabel.setText(language.serviceScreenCertificateLabel);
+            tvEquipmentLabel.setText(language.serviceScreenEquipmentLabel);
+            tvSubServicesHeader.setText(language.servicesLabel);
+        }
+
 
         public void bindData(PloyerServiceDetailGson.Data data) {
+            bindLanguage();
             if (null != data) {
-                toolbar.setTitle(data.getServiceNameOthers());
-                tvPrice.setText("From $" + data.getPriceMin());
+                if (!TextUtils.isEmpty(data.getServiceNameOthers())) {
+                    toolbar.setTitle(data.getServiceNameOthers());
+                } else {
+                    toolbar.setTitle(data.getServiceName());
+                }
+                tvPrice.setText(language.serviceScreenFrom + " " + data.getPriceUnit() + " " + data.getPriceMin());
                 tvDescription.setText(data.getDescription());
                 tvCertificate.setText(data.getCertificate());
                 tvEquipment.setText(data.getEquipment());

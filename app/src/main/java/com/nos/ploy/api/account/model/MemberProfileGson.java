@@ -4,6 +4,7 @@ import com.google.gson.annotations.SerializedName;
 import com.nos.ploy.api.base.response.BaseResponse;
 import com.nos.ploy.api.ployee.model.PloyeeAvailiabilityGson;
 import com.nos.ploy.api.ployer.model.PloyerServiceDetailGson;
+import com.nos.ploy.api.ployer.model.ReviewGson;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,6 +28,9 @@ public class MemberProfileGson extends BaseResponse<MemberProfileGson.Data> {
         @SerializedName("serviceMapping")
         private List<PloyerServiceDetailGson.Data> serviceDetails = new ArrayList<>();
 
+        @SerializedName("reviewAVG")
+        private ReviewGson.Data.ReviewAverage reviewAverage;
+
         public Data() {
         }
 
@@ -44,6 +48,10 @@ public class MemberProfileGson extends BaseResponse<MemberProfileGson.Data> {
 
         public PloyeeProfileGson.Data getUserProfile() {
             return userProfile;
+        }
+
+        public ReviewGson.Data.ReviewAverage getReviewAverage() {
+            return reviewAverage;
         }
     }
 }

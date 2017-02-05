@@ -9,6 +9,7 @@
     android:paddingTop="16dp">
 
     <TextView
+        android:id="@+id/textview_introduction_item_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
@@ -25,6 +26,7 @@
         android:src="@drawable/image_android_phone_place_holder_160dp" />
 
     <TextView
+        android:id="@+id/textview_introduction_item_description"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"

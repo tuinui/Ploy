@@ -155,16 +155,17 @@ public class PloyerHomeActivity extends BaseActivity implements SearchView.OnQue
         super.bindLanguage(data);
         mTextViewTitle.setText(data.ployerHomeSearchService);
         mSearchView.setQueryHint(data.providerScreenSearch);
+        if (UserTokenManager.isLogin(this)) {
+            mTextViewSwitchToPloyee.setText(data.mainMenuOfferService);
+        } else {
+            mTextViewSwitchToPloyee.setText(data.sidemenuLoginLogout);
+        }
+
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        if (UserTokenManager.isLogin(this)) {
-            mTextViewSwitchToPloyee.setText(R.string.Offer_services);
-        } else {
-            mTextViewSwitchToPloyee.setText(R.string.Login_or_Signup);
-        }
     }
 
     private void initView() {

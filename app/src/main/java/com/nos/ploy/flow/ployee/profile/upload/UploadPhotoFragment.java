@@ -111,6 +111,7 @@ public class UploadPhotoFragment extends BaseFragment {
     protected void bindLanguage(LanguageAppLabelGson.Data data) {
         super.bindLanguage(data);
         mTextViewTitle.setText(data.profileScreenUploadHeader);
+        PopupMenuUtils.setMenuTitle(mToolbar.getMenu(),R.id.menu_done_item_done,data.doneLabel);
     }
 
     private UploadPhotoRecyclerAdapter mAdapter = new UploadPhotoRecyclerAdapter() {

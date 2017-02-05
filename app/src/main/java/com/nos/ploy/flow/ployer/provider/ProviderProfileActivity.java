@@ -198,8 +198,6 @@ public class ProviderProfileActivity extends BaseActivity implements GoogleApiCl
         enableBackButton(mToolbar);
         if (null != mUserServiceData) {
             mTextViewTitle.setText(mUserServiceData.getFullName());
-            mRatingBarRate.setRating(mUserServiceData.getReviewPoint());
-            mTextViewRatingPoint.setText(mUserServiceData.getReviewPoint() + "/5");
 
         }
     }
@@ -207,6 +205,7 @@ public class ProviderProfileActivity extends BaseActivity implements GoogleApiCl
     @Override
     protected void bindLanguage(LanguageAppLabelGson.Data data) {
         super.bindLanguage(data);
+        mServiceAdapter.setLanguage(data);
         PopupMenuUtils.setMenuTitle(mToolbar.getMenu(), R.id.menu_done_item_done, data.doneLabel);
         mTextViewTitle.setText(data.profileScreenHeader);
         mButtonEmail.setText(data.profileScreenEmail);
@@ -232,6 +231,7 @@ public class ProviderProfileActivity extends BaseActivity implements GoogleApiCl
                     if (null != data.getData().getReviewAverage() && null != data.getData().getReviewAverage().getAll()) {
                         mUserServiceData.setReviewPoint(data.getData().getReviewAverage().getAll());
                     }
+                    mTextViewRatingCount.setText(mUserServiceData.getReviewCount() + " " + mLanguageData.profileScreenReviews);
                     initToolbar();
                 }
 
@@ -355,6 +355,12 @@ public class ProviderProfileActivity extends BaseActivity implements GoogleApiCl
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
+
+                if (null != data.getReviewAverage()) {
+                    mRatingBarRate.setRating(data.getReviewAverage().getAll());
+                    mTextViewRatingPoint.setText(data.getReviewAverage().getAll() + "/5");
+                }
+
                 if (null != data.getUserProfile()) {
                     bindUserProfile(data.getUserProfile());
                 }
@@ -484,12 +490,12 @@ public class ProviderProfileActivity extends BaseActivity implements GoogleApiCl
     public void onClick(View v) {
         int id = v.getId();
         if (id == mButtonEmail.getId()) {
-            if (null != mUserServiceData) {
-                IntentUtils.sendEmail(v.getContext(), mUserServiceData.getEmail());
+            if (null != mData && null != mData.getUserProfile() && null != mData.getUserProfile().getEmail()) {
+                IntentUtils.sendEmail(v.getContext(), mData.getUserProfile().getEmail());
             }
         } else if (id == mButtonPhone.getId()) {
-            if (null != mUserServiceData) {
-                IntentUtils.makeACall(v.getContext(), mUserServiceData.getPhone());
+            if (null != mData && null != mData.getUserProfile() && null != mData.getUserProfile().getPhone()) {
+                IntentUtils.makeACall(v.getContext(), mData.getUserProfile().getPhone());
             }
         } else if (id == mImageViewStaticMaps.getId()) {
             openLocalizationMaps();

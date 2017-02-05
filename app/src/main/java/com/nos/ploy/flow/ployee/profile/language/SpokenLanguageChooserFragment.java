@@ -21,6 +21,7 @@ import com.nos.ploy.api.masterdata.MasterApi;
 import com.nos.ploy.api.masterdata.model.LanguageAppLabelGson;
 import com.nos.ploy.api.masterdata.model.LanguageGson;
 import com.nos.ploy.base.BaseFragment;
+import com.nos.ploy.utils.PopupMenuUtils;
 import com.nos.ploy.utils.RecyclerUtils;
 
 import java.util.ArrayList;
@@ -131,6 +132,7 @@ public class SpokenLanguageChooserFragment extends BaseFragment {
     @Override
     protected void bindLanguage(LanguageAppLabelGson.Data data) {
         super.bindLanguage(data);
+        PopupMenuUtils.setMenuTitle(mToolbar.getMenu(),R.id.menu_done_item_done,data.doneLabel);
         mTextViewTitle.setText(data.profileScreenLanguage);
     }
 

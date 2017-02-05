@@ -24,6 +24,7 @@ import com.nos.ploy.api.masterdata.model.LanguageGson;
 import com.nos.ploy.api.ployer.model.PloyerServicesGson;
 import com.nos.ploy.base.BaseFragment;
 import com.nos.ploy.flow.ployee.profile.language.LanguageChooserRecyclerAdapter;
+import com.nos.ploy.utils.PopupMenuUtils;
 import com.nos.ploy.utils.RecyclerUtils;
 
 import java.util.ArrayList;
@@ -116,8 +117,8 @@ public class FilterLanguageFragment extends BaseFragment implements View.OnClick
 
         Bundle args = new Bundle();
         args.putParcelable(KEY_SERVICE_DATA, data);
-        args.putStringArrayList(KEY_LANGUAGES,languages);
-        args.putLong(KEY_TOTAL_COUNT,total);
+        args.putStringArrayList(KEY_LANGUAGES, languages);
+        args.putLong(KEY_TOTAL_COUNT, total);
         FilterLanguageFragment fragment = new FilterLanguageFragment();
         fragment.setArguments(args);
         fragment.setListener(onDataChangedListener);
@@ -129,10 +130,10 @@ public class FilterLanguageFragment extends BaseFragment implements View.OnClick
         super.onCreate(savedInstanceState);
         if (null != getArguments()) {
             mServiceData = getArguments().getParcelable(KEY_SERVICE_DATA);
-            if(null != getArguments().getStringArrayList(KEY_LANGUAGES)){
+            if (null != getArguments().getStringArrayList(KEY_LANGUAGES)) {
                 mCheckedLanguages = getArguments().getStringArrayList(KEY_LANGUAGES);
             }
-            mTotal = getArguments().getLong(KEY_TOTAL_COUNT,0);
+            mTotal = getArguments().getLong(KEY_TOTAL_COUNT, 0);
         }
         mApi = getRetrofit().create(MasterApi.class);
     }
@@ -183,7 +184,7 @@ public class FilterLanguageFragment extends BaseFragment implements View.OnClick
     private void initRecyclerView() {
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         mRecyclerView.setAdapter(mAdapter);
-        mRecyclerView.addItemDecoration(new DividerItemDecoration(getContext(),DividerItemDecoration.VERTICAL));
+        mRecyclerView.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL));
     }
 
     private void initView() {
@@ -215,9 +216,10 @@ public class FilterLanguageFragment extends BaseFragment implements View.OnClick
     @Override
     protected void bindLanguage(LanguageAppLabelGson.Data data) {
         super.bindLanguage(data);
+        PopupMenuUtils.setMenuTitle(mToolbar.getMenu(), R.id.menu_done_item_done, data.doneLabel);
         mTextViewTitle.setText(data.profileScreenLanguageHeader);
         mButtonNoPref.setText(data.avaliabilityScreenNoPrefer);
-            mTextViewSubTitle.setText(mTotal +" " +data.providersLabel);
+        mTextViewSubTitle.setText(mTotal + " " + data.providersLabel);
 
     }
 

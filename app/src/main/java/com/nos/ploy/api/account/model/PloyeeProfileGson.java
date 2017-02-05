@@ -64,11 +64,15 @@ public class PloyeeProfileGson extends BaseResponse<PloyeeProfileGson.Data> {
         private Boolean contactPhone;
         @SerializedName("contactEmail")
         private Boolean contactEmail;
+        @SerializedName("phone")
+        private String phone;
+        @SerializedName("email")
+        private String email;
 
         public Data() {
         }
 
-        private Data(Long userProfileId, long userId, String aboutMe, String education, String work, String interest, ArrayList<Language> language, List<Transport> transport, Location location, boolean contactPhone, boolean contactEmail) {
+        private Data(Long userProfileId, long userId, String aboutMe, String education, String work, String interest, ArrayList<Language> language, List<Transport> transport, Location location, boolean contactPhone, boolean contactEmail,String phone,String email) {
             this.userProfileId = userProfileId;
             this.userId = userId;
             this.aboutMe = aboutMe;
@@ -80,10 +84,12 @@ public class PloyeeProfileGson extends BaseResponse<PloyeeProfileGson.Data> {
             this.location = location;
             this.contactEmail = contactEmail;
             this.contactPhone = contactPhone;
+            this.phone  = phone;
+            this.email = email;
         }
 
         public Data cloneThis() {
-            return new Data(null, userId, aboutMe, education, work, interest, language, transport, location, contactEmail, contactPhone);
+            return new Data(null, userId, aboutMe, education, work, interest, language, transport, location, contactEmail, contactPhone,phone,email);
         }
 
         public Boolean isContactPhone() {
@@ -172,6 +178,14 @@ public class PloyeeProfileGson extends BaseResponse<PloyeeProfileGson.Data> {
 
         public void setUserProfileId(long userProfileId) {
             this.userProfileId = userProfileId;
+        }
+
+        public String getEmail() {
+            return email;
+        }
+
+        public String getPhone() {
+            return phone;
         }
 
         public static class Language implements Parcelable {

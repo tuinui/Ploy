@@ -75,6 +75,8 @@ public class PloyerServiceDetailGson extends BaseResponse<PloyerServiceDetailGso
         private long userId;
         @SerializedName("serviceMappingId")
         private long serviceMappingId;
+        @SerializedName("serviceName")
+        private String serviceName;
         @SerializedName("serviceNameOthers")
         private String serviceNameOthers;
         @SerializedName("description")
@@ -95,11 +97,12 @@ public class PloyerServiceDetailGson extends BaseResponse<PloyerServiceDetailGso
         public Data() {
         }
 
-        private Data(long serviceId, long userId, long serviceMappingId, String serviceNameOthers, String description, long priceMin, long priceMax, String certificate, String equipment, List<SubService> subServices) {
+        private Data(long serviceId, long userId, long serviceMappingId, String serviceNameOthers,String serviceName, String description, long priceMin, long priceMax, String certificate, String equipment, List<SubService> subServices) {
             this.serviceId = serviceId;
             this.userId = userId;
             this.serviceMappingId = serviceMappingId;
             this.serviceNameOthers = serviceNameOthers;
+            this.serviceName = serviceName;
             this.description = description;
             this.priceMin = priceMin;
             this.priceMax = priceMax;
@@ -189,11 +192,15 @@ public class PloyerServiceDetailGson extends BaseResponse<PloyerServiceDetailGso
         }
 
         public Data closeThis() {
-            return new Data(serviceId, userId, serviceMappingId, serviceNameOthers, description, priceMin, priceMax, certificate, equipment, subServices);
+            return new Data(serviceId, userId, serviceMappingId, serviceNameOthers,serviceName, description, priceMin, priceMax, certificate, equipment, subServices);
         }
 
         public String getPriceUnit() {
             return priceUnit;
+        }
+
+        public String getServiceName() {
+            return serviceName;
         }
 
         public static class SubService {

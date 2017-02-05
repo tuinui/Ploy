@@ -1,5 +1,6 @@
 package com.nos.ploy.flow.ployer.provider.review;
 
+import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,8 +10,11 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.nos.ploy.R;
+import com.nos.ploy.api.ployer.model.ProviderUserListGson;
 import com.nos.ploy.api.ployer.model.ReviewGson;
+import com.nos.ploy.flow.ployer.provider.ProviderProfileActivity;
 import com.nos.ploy.utils.DateParseUtils;
+import com.nos.ploy.utils.IntentUtils;
 import com.nos.ploy.utils.RecyclerUtils;
 
 import java.util.ArrayList;
@@ -46,7 +50,7 @@ public class ProviderReviewRecyclerAdapter extends RecyclerView.Adapter<Provider
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         if (RecyclerUtils.isAvailableData(mDatas, position)) {
-            ReviewGson.Data.ReviewData data = mDatas.get(position);
+            final ReviewGson.Data.ReviewData data = mDatas.get(position);
             if(null != data.getUserProfileImage()){
                 Glide.with(holder.imgProfile.getContext()).load(data.getUserProfileImage().getImagePath()).error(R.drawable.ic_circle_profile_120dp).into(holder.imgProfile);
             }
@@ -60,6 +64,15 @@ public class ProviderReviewRecyclerAdapter extends RecyclerView.Adapter<Provider
                     holder.tvDate.setText(DateParseUtils.parseDateString(data.getReview().getCreatedDate(),"MMM dd, yyyy"));
                 }
             }
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Bundle bundle = new Bundle();
+                    ProviderUserListGson.Data.UserService mockUserService = new ProviderUserListGson.Data.UserService(data.getUserReview().getUserId(), data.getUserReview(), null);
+                    bundle.putParcelable(ProviderProfileActivity.KEY_PLOYEE_USER_SERVICE_DATA, mockUserService);
+                    IntentUtils.startActivity(v.getContext(), ProviderProfileActivity.class, bundle);
+                }
+            });
 
         }
     }

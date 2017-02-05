@@ -25,6 +25,7 @@ import com.nos.ploy.base.BaseFragment;
 import com.nos.ploy.cache.SharePreferenceUtils;
 import com.nos.ploy.flow.ployee.home.content.service.detail.contract.subservice.PloyeeServiceDetailSubServiceRecyclerAdapter;
 import com.nos.ploy.flow.ployee.home.content.service.detail.contract.subservice.viewmodel.PloyeeServiceDetailSubServiceItemBaseViewModel;
+import com.nos.ploy.utils.PopupMenuUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -108,6 +109,7 @@ public class FilterServicesFragment extends BaseFragment implements View.OnClick
     @Override
     protected void bindLanguage(LanguageAppLabelGson.Data data) {
         super.bindLanguage(data);
+        PopupMenuUtils.setMenuTitle(mToolbar.getMenu(),R.id.menu_done_item_done,data.doneLabel);
         mRadioButtonCertificate.setText(data.serviceScreenCertificateLabel);
         mRadioButtonEquipment.setText(data.serviceScreenEquipmentLabel);
         mButtonNoPref.setText(data.avaliabilityScreenNoPrefer);

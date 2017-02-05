@@ -31,6 +31,7 @@ import com.nos.ploy.DrawerController;
 import com.nos.ploy.R;
 import com.nos.ploy.api.authentication.model.AccountGson;
 import com.nos.ploy.api.base.RetrofitCallUtils;
+import com.nos.ploy.api.masterdata.model.LanguageAppLabelGson;
 import com.nos.ploy.api.ployer.PloyerApi;
 import com.nos.ploy.api.ployer.model.PloyerServicesGson;
 import com.nos.ploy.api.ployer.model.PostProviderFilterGson;
@@ -244,6 +245,17 @@ public class PloyerPersonActivity extends BaseActivity implements SearchView.OnQ
         initFooter();
         initView();
         initToolbar();
+    }
+
+    @Override
+    protected void bindLanguage(LanguageAppLabelGson.Data data) {
+        super.bindLanguage(data);
+        mSearchView.setQueryHint(data.providerScreenSearch);
+        if (UserTokenManager.isLogin(this)) {
+            mTextViewSwitchToPloyee.setText(data.mainMenuOfferService);
+        } else {
+            mTextViewSwitchToPloyee.setText(data.sidemenuLoginLogout);
+        }
     }
 
     @Override
@@ -489,16 +501,6 @@ public class PloyerPersonActivity extends BaseActivity implements SearchView.OnQ
     @Override
     public void onConnectionSuspended(int i) {
 
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        if (UserTokenManager.isLogin(this)) {
-            mTextViewSwitchToPloyee.setText(R.string.Offer_services);
-        } else {
-            mTextViewSwitchToPloyee.setText(R.string.Login_or_Signup);
-        }
     }
 
     @Override

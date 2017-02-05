@@ -14,6 +14,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.nos.ploy.R;
+import com.nos.ploy.api.masterdata.model.LanguageAppLabelGson;
 import com.nos.ploy.base.BaseFragment;
 import com.nos.ploy.flow.generic.CommonFragmentStatePagerAdapter;
 
@@ -67,7 +68,7 @@ public class IntroductionFragment extends BaseFragment implements View.OnClickLi
         }
         if (mContentFragments.isEmpty()) {
             for (int i = 0; i < 3; i++) {
-                mContentFragments.add(IntroductionItemFragment.newInstance());
+                mContentFragments.add(IntroductionItemFragment.newInstance(i));
             }
         }
     }
@@ -86,6 +87,14 @@ public class IntroductionFragment extends BaseFragment implements View.OnClickLi
         initView();
         initToolbar();
         initPager();
+    }
+
+    @Override
+    protected void bindLanguage(LanguageAppLabelGson.Data data) {
+        super.bindLanguage(data);
+        mTextViewTitle.setText(data.introductionScreenHeader);
+        mButtonOfferServices.setText(data.mainMenuOfferService);
+        mButtonFindServices.setText(data.mainMenuSearchService );
     }
 
     @Override

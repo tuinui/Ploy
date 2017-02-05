@@ -207,7 +207,9 @@ public class PloyeeHomeActivity extends BaseActivity implements View.OnClickList
     @Override
     protected void bindLanguage(LanguageAppLabelGson.Data data) {
         super.bindLanguage(data);
-
+        mSearchView.setQueryHint(data.providerScreenSearch);
+        mTextViewSwitchToPloyer.setText(data.mainMenuSearchService);
+        mTextViewTitle.setText(data.providerScreenHeader);
     }
 
     private void initView() {
@@ -255,7 +257,6 @@ public class PloyeeHomeActivity extends BaseActivity implements View.OnClickList
 
     private void initToolbar() {
         enableBackButton(mToolbar);
-        mTextViewTitle.setText(LPloyee);
     }
 
     @Override
@@ -288,14 +289,15 @@ public class PloyeeHomeActivity extends BaseActivity implements View.OnClickList
 
     private void onClickBottomMenu(@BottomMenu int menu) {
         if (menu == AVAILABLITY) {
-            mTextViewTitle.setText(LAvailability);
+            mTextViewTitle.setText(mLanguageData.avaliabilityScreenHeader);
             mSearchView.setVisibility(View.GONE);
             mViewPager.setCurrentItem(1);
             PopupMenuUtils.clearAndInflateMenu(mToolbar, R.menu.menu_done, mAvailabilityMenuItemClickListener);
+            PopupMenuUtils.setMenuTitle(mToolbar.getMenu(),R.id.menu_done_item_done,mLanguageData.doneLabel);
             mImageViewFooterServiceList.setActivated(false);
             mImageViewFooterAvailability.setActivated(true);
         } else if (menu == SERVICE_LIST) {
-            mTextViewTitle.setText(LPloyee);
+            mTextViewTitle.setText(mLanguageData.providerScreenHeader);
             PopupMenuUtils.clearMenu(mToolbar);
             mSearchView.setVisibility(View.VISIBLE);
             mViewPager.setCurrentItem(0);

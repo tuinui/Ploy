@@ -24,6 +24,7 @@ import com.nos.ploy.flow.ployee.home.content.availability.contract.AvailabilityV
 import com.nos.ploy.flow.ployee.home.content.availability.contract.NormalItemAvailabilityVM;
 import com.nos.ploy.flow.ployee.home.content.availability.contract.WeekAvailabilityVM;
 import com.nos.ploy.flow.ployee.home.content.availability.view.AvailabilityRecyclerAdapter;
+import com.nos.ploy.utils.PopupMenuUtils;
 
 import org.apache.commons.lang3.SerializationUtils;
 
@@ -161,6 +162,7 @@ public class FilterAvailabilityFragment extends BaseFragment implements View.OnC
     @Override
     protected void bindLanguage(LanguageAppLabelGson.Data data) {
         super.bindLanguage(data);
+        PopupMenuUtils.setMenuTitle(mToolbar.getMenu(),R.id.menu_done_item_done,data.doneLabel);
         mAdapter.setLanguage(data);
         mButtonNoPref.setText(data.avaliabilityScreenNoPrefer);
         mTextViewSubtitle.setText(mTotal +" " +data.providersLabel);

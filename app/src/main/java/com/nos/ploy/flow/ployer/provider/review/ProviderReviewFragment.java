@@ -146,6 +146,8 @@ public class ProviderReviewFragment extends BaseFragment implements View.OnClick
     protected void bindLanguage(LanguageAppLabelGson.Data data) {
         super.bindLanguage(data);
         mTextViewTitle.setText(data.reviewScreenHeader);
+        mTextViewOverAllTitle.setText(data.reviewScreenOverall);
+        mTextViewSubtitle.setText(data.profileScreenReviews);
         mTextViewCompetenceTitle.setText(data.reviewScreenCompetence);
         mTextViewCommunicationTitle.setText(data.reviewScreenCommunication);
         mTextViewPolitenessTitle.setText(data.reviewScreenPoliteness);
@@ -226,13 +228,13 @@ public class ProviderReviewFragment extends BaseFragment implements View.OnClick
                 int size = data.getReviewDataList().size();
                 mTextViewOverAllTitle.setText(LOverall + " (" + size + ") ");
                 mTextViewSubtitle.setVisibility(View.VISIBLE);
-                if (size == 0 || size == 1) {
-                    mTextViewSubtitle.setText(data.getReviewDataList().size() + " " + LReview);
-                } else {
-                    mTextViewSubtitle.setText(data.getReviewDataList().size() + " " + LReviews);
-                }
+//                if (size == 0 || size == 1) {
+//                    mTextViewSubtitle.setText(data.getReviewDataList().size() + " " + LReview);
+//                } else {
+//                    mTextViewSubtitle.setText(data.getReviewDataList().size() + " " + LReviews);
+//                }
 
-
+                mTextViewSubtitle.setText(mData.getReviewDataList().size() + " " + mLanguageData.profileScreenReviews);
                 mAdapter.replaceData(data.getReviewDataList());
             }
 

@@ -206,6 +206,7 @@ public class FilterFragment extends BaseFragment implements View.OnClickListener
         mTextViewAvailability.setText(data.avaliabilityScreenHeader);
         mTextViewLanguage.setText(data.profileScreenLanguage);
         mButtonEmail.setText(data.profileScreenEmail);
+        mButtonPhone.setText(data.profileScreenPhone);
         mButtonFilter.setText(data.filterScreenBtn);
         mButtonClear.setText(data.filterScreenClear);
         mEditTextFrom.setHint(data.serviceScreenFrom);

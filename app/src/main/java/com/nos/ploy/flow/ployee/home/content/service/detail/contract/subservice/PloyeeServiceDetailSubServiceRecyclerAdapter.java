@@ -10,6 +10,7 @@ import android.widget.Space;
 import android.widget.TextView;
 
 import com.nos.ploy.R;
+import com.nos.ploy.api.masterdata.model.LanguageAppLabelGson;
 import com.nos.ploy.api.ployer.model.PloyerServiceDetailGson;
 import com.nos.ploy.flow.ployee.home.content.service.detail.contract.subservice.viewmodel.HeaderSubServiceVM;
 import com.nos.ploy.flow.ployee.home.content.service.detail.contract.subservice.viewmodel.NormalSubServiceVM;
@@ -31,6 +32,7 @@ import butterknife.ButterKnife;
 public class PloyeeServiceDetailSubServiceRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private final boolean mDisableMode;
     private List<PloyeeServiceDetailSubServiceItemBaseViewModel> mDatas = new ArrayList<>();
+    private LanguageAppLabelGson.Data language;
 
     public PloyeeServiceDetailSubServiceRecyclerAdapter() {
         this.mDisableMode = false;
@@ -164,6 +166,10 @@ public class PloyeeServiceDetailSubServiceRecyclerAdapter extends RecyclerView.A
     @Override
     public int getItemCount() {
         return RecyclerUtils.getSize(mDatas);
+    }
+
+    public void setLanguage(LanguageAppLabelGson.Data language) {
+        this.language = language;
     }
 
     public static class HeaderVH extends RecyclerView.ViewHolder {

@@ -23,6 +23,7 @@ import com.nos.ploy.api.masterdata.model.LanguageAppLabelGson;
 import com.nos.ploy.base.BaseFragment;
 import com.nos.ploy.utils.FragmentTransactionUtils;
 import com.nos.ploy.utils.IntentUtils;
+import com.nos.ploy.utils.PopupMenuUtils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -71,6 +72,7 @@ public class LocalizationMapsFragment extends BaseFragment implements OnMapReady
     @Override
     protected void bindLanguage(LanguageAppLabelGson.Data data) {
         super.bindLanguage(data);
+        PopupMenuUtils.setMenuTitle(mToolbar.getMenu(),R.id.menu_done_item_done,data.doneLabel);
         mTextViewToolbarTitle.setText(data.profileScreenLocalization);
     }
 
