@@ -7,7 +7,9 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.Toolbar;
 import android.telephony.PhoneNumberFormattingTextWatcher;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -33,12 +35,13 @@ import com.nos.ploy.api.masterdata.model.LanguageAppLabelGson;
 import com.nos.ploy.api.utils.loader.AccountInfoLoader;
 import com.nos.ploy.base.BaseFragment;
 import com.nos.ploy.cache.UserTokenManager;
+import com.nos.ploy.flow.generic.signin.ChangePasswordFragment;
 import com.nos.ploy.flow.ployee.account.phone.PloyeeAccountPhoneFragment;
+import com.nos.ploy.utils.PopupMenuUtils;
 import com.rengwuxian.materialedittext.MaterialEditText;
 
 import java.util.Arrays;
 
-import butterknife.BindString;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import rx.functions.Action1;
@@ -75,6 +78,8 @@ public class PloyeeAccountFragment extends BaseFragment implements View.OnClickL
     Button mButtonLogout;
     @BindView(R.id.textview_ployee_account_notices)
     TextView mTextViewNotices;
+    @BindView(R.id.textview_ployee_account_main_obligatory)
+    TextView mTextViewObligatory;
     private AccountGson.Data mData;
     private CallbackManager mCallbackManager;
     private AuthenticationApi mAuthenApi;
@@ -95,6 +100,8 @@ public class PloyeeAccountFragment extends BaseFragment implements View.OnClickL
         public void onDataSuccess(BaseResponse data) {
             dismissLoading();
             showToast("Success");
+            isDataChanged = false;
+            PopupMenuUtils.clearMenu(mToolbar);
             refreshData();
         }
 
@@ -121,6 +128,7 @@ public class PloyeeAccountFragment extends BaseFragment implements View.OnClickL
             Log.i(TAG, error.toString());
         }
     };
+    private boolean isDataChanged;
 
     public static PloyeeAccountFragment newInstance(AccountGson.Data data) {
 
@@ -177,7 +185,7 @@ public class PloyeeAccountFragment extends BaseFragment implements View.OnClickL
         mEdittextPassword.setHint(data.accountScreenChangepass);
         mEdittextPassword.setFloatingLabelText(data.accountScreenChangepass);
         mTextViewNotices.setText(data.accountScreenDescript);
-
+        mTextViewObligatory.setText(data.accountScreenObligatory);
     }
 
     private void initFacebookButton() {
@@ -193,6 +201,7 @@ public class PloyeeAccountFragment extends BaseFragment implements View.OnClickL
     private void initView() {
         disableEditable(mEditTextPhone);
         disableEditable(mEditTextEmail);
+        disableEditable(mEdittextPassword);
 //        disableEditable(mEditTextBirthday);
         setRefreshLayout(mSwipeRefreshLayout, new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -202,7 +211,7 @@ public class PloyeeAccountFragment extends BaseFragment implements View.OnClickL
         });
         mEditTextPhone.addTextChangedListener(new PhoneNumberFormattingTextWatcher());
         mEditTextPhone.setOnClickListener(this);
-//        mEditTextBirthday.setOnClickListener(this);
+        mEdittextPassword.setOnClickListener(this);
         mButtonLogout.setOnClickListener(this);
         mButtonFacebookFake.setOnClickListener(this);
 
@@ -214,27 +223,87 @@ public class PloyeeAccountFragment extends BaseFragment implements View.OnClickL
         mEdittextPassword.setFocusFraction(1f);
     }
 
+    private void addTextWatcher() {
+        mEditTextFirstname.addTextChangedListener(mTextWatcher);
+        mEditTextLastName.addTextChangedListener(mTextWatcher);
+        mEditTextEmail.addTextChangedListener(mTextWatcher);
+        mEditTextPhone.addTextChangedListener(mTextWatcher);
+    }
+
+    private void removeTextWatcher() {
+        mEditTextFirstname.removeTextChangedListener(mTextWatcher);
+        mEditTextLastName.removeTextChangedListener(mTextWatcher);
+        mEditTextEmail.removeTextChangedListener(mTextWatcher);
+        mEditTextPhone.removeTextChangedListener(mTextWatcher);
+    }
+
+    private TextWatcher mTextWatcher = new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+            inflateMenu();
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+
+        }
+    };
+
+
     private void initToolbar() {
 
-        enableBackButton(mToolbar);
-        mToolbar.inflateMenu(R.menu.menu_done);
-        mToolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+        enableBackButton(mToolbar, new View.OnClickListener() {
             @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                if (item.getItemId() == R.id.menu_done_item_done) {
-                    attemptUpdateAccount();
-                }
-                return false;
+            public void onClick(View v) {
+                attempClose();
             }
         });
     }
 
+    private void attempClose() {
+        if (isDataChanged && null != mLanguageData) {
+            PopupMenuUtils.showConfirmationAlertMenu(getContext(), null, mLanguageData.accountScreenConfirmBeforeBack, mLanguageData.okLabel, mLanguageData.cancelLabel, new Action1<Boolean>() {
+                @Override
+                public void call(Boolean yes) {
+                    if (yes) {
+                        dismiss();
+                    }
+                }
+            });
+        } else {
+            dismiss();
+        }
+    }
+
+    private void inflateMenu() {
+        if (!isDataChanged) {
+            mToolbar.inflateMenu(R.menu.menu_done);
+            isDataChanged = true;
+            mToolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+                @Override
+                public boolean onMenuItemClick(MenuItem item) {
+                    if (item.getItemId() == R.id.menu_done_item_done) {
+                        attemptUpdateAccount();
+                    }
+                    return false;
+                }
+            });
+        }
+    }
+
     private void bindData(AccountGson.Data data) {
+
         mData = data;
         if (null != mData) {
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
+                    removeTextWatcher();
                     mEditTextFirstname.setText(mData.getFirstName());
                     mEditTextLastName.setText(mData.getLastName());
                     mEditTextPhone.setText(mData.getPhone());
@@ -244,29 +313,31 @@ public class PloyeeAccountFragment extends BaseFragment implements View.OnClickL
                     } else {
                         mButtonFacebookFake.setVisibility(View.GONE);
                     }
+                    addTextWatcher();
                 }
             });
 
         }
+
     }
 
-    private void attemptUpdateAccount(){
+    private void attemptUpdateAccount() {
         boolean canUpdate = true;
         String firstName = extractString(mEditTextFirstname);
         String lastName = extractString(mEditTextLastName);
-        if(TextUtils.isEmpty(firstName)){
+        if (TextUtils.isEmpty(firstName)) {
             canUpdate = false;
             mEditTextFirstname.setText(mLanguageData.accountScreenNameCantEmpty);
             mEditTextFirstname.requestFocus();
         }
 
-        if(TextUtils.isEmpty(lastName)){
+        if (TextUtils.isEmpty(lastName)) {
             canUpdate = false;
             mEditTextLastName.setText(mLanguageData.accountScreenNameCantEmpty);
             mEditTextLastName.requestFocus();
         }
 
-        if(canUpdate){
+        if (canUpdate) {
             requestUpdateAccount();
         }
 
@@ -322,6 +393,8 @@ public class PloyeeAccountFragment extends BaseFragment implements View.OnClickL
             ActivityCompat.finishAfterTransition(getActivity());
         } else if (id == mButtonFacebookFake.getId()) {
             mLoginButtonFacebook.callOnClick();
+        } else if (id == mEdittextPassword.getId()) {
+            showFragment(ChangePasswordFragment.newInstance());
         }
     }
 

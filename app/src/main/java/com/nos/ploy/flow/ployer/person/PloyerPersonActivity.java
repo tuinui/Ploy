@@ -78,6 +78,7 @@ public class PloyerPersonActivity extends BaseActivity implements SearchView.OnQ
     private String mSuggestionFrom = "PloyeeName";
     private ProviderUserListGson.Data mData;
     private PostProviderFilterGson mPostData;
+    private long mTotal = 0;
 
     @Retention(RetentionPolicy.SOURCE)
     @IntDef({LIST, MAPS})
@@ -287,7 +288,7 @@ public class PloyerPersonActivity extends BaseActivity implements SearchView.OnQ
 
         mTextViewSubTitle.setVisibility(View.VISIBLE);
         if (null != mParentData) {
-            mTextViewSubTitle.setText(mParentData.getPloyeeCountDisplay());
+
             mTextViewTitle.setText(mParentData.getServiceName());
         }
 
@@ -342,7 +343,7 @@ public class PloyerPersonActivity extends BaseActivity implements SearchView.OnQ
     }
 
     private void onClickFilterMenu() {
-        showFragment(FilterFragment.newInstance(mParentData, mPostData, new FilterFragment.OnFilterConfirmListener() {
+        showFragment(FilterFragment.newInstance(mParentData, mPostData,mTotal, new FilterFragment.OnFilterConfirmListener() {
             @Override
             public void onFilterConfirm(PostProviderFilterGson data) {
                 mPostData = data;
@@ -388,6 +389,7 @@ public class PloyerPersonActivity extends BaseActivity implements SearchView.OnQ
                 isRequesting = false;
                 dismissRefreshing();
                 bindData(data.getData());
+
             }
 
             @Override
@@ -400,10 +402,15 @@ public class PloyerPersonActivity extends BaseActivity implements SearchView.OnQ
 
     private void bindData(final ProviderUserListGson.Data data) {
         if (null != data && null != data.getUserServiceList()) {
+            if(null != data.getPagination() ){
+                mTotal = data.getPagination().getTotal();
+            }
+
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
                     mData = data;
+                    mTextViewSubTitle.setText(mData.getPagination().getTotal() +" " +mLanguageData.providersLabel);
                     if (null != mPersonListFragment) {
                         mPersonListFragment.bindData(data);
                     }

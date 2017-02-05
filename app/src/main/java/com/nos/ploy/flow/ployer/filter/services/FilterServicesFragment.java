@@ -40,6 +40,7 @@ public class FilterServicesFragment extends BaseFragment implements View.OnClick
 
     private static final String KEY_SERVICE_DATA = "KEY_SERVICE_DATA";
     private static final String KEY_FILTERED_DATA = "SERVICE_IDS";
+    private static final String KEY_TOTAL_COUNT = "TOTCAL";
     @BindView(R.id.radiobutton_filter_services_certificate)
     RadioButton mRadioButtonCertificate;
     @BindView(R.id.radiobutton_filter_services_equipment_needed)
@@ -66,7 +67,10 @@ public class FilterServicesFragment extends BaseFragment implements View.OnClick
         public void onDataSuccess(PloyerServiceDetailGson data) {
             dismissRefreshing();
             if (null != data && null != data.getData() && null != data.getData().getSubServices()) {
-                mTextViewSubtitle.setText(mServiceData.getPloyeeCountDisplay());
+                if (null != mServiceData) {
+                    mTextViewSubtitle.setText(mServiceData.getPloyeeCount() + " " + mLanguageData.providersLabel);
+                }
+
                 bindData(data.getData().getSubServices());
             }
         }
@@ -78,12 +82,14 @@ public class FilterServicesFragment extends BaseFragment implements View.OnClick
         }
     };
     private PostProviderFilterGson mFilteredData = new PostProviderFilterGson();
+    private long mTotal;
 
-    public static FilterServicesFragment newInstance(PloyerServicesGson.Data data, PostProviderFilterGson filterData, OnClickDoneListener listener) {
+    public static FilterServicesFragment newInstance(PloyerServicesGson.Data data, long total, PostProviderFilterGson filterData, OnClickDoneListener listener) {
 
         Bundle args = new Bundle();
         args.putParcelable(KEY_SERVICE_DATA, data);
         args.putParcelable(KEY_FILTERED_DATA, filterData);
+        args.putLong(KEY_TOTAL_COUNT, total);
         FilterServicesFragment fragment = new FilterServicesFragment();
         fragment.setArguments(args);
         fragment.setListener(listener);
@@ -105,6 +111,7 @@ public class FilterServicesFragment extends BaseFragment implements View.OnClick
         mRadioButtonCertificate.setText(data.serviceScreenCertificateLabel);
         mRadioButtonEquipment.setText(data.serviceScreenEquipmentLabel);
         mButtonNoPref.setText(data.avaliabilityScreenNoPrefer);
+        mTextViewSubtitle.setText(mTotal + " " + data.providersLabel);
     }
 
     @Override
@@ -112,6 +119,7 @@ public class FilterServicesFragment extends BaseFragment implements View.OnClick
         super.onCreate(savedInstanceState);
         if (null != getArguments()) {
             mServiceData = getArguments().getParcelable(KEY_SERVICE_DATA);
+            mTotal = getArguments().getLong(KEY_TOTAL_COUNT, 0);
             PostProviderFilterGson filterData = getArguments().getParcelable(KEY_FILTERED_DATA);
             if (filterData != null) {
                 mFilteredData.setCertificate(filterData.isCertificate());
@@ -141,7 +149,7 @@ public class FilterServicesFragment extends BaseFragment implements View.OnClick
         if (null != mServiceData) {
             mTextViewTitle.setText(mServiceData.getServiceName());
             mTextViewSubtitle.setVisibility(View.VISIBLE);
-            mTextViewSubtitle.setText(mServiceData.getPloyeeCountDisplay());
+
         }
         mToolbar.inflateMenu(R.menu.menu_done);
         mToolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
@@ -160,7 +168,7 @@ public class FilterServicesFragment extends BaseFragment implements View.OnClick
     }
 
     private void initRecyclerView() {
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(),2) {
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), 2) {
             @Override
             public boolean canScrollVertically() {
                 return false;
@@ -169,8 +177,8 @@ public class FilterServicesFragment extends BaseFragment implements View.OnClick
         gridLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
             @Override
             public int getSpanSize(int position) {
-                @PloyeeServiceDetailSubServiceItemBaseViewModel.ViewType int viewType  = mAdapter.getItemViewType(position);
-                if(viewType == PloyeeServiceDetailSubServiceItemBaseViewModel.ITEM || viewType == PloyeeServiceDetailSubServiceItemBaseViewModel.SPACE_ONE_ELEMENT){
+                @PloyeeServiceDetailSubServiceItemBaseViewModel.ViewType int viewType = mAdapter.getItemViewType(position);
+                if (viewType == PloyeeServiceDetailSubServiceItemBaseViewModel.ITEM || viewType == PloyeeServiceDetailSubServiceItemBaseViewModel.SPACE_ONE_ELEMENT) {
                     return 1;
                 }
                 return 2;

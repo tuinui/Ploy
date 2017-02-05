@@ -200,7 +200,7 @@ public class ProviderProfileActivity extends BaseActivity implements GoogleApiCl
             mTextViewTitle.setText(mUserServiceData.getFullName());
             mRatingBarRate.setRating(mUserServiceData.getReviewPoint());
             mTextViewRatingPoint.setText(mUserServiceData.getReviewPoint() + "/5");
-            mTextViewRatingCount.setText(mUserServiceData.getReviewCount() + " " + mLanguageData.profileScreenReviews);
+
         }
     }
 
@@ -218,7 +218,7 @@ public class ProviderProfileActivity extends BaseActivity implements GoogleApiCl
         mTextViewTransportationheader.setText(data.profileScreenTransport);
         mButtonPhone.setText(data.profileScreenPhone);
         mButtonEmail.setText(data.profileScreenEmail);
-
+        mTextViewRatingCount.setText(mUserServiceData.getReviewCount() + " " + mLanguageData.profileScreenReviews);
     }
 
     private void requestReviewData() {

@@ -22,9 +22,9 @@ import java.util.List;
 public class ProviderUserListGson extends BaseResponse<ProviderUserListGson.Data> {
 
 
-    public static class Data implements SortedListAdapter.ViewModel {
+    public static class Data implements SortedListAdapter.ViewModel, Parcelable {
         @SerializedName("pagination")
-        private Pagination pagination;
+        private Pagination pagination = new Pagination();
 
         @SerializedName("userList")
         private List<UserService> userServiceList = new ArrayList<>();
@@ -41,7 +41,7 @@ public class ProviderUserListGson extends BaseResponse<ProviderUserListGson.Data
             return userServiceList;
         }
 
-        public static class Pagination {
+        public static class Pagination implements Parcelable {
             @SerializedName("pageNo")
             private Long pageNo;
             @SerializedName("total")
@@ -58,6 +58,34 @@ public class ProviderUserListGson extends BaseResponse<ProviderUserListGson.Data
             public Long getTotal() {
                 return null == total ? 0 : total;
             }
+
+            @Override
+            public int describeContents() {
+                return 0;
+            }
+
+            @Override
+            public void writeToParcel(Parcel dest, int flags) {
+                dest.writeValue(this.pageNo);
+                dest.writeValue(this.total);
+            }
+
+            protected Pagination(Parcel in) {
+                this.pageNo = (Long) in.readValue(Long.class.getClassLoader());
+                this.total = (Long) in.readValue(Long.class.getClassLoader());
+            }
+
+            public static final Creator<Pagination> CREATOR = new Creator<Pagination>() {
+                @Override
+                public Pagination createFromParcel(Parcel source) {
+                    return new Pagination(source);
+                }
+
+                @Override
+                public Pagination[] newArray(int size) {
+                    return new Pagination[size];
+                }
+            };
         }
 
 
@@ -280,5 +308,33 @@ public class ProviderUserListGson extends BaseResponse<ProviderUserListGson.Data
 
 
         }
+
+        @Override
+        public int describeContents() {
+            return 0;
+        }
+
+        @Override
+        public void writeToParcel(Parcel dest, int flags) {
+            dest.writeParcelable(this.pagination, flags);
+            dest.writeTypedList(this.userServiceList);
+        }
+
+        protected Data(Parcel in) {
+            this.pagination = in.readParcelable(Pagination.class.getClassLoader());
+            this.userServiceList = in.createTypedArrayList(UserService.CREATOR);
+        }
+
+        public static final Parcelable.Creator<Data> CREATOR = new Parcelable.Creator<Data>() {
+            @Override
+            public Data createFromParcel(Parcel source) {
+                return new Data(source);
+            }
+
+            @Override
+            public Data[] newArray(int size) {
+                return new Data[size];
+            }
+        };
     }
 }

@@ -11,6 +11,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.github.wrdlbrnft.sortedlistadapter.SortedListAdapter;
 import com.nos.ploy.R;
+import com.nos.ploy.api.masterdata.model.LanguageAppLabelGson;
 import com.nos.ploy.api.ployer.model.PloyerServicesGson;
 
 import java.util.Comparator;
@@ -29,6 +30,7 @@ public class PloyerCategoryRecyclerAdapter extends SortedListAdapter<PloyerServi
 
 
     private final Action1<PloyerServicesGson.Data> onItemClickListener;
+    private LanguageAppLabelGson.Data language;
 
     public PloyerCategoryRecyclerAdapter(Context context, Comparator<PloyerServicesGson.Data> comparator, Action1<PloyerServicesGson.Data> onItemClick) {
         super(context, PloyerServicesGson.Data.class, comparator);
@@ -48,6 +50,10 @@ public class PloyerCategoryRecyclerAdapter extends SortedListAdapter<PloyerServi
     @Override
     protected boolean areItemContentsTheSame(PloyerServicesGson.Data oldItem, PloyerServicesGson.Data newItem) {
         return oldItem.equals(newItem);
+    }
+
+    public void setLanguage(LanguageAppLabelGson.Data language) {
+        this.language = language;
     }
 
     public class ViewHolder extends SortedListAdapter.ViewHolder<PloyerServicesGson.Data> {
@@ -79,7 +85,7 @@ public class PloyerCategoryRecyclerAdapter extends SortedListAdapter<PloyerServi
             });
             Glide.with(imgServiceImage.getContext()).load(data.getImgUrl()).placeholder(mDrawableGenizPlaceHolder).error(mDrawableGenizPlaceHolder).fallback(mDrawableGenizPlaceHolder).into(imgServiceImage);
             tvTitle.setText(data.getServiceName());
-            tvSubtitle.setText(data.getPloyeeCountDisplay());
+            tvSubtitle.setText(data.getPloyeeCount() + " " +language.providersLabel);
         }
     }
 }

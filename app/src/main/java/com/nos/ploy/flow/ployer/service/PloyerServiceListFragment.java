@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 
 import com.nos.ploy.R;
 import com.nos.ploy.api.base.RetrofitCallUtils;
+import com.nos.ploy.api.masterdata.model.LanguageAppLabelGson;
 import com.nos.ploy.api.ployer.PloyerApi;
 import com.nos.ploy.api.ployer.model.PloyerServicesGson;
 import com.nos.ploy.base.BaseFragment;
@@ -132,6 +133,12 @@ public class PloyerServiceListFragment extends BaseFragment implements SearchVie
         mAdapter.edit()
                 .replaceAll(mDatas)
                 .commit();
+    }
+
+    @Override
+    protected void bindLanguage(LanguageAppLabelGson.Data data) {
+        super.bindLanguage(data);
+        mAdapter.setLanguage(data);
     }
 
     @Override

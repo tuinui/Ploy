@@ -424,9 +424,6 @@ public class LanguageAppLabelGson extends BaseResponse<LanguageAppLabelGson.Data
         @SerializedName("introduction_screen_descript3")
          
         public String introductionScreenDescript3;
-        @SerializedName("# t -")
-         
-        public String t;
         @SerializedName("account_screen_obligatory")
        
         public String accountScreenObligatory;
@@ -438,5 +435,9 @@ public class LanguageAppLabelGson extends BaseResponse<LanguageAppLabelGson.Data
         public String accountScreenConfirmBeforeBack;
         @SerializedName("cancel_label")
         public String cancelLabel;
+        @SerializedName("service_screen_alert")
+        public String serviceScreenAlert;
+        @SerializedName("account_screen_resetpass_header")
+        public String accountScreenResetpassHeader;
     }
 }

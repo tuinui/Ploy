@@ -155,14 +155,17 @@ public class FilterFragment extends BaseFragment implements View.OnClickListener
     private List<TransportGsonVm> mTransportVms = new ArrayList<>();
     private static final String KEY_SERVICE_DATA = "SERVICE_DATA";
     private static final String KEY_POST_DATA = "POST_DATA";
+    private static final String KEY_TOTAL_COUNT = "TOTAL_COUNT";
     private PloyerServicesGson.Data mData;
     private PloyerApi mPloyerApi;
     private OnFilterConfirmListener listener;
+    private long mTotalCount;
 
-    public static FilterFragment newInstance(PloyerServicesGson.Data data, PostProviderFilterGson postData, OnFilterConfirmListener listener) {
+    public static FilterFragment newInstance(PloyerServicesGson.Data data, PostProviderFilterGson postData, long totalCount, OnFilterConfirmListener listener) {
         Bundle args = new Bundle();
         args.putParcelable(KEY_SERVICE_DATA, data);
         args.putParcelable(KEY_POST_DATA, postData);
+        args.putLong(KEY_TOTAL_COUNT,totalCount);
         FilterFragment fragment = new FilterFragment();
         fragment.setArguments(args);
         fragment.setListener(listener);
@@ -177,6 +180,7 @@ public class FilterFragment extends BaseFragment implements View.OnClickListener
             if (null != getArguments().getParcelable(KEY_POST_DATA)) {
                 mPostData = getArguments().getParcelable(KEY_POST_DATA);
             }
+            mTotalCount = getArguments().getLong(KEY_TOTAL_COUNT);
 
             if (mData != null) {
                 mPostData.setServiceId(mData.getId());
@@ -209,7 +213,7 @@ public class FilterFragment extends BaseFragment implements View.OnClickListener
         mTextViewContactMethod.setText(data.profileScreenContactMethod);
         mTextViewRatingLabel.setText(data.filterScreenRating);
         mTextViewTransport.setText(data.profileScreenTransport);
-        mTextViewSubTitle.setText(mData.getPloyeeCount() + " " + data.providersLabel);
+        mTextViewSubTitle.setText(mTotalCount + " " + data.providersLabel);
     }
 
     @Override
@@ -439,7 +443,7 @@ public class FilterFragment extends BaseFragment implements View.OnClickListener
 
     private FilterLanguageFragment getLanguageFragment() {
 
-        return FilterLanguageFragment.newInstance(mData, mPostData.cloneThis().getLanguages(), new FilterLanguageFragment.OnDataChangedListener() {
+        return FilterLanguageFragment.newInstance(mData,mTotalCount, mPostData.cloneThis().getLanguages(), new FilterLanguageFragment.OnDataChangedListener() {
             @Override
             public void onClickDone(ArrayList<String> datas) {
                 mPostData.setLanguages(datas);
@@ -449,7 +453,7 @@ public class FilterFragment extends BaseFragment implements View.OnClickListener
     }
 
     private FilterServicesFragment getServicesFragment() {
-        return FilterServicesFragment.newInstance(mData, mPostData.cloneThis(), new FilterServicesFragment.OnClickDoneListener() {
+        return FilterServicesFragment.newInstance(mData,mTotalCount, mPostData.cloneThis(), new FilterServicesFragment.OnClickDoneListener() {
             @Override
             public void onClickDone(List<Long> subServiceLv2Ids, boolean certificate, boolean equipment) {
                 mPostData.setCertificate(certificate);
@@ -461,7 +465,7 @@ public class FilterFragment extends BaseFragment implements View.OnClickListener
     }
 
     private FilterAvailabilityFragment getAvailabilityFragment() {
-        return FilterAvailabilityFragment.newInstance(mData, mPostData.cloneThis().getAvailabilityItems(), new FilterAvailabilityFragment.OnClickDoneListener() {
+        return FilterAvailabilityFragment.newInstance(mData,mTotalCount, mPostData.cloneThis().getAvailabilityItems(), new FilterAvailabilityFragment.OnClickDoneListener() {
             @Override
             public void onClickDone(PloyeeAvailiabilityGson.Data data) {
                 mPostData.addAllAvailabilityItem(data.getAvailabilityItems());

@@ -105,16 +105,19 @@ public class FilterLanguageFragment extends BaseFragment implements View.OnClick
 
     private static final String KEY_SERVICE_DATA = "SERVICE_DATA";
     private static final String KEY_LANGUAGES = "LANGUAGES";
+    private static final String KEY_TOTAL_COUNT = "TOTAL_COUNT";
     private PloyerServicesGson.Data mServiceData;
     private MasterApi mApi;
     private List<PloyeeProfileGson.Data.Language> mDatas = new ArrayList<>();
     private OnDataChangedListener mOnDataChangedListener;
+    private long mTotal;
 
-    public static FilterLanguageFragment newInstance(PloyerServicesGson.Data data, ArrayList<String> languages, OnDataChangedListener onDataChangedListener) {
+    public static FilterLanguageFragment newInstance(PloyerServicesGson.Data data, long total, ArrayList<String> languages, OnDataChangedListener onDataChangedListener) {
 
         Bundle args = new Bundle();
         args.putParcelable(KEY_SERVICE_DATA, data);
         args.putStringArrayList(KEY_LANGUAGES,languages);
+        args.putLong(KEY_TOTAL_COUNT,total);
         FilterLanguageFragment fragment = new FilterLanguageFragment();
         fragment.setArguments(args);
         fragment.setListener(onDataChangedListener);
@@ -129,7 +132,7 @@ public class FilterLanguageFragment extends BaseFragment implements View.OnClick
             if(null != getArguments().getStringArrayList(KEY_LANGUAGES)){
                 mCheckedLanguages = getArguments().getStringArrayList(KEY_LANGUAGES);
             }
-
+            mTotal = getArguments().getLong(KEY_TOTAL_COUNT,0);
         }
         mApi = getRetrofit().create(MasterApi.class);
     }
@@ -191,9 +194,6 @@ public class FilterLanguageFragment extends BaseFragment implements View.OnClick
     private void initToolbar() {
         mTextViewTitle.setText(R.string.Language_spoken);
         mTextViewSubTitle.setVisibility(View.VISIBLE);
-        if (null != mServiceData) {
-            mTextViewSubTitle.setText(mServiceData.getPloyeeCountDisplay());
-        }
         mToolbar.inflateMenu(R.menu.menu_done);
         mToolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
             @Override
@@ -217,6 +217,8 @@ public class FilterLanguageFragment extends BaseFragment implements View.OnClick
         super.bindLanguage(data);
         mTextViewTitle.setText(data.profileScreenLanguageHeader);
         mButtonNoPref.setText(data.avaliabilityScreenNoPrefer);
+            mTextViewSubTitle.setText(mTotal +" " +data.providersLabel);
+
     }
 
     @Override

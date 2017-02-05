@@ -58,14 +58,17 @@ public class FilterAvailabilityFragment extends BaseFragment implements View.OnC
     private AvailabilityRecyclerAdapter mAdapter = new AvailabilityRecyclerAdapter();
     private static final String KEY_SERVICE_DATA = "SERVICE_DATA";
     private static final String KEY_AVAILABILITY_ITEMS = "AVAILABILITY_ITEMS";
+    private static final String KEY_TOTAL_COUNT = "TOTAL_COUNT";
     private OnClickDoneListener listener;
     private ArrayList<PloyeeAvailiabilityGson.Data.AvailabilityItem> mAvailabilityItems = new ArrayList<>();
+    private long mTotal;
 
-    public static FilterAvailabilityFragment newInstance(PloyerServicesGson.Data data, ArrayList<PloyeeAvailiabilityGson.Data.AvailabilityItem> availabilityItems, OnClickDoneListener listener) {
+    public static FilterAvailabilityFragment newInstance(PloyerServicesGson.Data data, long total, ArrayList<PloyeeAvailiabilityGson.Data.AvailabilityItem> availabilityItems, OnClickDoneListener listener) {
 
         Bundle args = new Bundle();
         args.putParcelable(KEY_SERVICE_DATA, data);
         args.putParcelableArrayList(KEY_AVAILABILITY_ITEMS, availabilityItems);
+        args.putLong(KEY_TOTAL_COUNT,total);
         FilterAvailabilityFragment fragment = new FilterAvailabilityFragment();
         fragment.setArguments(args);
 //        fragment.setAvailabilityItems(availabilityItems);
@@ -86,6 +89,7 @@ public class FilterAvailabilityFragment extends BaseFragment implements View.OnC
         super.onCreate(savedInstanceState);
         if (null != getArguments()) {
             mServiceData = getArguments().getParcelable(KEY_SERVICE_DATA);
+            mTotal = getArguments().getLong(KEY_TOTAL_COUNT);
             ArrayList<PloyeeAvailiabilityGson.Data.AvailabilityItem> items = getArguments().getParcelableArrayList(KEY_AVAILABILITY_ITEMS);
             if(null != items){
                 for(PloyeeAvailiabilityGson.Data.AvailabilityItem item : items){
@@ -108,7 +112,7 @@ public class FilterAvailabilityFragment extends BaseFragment implements View.OnC
         enableBackButton(mToolbar);
         mTextViewSubtitle.setVisibility(View.VISIBLE);
         mTextViewTitle.setText(R.string.Availability);
-        mTextViewSubtitle.setText(mServiceData.getPloyeeCountDisplay());
+
         mToolbar.inflateMenu(R.menu.menu_done);
         mToolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
             @Override
@@ -157,7 +161,9 @@ public class FilterAvailabilityFragment extends BaseFragment implements View.OnC
     @Override
     protected void bindLanguage(LanguageAppLabelGson.Data data) {
         super.bindLanguage(data);
+        mAdapter.setLanguage(data);
         mButtonNoPref.setText(data.avaliabilityScreenNoPrefer);
+        mTextViewSubtitle.setText(mTotal +" " +data.providersLabel);
     }
 
     @Override

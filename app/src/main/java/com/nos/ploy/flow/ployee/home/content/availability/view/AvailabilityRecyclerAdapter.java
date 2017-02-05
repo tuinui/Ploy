@@ -90,10 +90,23 @@ public class AvailabilityRecyclerAdapter extends RecyclerView.Adapter<RecyclerVi
                 }
                 break;
             case AvailabilityViewModel.WEEK:
+                bindWeek((WeekVH) holder);
                 break;
             case AvailabilityViewModel.NONE:
             default:
                 break;
+        }
+    }
+
+    private void bindWeek(final WeekVH holder){
+        if(null != holder && null != language){
+            holder.tvMon.setText(language.avaliabilityScreenMonday);
+            holder.tvTues.setText(language.avaliabilityScreenTuesday);
+            holder.tvWednes.setText(language.avaliabilityScreenWednesday);
+            holder.tvThurs.setText(language.avaliabilityScreenThursday);
+            holder.tvFri.setText(language.avaliabilityScreenFriday);
+            holder.tvSatur.setText(language.avaliabilityScreenSaturday);
+            holder.tvSun.setText(language.avaliabilityScreenSunday);
         }
     }
 
@@ -221,13 +234,7 @@ public class AvailabilityRecyclerAdapter extends RecyclerView.Adapter<RecyclerVi
         public WeekVH(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
-            tvMon.setText(language.avaliabilityScreenMonday);
-            tvTues.setText(language.avaliabilityScreenTuesday);
-            tvWednes.setText(language.avaliabilityScreenWednesday);
-            tvThurs.setText(language.avaliabilityScreenThursday);
-            tvFri.setText(language.avaliabilityScreenFriday);
-            tvSatur.setText(language.avaliabilityScreenSaturday);
-            tvSun.setText(language.avaliabilityScreenSunday);
+
         }
     }
 }
