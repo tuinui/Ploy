@@ -6,11 +6,11 @@ import android.support.annotation.IntDef;
 import android.text.TextUtils;
 
 import com.google.gson.Gson;
+import com.nos.ploy.DrawerController;
 import com.nos.ploy.api.account.model.ProfileImageGson;
 import com.nos.ploy.api.authentication.model.AccountGson;
 import com.nos.ploy.api.authentication.model.UserTokenGson;
 import com.nos.ploy.api.masterdata.model.AppLanguageGson;
-import com.nos.ploy.api.masterdata.model.LanguageAppLabelGson;
 import com.nos.ploy.api.masterdata.model.LanguageAppLabelGson;
 
 import java.lang.annotation.Retention;
@@ -53,6 +53,7 @@ public class SharePreferenceUtils {
         try {
             userTokenGsonString = new Gson().toJson(userTokenGson, UserTokenGson.Data.class);
             with(context, USER).edit().putString(KEY_USER_TOKEN_GSON, userTokenGsonString).commit();
+            DrawerController.PLOYER_MENUS.add(DrawerController.MENU_ACCOUNT);
         } catch (Exception e) {
             with(context, USER).edit().putString(KEY_USER_TOKEN_GSON, "").commit();
         }
@@ -160,26 +161,26 @@ public class SharePreferenceUtils {
         return new Gson().fromJson(accountGsonString, AccountGson.Data.class);
     }
 
-    public static void saveAppLanguageLabelGson(Context context,String languageLabel,String lgCode){
-        if(null == context){
+    public static void saveAppLanguageLabelGson(Context context, String languageLabel, String lgCode) {
+        if (null == context) {
             return;
         }
-        try{
-            with(context, APP_SETTINGS).edit().putString(KEY_APP_LANGUAGE_LABEL_GSON_PREFIX+lgCode, languageLabel).commit();
-        }catch (Exception ignored){
+        try {
+            with(context, APP_SETTINGS).edit().putString(KEY_APP_LANGUAGE_LABEL_GSON_PREFIX + lgCode, languageLabel).commit();
+        } catch (Exception ignored) {
 
         }
 
     }
 
-    public static LanguageAppLabelGson getAppLanguageLabelGson(Context context, String lgCode){
-        if(null == context){
+    public static LanguageAppLabelGson getAppLanguageLabelGson(Context context, String lgCode) {
+        if (null == context) {
             return null;
         }
-        try{
-            String appLabel = with(context,APP_SETTINGS).getString(KEY_APP_LANGUAGE_LABEL_GSON_PREFIX+lgCode,"");
-            return new Gson().fromJson(appLabel,LanguageAppLabelGson.class);
-        }catch (Exception ignored){
+        try {
+            String appLabel = with(context, APP_SETTINGS).getString(KEY_APP_LANGUAGE_LABEL_GSON_PREFIX + lgCode, "");
+            return new Gson().fromJson(appLabel, LanguageAppLabelGson.class);
+        } catch (Exception ignored) {
             return null;
         }
     }

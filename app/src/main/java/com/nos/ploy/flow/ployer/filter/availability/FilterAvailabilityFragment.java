@@ -163,6 +163,7 @@ public class FilterAvailabilityFragment extends BaseFragment implements View.OnC
     protected void bindLanguage(LanguageAppLabelGson.Data data) {
         super.bindLanguage(data);
         PopupMenuUtils.setMenuTitle(mToolbar.getMenu(),R.id.menu_done_item_done,data.doneLabel);
+        mTextViewTitle.setText(data.avaliabilityScreenHeader);
         mAdapter.setLanguage(data);
         mButtonNoPref.setText(data.avaliabilityScreenNoPrefer);
         mTextViewSubtitle.setText(mTotal +" " +data.providersLabel);

@@ -204,11 +204,11 @@ public class ProviderUserListGson extends BaseResponse<ProviderUserListGson.Data
             }
 
             public Double getLocationLat() {
-                return null == locationLat ? 0 : locationLat;
+                return locationLat;
             }
 
             public Double getLocationLng() {
-                return null == locationLng ? 0 : locationLng;
+                return  locationLng;
             }
 
             public Long getMaxPrice() {

@@ -23,6 +23,7 @@ import com.nos.ploy.base.BaseFragment;
 import com.nos.ploy.cache.UserTokenManager;
 import com.nos.ploy.flow.ployer.provider.leavereview.LeaveReviewFragment;
 import com.nos.ploy.utils.LanguageFormatter;
+import com.nos.ploy.utils.RatingBarUtils;
 
 import butterknife.BindString;
 import butterknife.BindView;
@@ -146,7 +147,6 @@ public class ProviderReviewFragment extends BaseFragment implements View.OnClick
     protected void bindLanguage(LanguageAppLabelGson.Data data) {
         super.bindLanguage(data);
         mTextViewTitle.setText(data.reviewScreenHeader);
-        mTextViewOverAllTitle.setText(data.reviewScreenOverall);
         mTextViewSubtitle.setText(data.profileScreenReviews);
         mTextViewCompetenceTitle.setText(data.reviewScreenCompetence);
         mTextViewCommunicationTitle.setText(data.reviewScreenCommunication);
@@ -154,7 +154,7 @@ public class ProviderReviewFragment extends BaseFragment implements View.OnClick
         mTextViewPunctualityTitle.setText(data.reviewScreenPunctuality);
         mTextViewProfessionalismTitle.setText(data.reviewScreenProfession);
         mButtonLeaveAReview.setText(data.reivewScreenLeaveReview);
-        mTextViewOverAllTitle.setText(data.reviewScreenOverall);
+
     }
 
     private void initToolbar() {
@@ -205,28 +205,28 @@ public class ProviderReviewFragment extends BaseFragment implements View.OnClick
             if (null != data.getReviewAverage()) {
                 ReviewGson.Data.ReviewAverage reviewAverage = data.getReviewAverage();
 
-                mRatingAll.setRating(reviewAverage.getAll());
+                mRatingAll.setRating(RatingBarUtils.getRatingbarRoundingNumber(reviewAverage.getAll()));
                 mTextViewOverAllPoint.setText(LanguageFormatter.formatDecimal(reviewAverage.getAll()));
 
-                mRatingCommunication.setRating(reviewAverage.getCommunication());
+                mRatingCommunication.setRating(RatingBarUtils.getRatingbarRoundingNumber(reviewAverage.getCommunication()));
                 mTextViewCommunicationPoint.setText(LanguageFormatter.formatDecimal(reviewAverage.getCommunication()));
 
-                mRatingCompetence.setRating(reviewAverage.getCompetence());
+                mRatingCompetence.setRating(RatingBarUtils.getRatingbarRoundingNumber(reviewAverage.getCompetence()));
                 mTextViewCompetencePoint.setText(LanguageFormatter.formatDecimal(reviewAverage.getCompetence()));
 
-                mRatingPolite.setRating(reviewAverage.getPoliteness());
+                mRatingPolite.setRating(RatingBarUtils.getRatingbarRoundingNumber(reviewAverage.getPoliteness()));
                 mTextViewPolitePoint.setText(LanguageFormatter.formatDecimal(reviewAverage.getPoliteness()));
 
-                mRatingProfessionalism.setRating(reviewAverage.getProfessionalism());
+                mRatingProfessionalism.setRating(RatingBarUtils.getRatingbarRoundingNumber(reviewAverage.getProfessionalism()));
                 mTextViewProfessionalism.setText(LanguageFormatter.formatDecimal(reviewAverage.getProfessionalism()));
 
-                mRatingPunctuality.setRating(reviewAverage.getPunctuality());
+                mRatingPunctuality.setRating(RatingBarUtils.getRatingbarRoundingNumber(reviewAverage.getPunctuality()));
                 mTextViewPunctualityPoint.setText(LanguageFormatter.formatDecimal(reviewAverage.getPunctuality()));
             }
 
             if (null != data.getReviewDataList()) {
                 int size = data.getReviewDataList().size();
-                mTextViewOverAllTitle.setText(LOverall + " (" + size + ") ");
+                mTextViewOverAllTitle.setText(mLanguageData.reviewScreenOverall + " (" + size + " "+mLanguageData.reviewLabel+") ");
                 mTextViewSubtitle.setVisibility(View.VISIBLE);
 //                if (size == 0 || size == 1) {
 //                    mTextViewSubtitle.setText(data.getReviewDataList().size() + " " + LReview);

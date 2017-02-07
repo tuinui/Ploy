@@ -35,6 +35,7 @@ import com.nos.ploy.utils.DrawableUtils;
 import com.nos.ploy.utils.FragmentTransactionUtils;
 import com.nos.ploy.utils.IntentUtils;
 import com.nos.ploy.utils.MyLocationUtils;
+import com.nos.ploy.utils.RatingBarUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -54,19 +55,23 @@ public class PloyerPersonMapFragment extends BaseFragment implements OnMapReadyC
     @BindView(R.id.cardview_ployer_person_maps_bottomsheet_container)
     CardView mCardViewSheetContainer;
     @BindView(R.id.textview_ployer_person_maps_bottom_sheet_item_price)
-    public TextView mTextViewPrice;
+    TextView mTextViewPrice;
     @BindView(R.id.imageview_ployer_person_maps_bottom_sheet_item_profile_photo)
-    public ImageView mImageViewProfilePhoto;
+    ImageView mImageViewProfilePhoto;
     @BindView(R.id.ratingbar_ployer_person_maps_bottom_sheet_item_rate)
-    public RatingBar mRatingBarRate;
+    RatingBar mRatingBarRate;
     @BindView(R.id.textview_ployer_person_maps_bottom_sheet_item_title)
-    public TextView mTextViewSheetTitle;
+    TextView mTextViewSheetTitle;
+    @BindView(R.id.textview_ployer_maps_bottom_sheet_item_subtitle)
+    TextView mTExtViewSheetSubTitle;
     @BindView(R.id.textview_ployer_person_maps_bottom_sheet_distance)
-    public TextView mTextViewDistance;
+    TextView mTextViewDistance;
     @BindView(R.id.textview_ployer_person_maps_bottom_sheet_item_description)
-    public TextView mTextViewDescription;
+    TextView mTextViewDescription;
     @BindView(R.id.textview_ployer_person_maps_bottom_sheet_item_review_count)
-    public TextView mTextViewReviewCount;
+    TextView mTextViewReviewCount;
+    @BindView(R.id.textview_ployer_maps_bottom_sheet_item_rate)
+    TextView mTextViewRating;
     @BindDimen(R.dimen.dp24)
     int dp24;
     private BottomSheetBehavior<NestedScrollView> mBottomSheetBehavior;
@@ -177,7 +182,7 @@ public class PloyerPersonMapFragment extends BaseFragment implements OnMapReadyC
     }
 
     private MarkerOptions intoMarker(final ProviderUserListGson.Data.UserService data) {
-        if (null == data) {
+        if (null == data || null == data.getLocationLat() || null == data.getLocationLng()) {
             return null;
         }
         View v = LayoutInflater.from(getContext()).inflate(R.layout.view_maps_pin_box, null);
@@ -194,12 +199,16 @@ public class PloyerPersonMapFragment extends BaseFragment implements OnMapReadyC
             mCurrentSelectedData = data;
             Glide.with(mImageViewProfilePhoto.getContext()).load(data.getImagePath()).error(R.drawable.ic_ployer_item_placeholder).into(mImageViewProfilePhoto);
             mTextViewSheetTitle.setText(data.getFullName());
+            mTExtViewSheetSubTitle.setText(mServiceData.getServiceName());
             mTextViewDescription.setText(data.getDescription());
-            mTextViewPrice.setText(data.getMinPrice() + "/h");
+            mTextViewPrice.setText("$" + data.getMinPrice());
             mTextViewReviewCount.setText("" + data.getReviewCount());
-            mRatingBarRate.setRating(data.getReviewPoint());
+            mTextViewRating.setText(data.getReviewPoint() + "/5");
+            mRatingBarRate.setRating(RatingBarUtils.getRatingbarRoundingNumber(data.getReviewPoint()));
             if (null != data.getLocationLat() && null != data.getLocationLng()) {
                 mTextViewDistance.setText(MyLocationUtils.getDistanceFromCurrentLocation(mTextViewDistance.getContext(), mGoogleApiClient, new LatLng(data.getLocationLat(), data.getLocationLng())));
+            } else {
+                mTextViewDistance.setText("-");
             }
 
             expandBottomSheet(true);

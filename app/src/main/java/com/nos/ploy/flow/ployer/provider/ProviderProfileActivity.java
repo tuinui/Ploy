@@ -12,6 +12,7 @@ import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RatingBar;
@@ -49,6 +50,7 @@ import com.nos.ploy.utils.GoogleApiAvailabilityUtils;
 import com.nos.ploy.utils.IntentUtils;
 import com.nos.ploy.utils.MyLocationUtils;
 import com.nos.ploy.utils.PopupMenuUtils;
+import com.nos.ploy.utils.RatingBarUtils;
 import com.nos.ploy.utils.RecyclerUtils;
 
 import java.util.ArrayList;
@@ -63,6 +65,7 @@ public class ProviderProfileActivity extends BaseActivity implements GoogleApiCl
 
     public static final String KEY_PLOYEE_USER_SERVICE_DATA = "PLOYEE_USER_SERVICE_DATA";
     public static final String KEY_PLOYEEPROFILEGSON_DATA = "PLOYEEPROFILEGSON_DATA";
+    public static final String KEY_IS_PREVIEW = "IS_PREVIEW";
     private ProviderUserListGson.Data.UserService mUserServiceData;
     @BindView(R.id.viewpager_profile_image_slider)
     ViewPager mViewPagerSlider;
@@ -121,7 +124,7 @@ public class ProviderProfileActivity extends BaseActivity implements GoogleApiCl
     @BindView(R.id.textview_member_profile_rate_count)
     TextView mTextViewRatingCount;
     private boolean mIsPreviewMode;
-    private PloyeeProfileGson.Data mPreviewData;
+//    private PloyeeProfileGson.Data mPreviewData;
 
     @OnClick(R.id.view_activity_member_profile_availability_block)
     public void onClickAvailabilityBlock(View view) {
@@ -147,7 +150,7 @@ public class ProviderProfileActivity extends BaseActivity implements GoogleApiCl
             if (RecyclerUtils.isAvailableData(mTransportDatas, position)) {
                 TransportGsonVm data = mTransportDatas.get(position);
                 holder.imgTransport.setImageResource(data.getDrawable());
-                holder.tvTitle.setText(data.getTitle());
+                holder.tvTitle.setText(toTransportName(data.getId()));
                 holder.imgTransport.setActivated(true);
             }
 
@@ -196,18 +199,15 @@ public class ProviderProfileActivity extends BaseActivity implements GoogleApiCl
 
     private void initToolbar() {
         enableBackButton(mToolbar);
-        if (null != mUserServiceData) {
-            mTextViewTitle.setText(mUserServiceData.getFullName());
-
-        }
     }
 
     @Override
     protected void bindLanguage(LanguageAppLabelGson.Data data) {
         super.bindLanguage(data);
+        mTransportRecyclerAdapter.setLanguage(data);
         mServiceAdapter.setLanguage(data);
+        mAvailabilityAdapter.setLanguage(data);
         PopupMenuUtils.setMenuTitle(mToolbar.getMenu(), R.id.menu_done_item_done, data.doneLabel);
-        mTextViewTitle.setText(data.profileScreenHeader);
         mButtonEmail.setText(data.profileScreenEmail);
         mTextViewAboutMeHeader.setText(data.profileScreenAboutMe);
         mTextViewLanguagesHeader.setText(data.profileScreenLanguage);
@@ -218,10 +218,19 @@ public class ProviderProfileActivity extends BaseActivity implements GoogleApiCl
         mButtonPhone.setText(data.profileScreenPhone);
         mButtonEmail.setText(data.profileScreenEmail);
         mTextViewRatingCount.setText(mUserServiceData.getReviewCount() + " " + mLanguageData.profileScreenReviews);
+        if (null != mUserServiceData && mIsPreviewMode) {
+            mTextViewTitle.setText(mUserServiceData.getFullName() + "(" + mLanguageData.profileScreenPreview + ")");
+        } else {
+            mTextViewTitle.setText(mUserServiceData.getFullName());
+        }
+
     }
 
     private void requestReviewData() {
-        RetrofitCallUtils.with(mApi.getReviewByUserId(mUserId), new RetrofitCallUtils.RetrofitCallback<ReviewGson>() {
+        if (null == mUserServiceData) {
+            return;
+        }
+        RetrofitCallUtils.with(mApi.getReviewByUserId(mUserServiceData.getUserId()), new RetrofitCallUtils.RetrofitCallback<ReviewGson>() {
             @Override
             public void onDataSuccess(ReviewGson data) {
                 if (null != data && null != data.getData()) {
@@ -330,11 +339,12 @@ public class ProviderProfileActivity extends BaseActivity implements GoogleApiCl
     private void initData() {
         if (null != getIntent() && null != getIntent().getExtras()) {
             mUserServiceData = getIntent().getExtras().getParcelable(KEY_PLOYEE_USER_SERVICE_DATA);
-            mPreviewData = getIntent().getExtras().getParcelable(KEY_PLOYEEPROFILEGSON_DATA);
-            if (null != mPreviewData) {
-                mIsPreviewMode = true;
-                bindUserProfile(mPreviewData);
-            }
+//            mPreviewData = getIntent().getExtras().getParcelable(KEY_PLOYEEPROFILEGSON_DATA);
+            mIsPreviewMode = getIntent().getExtras().getBoolean(KEY_IS_PREVIEW, false);
+//            if (null != mPreviewData) {
+//                mIsPreviewMode = true;
+//                bindUserProfile(mPreviewData);
+//            }
         }
     }
 
@@ -357,7 +367,7 @@ public class ProviderProfileActivity extends BaseActivity implements GoogleApiCl
             public void run() {
 
                 if (null != data.getReviewAverage()) {
-                    mRatingBarRate.setRating(data.getReviewAverage().getAll());
+                    mRatingBarRate.setRating(RatingBarUtils.getRatingbarRoundingNumber(data.getReviewAverage().getAll()));
                     mTextViewRatingPoint.setText(data.getReviewAverage().getAll() + "/5");
                 }
 
@@ -384,6 +394,26 @@ public class ProviderProfileActivity extends BaseActivity implements GoogleApiCl
         if (null != data) {
             mTransportDatas.clear();
             mTransportDatas.addAll(toTransportVm(data.getTransport()));
+//            if (id == mButtonEmail.getId()) {
+//                if (null != mData && null != mData.getUserProfile() && null != mData.getUserProfile().getEmail()) {
+//                    IntentUtils.sendEmail(v.getContext(), mData.getUserProfile().getEmail());
+//                }
+//            } else if (id == mButtonPhone.getId()) {
+//                if (null != mData && null != mData.getUserProfile() && null != mData.getUserProfile().getPhone()) {
+//                    IntentUtils.makeACall(v.getContext(), mData.getUserProfile().getPhone());
+//                }
+            if (!TextUtils.isEmpty(data.getEmail()) && data.isContactEmail()) {
+                mButtonEmail.setVisibility(View.VISIBLE);
+            } else {
+                mButtonEmail.setVisibility(View.GONE);
+            }
+
+            if (!TextUtils.isEmpty(data.getPhone()) && data.isContactPhone()) {
+                mButtonPhone.setVisibility(View.VISIBLE);
+            } else {
+                mButtonPhone.setVisibility(View.GONE);
+            }
+            mTextViewInterests.setText(data.getInterest());
             mTransportRecyclerAdapter.notifyDataSetChanged();
             mTextViewAboutMe.setText(data.getAboutMe());
             String languageSupports = "";
@@ -404,8 +434,15 @@ public class ProviderProfileActivity extends BaseActivity implements GoogleApiCl
             if (null != data.getLocation()) {
                 LatLng latLng = new LatLng(data.getLocation().getLat(), data.getLocation().getLng());
                 mTextViewAddress.setText(MyLocationUtils.getCompleteAddressString(this, data.getLocation().getLat(), data.getLocation().getLng()));
-                mTextViewDistance.setText(MyLocationUtils.getDistanceFromCurrentLocation(this, mGoogleApiClient, latLng));
+                if (MyLocationUtils.locationProviderEnabled(this)) {
+                    mTextViewDistance.setText(MyLocationUtils.getDistanceFromCurrentLocation(this, mGoogleApiClient, latLng));
+                }
+
                 Glide.with(mImageViewStaticMaps.getContext()).load(MyLocationUtils.getStaticMapsUrl(latLng)).into(mImageViewStaticMaps);
+            } else {
+                mTextViewDistance.setText("");
+                mTextViewAddress.setText(mLanguageData.profileScreenLocation);
+                Glide.with(mImageViewStaticMaps.getContext()).load(MyLocationUtils.getStaticMapsUrl(new LatLng(0, 0))).into(mImageViewStaticMaps);
             }
 
             mTextViewEducation.setText(data.getEducation());
@@ -416,6 +453,7 @@ public class ProviderProfileActivity extends BaseActivity implements GoogleApiCl
     private void bindAvailability(PloyeeAvailiabilityGson.Data data) {
         if (null != data) {
             mAvailabilityAdapter.replaceData(toAvailabilityVm(data.getAvailabilityItems()));
+
         }
     }
 

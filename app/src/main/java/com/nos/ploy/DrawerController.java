@@ -39,21 +39,22 @@ public class DrawerController {
     public static List<DrawerMenuItem> PLOYEE_MENUS = new ArrayList<>();
     public static List<DrawerMenuItem> PLOYER_MENUS = new ArrayList<>();
     private static DrawerController INTSTANCE = new DrawerController();
-
+    public static DrawerMenuItem MENU_INTRODUCTION = new DrawerMenuItem(INTRODUCTION, "Introduction");
+    public static DrawerMenuItem MENU_SETTINGS = new DrawerMenuItem(SETTINGS, "Settings");
+    public static DrawerMenuItem MENU_ACCOUNT = new DrawerMenuItem(ACCOUNT, "Account");
     static {
-        DrawerMenuItem settings = new DrawerMenuItem(SETTINGS, "Settings");
-        DrawerMenuItem account = new DrawerMenuItem(ACCOUNT, "Account");
+
 //        DrawerMenuItem whatIsPloyer = new DrawerMenuItem(WHAT_IS_PLOYER, "What is Ployer");
 //        DrawerMenuItem whatIsPloyee = new DrawerMenuItem(WHAT_IS_PLOYEE, "What is Ployee");
-        DrawerMenuItem introduction = new DrawerMenuItem(INTRODUCTION, "Introduction");
-        PLOYEE_MENUS.add(settings);
-        PLOYEE_MENUS.add(account);
-        PLOYEE_MENUS.add(introduction);
+        PLOYEE_MENUS.add(MENU_SETTINGS);
+        PLOYEE_MENUS.add(MENU_ACCOUNT);
+        PLOYEE_MENUS.add(MENU_INTRODUCTION);
 //        PLOYEE_MENUS.add(whatIsPloyer);
 //        PLOYEE_MENUS.add(whatIsPloyee);
 
-        PLOYER_MENUS.add(settings);
-        PLOYER_MENUS.add(introduction);
+        PLOYER_MENUS.add(MENU_SETTINGS);
+        PLOYER_MENUS.add(MENU_ACCOUNT);
+        PLOYER_MENUS.add(MENU_INTRODUCTION);
 //        PLOYER_MENUS.add(whatIsPloyer);
 //        PLOYER_MENUS.add(whatIsPloyee);
     }

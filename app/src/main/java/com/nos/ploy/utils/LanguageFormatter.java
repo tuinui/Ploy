@@ -51,6 +51,6 @@ public class LanguageFormatter {
     }
 
     public static CharSequence formatDecimal(float value) {
-        return String.format(Locale.getDefault(), "%.2f", value);
+        return String.format(Locale.getDefault(), "%.1f", value);
     }
 }

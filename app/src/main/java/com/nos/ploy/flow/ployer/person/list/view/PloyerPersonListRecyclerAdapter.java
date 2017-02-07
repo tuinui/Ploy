@@ -1,6 +1,6 @@
 package com.nos.ploy.flow.ployer.person.list.view;
 
-import android.content.Context;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,8 +11,11 @@ import android.widget.TextView;
 import com.github.wrdlbrnft.sortedlistadapter.SortedListAdapter;
 import com.nos.ploy.R;
 import com.nos.ploy.api.ployer.model.ProviderUserListGson;
+import com.nos.ploy.flow.generic.UserServiceFilter;
+import com.nos.ploy.utils.RecyclerUtils;
 
-import java.util.Comparator;
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -21,31 +24,54 @@ import butterknife.ButterKnife;
  * Created by User on 10/11/2559.
  */
 
-public class PloyerPersonListRecyclerAdapter extends SortedListAdapter<ProviderUserListGson.Data.UserService> {
+public class PloyerPersonListRecyclerAdapter extends RecyclerView.Adapter<PloyerPersonListRecyclerAdapter.ViewHolder> {
     private OnDataBindListener mListener;
-
-    public PloyerPersonListRecyclerAdapter(Context context, Comparator<ProviderUserListGson.Data.UserService> comparator, OnDataBindListener listener) {
-        super(context, ProviderUserListGson.Data.UserService.class, comparator);
+    private List<ProviderUserListGson.Data.UserService> mDatas = new ArrayList<>();
+    private List<ProviderUserListGson.Data.UserService> mFilteredData = new ArrayList<>();
+    private UserServiceFilter mFilter;
+    public PloyerPersonListRecyclerAdapter(OnDataBindListener listener) {
         mListener = listener;
+        mFilter = new UserServiceFilter(mDatas,this);
     }
 
+    public void replaceData(List<ProviderUserListGson.Data.UserService> datas) {
+        mDatas.clear();
+        mDatas.addAll(datas);
+        notifyItemChanged(0, getItemCount());
+    }
+
+    public void setFilteredData(List<ProviderUserListGson.Data.UserService> mFilteredData) {
+        this.mFilteredData.clear();
+        this.mFilteredData.addAll(mFilteredData);
+    }
+
+    public void filterList(String text) {
+        mFilter.filter(text);
+    }
     //    @Override
 //    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 //        return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.view_ployee_list_item, parent, false));
 //    }
+
+
     @Override
-    protected SortedListAdapter.ViewHolder<? extends ProviderUserListGson.Data.UserService> onCreateViewHolder(LayoutInflater inflater, ViewGroup parent, int viewType) {
+    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         return new PloyerPersonListRecyclerAdapter.ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.view_ployer_list_item, parent, false));
     }
 
     @Override
-    protected boolean areItemContentsTheSame(ProviderUserListGson.Data.UserService data, ProviderUserListGson.Data.UserService t1) {
-        return data.getUserId() == t1.getUserId();
+    public void onBindViewHolder(ViewHolder holder, int position) {
+        if (null != mListener) {
+            if (RecyclerUtils.isAvailableData(mDatas, position)) {
+                mListener.onDataBind(holder, mDatas.get(position));
+            }
+
+        }
     }
 
     @Override
-    protected boolean areItemsTheSame(ProviderUserListGson.Data.UserService data, ProviderUserListGson.Data.UserService t1) {
-        return data.equals(t1);
+    public int getItemCount() {
+        return RecyclerUtils.getSize(mDatas);
     }
 
     public class ViewHolder extends SortedListAdapter.ViewHolder<ProviderUserListGson.Data.UserService> {
@@ -65,7 +91,8 @@ public class PloyerPersonListRecyclerAdapter extends SortedListAdapter<ProviderU
         public TextView tvDescription;
         @BindView(R.id.textview_ployer_list_item_review_count)
         public TextView tvReviewCount;
-
+        @BindView(R.id.textview_ployer_list_item_rate)
+        public TextView tvRate;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -74,8 +101,8 @@ public class PloyerPersonListRecyclerAdapter extends SortedListAdapter<ProviderU
 
         @Override
         protected void performBind(ProviderUserListGson.Data.UserService data) {
-            if(null != mListener){
-                mListener.onDataBind(this,data);
+            if (null != mListener) {
+                mListener.onDataBind(this, data);
             }
 
         }
@@ -84,7 +111,7 @@ public class PloyerPersonListRecyclerAdapter extends SortedListAdapter<ProviderU
 
 
     public static interface OnDataBindListener {
-        public void onDataBind(ViewHolder holder,ProviderUserListGson.Data.UserService data);
+        public void onDataBind(ViewHolder holder, ProviderUserListGson.Data.UserService data);
     }
 
 }

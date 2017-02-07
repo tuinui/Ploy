@@ -22,6 +22,7 @@ import com.nos.ploy.flow.ployer.person.list.view.PloyerPersonListRecyclerAdapter
 import com.nos.ploy.flow.ployer.provider.ProviderProfileActivity;
 import com.nos.ploy.utils.IntentUtils;
 import com.nos.ploy.utils.MyLocationUtils;
+import com.nos.ploy.utils.RatingBarUtils;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -58,11 +59,14 @@ public class PloyerPersonListFragment extends BaseFragment implements SearchView
             Glide.with(holder.imgPhoto.getContext()).load(data.getImagePath()).error(R.drawable.ic_ployer_item_placeholder).into(holder.imgPhoto);
             holder.tvTitle.setText(data.getFullName());
             holder.tvDescription.setText(data.getDescription());
-            holder.tvPrice.setText(data.getMinPrice() + "/h");
+            holder.tvPrice.setText("$" + data.getMinPrice());
             holder.tvReviewCount.setText("" + data.getReviewCount());
-            holder.ratingBar.setRating(data.getReviewPoint());
+            holder.tvRate.setText(data.getReviewPoint() + "/5");
+            holder.ratingBar.setRating(RatingBarUtils.getRatingbarRoundingNumber(data.getReviewPoint()));
             if (null != data.getLocationLat() && null != data.getLocationLng()) {
                 holder.tvDistance.setText(MyLocationUtils.getDistanceFromCurrentLocation(holder.tvDistance.getContext(), mGoogleApiClient, new LatLng(data.getLocationLat(), data.getLocationLng())));
+            } else {
+                holder.tvDistance.setText("-");
             }
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                                                    @Override
@@ -136,15 +140,16 @@ public class PloyerPersonListFragment extends BaseFragment implements SearchView
             mDatas.clear();
             mDatas.addAll(data.getUserServiceList());
             if (null != mAdapter) {
-                mAdapter.edit()
-                        .replaceAll(mDatas)
-                        .commit();
+//                mAdapter.edit()
+//                        .replaceAll(mDatas)
+//                        .commit();
+                mAdapter.replaceData(mDatas);
             }
         }
     }
 
     private void initRecyclerView() {
-        mAdapter = new PloyerPersonListRecyclerAdapter(getContext(), USER_ID_COMPARATOR, mOnDataBindListener);
+        mAdapter = new PloyerPersonListRecyclerAdapter(mOnDataBindListener);
         mRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
         mRecyclerView.setAdapter(mAdapter);
     }
@@ -158,9 +163,10 @@ public class PloyerPersonListFragment extends BaseFragment implements SearchView
     public boolean onQueryTextChange(String query) {
         final List<ProviderUserListGson.Data.UserService> filteredModelList = filter(mDatas, query);
         if (null != mAdapter) {
-            mAdapter.edit()
-                    .replaceAll(filteredModelList)
-                    .commit();
+//            mAdapter.edit()
+//                    .replaceAll(filteredModelList)
+//                    .commit();
+            mAdapter.filterList(query);
         }
         if (null != mRecyclerView) {
             mRecyclerView.scrollToPosition(0);

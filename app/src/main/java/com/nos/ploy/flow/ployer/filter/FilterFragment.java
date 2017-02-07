@@ -19,6 +19,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.appyvet.rangebar.RangeBar;
 import com.nos.ploy.R;
 import com.nos.ploy.api.account.model.PloyeeProfileGson;
 import com.nos.ploy.api.account.model.TransportGson;
@@ -28,9 +29,12 @@ import com.nos.ploy.api.masterdata.MasterApi;
 import com.nos.ploy.api.masterdata.model.LanguageAppLabelGson;
 import com.nos.ploy.api.ployee.model.PloyeeAvailiabilityGson;
 import com.nos.ploy.api.ployer.PloyerApi;
+import com.nos.ploy.api.ployer.model.PloyerServiceDetailGson;
 import com.nos.ploy.api.ployer.model.PloyerServicesGson;
+import com.nos.ploy.api.ployer.model.PostGetPloyerServiceDetailGson;
 import com.nos.ploy.api.ployer.model.PostProviderFilterGson;
 import com.nos.ploy.base.BaseFragment;
+import com.nos.ploy.cache.SharePreferenceUtils;
 import com.nos.ploy.custom.view.InputFilterMinMax;
 import com.nos.ploy.custom.view.NumberTextWatcher;
 import com.nos.ploy.flow.ployee.profile.TransportRecyclerAdapter;
@@ -88,7 +92,18 @@ public class FilterFragment extends BaseFragment implements View.OnClickListener
     TextView mTextViewContactMethod;
     @BindView(R.id.textview_filter_transport_label)
     TextView mTextViewTransport;
+    @BindView(R.id.materialrangebar_filter_rate)
+    RangeBar mRangeBar;
+    @BindView(R.id.textview_filter_price_unit)
+    TextView mTextViewPriceUnit;
 
+    private RangeBar.OnRangeBarChangeListener mRangeBarListener = new RangeBar.OnRangeBarChangeListener() {
+        @Override
+        public void onRangeChangeListener(RangeBar rangeBar, int leftPinIndex, int rightPinIndex, String leftPinValue, String rightPinValue) {
+            mEditTextFrom.setText(leftPinValue);
+            mEditTextTo.setText(rightPinValue);
+        }
+    };
 
     private PostProviderFilterGson mPostData = new PostProviderFilterGson();
     private FilterRatingRecyclerAdapter mRatingAdapter = new FilterRatingRecyclerAdapter(new Action1<Long>() {
@@ -103,7 +118,7 @@ public class FilterFragment extends BaseFragment implements View.OnClickListener
             if (RecyclerUtils.isAvailableData(mTransportVms, position)) {
                 TransportGsonVm data = mTransportVms.get(position);
                 holder.imgTransport.setImageResource(data.getDrawable());
-                holder.tvTitle.setText(data.getTitle());
+                holder.tvTitle.setText(toTransportName(data.getId()));
                 holder.imgTransport.setActivated(data.isCheck());
                 holder.imgTransport.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -160,12 +175,13 @@ public class FilterFragment extends BaseFragment implements View.OnClickListener
     private PloyerApi mPloyerApi;
     private OnFilterConfirmListener listener;
     private long mTotalCount;
+    private PloyerServiceDetailGson.Data mServiceDetail;
 
     public static FilterFragment newInstance(PloyerServicesGson.Data data, PostProviderFilterGson postData, long totalCount, OnFilterConfirmListener listener) {
         Bundle args = new Bundle();
         args.putParcelable(KEY_SERVICE_DATA, data);
         args.putParcelable(KEY_POST_DATA, postData);
-        args.putLong(KEY_TOTAL_COUNT,totalCount);
+        args.putLong(KEY_TOTAL_COUNT, totalCount);
         FilterFragment fragment = new FilterFragment();
         fragment.setArguments(args);
         fragment.setListener(listener);
@@ -191,6 +207,21 @@ public class FilterFragment extends BaseFragment implements View.OnClickListener
         mPloyerApi = getRetrofit().create(PloyerApi.class);
     }
 
+    private void refreshDataPriceUnit() {
+        RetrofitCallUtils.with(getRetrofit().create(PloyerApi.class).getServiceDetail(new PostGetPloyerServiceDetailGson(mData.getId(), -1L, SharePreferenceUtils.getCurrentActiveAppLanguageCode(getContext()))), new RetrofitCallUtils.RetrofitCallback<PloyerServiceDetailGson>() {
+            @Override
+            public void onDataSuccess(PloyerServiceDetailGson data) {
+                mServiceDetail = data.getData();
+                mTextViewPriceUnit.setText(mServiceDetail.getPriceUnit());
+            }
+
+            @Override
+            public void onDataFailure(String f7ailCause) {
+
+            }
+        }).enqueue(getContext());
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -202,11 +233,12 @@ public class FilterFragment extends BaseFragment implements View.OnClickListener
     @Override
     protected void bindLanguage(LanguageAppLabelGson.Data data) {
         super.bindLanguage(data);
+        mTransportAdapter.setLanguage(data);
         mTextViewServices.setText(data.servicesLabel);
         mTextViewAvailability.setText(data.avaliabilityScreenHeader);
         mTextViewLanguage.setText(data.profileScreenLanguage);
-        mButtonEmail.setText(data.profileScreenEmail);
-        mButtonPhone.setText(data.profileScreenPhone);
+        mButtonEmail.setText(data.profileScreenShowEmail);
+        mButtonPhone.setText(data.profileScreenShowPhone);
         mButtonFilter.setText(data.filterScreenBtn);
         mButtonClear.setText(data.filterScreenClear);
         mEditTextFrom.setHint(data.serviceScreenFrom);
@@ -240,6 +272,10 @@ public class FilterFragment extends BaseFragment implements View.OnClickListener
         super.onResume();
         if (mTransportVms.isEmpty()) {
             requestTransportData();
+        }
+
+        if(mServiceDetail  == null){
+            refreshDataPriceUnit();
         }
     }
 
@@ -309,8 +345,8 @@ public class FilterFragment extends BaseFragment implements View.OnClickListener
     private void bindData(PostProviderFilterGson data) {
         mPostData = data;
         if (null != data) {
-            mEditTextFrom.setText("" + data.getPriceMin());
-            mEditTextTo.setText("" + data.getPriceMax());
+            setLeftPinValue(data.getPriceMin());
+            setRightPinValue(data.getPriceMax());
             mButtonEmail.setActivated(data.isContactEmail());
             mButtonPhone.setActivated(data.isContactPhone());
             mRatingAdapter.replaceData(data.getReview());
@@ -328,6 +364,7 @@ public class FilterFragment extends BaseFragment implements View.OnClickListener
 
 
     private void initView() {
+        mRangeBar.setOnRangeBarChangeListener(mRangeBarListener);
         disableEditable(mEditTextFrom);
         disableEditable(mEditTextTo);
         mEditTextFrom.setOnClickListener(this);
@@ -344,6 +381,40 @@ public class FilterFragment extends BaseFragment implements View.OnClickListener
         mButtonClear.setOnClickListener(this);
         mButtonFilter.setOnClickListener(this);
     }
+
+    private void setLeftPinValue(long min) {
+        int minValueToSet;
+        if (min >= 1000) {
+            minValueToSet = 1000;
+        } else {
+            minValueToSet = (int) min;
+        }
+        mEditTextFrom.setText(String.valueOf(minValueToSet));
+        if (minValueToSet > Integer.valueOf(mRangeBar.getRightPinValue())) {
+            mRangeBar.setRangePinsByValue(Float.parseFloat(mRangeBar.getRightPinValue()), minValueToSet);
+        } else {
+            mRangeBar.setRangePinsByValue(minValueToSet, Float.parseFloat(mRangeBar.getRightPinValue()));
+        }
+        mPostData.setPriceMin(min);
+    }
+
+    private void setRightPinValue(long max) {
+        int maxValueToSet;
+        if (max >= 1000) {
+            maxValueToSet = 1000;
+        } else {
+            maxValueToSet = (int) max;
+        }
+        mEditTextTo.setText(String.valueOf(maxValueToSet));
+        mRangeBar.setRangePinsByValue(Float.parseFloat(mRangeBar.getLeftPinValue()), maxValueToSet);
+        if (Integer.valueOf(mRangeBar.getLeftPinValue()) > maxValueToSet) {
+            mRangeBar.setRangePinsByValue(maxValueToSet, Float.parseFloat(mRangeBar.getLeftPinValue()));
+        } else {
+            mRangeBar.setRangePinsByValue(Float.parseFloat(mRangeBar.getLeftPinValue()), maxValueToSet);
+        }
+        mPostData.setPriceMax(max);
+    }
+
 
     @Override
     public void onClick(View v) {
@@ -368,18 +439,36 @@ public class FilterFragment extends BaseFragment implements View.OnClickListener
             showPopupAlertEditTextMenu(mEditTextFrom.getContext(), String.valueOf(mEditTextFrom.getHint()), String.valueOf(mEditTextFrom.getText()), new Action1<String>() {
                 @Override
                 public void call(String s) {
-                    mPostData.setPriceMin(extractLong(s));
+                    long value;
+                    if (Long.valueOf(s) >= 1000) {
+                        value = 1000;
+                    } else {
+                        value = extractLong(s);
+                    }
+
+                    mPostData.setPriceMin(value);
                     bindData(mPostData);
+
                 }
             });
+
+
         } else if (id == mEditTextTo.getId()) {
+
             showPopupAlertEditTextMenu(mEditTextTo.getContext(), String.valueOf(mEditTextTo.getHint()), String.valueOf(mEditTextTo.getText()), new Action1<String>() {
                 @Override
                 public void call(String s) {
-                    mPostData.setPriceMax(extractLong(s));
+                    long value;
+                    if (Long.valueOf(s) >= 1000) {
+                        value = 1000;
+                    } else {
+                        value = extractLong(s);
+                    }
+                    mPostData.setPriceMax(value);
                     bindData(mPostData);
                 }
             });
+
         }
     }
 
@@ -444,7 +533,7 @@ public class FilterFragment extends BaseFragment implements View.OnClickListener
 
     private FilterLanguageFragment getLanguageFragment() {
 
-        return FilterLanguageFragment.newInstance(mData,mTotalCount, mPostData.cloneThis().getLanguages(), new FilterLanguageFragment.OnDataChangedListener() {
+        return FilterLanguageFragment.newInstance(mData, mTotalCount, mPostData.cloneThis().getLanguages(), new FilterLanguageFragment.OnDataChangedListener() {
             @Override
             public void onClickDone(ArrayList<String> datas) {
                 mPostData.setLanguages(datas);
@@ -454,7 +543,7 @@ public class FilterFragment extends BaseFragment implements View.OnClickListener
     }
 
     private FilterServicesFragment getServicesFragment() {
-        return FilterServicesFragment.newInstance(mData,mTotalCount, mPostData.cloneThis(), new FilterServicesFragment.OnClickDoneListener() {
+        return FilterServicesFragment.newInstance(mData, mTotalCount, mPostData.cloneThis(), new FilterServicesFragment.OnClickDoneListener() {
             @Override
             public void onClickDone(List<Long> subServiceLv2Ids, boolean certificate, boolean equipment) {
                 mPostData.setCertificate(certificate);
@@ -466,7 +555,7 @@ public class FilterFragment extends BaseFragment implements View.OnClickListener
     }
 
     private FilterAvailabilityFragment getAvailabilityFragment() {
-        return FilterAvailabilityFragment.newInstance(mData,mTotalCount, mPostData.cloneThis().getAvailabilityItems(), new FilterAvailabilityFragment.OnClickDoneListener() {
+        return FilterAvailabilityFragment.newInstance(mData, mTotalCount, mPostData.cloneThis().getAvailabilityItems(), new FilterAvailabilityFragment.OnClickDoneListener() {
             @Override
             public void onClickDone(PloyeeAvailiabilityGson.Data data) {
                 mPostData.addAllAvailabilityItem(data.getAvailabilityItems());

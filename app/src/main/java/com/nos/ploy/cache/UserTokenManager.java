@@ -3,6 +3,7 @@ package com.nos.ploy.cache;
 import android.content.Context;
 
 import com.facebook.login.LoginManager;
+import com.nos.ploy.DrawerController;
 import com.nos.ploy.api.authentication.model.UserTokenGson;
 
 /**
@@ -35,5 +36,6 @@ public class UserTokenManager extends SharePreferenceUtils {
     public static void clearData(Context context) {
         SharePreferenceUtils.with(context, USER).edit().clear().apply();
         LoginManager.getInstance().logOut();
+        DrawerController.PLOYER_MENUS.remove(DrawerController.MENU_ACCOUNT);
     }
 }

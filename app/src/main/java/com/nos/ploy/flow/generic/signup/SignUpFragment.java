@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.text.style.ClickableSpan;
 import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,7 +30,9 @@ import com.nos.ploy.api.authentication.model.PostSignupGson;
 import com.nos.ploy.api.base.RetrofitCallUtils;
 import com.nos.ploy.api.masterdata.model.LanguageAppLabelGson;
 import com.nos.ploy.base.BaseFragment;
+import com.nos.ploy.flow.generic.htmltext.HtmlTextFragment;
 import com.nos.ploy.utils.ImagePickerUtils;
+import com.nos.ploy.utils.LanguageTextUtils;
 import com.nos.ploy.utils.MyFileUtils;
 import com.rengwuxian.materialedittext.MaterialEditText;
 
@@ -232,7 +235,26 @@ public class SignUpFragment extends BaseFragment implements View.OnClickListener
         mEditTextRePassword.setHint(data.signupScreenRepass);
         mEditTextRePassword.setFloatingLabelText(data.signupScreenRepass);
         mTextViewDescription.setText(data.signupScreenDescript1 + "\n" + data.signupScreenDescript2);
-        mTextViewPrivacy.setText(data.signupScreenDescript3 + " " + data.signupScreenDescript4 + " " + data.signupScreenDescript5 + " " + data.signupScreenDescript6);
+
+        mButtonCreateAccount.setText(data.signupScreenBtn);
+
+        /*
+            String info = Lstorefront_shipment_history_note;
+                String linkLearnMore = "<a href=\"" + IntentUtils.URL_PAGE_365_EXPRESS + "\">" + Llearn_more + "</a>";
+                PopupMenuUtils.showInfoDialogAutoLink(getContext(), Lstorefront_shipment_history_header, Html.fromHtml(info + " " + linkLearnMore), Ltour_messages_i_got_it);
+         */
+        String fullText = data.signupScreenDescript3 + " " + data.signupScreenDescript4 + " " + data.signupScreenDescript5 + " " + data.signupScreenDescript6;
+        LanguageTextUtils.createLink(mTextViewPrivacy, fullText, data.signupScreenDescript4, data.signupScreenDescript6, new ClickableSpan() {
+            @Override
+            public void onClick(View widget) {
+                showFragment(HtmlTextFragment.newInstance(HtmlTextFragment.TERM_AND_CONDITIONS));
+            }
+        }, new ClickableSpan() {
+            @Override
+            public void onClick(View widget) {
+                showFragment(HtmlTextFragment.newInstance(HtmlTextFragment.POLICY));
+            }
+        });
     }
 
     private void requestPostUploadProfileImage(Long userId, String imgBase64, final Action1<Boolean> onFinishUpload) {

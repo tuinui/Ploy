@@ -17,6 +17,7 @@ import com.nos.ploy.R;
 import com.nos.ploy.api.masterdata.model.LanguageAppLabelGson;
 import com.nos.ploy.base.BaseFragment;
 import com.nos.ploy.flow.generic.CommonFragmentStatePagerAdapter;
+import com.nos.ploy.utils.PopupMenuUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -95,6 +96,7 @@ public class IntroductionFragment extends BaseFragment implements View.OnClickLi
         mTextViewTitle.setText(data.introductionScreenHeader);
         mButtonOfferServices.setText(data.mainMenuOfferService);
         mButtonFindServices.setText(data.mainMenuSearchService );
+        PopupMenuUtils.setMenuTitle(mToolbar.getMenu(),R.id.menuitem_close_close,data.closeLabel);
     }
 
     @Override

@@ -115,6 +115,8 @@ public class PloyeeProfileActivity extends BaseActivity implements View.OnClickL
     Drawable mDrawableNonSelecteddot;
     @BindDrawable(R.drawable.selecteditem_dot)
     Drawable mDrawableSelectedDot;
+    @BindView(R.id.textview_ployee_profile_contact_method_label)
+    TextView mTextViewContactMethod;
     //    private GoogleMap mGoogleMap;
 //    private SupportMapFragment mMapFragment = SupportMapFragment.newInstance();
     private AccountApi mAccountApi;
@@ -130,7 +132,7 @@ public class PloyeeProfileActivity extends BaseActivity implements View.OnClickL
             if (RecyclerUtils.isAvailableData(mAllDataTransports, position)) {
                 TransportGsonVm data = mAllDataTransports.get(position);
                 holder.imgTransport.setImageResource(data.getDrawable());
-                holder.tvTitle.setText(data.getTitle());
+                holder.tvTitle.setText(toTransportName(data.getId()));
 
                 holder.imgTransport.setActivated(isTransportActivated(data.getId()));
                 holder.imgTransport.setOnClickListener(new View.OnClickListener() {
@@ -242,6 +244,7 @@ public class PloyeeProfileActivity extends BaseActivity implements View.OnClickL
     @Override
     protected void bindLanguage(LanguageAppLabelGson.Data data) {
         super.bindLanguage(data);
+        mTransportRecyclerAdapter.setLanguage(data);
         PopupMenuUtils.setMenuTitle(mToolbar.getMenu(), R.id.menu_done_item_done, data.doneLabel);
         mTextViewTitle.setText(data.profileScreenHeader);
         mButtonEmail.setText(data.profileScreenEmail);
@@ -257,6 +260,8 @@ public class PloyeeProfileActivity extends BaseActivity implements View.OnClickL
         mTextViewTransportLabel.setText(data.profileScreenTransport);
         mButtonPhone.setText(data.profileScreenPhone);
         mButtonEmail.setText(data.profileScreenEmail);
+        mTextViewContactMethod.setText(data.profileScreenContactMethod);
+        mButtonPreview.setText(data.profileScreenPreview);
     }
 
     private void bindData(final PostUpdateProfileGson data) {
@@ -296,12 +301,19 @@ public class PloyeeProfileActivity extends BaseActivity implements View.OnClickL
                             languageSupports += language.getSpokenLanguageValue() + " ,";
                         }
                     }
+                    languageSupports = removeLastCharacter(languageSupports);
                     mTextViewLanguageSupport.setText(languageSupports);
                 }
             });
-
         }
 
+    }
+
+    public String removeLastCharacter(String str) {
+        if (str != null && str.length() > 0 && str.charAt(str.length() - 1) == ',') {
+            str = str.substring(0, str.length() - 1);
+        }
+        return str;
     }
 
     private void requestTransportData() {
@@ -577,6 +589,7 @@ public class PloyeeProfileActivity extends BaseActivity implements View.OnClickL
                 Bundle bundle = new Bundle();
                 ProviderUserListGson.Data.UserService mockUserService = new ProviderUserListGson.Data.UserService(mUserId, data, mCurrentLatLng);
                 bundle.putParcelable(ProviderProfileActivity.KEY_PLOYEE_USER_SERVICE_DATA, mockUserService);
+                bundle.putBoolean(ProviderProfileActivity.KEY_IS_PREVIEW,true);
                 IntentUtils.startActivity(context, ProviderProfileActivity.class, bundle);
             }
         });

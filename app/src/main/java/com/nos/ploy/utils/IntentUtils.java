@@ -11,6 +11,11 @@ import com.google.android.gms.maps.model.LatLng;
 import com.nos.ploy.base.BaseActivity;
 import com.nos.ploy.base.BaseFragment;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import rx.functions.Action1;
+
 /**
  * Created by User on 10/11/2559.
  */
@@ -72,18 +77,35 @@ public class IntentUtils {
     }
 
 
-    public static void makeACall(Context context, String numberToCall) {
+    public static void makeACall(final Context context, final String numberToCall) {
         if (!TextUtils.isEmpty(numberToCall) && null != context) {
-            Uri number = Uri.parse("tel:" + numberToCall);
-            Intent callIntent = new Intent(Intent.ACTION_CALL, number);
+            final Uri number = Uri.parse("tel:" + numberToCall);
+//            Intent callIntent = new Intent(Intent.ACTION_CALL, number);
 //            context.startActivity(callIntent);
+            List<PopupMenuUtils.MenuVM> menus = new ArrayList<>();
+            menus.add(new PopupMenuUtils.MenuVM<>("Call", "Call", new Action1<String>() {
+                @Override
+                public void call(String s) {
+                    Intent callIntent = new Intent(Intent.ACTION_CALL, number);
+                    context.startActivity(callIntent);
+                }
+            }));
+
+            menus.add(new PopupMenuUtils.MenuVM<>("SMS", "SMS", new Action1<String>() {
+                @Override
+                public void call(String s) {
+                    Intent smsIntent = new Intent(Intent.ACTION_VIEW, Uri.fromParts("sms", numberToCall, null));
+                    context.startActivity(smsIntent);
+                }
+            }));
+
+            PopupMenuUtils.showDialogMenu(menus,context);
 
 
-
-            Intent smsIntent = new Intent(Intent.ACTION_VIEW, Uri.fromParts("sms", numberToCall, null));
-            Intent chooserIntent = Intent.createChooser(callIntent, "Contact...");
-            chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, new Intent[] { smsIntent });
-            context.startActivity(chooserIntent);
+//            Intent smsIntent = new Intent(Intent.ACTION_VIEW, Uri.fromParts("sms", numberToCall, null));
+//            Intent chooserIntent = Intent.createChooser(callIntent, "Contact...");
+//            chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, new Intent[] { smsIntent });
+//            context.startActivity(chooserIntent);
         }
     }
     public static void startActivity(BaseFragment fragment, Class<? extends Activity> desireClass) {

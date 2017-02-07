@@ -14,8 +14,10 @@ import android.view.ViewStub;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.nos.ploy.DrawerController;
 import com.nos.ploy.R;
+import com.nos.ploy.api.account.model.ProfileImageGson;
 import com.nos.ploy.api.authentication.model.AccountGson;
 import com.nos.ploy.api.masterdata.model.LanguageAppLabelGson;
 import com.nos.ploy.api.ployer.PloyerApi;
@@ -29,9 +31,12 @@ import com.nos.ploy.flow.generic.register.SignInSignupActivity;
 import com.nos.ploy.flow.generic.settings.SettingsFragment;
 import com.nos.ploy.flow.ployee.account.main.PloyeeAccountFragment;
 import com.nos.ploy.flow.ployee.home.PloyeeHomeActivity;
+import com.nos.ploy.flow.ployee.profile.PloyeeProfileActivity;
 import com.nos.ploy.flow.ployer.person.PloyerPersonActivity;
 import com.nos.ploy.utils.FragmentTransactionUtils;
 import com.nos.ploy.utils.IntentUtils;
+
+import java.util.List;
 
 import butterknife.BindDimen;
 import butterknife.BindDrawable;
@@ -39,7 +44,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import rx.functions.Action1;
 
-public class PloyerHomeActivity extends BaseActivity implements SearchView.OnQueryTextListener {
+public class PloyerHomeActivity extends BaseActivity implements SearchView.OnQueryTextListener, View.OnClickListener {
     @BindView(R.id.toolbar_main)
     Toolbar mToolbar;
     @BindView(R.id.imageview_main_footer_logo1)
@@ -62,7 +67,44 @@ public class PloyerHomeActivity extends BaseActivity implements SearchView.OnQue
     TextView mTextViewSwitchToPloyee;
     @BindView(R.id.foregroundlinearlayout_main_drawer_switch_container)
     ForegroundLinearLayout mForeGroundLinearLayoutSwitchToContainer;
+    @BindView(R.id.foregroundlinearlayout_main_drawer_header_container)
+    ForegroundLinearLayout mLinearLayoutHeaderContainer;
+    @BindView(R.id.imageview_main_drawer_profile)
+    ImageView mImageViewProfile;
+    @BindView(R.id.textview_main_drawer_username)
+    TextView mTextViewUsername;
+    @BindView(R.id.imageview_main_drawer_switch_icon)
+    ImageView mImageViewSwitchIcon;
     private SearchView mSearchView;
+
+    private Action1<List<ProfileImageGson.Data>> mOnLoadProfileFinish = new Action1<List<ProfileImageGson.Data>>() {
+        @Override
+        public void call(List<ProfileImageGson.Data> datas) {
+            if (null != datas && !datas.isEmpty()) {
+                final ProfileImageGson.Data data = datas.get(0);
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Glide.with(PloyerHomeActivity.this).load(data.getImagePath()).into(mImageViewProfile);
+                    }
+                });
+            }
+        }
+    };
+    //    private PloyeeProfileActivity_Deprecated mProfileFragment = PloyeeProfileActivity_Deprecated.newInstance();
+    private Action1<AccountGson.Data> mOnLoadAccountFinish = new Action1<AccountGson.Data>() {
+        @Override
+        public void call(final AccountGson.Data data) {
+            if (null != data) {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        mTextViewUsername.setText(data.getFullName());
+                    }
+                });
+            }
+        }
+    };
 
     @Override
     public boolean onQueryTextSubmit(String query) {
@@ -126,7 +168,7 @@ public class PloyerHomeActivity extends BaseActivity implements SearchView.OnQue
                             IntentUtils.startActivity(context, PloyeeHomeActivity.class);
                             finishThisActivity();
                         }
-                    },true));
+                    }, true));
 
                     break;
             }
@@ -166,21 +208,32 @@ public class PloyerHomeActivity extends BaseActivity implements SearchView.OnQue
     @Override
     public void onResume() {
         super.onResume();
+        invalidateSideBar();
+        AccountInfoLoader.getProfileImage(this, mUserId, mOnLoadProfileFinish);
+        AccountInfoLoader.getAccountGson(this, mUserId, mOnLoadAccountFinish);
+    }
+
+    private void invalidateSideBar() {
+        if (UserTokenManager.isLogin(this)) {
+            if (!DrawerController.PLOYER_MENUS.contains(DrawerController.MENU_ACCOUNT)) {
+                DrawerController.PLOYER_MENUS.add(DrawerController.MENU_ACCOUNT);
+            }
+            mImageViewProfile.setImageResource(R.drawable.ic_circle_profile_120dp);
+            mImageViewProfile.setColorFilter(Color.TRANSPARENT);
+            mImageViewSwitchIcon.setVisibility(View.VISIBLE);
+        } else {
+            if (DrawerController.PLOYER_MENUS.contains(DrawerController.MENU_ACCOUNT)) {
+                DrawerController.PLOYER_MENUS.remove(DrawerController.MENU_ACCOUNT);
+            }
+            mImageViewProfile.setImageResource(R.drawable.ic_geniz_logo_133dp);
+            mImageViewProfile.setColorFilter(Color.WHITE);
+            mImageViewSwitchIcon.setVisibility(View.GONE);
+        }
     }
 
     private void initView() {
-        mForeGroundLinearLayoutSwitchToContainer.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (UserTokenManager.isLogin(v.getContext())) {
-                    IntentUtils.startActivity(PloyerHomeActivity.this, PloyeeHomeActivity.class);
-                    finishThisActivity();
-                } else {
-                    IntentUtils.startActivity(v.getContext(), SignInSignupActivity.class);
-                }
-
-            }
-        });
+        mForeGroundLinearLayoutSwitchToContainer.setOnClickListener(this);
+        mLinearLayoutHeaderContainer.setOnClickListener(this);
     }
 
     private void initToolbar() {
@@ -192,6 +245,11 @@ public class PloyerHomeActivity extends BaseActivity implements SearchView.OnQue
                 onBackPressed();
             }
         });
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
     }
 
     private void initMenu() {
@@ -208,7 +266,6 @@ public class PloyerHomeActivity extends BaseActivity implements SearchView.OnQue
         mImageViewFooterLogo1.setPadding(dp16, dp16, dp16, dp16);
         mRecyclerViewDrawer.setBackgroundResource(android.R.color.white);
         DrawerController.initDrawer(this, DrawerController.PLOYER_MENUS, mDrawerLayout, mRecyclerViewDrawer, mToolbar, mImageViewMore, Color.BLACK, mOnMenuItemSelectedListener);
-
     }
 
 
@@ -218,4 +275,18 @@ public class PloyerHomeActivity extends BaseActivity implements SearchView.OnQue
         IntentUtils.startActivity(this, PloyerPersonActivity.class, bundle);
     }
 
+    @Override
+    public void onClick(View v) {
+        int id = v.getId();
+        if (id == mForeGroundLinearLayoutSwitchToContainer.getId()) {
+            if (UserTokenManager.isLogin(v.getContext())) {
+                IntentUtils.startActivity(PloyerHomeActivity.this, PloyeeHomeActivity.class);
+                finishThisActivity();
+            } else {
+                IntentUtils.startActivity(v.getContext(), SignInSignupActivity.class);
+            }
+        } else if (id == mLinearLayoutHeaderContainer.getId()) {
+            IntentUtils.startActivity(this, PloyeeProfileActivity.class);
+        }
+    }
 }

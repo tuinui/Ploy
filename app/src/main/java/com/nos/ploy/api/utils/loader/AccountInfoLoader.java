@@ -51,7 +51,7 @@ public class AccountInfoLoader {
                     callbackSaveCache.onResponse(call, response);
                     if (null != onFinish) {
                         AccountGson.Data data = SharePreferenceUtils.getAccountGson(context);
-                        if (null == data) {
+                        if (null == data && null != response.body() && null != response.body().getData()) {
                             data = response.body().getData();
                         }
                         onFinish.call(data);

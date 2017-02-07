@@ -84,6 +84,6 @@ public class PloyeeServiceDetailVM implements PloyeeServiceDetailContract.ViewMo
 
     @Override
     public String getPriceUnit() {
-        return null;
+        return priceUnit;
     }
 }

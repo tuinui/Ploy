@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -75,9 +76,9 @@
                 android:orientation="vertical">
 
                 <TextView
+                    android:id="@+id/textview_filter_contact_method_label"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:id="@+id/textview_filter_contact_method_label"
                     android:padding="8dp"
                     android:text="@string/Contact_method" />
 
@@ -138,12 +139,13 @@
                     app:met_floatingLabelText="@string/From" />
 
                 <TextView
+                    android:id="@+id/textview_filter_price_unit"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="center"
                     android:padding="8dp"
-                    android:text="Price/Hour" />
+                    tools:text="Price/Hour" />
 
                 <com.rengwuxian.materialedittext.MaterialEditText
                     android:id="@+id/edittext_filter_to"
@@ -162,6 +164,15 @@
 
 
             </LinearLayout>
+
+            <com.appyvet.rangebar.RangeBar
+                android:id="@+id/materialrangebar_filter_rate"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:rangeBarPaddingBottom="8dp"
+                app:tickEnd="1000"
+                app:tickInterval="5"
+                app:tickStart="0" />
 
             <LinearLayout
                 android:layout_width="match_parent"

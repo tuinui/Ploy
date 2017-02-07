@@ -47,7 +47,6 @@ public class PloyerServiceListFragment extends BaseFragment implements SearchVie
             if (null != data && null != data.getData()) {
                 bindData(data.getData());
             }
-
         }
 
         @Override
@@ -65,7 +64,7 @@ public class PloyerServiceListFragment extends BaseFragment implements SearchVie
     private static final Comparator<PloyerServicesGson.Data> ID_COMPARATOR = new Comparator<PloyerServicesGson.Data>() {
         @Override
         public int compare(PloyerServicesGson.Data a, PloyerServicesGson.Data b) {
-            return Long.valueOf(a.getId()).compareTo(b.getId());
+            return a.getId().compareTo(b.getId());
         }
     };
     private FragmentInteractionListener listener;
@@ -122,7 +121,7 @@ public class PloyerServiceListFragment extends BaseFragment implements SearchVie
 
 
     private void initRecyclerView() {
-        mAdapter = new PloyerCategoryRecyclerAdapter(getContext(), ID_COMPARATOR, mOnItemClick);
+        mAdapter = new PloyerCategoryRecyclerAdapter(mOnItemClick);
         mRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
         mRecyclerView.setAdapter(mAdapter);
     }
@@ -130,10 +129,13 @@ public class PloyerServiceListFragment extends BaseFragment implements SearchVie
     private void bindData(ArrayList<PloyerServicesGson.Data> data) {
         mDatas.clear();
         mDatas.addAll(data);
-        mAdapter.edit()
-                .replaceAll(mDatas)
-                .commit();
+        mAdapter.replaceData(data);
+//        mAdapter.edit()
+//                .replaceAll(mDatas)
+//                .commit();
     }
+
+
 
     @Override
     protected void bindLanguage(LanguageAppLabelGson.Data data) {
@@ -149,11 +151,12 @@ public class PloyerServiceListFragment extends BaseFragment implements SearchVie
 
     @Override
     public boolean onQueryTextChange(String query) {
-        final List<PloyerServicesGson.Data> filteredModelList = filter(mDatas, query);
+//        final List<PloyerServicesGson.Data> filteredModelList = filter(mDatas, query);
         if (null != mAdapter) {
-            mAdapter.edit()
-                    .replaceAll(filteredModelList)
-                    .commit();
+//            mAdapter.edit()
+//                    .replaceAll(filteredModelList)
+//                    .commit();
+            mAdapter.filterList(query);
         }
 
         if (null != mRecyclerView) {
@@ -193,6 +196,6 @@ public class PloyerServiceListFragment extends BaseFragment implements SearchVie
     }
 
     public static interface FragmentInteractionListener {
-            public void onServiceClick(PloyerServicesGson.Data data);
+        public void onServiceClick(PloyerServicesGson.Data data);
     }
 }

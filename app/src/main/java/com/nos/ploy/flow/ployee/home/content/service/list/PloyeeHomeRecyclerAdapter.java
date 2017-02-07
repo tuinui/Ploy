@@ -1,16 +1,18 @@
 package com.nos.ploy.flow.ployee.home.content.service.list;
 
-import android.content.Context;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.github.wrdlbrnft.sortedlistadapter.SortedListAdapter;
 import com.nos.ploy.R;
+import com.nos.ploy.flow.generic.PloyeeServiceItemViewModelFilter;
 import com.nos.ploy.flow.ployee.home.content.service.list.viewmodel.PloyeeServiceItemViewModel;
+import com.nos.ploy.utils.RecyclerUtils;
 
-import java.util.Comparator;
+import java.util.ArrayList;
+import java.util.List;
 
 import rx.functions.Action1;
 
@@ -18,30 +20,66 @@ import rx.functions.Action1;
  * Created by User on 11/11/2559.
  */
 
-public class PloyeeHomeRecyclerAdapter extends SortedListAdapter<PloyeeServiceItemViewModel> {
+public class PloyeeHomeRecyclerAdapter extends RecyclerView.Adapter<PloyeeHomeRecyclerAdapter.ViewHolder> {
     private final Action1<PloyeeServiceItemViewModel> mActionOnClick;
+    private List<PloyeeServiceItemViewModel> mFilteredData = new ArrayList<>();
+    private List<PloyeeServiceItemViewModel> mOriginalDatas = new ArrayList<>();
+    private PloyeeServiceItemViewModelFilter filter;
 
-    public PloyeeHomeRecyclerAdapter(Context context, Comparator<PloyeeServiceItemViewModel> comparator, Action1<PloyeeServiceItemViewModel> actionOnClick) {
-        super(context, PloyeeServiceItemViewModel.class, comparator);
+    public PloyeeHomeRecyclerAdapter(Action1<PloyeeServiceItemViewModel> actionOnClick) {
         this.mActionOnClick = actionOnClick;
+        filter = new PloyeeServiceItemViewModelFilter(mOriginalDatas, this);
+    }
+
+
+    public void setFilteredData(List<PloyeeServiceItemViewModel> mFilteredData) {
+        this.mFilteredData.clear();
+        this.mFilteredData.addAll(mFilteredData);
+    }
+
+    public void filterList(String text) {
+        filter.filter(text);
     }
 
     @Override
-    protected SortedListAdapter.ViewHolder<? extends PloyeeServiceItemViewModel> onCreateViewHolder(LayoutInflater inflater, ViewGroup parent, int viewType) {
+    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.view_textview_list_item, parent, false));
     }
 
     @Override
-    protected boolean areItemsTheSame(PloyeeServiceItemViewModel item1, PloyeeServiceItemViewModel item2) {
-        return item1.getId() == item2.getId();
+    public void onBindViewHolder(final ViewHolder holder, final int position) {
+        if (RecyclerUtils.isAvailableData(mFilteredData, position)) {
+            final PloyeeServiceItemViewModel vm = mFilteredData.get(position);
+            holder.tvTitle.setText(vm.getText());
+            holder.tvTitle.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (RecyclerUtils.isAvailableData(mFilteredData, holder.getAdapterPosition())) {
+                        PloyeeServiceItemViewModel vm = mFilteredData.get(holder.getAdapterPosition());
+                        if (null != mActionOnClick) {
+                            mActionOnClick.call(vm);
+                        }
+                    }
+
+                }
+            });
+        }
     }
 
     @Override
-    protected boolean areItemContentsTheSame(PloyeeServiceItemViewModel oldItem, PloyeeServiceItemViewModel newItem) {
-        return oldItem.equals(newItem);
+    public int getItemCount() {
+        return RecyclerUtils.getSize(mFilteredData);
     }
 
-    public class ViewHolder extends SortedListAdapter.ViewHolder<PloyeeServiceItemViewModel> {
+    public void replaceData(List<PloyeeServiceItemViewModel> datas) {
+        mOriginalDatas.clear();
+        mOriginalDatas.addAll(datas);
+        mFilteredData.clear();
+        mFilteredData.addAll(datas);
+        notifyItemChanged(0, getItemCount());
+    }
+
+    public class ViewHolder extends RecyclerView.ViewHolder {
         public TextView tvTitle;
 
         public ViewHolder(View itemView) {
@@ -49,17 +87,6 @@ public class PloyeeHomeRecyclerAdapter extends SortedListAdapter<PloyeeServiceIt
             tvTitle = (TextView) itemView.findViewById(R.id.textview_list_item);
         }
 
-        @Override
-        protected void performBind(final PloyeeServiceItemViewModel vm) {
-            tvTitle.setText(vm.getText());
-            tvTitle.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if (null != mActionOnClick) {
-                        mActionOnClick.call(vm);
-                    }
-                }
-            });
-        }
+
     }
 }

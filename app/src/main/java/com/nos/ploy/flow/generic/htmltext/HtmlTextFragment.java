@@ -16,6 +16,7 @@ import com.nos.ploy.R;
 import com.nos.ploy.api.base.RetrofitCallUtils;
 import com.nos.ploy.api.masterdata.MasterApi;
 import com.nos.ploy.api.masterdata.model.HtmlAppGson;
+import com.nos.ploy.api.masterdata.model.LanguageAppLabelGson;
 import com.nos.ploy.base.BaseFragment;
 import com.nos.ploy.cache.SharePreferenceUtils;
 
@@ -76,6 +77,7 @@ public class HtmlTextFragment extends BaseFragment {
             dismissRefreshing();
         }
     };
+    private String mTitleString;
 
     public static HtmlTextFragment newInstance(@Menu int menu) {
 
@@ -101,6 +103,32 @@ public class HtmlTextFragment extends BaseFragment {
         View v = inflater.inflate(R.layout.fragment_html_text, container, false);
         ButterKnife.bind(this, v);
         return v;
+    }
+
+    @Override
+    protected void bindLanguage(LanguageAppLabelGson.Data data) {
+        super.bindLanguage(data);
+        mTextViewTitle.setText(getTitleString(data));
+    }
+
+    private String getTitleString(LanguageAppLabelGson.Data data) {
+        switch (mMenu) {
+            case FAQ:
+                return data.settingFaq;
+            case LEGAL:
+                return data.settingLagal;
+            case POLICY:
+                return data.settingPrivacy;
+            case TERM_AND_CONDITIONS:
+                return data.settingTerms;
+//            case WHAT_IS_PLOYEE:
+//                return LWhat_is_Ployee;
+//            case WHAT_IS_PLOYER:
+//                return LWhat_is_Ployer;
+            case NONE:
+            default:
+                return "";
+        }
     }
 
     @Override
@@ -146,7 +174,6 @@ public class HtmlTextFragment extends BaseFragment {
     }
 
     private void initToolbar() {
-        mTextViewTitle.setText(getTitleString());
         enableBackButton(mToolbar);
     }
 
@@ -185,25 +212,6 @@ public class HtmlTextFragment extends BaseFragment {
         return result;
     }
 
-    private String getTitleString() {
-        switch (mMenu) {
-            case FAQ:
-                return LFAQ;
-            case LEGAL:
-                return LLegal;
-            case POLICY:
-                return LPrivacy_Policy;
-            case TERM_AND_CONDITIONS:
-                return LTerm_and_Conditions;
-            case WHAT_IS_PLOYEE:
-                return LWhat_is_Ployee;
-            case WHAT_IS_PLOYER:
-                return LWhat_is_Ployer;
-            case NONE:
-            default:
-                return "";
-        }
-    }
 
     @Retention(RetentionPolicy.SOURCE)
     @IntDef({NONE, POLICY, TERM_AND_CONDITIONS, LEGAL, FAQ, WHAT_IS_PLOYER, WHAT_IS_PLOYEE})

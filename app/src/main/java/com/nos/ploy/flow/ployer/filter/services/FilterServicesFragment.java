@@ -213,6 +213,7 @@ public class FilterServicesFragment extends BaseFragment implements View.OnClick
 
     private void refreshData() {
         showRefreshing();
+
         RetrofitCallUtils.with(mApi.getServiceDetail(new PostGetPloyerServiceDetailGson(mServiceData.getId(), -1L, mLgCode)), mCallbackRefresh).enqueue(getContext());
     }
 

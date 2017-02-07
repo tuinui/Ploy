@@ -52,11 +52,15 @@ public class LanguageAppLabelGson extends BaseResponse<LanguageAppLabelGson.Data
         @SerializedName("pass_reset_screen_header")
          
         public String passResetScreenHeader;
+
+        @SerializedName("pass_reset_screen_btn")
+        public String passResetScreenBtn;
+
         @SerializedName("pass_reset_screen_descript")
          
         public String passResetScreenDescript;
         @SerializedName("pass_reset_screen_email")
-         
+
         public String passResetScreenEmail;
         @SerializedName("pass_reset_screen_newpass")
          

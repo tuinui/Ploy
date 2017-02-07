@@ -26,9 +26,6 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 import rx.functions.Action1;
 
 /**
@@ -54,11 +51,11 @@ public class PloyeeServiceListFragment extends BaseFragment implements SearchVie
     private Action1<PloyeeServiceItemViewModel> mActionOnClickServiceItem = new Action1<PloyeeServiceItemViewModel>() {
         @Override
         public void call(PloyeeServiceItemViewModel data) {
-            showFragment(PloyeeServiceDetailFragment.newInstance(mUserId, data.getId(),SharePreferenceUtils.getCurrentActiveAppLanguageCode(getContext()), data.getText()));
+            showFragment(PloyeeServiceDetailFragment.newInstance(mUserId, data.getId(), SharePreferenceUtils.getCurrentActiveAppLanguageCode(getContext()), data.getText()));
         }
     };
     private PloyeeHomeRecyclerAdapter mAdapter;
-//    private Callback<PloyeeServiceListGson> mCallbackPloyeeService = new Callback<PloyeeServiceListGson>() {
+    //    private Callback<PloyeeServiceListGson> mCallbackPloyeeService = new Callback<PloyeeServiceListGson>() {
 //        @Override
 //        public void onResponse(Call<PloyeeServiceListGson> call, Response<PloyeeServiceListGson> response) {
 //            mSwipeRefreshLayout.setRefreshing(false);
@@ -111,7 +108,7 @@ public class PloyeeServiceListFragment extends BaseFragment implements SearchVie
             mUserId = getArguments().getLong(KEY_USER_ID, 0L);
         }
         mService = getRetrofit().create(PloyeeApi.class);
-        mAdapter = new PloyeeHomeRecyclerAdapter(getActivity(), ALPHABETICAL_COMPARATOR, mActionOnClickServiceItem);
+        mAdapter = new PloyeeHomeRecyclerAdapter(mActionOnClickServiceItem);
     }
 
     @Nullable
@@ -147,9 +144,7 @@ public class PloyeeServiceListFragment extends BaseFragment implements SearchVie
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                mAdapter.edit()
-                        .replaceAll(mDatas)
-                        .commit();
+                mAdapter.replaceData(mDatas);
             }
         });
 
@@ -195,11 +190,12 @@ public class PloyeeServiceListFragment extends BaseFragment implements SearchVie
 
     @Override
     public boolean onQueryTextChange(String query) {
-        final List<PloyeeServiceItemViewModel> filteredModelList = filter(mDatas, query);
+//        final List<PloyeeServiceItemViewModel> filteredModelList = filter(mDatas, query);
         if (null != mAdapter) {
-            mAdapter.edit()
-                    .replaceAll(filteredModelList)
-                    .commit();
+//            mAdapter.edit()
+//                    .replaceAll(filteredModelList)
+//                    .commit();
+            mAdapter.filterList(query);
         }
         if (null != mRecyclerView) {
             mRecyclerView.scrollToPosition(0);

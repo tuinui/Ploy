@@ -153,12 +153,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:background="?attr/selectableItemBackground"
-                android:clickable="true"
+                android:autoLink="all"
                 android:gravity="center"
                 android:padding="8dp"
                 android:text="@string/By_signing_up_i_agree_to_ploy_s_term_of_service_and_privacy_policy"
-                android:textColor="@android:color/white" />
+                android:textColor="@android:color/white"
+                android:textColorLink="@android:color/white" />
 
 
         </LinearLayout>

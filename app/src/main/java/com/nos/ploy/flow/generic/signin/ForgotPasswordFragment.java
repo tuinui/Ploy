@@ -95,6 +95,7 @@ public class ForgotPasswordFragment extends BaseFragment implements View.OnClick
         mEditTextPassword.setFloatingLabelText(data.passResetScreenNewpass);
         mEditTextRePassword.setHint(data.passResetScreenRepass);
         mEditTextRePassword.setFloatingLabelText(data.passResetScreenNewpass);
+        mButtonConfirm.setText(data.passResetScreenBtn);
     }
 
     @Nullable

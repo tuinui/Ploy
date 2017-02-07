@@ -24,11 +24,13 @@ import android.view.ViewStub;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
 import com.nos.ploy.DrawerController;
 import com.nos.ploy.R;
+import com.nos.ploy.api.account.model.ProfileImageGson;
 import com.nos.ploy.api.authentication.model.AccountGson;
 import com.nos.ploy.api.base.RetrofitCallUtils;
 import com.nos.ploy.api.masterdata.model.LanguageAppLabelGson;
@@ -48,6 +50,7 @@ import com.nos.ploy.flow.generic.register.SignInSignupActivity;
 import com.nos.ploy.flow.generic.settings.SettingsFragment;
 import com.nos.ploy.flow.ployee.account.main.PloyeeAccountFragment;
 import com.nos.ploy.flow.ployee.home.PloyeeHomeActivity;
+import com.nos.ploy.flow.ployee.profile.PloyeeProfileActivity;
 import com.nos.ploy.flow.ployer.filter.FilterFragment;
 import com.nos.ploy.flow.ployer.person.list.PloyerPersonListFragment;
 import com.nos.ploy.flow.ployer.person.maps.PloyerPersonMapFragment;
@@ -71,7 +74,7 @@ import rx.functions.Action1;
  * Created by Saran on 8/1/2560.
  */
 
-public class PloyerPersonActivity extends BaseActivity implements SearchView.OnQueryTextListener, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
+public class PloyerPersonActivity extends BaseActivity implements SearchView.OnQueryTextListener, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, View.OnClickListener {
     private boolean isRequesting;
     private GoogleApiClient mGoogleApiClient;
     private ArrayList<String> mSuggestions = new ArrayList<>();
@@ -80,6 +83,7 @@ public class PloyerPersonActivity extends BaseActivity implements SearchView.OnQ
     private ProviderUserListGson.Data mData;
     private PostProviderFilterGson mPostData;
     private long mTotal = 0;
+
 
     @Retention(RetentionPolicy.SOURCE)
     @IntDef({LIST, MAPS})
@@ -106,14 +110,22 @@ public class PloyerPersonActivity extends BaseActivity implements SearchView.OnQ
     DrawerLayout mDrawerLayout;
     @BindView(R.id.viewpager_ployer_person)
     CustomViewPager mViewPager;
+    @BindView(R.id.imageview_main_drawer_profile)
+    ImageView mImageViewProfile;
+    @BindView(R.id.textview_main_drawer_username)
+    TextView mTextViewUsername;
     @BindDrawable(R.drawable.ic_geniz_logo_133dp)
     Drawable mDrawableGenizLogo;
     @BindDimen(R.dimen.dp8)
     int dp16;
     @BindView(R.id.textview_main_drawer_switch_to)
     TextView mTextViewSwitchToPloyee;
+    @BindView(R.id.foregroundlinearlayout_main_drawer_header_container)
+    ForegroundLinearLayout mLinearLayoutHeaderContainer;
     @BindView(R.id.foregroundlinearlayout_main_drawer_switch_container)
     ForegroundLinearLayout mForeGroundLinearLayoutSwitchToContainer;
+    @BindView(R.id.imageview_main_drawer_switch_icon)
+    ImageView mImageViewSwitchIcon;
     public static final String KEY_SERVICE_DATA = "SERVICE_DATA";
     private SearchView mSearchView;
     private CommonFragmentStatePagerAdapter mPagerAdapter;
@@ -130,6 +142,34 @@ public class PloyerPersonActivity extends BaseActivity implements SearchView.OnQ
     @Menu
     int mCurrentMenu = LIST;
 
+    private Action1<List<ProfileImageGson.Data>> mOnLoadProfileFinish = new Action1<List<ProfileImageGson.Data>>() {
+        @Override
+        public void call(List<ProfileImageGson.Data> datas) {
+            if (null != datas && !datas.isEmpty()) {
+                final ProfileImageGson.Data data = datas.get(0);
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Glide.with(PloyerPersonActivity.this).load(data.getImagePath()).into(mImageViewProfile);
+                    }
+                });
+            }
+        }
+    };
+    //    private PloyeeProfileActivity_Deprecated mProfileFragment = PloyeeProfileActivity_Deprecated.newInstance();
+    private Action1<AccountGson.Data> mOnLoadAccountFinish = new Action1<AccountGson.Data>() {
+        @Override
+        public void call(final AccountGson.Data data) {
+            if (null != data) {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        mTextViewUsername.setText(data.getFullName());
+                    }
+                });
+            }
+        }
+    };
     private SearchView.OnSuggestionListener mSuggestionClickListener = new SearchView.OnSuggestionListener() {
         @Override
         public boolean onSuggestionClick(int position) {
@@ -220,7 +260,7 @@ public class PloyerPersonActivity extends BaseActivity implements SearchView.OnQ
                             IntentUtils.startActivity(context, PloyeeHomeActivity.class);
                             finishThisActivity();
                         }
-                    },true));
+                    }, true));
 
                     break;
             }
@@ -250,7 +290,7 @@ public class PloyerPersonActivity extends BaseActivity implements SearchView.OnQ
     @Override
     protected void bindLanguage(LanguageAppLabelGson.Data data) {
         super.bindLanguage(data);
-        mSearchView.setQueryHint(data.providerScreenSearch);
+        mSearchView.setQueryHint(data.ployerHomeSearchProvider);
         if (UserTokenManager.isLogin(this)) {
             mTextViewSwitchToPloyee.setText(data.mainMenuOfferService);
         } else {
@@ -258,6 +298,31 @@ public class PloyerPersonActivity extends BaseActivity implements SearchView.OnQ
         }
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        AccountInfoLoader.getProfileImage(this, mUserId, mOnLoadProfileFinish);
+        AccountInfoLoader.getAccountGson(this, mUserId, mOnLoadAccountFinish);
+
+        invalidateSideBar();
+    }
+    private void invalidateSideBar() {
+        if (UserTokenManager.isLogin(this)) {
+            if (!DrawerController.PLOYER_MENUS.contains(DrawerController.MENU_ACCOUNT)) {
+                DrawerController.PLOYER_MENUS.add(DrawerController.MENU_ACCOUNT);
+            }
+            mImageViewProfile.setImageResource(R.drawable.ic_circle_profile_120dp);
+            mImageViewProfile.setColorFilter(Color.TRANSPARENT);
+            mImageViewSwitchIcon.setVisibility(View.VISIBLE);
+        } else {
+            if (DrawerController.PLOYER_MENUS.contains(DrawerController.MENU_ACCOUNT)) {
+                DrawerController.PLOYER_MENUS.remove(DrawerController.MENU_ACCOUNT);
+            }
+            mImageViewProfile.setImageResource(R.drawable.ic_geniz_logo_133dp);
+            mImageViewProfile.setColorFilter(Color.WHITE);
+            mImageViewSwitchIcon.setVisibility(View.GONE);
+        }
+    }
     @Override
     protected void onStart() {
         super.onStart();
@@ -282,18 +347,8 @@ public class PloyerPersonActivity extends BaseActivity implements SearchView.OnQ
     }
 
     private void initView() {
-        mForeGroundLinearLayoutSwitchToContainer.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (UserTokenManager.isLogin(v.getContext())) {
-                    IntentUtils.startActivity(v.getContext(), PloyeeHomeActivity.class);
-                    finishThisActivity();
-                } else {
-                    IntentUtils.startActivity(v.getContext(), SignInSignupActivity.class);
-                }
-
-            }
-        });
+        mForeGroundLinearLayoutSwitchToContainer.setOnClickListener(this);
+        mLinearLayoutHeaderContainer.setOnClickListener(this);
     }
 
     private void initToolbar() {
@@ -355,7 +410,7 @@ public class PloyerPersonActivity extends BaseActivity implements SearchView.OnQ
     }
 
     private void onClickFilterMenu() {
-        showFragment(FilterFragment.newInstance(mParentData, mPostData,mTotal, new FilterFragment.OnFilterConfirmListener() {
+        showFragment(FilterFragment.newInstance(mParentData, mPostData, mTotal, new FilterFragment.OnFilterConfirmListener() {
             @Override
             public void onFilterConfirm(PostProviderFilterGson data) {
                 mPostData = data;
@@ -414,7 +469,7 @@ public class PloyerPersonActivity extends BaseActivity implements SearchView.OnQ
 
     private void bindData(final ProviderUserListGson.Data data) {
         if (null != data && null != data.getUserServiceList()) {
-            if(null != data.getPagination() ){
+            if (null != data.getPagination()) {
                 mTotal = data.getPagination().getTotal();
             }
 
@@ -422,7 +477,7 @@ public class PloyerPersonActivity extends BaseActivity implements SearchView.OnQ
                 @Override
                 public void run() {
                     mData = data;
-                    mTextViewSubTitle.setText(mData.getPagination().getTotal() +" " +mLanguageData.providersLabel);
+                    mTextViewSubTitle.setText(mData.getPagination().getTotal() + " " + mLanguageData.providersLabel);
                     if (null != mPersonListFragment) {
                         mPersonListFragment.bindData(data);
                     }
@@ -506,5 +561,21 @@ public class PloyerPersonActivity extends BaseActivity implements SearchView.OnQ
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
 
+    }
+
+
+    @Override
+    public void onClick(View v) {
+        int id = v.getId();
+        if (id == mForeGroundLinearLayoutSwitchToContainer.getId()) {
+            if (UserTokenManager.isLogin(v.getContext())) {
+                IntentUtils.startActivity(v.getContext(), PloyeeHomeActivity.class);
+                finishThisActivity();
+            } else {
+                IntentUtils.startActivity(v.getContext(), SignInSignupActivity.class);
+            }
+        } else if (id == mLinearLayoutHeaderContainer.getId()) {
+            IntentUtils.startActivity(this, PloyeeProfileActivity.class);
+        }
     }
 }
