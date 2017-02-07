@@ -205,7 +205,7 @@ public class PloyerPersonMapFragment extends BaseFragment implements OnMapReadyC
             mTextViewReviewCount.setText("" + data.getReviewCount());
             mTextViewRating.setText(data.getReviewPoint() + "/5");
             mRatingBarRate.setRating(RatingBarUtils.getRatingbarRoundingNumber(data.getReviewPoint()));
-            if (null != data.getLocationLat() && null != data.getLocationLng()) {
+            if (null != data.getLocationLat() && null != data.getLocationLng() && MyLocationUtils.locationProviderEnabled(mTextViewDistance.getContext())) {
                 mTextViewDistance.setText(MyLocationUtils.getDistanceFromCurrentLocation(mTextViewDistance.getContext(), mGoogleApiClient, new LatLng(data.getLocationLat(), data.getLocationLng())));
             } else {
                 mTextViewDistance.setText("-");

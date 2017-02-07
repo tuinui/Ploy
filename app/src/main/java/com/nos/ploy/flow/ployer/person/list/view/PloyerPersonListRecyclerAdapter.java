@@ -36,13 +36,17 @@ public class PloyerPersonListRecyclerAdapter extends RecyclerView.Adapter<Ployer
 
     public void replaceData(List<ProviderUserListGson.Data.UserService> datas) {
         mDatas.clear();
+        mFilteredData.clear();
+        notifyDataSetChanged();
+        mFilteredData.addAll(datas);
         mDatas.addAll(datas);
-        notifyItemChanged(0, getItemCount());
+        notifyDataSetChanged();
     }
 
     public void setFilteredData(List<ProviderUserListGson.Data.UserService> mFilteredData) {
         this.mFilteredData.clear();
         this.mFilteredData.addAll(mFilteredData);
+        notifyItemChanged(0, getItemCount());
     }
 
     public void filterList(String text) {
@@ -62,8 +66,8 @@ public class PloyerPersonListRecyclerAdapter extends RecyclerView.Adapter<Ployer
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         if (null != mListener) {
-            if (RecyclerUtils.isAvailableData(mDatas, position)) {
-                mListener.onDataBind(holder, mDatas.get(position));
+            if (RecyclerUtils.isAvailableData(mFilteredData, position)) {
+                mListener.onDataBind(holder, mFilteredData.get(position));
             }
 
         }
@@ -71,7 +75,7 @@ public class PloyerPersonListRecyclerAdapter extends RecyclerView.Adapter<Ployer
 
     @Override
     public int getItemCount() {
-        return RecyclerUtils.getSize(mDatas);
+        return RecyclerUtils.getSize(mFilteredData);
     }
 
     public class ViewHolder extends SortedListAdapter.ViewHolder<ProviderUserListGson.Data.UserService> {

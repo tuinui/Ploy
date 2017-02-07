@@ -109,7 +109,12 @@ public class FilterFragment extends BaseFragment implements View.OnClickListener
     private FilterRatingRecyclerAdapter mRatingAdapter = new FilterRatingRecyclerAdapter(new Action1<Long>() {
         @Override
         public void call(Long aLong) {
-            mPostData.setReview(aLong);
+            if(aLong == -404){
+                mPostData.setReview(null);
+            }else{
+                mPostData.setReview(aLong);
+            }
+
         }
     });
     private TransportRecyclerAdapter mTransportAdapter = new TransportRecyclerAdapter() {

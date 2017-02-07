@@ -3,8 +3,6 @@ package com.nos.ploy.flow.generic;
 import android.widget.Filter;
 
 import com.nos.ploy.api.ployer.model.ProviderUserListGson;
-import com.nos.ploy.flow.ployee.home.content.service.list.PloyeeHomeRecyclerAdapter;
-import com.nos.ploy.flow.ployee.home.content.service.list.viewmodel.PloyeeServiceItemViewModel;
 import com.nos.ploy.flow.ployer.person.list.view.PloyerPersonListRecyclerAdapter;
 
 import java.util.ArrayList;
@@ -33,7 +31,8 @@ public class UserServiceFilter extends Filter {
 
         //here you need to add proper items do filteredContactList
         for (final ProviderUserListGson.Data.UserService item : contactList) {
-            if (item.getFullName().toLowerCase().trim().contains(constraint)) {
+            String name = item.getFirstName().toLowerCase()+item.getLastName().toLowerCase();
+            if (name.trim().contains(constraint)) {
                 filteredContactList.add(item);
             }
         }

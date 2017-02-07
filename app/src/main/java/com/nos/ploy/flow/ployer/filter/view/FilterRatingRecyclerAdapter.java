@@ -26,8 +26,9 @@ public class FilterRatingRecyclerAdapter extends RecyclerView.Adapter<FilterRati
 
     private final Action1<Long> onRatingChangeListener;
     private List<FilterRatingViewModel> mDatas = new ArrayList<>();
+    private long mCurrentRating;
 
-    public FilterRatingRecyclerAdapter(Action1<Long> onRatingChange){
+    public FilterRatingRecyclerAdapter(Action1<Long> onRatingChange) {
         super();
         mDatas.add(new FilterRatingViewModel(1));
         mDatas.add(new FilterRatingViewModel(2));
@@ -37,15 +38,28 @@ public class FilterRatingRecyclerAdapter extends RecyclerView.Adapter<FilterRati
         this.onRatingChangeListener = onRatingChange;
     }
 
-    public void replaceData(long data) {
+    public void replaceData(Long data) {
         notifyDataSetChanged();
-        onRatingChangeListener.call(data);
-        for(FilterRatingViewModel vm : mDatas){
-            if(vm.getRating() >= data){
-                vm.setChecked(true);
-            }else{
+        if (mCurrentRating == data) {
+            mCurrentRating = -404;
+        } else {
+            mCurrentRating = data;
+        }
+
+        onRatingChangeListener.call(mCurrentRating);
+
+
+        for (FilterRatingViewModel vm : mDatas) {
+            if (mCurrentRating == -404) {
                 vm.setChecked(false);
+            } else {
+                if (vm.getRating() >= mCurrentRating) {
+                    vm.setChecked(true);
+                } else {
+                    vm.setChecked(false);
+                }
             }
+
         }
         notifyDataSetChanged();
     }

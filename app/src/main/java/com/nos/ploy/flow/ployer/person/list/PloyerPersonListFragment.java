@@ -63,7 +63,7 @@ public class PloyerPersonListFragment extends BaseFragment implements SearchView
             holder.tvReviewCount.setText("" + data.getReviewCount());
             holder.tvRate.setText(data.getReviewPoint() + "/5");
             holder.ratingBar.setRating(RatingBarUtils.getRatingbarRoundingNumber(data.getReviewPoint()));
-            if (null != data.getLocationLat() && null != data.getLocationLng()) {
+            if (null != data.getLocationLat() && null != data.getLocationLng() && MyLocationUtils.locationProviderEnabled(holder.tvDistance.getContext())) {
                 holder.tvDistance.setText(MyLocationUtils.getDistanceFromCurrentLocation(holder.tvDistance.getContext(), mGoogleApiClient, new LatLng(data.getLocationLat(), data.getLocationLng())));
             } else {
                 holder.tvDistance.setText("-");

@@ -14,7 +14,7 @@ import java.util.List;
  */
 
 public class PostProviderFilterGson implements Parcelable {
-//    public static final PostProviderFilterGson EMPTY_DATA = new PostProviderFilterGson();
+    //    public static final PostProviderFilterGson EMPTY_DATA = new PostProviderFilterGson();
     /*
     {
 	"pageNo":1,
@@ -49,7 +49,7 @@ public class PostProviderFilterGson implements Parcelable {
     @SerializedName("contactPhone")
     private boolean contactPhone;
     @SerializedName("review")
-    private long review;
+    private Long review;
     @SerializedName("priceMin")
     private long priceMin;
     @SerializedName("priceMax")
@@ -80,11 +80,11 @@ public class PostProviderFilterGson implements Parcelable {
         this.transportIds = transportIds;
     }
 
-    public PostProviderFilterGson cloneThis(){
-        return new PostProviderFilterGson(new ArrayList<>(availabilityItems),isCertificate(),isContactEmail(),isContactPhone(),isEquipment(),new ArrayList<>(languages),pageNo,pageSize,getPriceMax(),getPriceMax(),review,getServiceId(),new ArrayList<>(subServices),new ArrayList<>(transportIds));
+    public PostProviderFilterGson cloneThis() {
+        return new PostProviderFilterGson(new ArrayList<>(availabilityItems), isCertificate(), isContactEmail(), isContactPhone(), isEquipment(), new ArrayList<>(languages), pageNo, pageSize, getPriceMax(), getPriceMax(), review, getServiceId(), new ArrayList<>(subServices), new ArrayList<>(transportIds));
     }
 
-    public PostProviderFilterGson(){
+    public PostProviderFilterGson() {
         priceMin = 0;
         priceMax = 1000;
         contactEmail = false;
@@ -159,8 +159,9 @@ public class PostProviderFilterGson implements Parcelable {
         return priceMin;
     }
 
-    public long getReview() {
-        return review;
+    public Long getReview() {
+        return null != review ? review : 0
+                ;
     }
 
     public long getServiceId() {
@@ -172,7 +173,7 @@ public class PostProviderFilterGson implements Parcelable {
     }
 
     public List<Long> getTransportIds() {
-        if(null == transportIds){
+        if (null == transportIds) {
             transportIds = new ArrayList<>();
         }
         return transportIds;
@@ -194,7 +195,7 @@ public class PostProviderFilterGson implements Parcelable {
         this.priceMin = priceMin;
     }
 
-    public void setReview(long review) {
+    public void setReview(Long review) {
         this.review = review;
     }
 
@@ -266,7 +267,7 @@ public class PostProviderFilterGson implements Parcelable {
     };
 
     public void addAllAvailabilityItem(List<PloyeeAvailiabilityGson.Data.AvailabilityItem> items) {
-        if(availabilityItems == null){
+        if (availabilityItems == null) {
             availabilityItems = new ArrayList<>();
         }
         availabilityItems.clear();

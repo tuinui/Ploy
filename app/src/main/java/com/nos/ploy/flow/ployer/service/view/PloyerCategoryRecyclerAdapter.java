@@ -64,10 +64,11 @@ public class PloyerCategoryRecyclerAdapter extends RecyclerView.Adapter<PloyerCa
 
     public void replaceData(ArrayList<PloyerServicesGson.Data> data) {
         mOriginalDatas.clear();
-        mOriginalDatas.addAll(data);
         mFilteredDatas.clear();
+        notifyDataSetChanged();
+        mOriginalDatas.addAll(data);
         mFilteredDatas.addAll(mOriginalDatas);
-        notifyItemRangeChanged(0, getItemCount());
+        notifyDataSetChanged();
     }
 
     @Override

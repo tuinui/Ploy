@@ -73,10 +73,11 @@ public class PloyeeHomeRecyclerAdapter extends RecyclerView.Adapter<PloyeeHomeRe
 
     public void replaceData(List<PloyeeServiceItemViewModel> datas) {
         mOriginalDatas.clear();
-        mOriginalDatas.addAll(datas);
         mFilteredData.clear();
+        notifyDataSetChanged();
+        mOriginalDatas.addAll(datas);
         mFilteredData.addAll(datas);
-        notifyItemChanged(0, getItemCount());
+        notifyDataSetChanged();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
