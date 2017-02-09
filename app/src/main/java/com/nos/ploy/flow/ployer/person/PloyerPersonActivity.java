@@ -257,8 +257,14 @@ public class PloyerPersonActivity extends BaseActivity implements SearchView.OnQ
 
                         @Override
                         public void onClickOfferServices(Context context) {
-                            IntentUtils.startActivity(context, PloyeeHomeActivity.class);
-                            finishThisActivity();
+                            if (UserTokenManager.isLogin(context)) {
+                                IntentUtils.startActivity(context, PloyeeHomeActivity.class);
+                                finishThisActivity();
+                            } else {
+                                IntentUtils.startActivity(context, SignInSignupActivity.class);
+                            }
+
+
                         }
                     }, true));
 
@@ -301,28 +307,35 @@ public class PloyerPersonActivity extends BaseActivity implements SearchView.OnQ
     @Override
     public void onResume() {
         super.onResume();
-        AccountInfoLoader.getProfileImage(this, mUserId, mOnLoadProfileFinish);
-        AccountInfoLoader.getAccountGson(this, mUserId, mOnLoadAccountFinish);
 
         invalidateSideBar();
     }
+
     private void invalidateSideBar() {
+        List<DrawerController.DrawerMenuItem> menus = new ArrayList<>();
         if (UserTokenManager.isLogin(this)) {
-            if (!DrawerController.PLOYER_MENUS.contains(DrawerController.MENU_ACCOUNT)) {
-                DrawerController.PLOYER_MENUS.add(DrawerController.MENU_ACCOUNT);
-            }
+            menus.add(DrawerController.MENU_SETTINGS);
+            menus.add(DrawerController.MENU_ACCOUNT);
+            menus.add(DrawerController.MENU_INTRODUCTION);
             mImageViewProfile.setImageResource(R.drawable.ic_circle_profile_120dp);
             mImageViewProfile.setColorFilter(Color.TRANSPARENT);
             mImageViewSwitchIcon.setVisibility(View.VISIBLE);
+            mLinearLayoutHeaderContainer.setClickable(false);
+            AccountInfoLoader.getProfileImage(this, mUserId, mOnLoadProfileFinish);
+            AccountInfoLoader.getAccountGson(this, mUserId, mOnLoadAccountFinish);
         } else {
-            if (DrawerController.PLOYER_MENUS.contains(DrawerController.MENU_ACCOUNT)) {
-                DrawerController.PLOYER_MENUS.remove(DrawerController.MENU_ACCOUNT);
-            }
+            menus.add(DrawerController.MENU_SETTINGS);
+            menus.add(DrawerController.MENU_INTRODUCTION);
             mImageViewProfile.setImageResource(R.drawable.ic_geniz_logo_133dp);
             mImageViewProfile.setColorFilter(Color.WHITE);
             mImageViewSwitchIcon.setVisibility(View.GONE);
+            mLinearLayoutHeaderContainer.setClickable(false);
+            mTextViewUsername.setText("");
         }
+        DrawerController.initDrawer(this, menus, mDrawerLayout, mRecyclerViewDrawer, mToolbar, mImageViewMore, Color.BLACK, mOnMenuItemSelectedListener);
+        mToolbar.setNavigationIcon(R.drawable.ic_chevron_left_white_40dp);
     }
+
     @Override
     protected void onStart() {
         super.onStart();
@@ -391,7 +404,7 @@ public class PloyerPersonActivity extends BaseActivity implements SearchView.OnQ
         mImageViewFooterLogo1.setImageDrawable(mDrawableGenizLogo);
         mImageViewFooterLogo1.setPadding(dp16, dp16, dp16, dp16);
         mRecyclerViewDrawer.setBackgroundResource(android.R.color.white);
-        DrawerController.initDrawer(this, DrawerController.PLOYER_MENUS, mDrawerLayout, mRecyclerViewDrawer, mToolbar, mImageViewMore, Color.BLACK, mOnMenuItemSelectedListener);
+
 
     }
 
@@ -575,7 +588,10 @@ public class PloyerPersonActivity extends BaseActivity implements SearchView.OnQ
                 IntentUtils.startActivity(v.getContext(), SignInSignupActivity.class);
             }
         } else if (id == mLinearLayoutHeaderContainer.getId()) {
-            IntentUtils.startActivity(this, PloyeeProfileActivity.class);
+            if (UserTokenManager.isLogin(v.getContext())) {
+                IntentUtils.startActivity(this, PloyeeProfileActivity.class);
+            }
+
         }
     }
 }
