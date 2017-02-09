@@ -10,8 +10,11 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.nos.ploy.R;
+import com.nos.ploy.api.authentication.model.UserTokenGson;
 import com.nos.ploy.api.ployer.model.ProviderUserListGson;
 import com.nos.ploy.api.ployer.model.ReviewGson;
+import com.nos.ploy.cache.SharePreferenceUtils;
+import com.nos.ploy.cache.UserTokenManager;
 import com.nos.ploy.flow.ployer.provider.ProviderProfileActivity;
 import com.nos.ploy.utils.DateParseUtils;
 import com.nos.ploy.utils.IntentUtils;
@@ -41,6 +44,8 @@ public class ProviderReviewRecyclerAdapter extends RecyclerView.Adapter<Provider
         mDatas.addAll(reviewDataList);
         notifyDataSetChanged();
     }
+
+
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {

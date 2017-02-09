@@ -14,6 +14,7 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.nos.ploy.R;
+import com.nos.ploy.api.authentication.model.UserTokenGson;
 import com.nos.ploy.api.base.RetrofitCallUtils;
 import com.nos.ploy.api.masterdata.model.LanguageAppLabelGson;
 import com.nos.ploy.api.ployer.PloyerApi;
@@ -24,6 +25,9 @@ import com.nos.ploy.cache.UserTokenManager;
 import com.nos.ploy.flow.ployer.provider.leavereview.LeaveReviewFragment;
 import com.nos.ploy.utils.LanguageFormatter;
 import com.nos.ploy.utils.RatingBarUtils;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindString;
 import butterknife.BindView;
@@ -235,12 +239,27 @@ public class ProviderReviewFragment extends BaseFragment implements View.OnClick
 //                }
 
                 mTextViewSubtitle.setText(mData.getReviewDataList().size() + " " + mLanguageData.profileScreenReviews);
+                moveToFirstIfIsOwn(data.getReviewDataList());
                 mAdapter.replaceData(data.getReviewDataList());
             }
 
         }
     }
+    private void moveToFirstIfIsOwn(List<ReviewGson.Data.ReviewData> reviewDataList){
+        UserTokenGson.Data token = UserTokenManager.getToken(getContext());
+        if(token != null){
 
+//            List<ReviewGson.Data.ReviewData> results = new ArrayList<>();
+            List<ReviewGson.Data.ReviewData> tempDatas = new ArrayList<>(reviewDataList);
+            for(ReviewGson.Data.ReviewData data : tempDatas){
+                if(token.getUserId() == data.getUserReview().getUserId()){
+                    reviewDataList.remove(data);
+                    reviewDataList.add(0,data);
+                }
+            }
+        }
+
+    }
 
     private void initRecyclerView() {
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));

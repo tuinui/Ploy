@@ -15,6 +15,7 @@ import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
@@ -75,6 +76,8 @@ public class ProviderProfileActivity extends BaseActivity implements GoogleApiCl
     TextView mButtonPhone;
     @BindView(R.id.textview_member_profile_email_button)
     TextView mButtonEmail;
+    @BindView(R.id.linearlayout_member_profile_phone_email_container)
+    LinearLayout mLinearLayoutPhoneEmailContainer;
     @BindView(R.id.imageview_member_profile_static_maps)
     ImageView mImageViewStaticMaps;
     @BindView(R.id.textview_member_profile_address)
@@ -402,17 +405,27 @@ public class ProviderProfileActivity extends BaseActivity implements GoogleApiCl
 //                if (null != mData && null != mData.getUserProfile() && null != mData.getUserProfile().getPhone()) {
 //                    IntentUtils.makeACall(v.getContext(), mData.getUserProfile().getPhone());
 //                }
-            if (!TextUtils.isEmpty(data.getEmail()) && data.isContactEmail()) {
-                mButtonEmail.setVisibility(View.VISIBLE);
+            boolean shouldShowEmailButton = !TextUtils.isEmpty(data.getEmail()) && data.isContactEmail();
+            boolean shouldShowPhoneButton = !TextUtils.isEmpty(data.getPhone()) && data.isContactPhone();
+            if (!shouldShowEmailButton && !shouldShowPhoneButton) {
+                mLinearLayoutPhoneEmailContainer.setVisibility(View.GONE);
             } else {
-                mButtonEmail.setVisibility(View.GONE);
+                mLinearLayoutPhoneEmailContainer.setVisibility(View.VISIBLE);
+                if (shouldShowEmailButton) {
+                    mButtonEmail.setVisibility(View.VISIBLE);
+                } else {
+                    mButtonEmail.setVisibility(View.GONE);
+                }
+
+                if (shouldShowPhoneButton) {
+                    mButtonPhone.setVisibility(View.VISIBLE);
+                } else {
+                    mButtonPhone.setVisibility(View.GONE);
+                }
+
             }
 
-            if (!TextUtils.isEmpty(data.getPhone()) && data.isContactPhone()) {
-                mButtonPhone.setVisibility(View.VISIBLE);
-            } else {
-                mButtonPhone.setVisibility(View.GONE);
-            }
+
             mTextViewInterests.setText(data.getInterest());
             mTransportRecyclerAdapter.notifyDataSetChanged();
             mTextViewAboutMe.setText(data.getAboutMe());
