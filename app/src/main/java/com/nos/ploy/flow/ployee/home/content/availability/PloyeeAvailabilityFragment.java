@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.TextView;
 
 import com.nos.ploy.R;
@@ -23,12 +24,14 @@ import com.nos.ploy.flow.ployee.home.content.availability.contract.AvailabilityV
 import com.nos.ploy.flow.ployee.home.content.availability.contract.NormalItemAvailabilityVM;
 import com.nos.ploy.flow.ployee.home.content.availability.contract.WeekAvailabilityVM;
 import com.nos.ploy.flow.ployee.home.content.availability.view.AvailabilityRecyclerAdapter;
+import com.nos.ploy.utils.PopupMenuUtils;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import rx.functions.Action1;
 
 /**
  * Created by Saran on 22/11/2559.
@@ -50,8 +53,23 @@ public class PloyeeAvailabilityFragment extends BaseFragment implements View.OnC
     private MasterApi mMasterApi;
     private PloyeeApi mPloyeeApi;
     private long mUserId;
-    private AvailabilityRecyclerAdapter mAdapter = new AvailabilityRecyclerAdapter();
+    private boolean isContentChanged;
+
+    private AvailabilityRecyclerAdapter mAdapter = new AvailabilityRecyclerAdapter(new Action1<Void>() {
+        @Override
+        public void call(Void aVoid) {
+            isContentChanged = true;
+        }
+    });
     private PloyeeAvailiabilityGson.Data mData;
+
+
+    private CompoundButton.OnCheckedChangeListener mHolidayChangeListener = new CompoundButton.OnCheckedChangeListener() {
+        @Override
+        public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+            isContentChanged = true;
+        }
+    };
 
 
     public static PloyeeAvailabilityFragment newInstance(long userId) {
@@ -118,6 +136,7 @@ public class PloyeeAvailabilityFragment extends BaseFragment implements View.OnC
 
     private void refreshData() {
         showRefreshing();
+        isContentChanged = false;
         RetrofitCallUtils.with(mMasterApi.getAvailability(mUserId), new RetrofitCallUtils.RetrofitCallback<PloyeeAvailiabilityGson>() {
             @Override
             public void onDataSuccess(PloyeeAvailiabilityGson data) {
@@ -136,6 +155,7 @@ public class PloyeeAvailabilityFragment extends BaseFragment implements View.OnC
 
     private void bindData(final PloyeeAvailiabilityGson.Data data) {
         mData = data;
+        mSwitchHoliday.setOnCheckedChangeListener(null);
         if (null != mData) {
             runOnUiThread(new Runnable() {
                 @Override
@@ -147,7 +167,9 @@ public class PloyeeAvailabilityFragment extends BaseFragment implements View.OnC
                 }
             });
         }
+        mSwitchHoliday.setOnCheckedChangeListener(mHolidayChangeListener);
     }
+
 
     private List<AvailabilityViewModel> toVm(List<PloyeeAvailiabilityGson.Data.AvailabilityItem> datas) {
         List<AvailabilityViewModel> vms = new ArrayList<>();
@@ -226,5 +248,24 @@ public class PloyeeAvailabilityFragment extends BaseFragment implements View.OnC
             }
         }).enqueue(getContext());
 
+    }
+
+    public boolean isContentChanged(final Action1<Boolean> onYes) {
+        if (isContentChanged) {
+            PopupMenuUtils.showConfirmationAlertMenu(getContext(), null, mLanguageData.accountScreenConfirmBeforeBack, mLanguageData.okLabel, mLanguageData.cancelLabel, new Action1<Boolean>() {
+                @Override
+                public void call(Boolean yes) {
+                    if (null != onYes) {
+                        onYes.call(yes);
+                    }
+
+                    if (yes) {
+                        refreshData();
+                    }
+                }
+            });
+            return true;
+        }
+        return false;
     }
 }

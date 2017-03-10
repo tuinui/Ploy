@@ -19,6 +19,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import rx.functions.Action1;
 
 /**
  * Created by Saran on 21/12/2559.
@@ -26,11 +27,13 @@ import butterknife.ButterKnife;
 
 public class AvailabilityRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
+    private final Action1<Void> mOnContentChangeListener;
     private List<AvailabilityViewModel> mDatas = new ArrayList<>();
     private LanguageAppLabelGson.Data language;
 
 
-    public AvailabilityRecyclerAdapter() {
+    public AvailabilityRecyclerAdapter(Action1<Void> onContentChangeListener) {
+        this.mOnContentChangeListener = onContentChangeListener;
     }
 
     public void replaceData(List<AvailabilityViewModel> datas) {
@@ -98,8 +101,8 @@ public class AvailabilityRecyclerAdapter extends RecyclerView.Adapter<RecyclerVi
         }
     }
 
-    private void bindWeek(final WeekVH holder){
-        if(null != holder && null != language){
+    private void bindWeek(final WeekVH holder) {
+        if (null != holder && null != language) {
             holder.tvMon.setText(language.avaliabilityScreenMonday);
             holder.tvTues.setText(language.avaliabilityScreenTuesday);
             holder.tvWednes.setText(language.avaliabilityScreenWednesday);
@@ -107,6 +110,12 @@ public class AvailabilityRecyclerAdapter extends RecyclerView.Adapter<RecyclerVi
             holder.tvFri.setText(language.avaliabilityScreenFriday);
             holder.tvSatur.setText(language.avaliabilityScreenSaturday);
             holder.tvSun.setText(language.avaliabilityScreenSunday);
+        }
+    }
+
+    private void onContentChange(){
+        if(mOnContentChangeListener != null){
+            mOnContentChangeListener.call(null);
         }
     }
 
@@ -127,6 +136,7 @@ public class AvailabilityRecyclerAdapter extends RecyclerView.Adapter<RecyclerVi
                 public void onClick(View v) {
                     data.setMon(!data.isMon());
                     holder.tvMon.setActivated(data.isMon());
+                    onContentChange();
                 }
             });
 
@@ -135,6 +145,7 @@ public class AvailabilityRecyclerAdapter extends RecyclerView.Adapter<RecyclerVi
                 public void onClick(View v) {
                     data.setTues(!data.isTues());
                     holder.tvTues.setActivated(data.isTues());
+                    onContentChange();
                 }
             });
 
@@ -143,6 +154,7 @@ public class AvailabilityRecyclerAdapter extends RecyclerView.Adapter<RecyclerVi
                 public void onClick(View v) {
                     data.setWed(!data.isWed());
                     holder.tvWednes.setActivated(data.isWed());
+                    onContentChange();
                 }
             });
 
@@ -151,6 +163,7 @@ public class AvailabilityRecyclerAdapter extends RecyclerView.Adapter<RecyclerVi
                 public void onClick(View v) {
                     data.setThurs(!data.isThurs());
                     holder.tvThurs.setActivated(data.isThurs());
+                    onContentChange();
                 }
             });
 
@@ -159,6 +172,7 @@ public class AvailabilityRecyclerAdapter extends RecyclerView.Adapter<RecyclerVi
                 public void onClick(View v) {
                     data.setFri(!data.isFri());
                     holder.tvFri.setActivated(data.isFri());
+                    onContentChange();
                 }
             });
 
@@ -167,6 +181,7 @@ public class AvailabilityRecyclerAdapter extends RecyclerView.Adapter<RecyclerVi
                 public void onClick(View v) {
                     data.setSat(!data.isSat());
                     holder.tvSatur.setActivated(data.isSat());
+                    onContentChange();
                 }
             });
 
@@ -175,6 +190,7 @@ public class AvailabilityRecyclerAdapter extends RecyclerView.Adapter<RecyclerVi
                 public void onClick(View v) {
                     data.setSun(!data.isSun());
                     holder.tvSun.setActivated(data.isSun());
+                    onContentChange();
                 }
             });
 

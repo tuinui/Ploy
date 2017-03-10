@@ -1,6 +1,7 @@
 package com.nos.ploy.api.base;
 
 import android.content.Context;
+import android.text.TextUtils;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -54,7 +55,7 @@ public abstract class RetrofitCallUtils<T> {
 
     public abstract void onDataFailure(String failCause);
 
-    public void enqueue(final Context context) {
+    public void enqueue(final Context context, final boolean showEverything, final boolean dontShowAnything) {
         if (null != mCall) {
             mCall.enqueue(new Callback<T>() {
                 @Override
@@ -82,11 +83,19 @@ public abstract class RetrofitCallUtils<T> {
                                 T result = (T) response.body();
                                 if (null != result) {
                                     onDataSuccess(result);
+                                    if (!dontShowAnything && showEverything && !TextUtils.isEmpty(baseResponse.getUserMessage())) {
+                                        showToast(context, baseResponse.getUserMessage());
+                                    }
+
+
                                 }
 
                             } else {
                                 onDataFailure("null data");
-                                showToast(context, "null data");
+                                if (!dontShowAnything) {
+                                    showToast(context, "null data");
+                                }
+
                             }
 
                         } else if (response.body() instanceof BaseResponseArray) {
@@ -96,10 +105,15 @@ public abstract class RetrofitCallUtils<T> {
                                 T result = (T) response.body();
                                 if (null != result) {
                                     onDataSuccess(result);
+                                    if (!dontShowAnything && showEverything && !TextUtils.isEmpty(baseResponse.getUserMessage())) {
+                                        showToast(context, baseResponse.getUserMessage());
+                                    }
                                 }
                             } else {
                                 onDataFailure("null data");
-                                showToast(context, "null data");
+                                if (!dontShowAnything) {
+                                    showToast(context, "null data");
+                                }
                             }
 
                         }
@@ -108,14 +122,18 @@ public abstract class RetrofitCallUtils<T> {
                             String myError = response.errorBody().string();
                             BaseResponse baseErrorResponse = new Gson().fromJson(myError, BaseResponse.class);
                             if (null != baseErrorResponse) {
-                                showToast(context, baseErrorResponse.getUserMessage());
+                                if (!dontShowAnything) {
+                                    showToast(context, baseErrorResponse.getUserMessage());
+                                }
                                 onDataFailure(baseErrorResponse.getUserMessage());
                             }
 
                         } catch (Exception ignored) {
                         }
                     } else {
-                        showToast(context, "isNotSuccessful");
+                        if (!dontShowAnything) {
+                            showToast(context, "isNotSuccessful");
+                        }
                         onDataFailure("isNotSuccessful");
                     }
                 }
@@ -124,12 +142,27 @@ public abstract class RetrofitCallUtils<T> {
                 public void onFailure(Call call, Throwable t) {
                     if (null != t && null != t.getMessage()) {
                         onDataFailure(t.getMessage());
-                        showToast(context, t.getMessage());
+                        if (!dontShowAnything) {
+                            showToast(context, t.getMessage());
+                        }
                     }
                 }
             });
         }
     }
+
+    public void enqueue(final Context context) {
+        enqueue(context, false, false);
+    }
+
+    public void enqueueDontToast(final Context context) {
+        enqueue(context, false, true);
+    }
+
+    public void enqueueToastThoughSuccess(final Context context) {
+        enqueue(context, true, false);
+    }
+
 
     private void showToast(Context context, String message) {
         if (isReadForUiThread(context)) {

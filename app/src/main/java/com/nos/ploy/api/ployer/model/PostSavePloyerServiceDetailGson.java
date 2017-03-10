@@ -44,6 +44,38 @@ public class PostSavePloyerServiceDetailGson {
 
     }
 
+    public long getServiceId() {
+        return serviceId;
+    }
+
+    public long getUserId() {
+        return userId;
+    }
+
+    public String getServiceNameOthers() {
+        return serviceNameOthers;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public long getPriceMin() {
+        return priceMin;
+    }
+
+    public long getPriceMax() {
+        return priceMax;
+    }
+
+    public String getCertificate() {
+        return certificate;
+    }
+
+    public String getEquipment() {
+        return equipment;
+    }
+
     public PostSavePloyerServiceDetailGson(PloyerServiceDetailGson.Data data) {
         serviceId = data.getServiceId();
         userId = data.getUserId();

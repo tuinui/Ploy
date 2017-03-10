@@ -20,6 +20,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.BitmapImageViewTarget;
+import com.nos.ploy.BuildConfig;
 import com.nos.ploy.R;
 import com.nos.ploy.api.account.AccountApi;
 import com.nos.ploy.api.account.model.PostUploadProfileImageGson;
@@ -114,6 +115,9 @@ public class SignUpFragment extends BaseFragment implements View.OnClickListener
         super.onViewCreated(view, savedInstanceState);
         initView();
         initToolbar(mToolbar);
+        if (BuildConfig.DEBUG) {
+            dummyData();
+        }
     }
 
 
@@ -172,6 +176,7 @@ public class SignUpFragment extends BaseFragment implements View.OnClickListener
             canSubmit = false;
             mEditTextRePassword.requestFocus();
         }
+
         if (canSubmit) {
             if (TextUtils.equals(password, rePassword)) {
                 PostSignupGson data = new PostSignupGson(null, email, firstName, lastName, password);
@@ -186,6 +191,21 @@ public class SignUpFragment extends BaseFragment implements View.OnClickListener
 
     private boolean isEmailValid(CharSequence email) {
         return Patterns.EMAIL_ADDRESS.matcher(email).matches();
+    }
+
+    private int testIndex = 4;
+    private String testIndexString = "0" + testIndex;
+
+    private void dummyData() {
+        String emailWithDot = "nuimamon@gmail.com";
+        for (int i = 0; i < testIndex; i++) {
+            emailWithDot = "." + emailWithDot;
+        }
+        mEditTextEmail.setText(emailWithDot);
+        mEditTextFirstName.setText("testnui" + testIndexString);
+        mEditTextLastName.setText("testnui" + testIndexString);
+        mEditTextPassword.setText("123456");
+        mEditTextRePassword.setText("123456");
     }
 
     private void requestPostSignup(PostSignupGson data, final Context context) {
@@ -208,7 +228,7 @@ public class SignUpFragment extends BaseFragment implements View.OnClickListener
             public void onDataFailure(String failCause) {
                 dismissLoading();
             }
-        }).enqueue(context);
+        }).enqueueToastThoughSuccess(context);
     }
 
     private void checkIfProfileImageWillUpload(Long userId, Action1<Boolean> onFinishUpload) {

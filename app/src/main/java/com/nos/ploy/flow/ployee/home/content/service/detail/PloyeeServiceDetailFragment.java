@@ -12,6 +12,7 @@ import android.support.v7.widget.Toolbar;
 import android.text.InputFilter;
 import android.text.InputType;
 import android.text.TextUtils;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -37,6 +38,8 @@ import com.nos.ploy.flow.ployee.home.content.service.detail.contract.subservice.
 import com.nos.ploy.flow.ployee.home.content.service.detail.contract.subservice.viewmodel.PloyeeServiceDetailSubServiceItemBaseViewModel;
 import com.nos.ploy.utils.PopupMenuUtils;
 import com.rengwuxian.materialedittext.MaterialEditText;
+
+import java.util.List;
 
 import butterknife.BindString;
 import butterknife.BindView;
@@ -103,6 +106,8 @@ public class PloyeeServiceDetailFragment extends BaseFragment implements PloyeeS
     private long mServiceId;
     private String mToolbarTitle;
 
+    private boolean isContentChanged = false;
+
 
     public static PloyeeServiceDetailFragment newInstance(long userId, long serviceId, String currentActiveLanguageCode, String title) {
         Bundle args = new Bundle();
@@ -135,6 +140,44 @@ public class PloyeeServiceDetailFragment extends BaseFragment implements PloyeeS
         return v;
     }
 
+    private View.OnKeyListener mContentChangedListener = new View.OnKeyListener() {
+
+        @Override
+        public boolean onKey(View v, int keyCode, KeyEvent event) {
+            //key listening stuff
+            isContentChanged = true;
+            return false;
+        }
+    };
+
+    private void detectContentChanged() {
+        View v = getView();
+        if (null == getView()) {
+            return;
+        }
+        List<EditText> editTextList = getAllEditTexts(v);
+        for (EditText editText : editTextList) {
+            editText.setOnKeyListener(mContentChangedListener);
+        }
+    }
+
+
+    @Override
+    public boolean onBackPressed() {
+        if (isContentChanged) {
+            PopupMenuUtils.showConfirmationAlertMenu(getContext(), null, mLanguageData.accountScreenConfirmBeforeBack, mLanguageData.okLabel, mLanguageData.cancelLabel, new Action1<Boolean>() {
+                @Override
+                public void call(Boolean yes) {
+                    if (yes) {
+                        dismiss();
+                    }
+                }
+            });
+            return true;
+        }
+        return super.onBackPressed();
+    }
+
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -142,11 +185,13 @@ public class PloyeeServiceDetailFragment extends BaseFragment implements PloyeeS
         initRecyclerView();
         initView();
         initRangeBar();
+        detectContentChanged();
     }
 
     @Override
     protected void bindLanguage(LanguageAppLabelGson.Data data) {
         super.bindLanguage(data);
+
         PopupMenuUtils.setMenuTitle(mToolbar.getMenu(), R.id.menu_done_item_done, data.doneLabel);
         mTextViewSubtitle.setText(data.serviceScreenHeader);
         mEditTextOthers.setFloatingLabelText(data.serviceScreenServicesHint);
@@ -190,6 +235,7 @@ public class PloyeeServiceDetailFragment extends BaseFragment implements PloyeeS
         disableEditable(mEditTextPriceFrom);
         disableEditable(mEditTextPriceTo);
 
+
         mEditTextPriceFrom.setOnClickListener(this);
         mEditTextPriceFrom.addTextChangedListener(new NumberTextWatcher(mEditTextPriceFrom));
 //        mEditTextPriceFrom.setFilters(mInputMinMaxFilter);
@@ -197,11 +243,8 @@ public class PloyeeServiceDetailFragment extends BaseFragment implements PloyeeS
         mEditTextPriceTo.setOnClickListener(this);
         mEditTextPriceTo.addTextChangedListener(new NumberTextWatcher(mEditTextPriceTo));
 //        mEditTextPriceTo.setFilters(mInputMinMaxFilter);
-
         mButtonReset.setOnClickListener(this);
-
         mSwipeRefreshLayout.setOnRefreshListener(mOnRefreshListener);
-
 
     }
 
@@ -212,7 +255,14 @@ public class PloyeeServiceDetailFragment extends BaseFragment implements PloyeeS
     }
 
     private void initToolbar() {
-        enableBackButton(mToolbar);
+        enableBackButton(mToolbar, new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!onBackPressed()) {
+                    dismiss();
+                }
+            }
+        });
         mTextViewTitle.setText(mToolbarTitle);
         mTextViewSubtitle.setVisibility(View.VISIBLE);
         mTextViewSubtitle.setText(R.string.Service);
@@ -355,7 +405,7 @@ public class PloyeeServiceDetailFragment extends BaseFragment implements PloyeeS
 
     private void onClickReset() {
         if (null != mData && null != mData.getData()) {
-            PloyerServiceDetailGson.Data data = mData.getData().closeThis();
+            PloyerServiceDetailGson.Data data = mData.getData().cloneThis();
             data.setServiceNameOthers("");
             data.setPriceMax(1000);
             data.setPriceMin(0);
@@ -447,10 +497,36 @@ public class PloyeeServiceDetailFragment extends BaseFragment implements PloyeeS
         }
     }
 
+
+//    private boolean isContentChanged(){
+//
+//        PostSavePloyerServiceDetailGson data = gatheredData();
+//        if(null == data || null == mData || null == mData.getData()){
+//            return false;
+//        }else{
+//            boolean isContentChanged = false;
+//            PloyerServiceDetailGson.Data originalData =  mData.getData();
+//            if (!TextUtils.equals(originalData.getCertificate(), data.getCertificate())) {
+//                isContentChanged = true;
+//            }else if(!TextUtils.equals(originalData.getDescription(), data.getDescription())){
+//                isContentChanged = true;
+//            }else if(!TextUtils.equals(originalData.getEquipment(), data.getEquipment())){
+//                isContentChanged = true;
+//            }else if(originalData.getPriceMax() != data.getPriceMax()){
+//                isContentChanged = true;
+//            }else if(originalData.getPriceMin() != data.getPriceMin()){
+//                isContentChanged = true;
+//            }else if(originalData.getServiceNameOthers() != data.getServiceNameOthers()){
+//                isContentChanged = true;
+//            }
+//            return isContentChanged;
+//        }
+//    }
+
     private PostSavePloyerServiceDetailGson gatheredData() {
         PostSavePloyerServiceDetailGson data = null;
         if (null != mData && null != mData.getData() && null != mAdapter) {
-            data = new PostSavePloyerServiceDetailGson(mData.getData().closeThis());
+            data = new PostSavePloyerServiceDetailGson(mData.getData().cloneThis());
             data.setUserId(mUserId);
             data.setServiceId(mServiceId);
             data.setCertificate(extractString(mEditTextCertificate));
@@ -479,7 +555,7 @@ public class PloyeeServiceDetailFragment extends BaseFragment implements PloyeeS
             canRequest = false;
         }
 
-        if (gatheredData().getSubServiceLv2IdList().size() == 0) {
+        if (null != mData && null != mData.getData() && null != mData.getData().getSubServices() && !mData.getData().getSubServices().isEmpty() && gatheredData().getSubServiceLv2IdList().size() == 0) {
             canRequest = false;
             PopupMenuUtils.showConfirmationAlertMenu(getContext(), null, mLanguageData.serviceScreenAlert, mLanguageData.okLabel, null, null);
         }

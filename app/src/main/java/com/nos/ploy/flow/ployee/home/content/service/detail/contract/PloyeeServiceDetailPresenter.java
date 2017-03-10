@@ -77,7 +77,6 @@ public class PloyeeServiceDetailPresenter implements PloyeeServiceDetailContract
         RetrofitCallUtils
                 .with(mService.getServiceDetail(new PostGetPloyerServiceDetailGson(mServiceId, mUserId, languageCode)), mCallbackGetServiceDetailGson)
                 .enqueue(mView.getContext());
-
     }
 
     @Override

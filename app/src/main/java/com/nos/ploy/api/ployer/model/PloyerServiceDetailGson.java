@@ -191,7 +191,7 @@ public class PloyerServiceDetailGson extends BaseResponse<PloyerServiceDetailGso
             this.subServices = subServices;
         }
 
-        public Data closeThis() {
+        public Data cloneThis() {
             return new Data(serviceId, userId, serviceMappingId, serviceNameOthers,serviceName, description, priceMin, priceMax, certificate, equipment, subServices);
         }
 

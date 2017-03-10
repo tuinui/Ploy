@@ -4,6 +4,7 @@
     android:id="@+id/drawerlayout_ployee_home"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+
     android:fitsSystemWindows="true">
 
     <include layout="@layout/view_content_ployee_home" />

@@ -136,44 +136,52 @@ public class PloyeeHomeActivity extends BaseActivity implements View.OnClickList
     };
     private DrawerController.OnMenuItemSelectedListener mOnMenuItemSelectedListener = new DrawerController.OnMenuItemSelectedListener() {
         @Override
-        public void onMenuItemSelected(@DrawerController.Menu int menu) {
-            switch (menu) {
-                case DrawerController.NONE:
-                    break;
-                case DrawerController.ACCOUNT:
-                    AccountInfoLoader.getAccountGson(PloyeeHomeActivity.this, mUserId, new Action1<AccountGson.Data>() {
-                        @Override
-                        public void call(AccountGson.Data accountData) {
-                            if (null != accountData) {
-                                showFragment(PloyeeAccountFragment.newInstance(accountData));
-                            }
-                        }
-                    });
-                    break;
-                case DrawerController.SETTINGS:
-                    showFragment(SettingsFragment.newInstance(mUserId));
-                    break;
-                case DrawerController.WHAT_IS_PLOYEE:
-                    showFragment(HtmlTextFragment.newInstance(HtmlTextFragment.WHAT_IS_PLOYEE));
-                    break;
-                case DrawerController.WHAT_IS_PLOYER:
-                    showFragment(HtmlTextFragment.newInstance(HtmlTextFragment.WHAT_IS_PLOYER));
-                    break;
-                case DrawerController.INTRODUCTION:
-                    showFragment(IntroductionFragment.newInstance(new IntroductionFragment.FragmentInteractionListener() {
-                        @Override
-                        public void onClickFindServices(Context context) {
-                            IntentUtils.startActivity(context, PloyerHomeActivity.class);
-                            finishThisActivity();
+        public void onMenuItemSelected(@DrawerController.Menu final int menu) {
+            checkIfAvailabilityContentChanged(new Action1<Boolean>() {
+                @Override
+                public void call(Boolean yes) {
+                    if (yes) {
+                        switch (menu) {
+                            case DrawerController.NONE:
+                                break;
+                            case DrawerController.ACCOUNT:
+                                AccountInfoLoader.getAccountGson(PloyeeHomeActivity.this, mUserId, new Action1<AccountGson.Data>() {
+                                    @Override
+                                    public void call(AccountGson.Data accountData) {
+                                        if (null != accountData) {
+                                            showFragment(PloyeeAccountFragment.newInstance(accountData));
+                                        }
+                                    }
+                                });
+                                break;
+                            case DrawerController.SETTINGS:
+                                showFragment(SettingsFragment.newInstance(mUserId));
+                                break;
+                            case DrawerController.WHAT_IS_PLOYEE:
+                                showFragment(HtmlTextFragment.newInstance(HtmlTextFragment.WHAT_IS_PLOYEE));
+                                break;
+                            case DrawerController.WHAT_IS_PLOYER:
+                                showFragment(HtmlTextFragment.newInstance(HtmlTextFragment.WHAT_IS_PLOYER));
+                                break;
+                            case DrawerController.INTRODUCTION:
+                                showFragment(IntroductionFragment.newInstance(new IntroductionFragment.FragmentInteractionListener() {
+                                    @Override
+                                    public void onClickFindServices(Context context) {
+                                        IntentUtils.startActivity(context, PloyerHomeActivity.class);
+                                        finishThisActivity();
+                                    }
+
+                                    @Override
+                                    public void onClickOfferServices(Context context) {
+
+                                    }
+                                }, true));
+                                break;
                         }
 
-                        @Override
-                        public void onClickOfferServices(Context context) {
-
-                        }
-                    },true));
-                    break;
-            }
+                    }
+                }
+            });
         }
     };
     private Toolbar.OnMenuItemClickListener mAvailabilityMenuItemClickListener = new Toolbar.OnMenuItemClickListener() {
@@ -199,7 +207,7 @@ public class PloyeeHomeActivity extends BaseActivity implements View.OnClickList
         initFragment();
         mSearchView = (SearchView) mViewStubSearchView.inflate().findViewById(R.id.searchview_main);
         mSearchView.setOnQueryTextListener(this);
-        DrawerController.initDrawer(this,DrawerController.PLOYEE_MENUS, mDrawerLayout, mRecyclerViewDrawer, mToolbar, mImageViewMore, mOnMenuItemSelectedListener);
+        DrawerController.initDrawer(this, DrawerController.PLOYEE_MENUS, mDrawerLayout, mRecyclerViewDrawer, mToolbar, mImageViewMore, mOnMenuItemSelectedListener);
         initFooter();
         initToolbar();
     }
@@ -252,11 +260,42 @@ public class PloyeeHomeActivity extends BaseActivity implements View.OnClickList
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
+        checkIfAvailabilityContentChanged(new Action1<Boolean>() {
+            @Override
+            public void call(Boolean yes) {
+                if (yes) {
+                    PloyeeHomeActivity.super.onBackPressed();
+                }
+            }
+        });
+
     }
 
     private void initToolbar() {
-        enableBackButton(mToolbar);
+        mToolbar.setNavigationIcon(R.drawable.ic_chevron_left_white_40dp);
+        mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                checkIfAvailabilityContentChanged(new Action1<Boolean>() {
+                    @Override
+                    public void call(Boolean yes) {
+                        if (yes) {
+                            finishThisActivity();
+                        }
+
+                    }
+                });
+
+            }
+        });
+    }
+
+    private void checkIfAvailabilityContentChanged(Action1<Boolean> action) {
+        if (null != mAvailabilityFragment && mAvailabilityFragment.isContentChanged(action)) {
+
+        } else {
+            action.call(true);
+        }
     }
 
     @Override
@@ -269,10 +308,10 @@ public class PloyeeHomeActivity extends BaseActivity implements View.OnClickList
         } else if (id == mLinearLayoutHeaderContainer.getId()) {
             IntentUtils.startActivity(this, PloyeeProfileActivity.class);
         } else if (id == mForeGroundLinearLayoutSwitchToContainer.getId()) {
-            if(UserTokenManager.isLogin(view.getContext())){
+            if (UserTokenManager.isLogin(view.getContext())) {
                 IntentUtils.startActivity(PloyeeHomeActivity.this, PloyerHomeActivity.class);
                 finishThisActivity();
-            }else{
+            } else {
 
             }
 
@@ -286,23 +325,32 @@ public class PloyeeHomeActivity extends BaseActivity implements View.OnClickList
     }
 
 
-
     private void onClickBottomMenu(@BottomMenu int menu) {
         if (menu == AVAILABLITY) {
             mTextViewTitle.setText(mLanguageData.avaliabilityScreenHeader);
             mSearchView.setVisibility(View.GONE);
             mViewPager.setCurrentItem(1);
             PopupMenuUtils.clearAndInflateMenu(mToolbar, R.menu.menu_done, mAvailabilityMenuItemClickListener);
-            PopupMenuUtils.setMenuTitle(mToolbar.getMenu(),R.id.menu_done_item_done,mLanguageData.doneLabel);
+            PopupMenuUtils.setMenuTitle(mToolbar.getMenu(), R.id.menu_done_item_done, mLanguageData.doneLabel);
             mImageViewFooterServiceList.setActivated(false);
             mImageViewFooterAvailability.setActivated(true);
         } else if (menu == SERVICE_LIST) {
-            mTextViewTitle.setText(mLanguageData.providerScreenHeader);
-            PopupMenuUtils.clearMenu(mToolbar);
-            mSearchView.setVisibility(View.VISIBLE);
-            mViewPager.setCurrentItem(0);
-            mImageViewFooterServiceList.setActivated(true);
-            mImageViewFooterAvailability.setActivated(false);
+            checkIfAvailabilityContentChanged(new Action1<Boolean>() {
+                @Override
+                public void call(Boolean yes) {
+                    if (yes) {
+                        mTextViewTitle.setText(mLanguageData.providerScreenHeader);
+                        PopupMenuUtils.clearMenu(mToolbar);
+                        mSearchView.setVisibility(View.VISIBLE);
+                        mViewPager.setCurrentItem(0);
+
+                        mImageViewFooterServiceList.setActivated(true);
+                        mImageViewFooterAvailability.setActivated(false);
+                    }
+
+                }
+            });
+
         }
     }
 

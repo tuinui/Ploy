@@ -56,7 +56,7 @@ public class FilterAvailabilityFragment extends BaseFragment implements View.OnC
     private MasterApi mApi;
     private PloyeeAvailiabilityGson.Data mData;
     private PloyerServicesGson.Data mServiceData;
-    private AvailabilityRecyclerAdapter mAdapter = new AvailabilityRecyclerAdapter();
+    private AvailabilityRecyclerAdapter mAdapter = new AvailabilityRecyclerAdapter(null);
     private static final String KEY_SERVICE_DATA = "SERVICE_DATA";
     private static final String KEY_AVAILABILITY_ITEMS = "AVAILABILITY_ITEMS";
     private static final String KEY_TOTAL_COUNT = "TOTAL_COUNT";

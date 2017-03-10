@@ -138,7 +138,7 @@ public class ProviderProfileActivity extends BaseActivity implements GoogleApiCl
     private PloyerApi mApi;
     private MemberProfileGson.Data mData;
     private ProviderServiceRecyclerAdapter mServiceAdapter = new ProviderServiceRecyclerAdapter();
-    private AvailabilityRecyclerAdapter mAvailabilityAdapter = new AvailabilityRecyclerAdapter() {
+    private AvailabilityRecyclerAdapter mAvailabilityAdapter = new AvailabilityRecyclerAdapter(null) {
         @Override
         public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
             super.onBindViewHolder(holder, position);

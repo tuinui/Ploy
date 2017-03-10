@@ -27,6 +27,9 @@ import com.nos.ploy.api.masterdata.model.LanguageAppLabelGson;
 import com.nos.ploy.cache.LanguageAppLabelManager;
 import com.nos.ploy.utils.FragmentTransactionUtils;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import retrofit2.Retrofit;
 import rx.functions.Action1;
 
@@ -44,7 +47,7 @@ public abstract class BaseFragment extends AppCompatDialogFragment {
     private boolean isRefreshing;
     protected LanguageAppLabelGson.Data mLanguageData = new LanguageAppLabelGson.Data();
 
-    protected void bindLanguage(LanguageAppLabelGson.Data data){
+    protected void bindLanguage(LanguageAppLabelGson.Data data) {
         mLanguageData = data;
     }
 
@@ -87,6 +90,7 @@ public abstract class BaseFragment extends AppCompatDialogFragment {
     protected boolean isBottomSheetDialog() {
         return false;
     }
+
     @Override
     public void onStart() {
         super.onStart();
@@ -99,7 +103,7 @@ public abstract class BaseFragment extends AppCompatDialogFragment {
                 LanguageAppLabelManager.getLanguageLabel(getContext(), new Action1<LanguageAppLabelGson.Data>() {
                     @Override
                     public void call(LanguageAppLabelGson.Data data) {
-                        if(null != data){
+                        if (null != data) {
                             bindLanguage(data);
                         }
                     }
@@ -335,6 +339,29 @@ public abstract class BaseFragment extends AppCompatDialogFragment {
                 findAllChildViewAndDisableEditable(child);
             }
         }
+    }
+
+    protected List<EditText> getAllEditTexts(View v) {
+        if (null == v || !(v instanceof ViewGroup)) {
+            return null;
+        }
+
+        ViewGroup vg = (ViewGroup) v;
+        List<EditText> editTextList = new ArrayList<>();
+        for (int i = 0; i < vg.getChildCount(); i++) {
+            View child = vg.getChildAt(i);
+
+            if (null == child) {
+                continue;
+            }
+
+            if (child instanceof EditText) {
+                editTextList.add((EditText) child);
+            } else if (child instanceof ViewGroup) {
+                editTextList.addAll(getAllEditTexts(child));
+            }
+        }
+        return editTextList;
     }
 
 

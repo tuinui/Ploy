@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -150,7 +151,7 @@ public class SignInSignupActivity extends BaseActivity implements View.OnClickLi
                 goToPloyeeHome();
 
             }
-        },false));
+        }, false));
 
     }
 
@@ -182,9 +183,10 @@ public class SignInSignupActivity extends BaseActivity implements View.OnClickLi
                             String email = response.getJSONObject().getString("email");
                             String firstName = response.getJSONObject().getString("first_name");
                             String lastName = response.getJSONObject().getString("last_name");
-
-                            Profile profile = Profile.getCurrentProfile();
-                            String id = profile.getId();
+                            String id = response.getJSONObject().getString("id");
+                            if (TextUtils.isEmpty(id) && null != Profile.getCurrentProfile()) {
+                                id = Profile.getCurrentProfile().getId();
+                            }
                             requestSigninWithFacebook(SignInSignupActivity.this, email, firstName, lastName, id);
                         } catch (JSONException e) {
                             e.printStackTrace();

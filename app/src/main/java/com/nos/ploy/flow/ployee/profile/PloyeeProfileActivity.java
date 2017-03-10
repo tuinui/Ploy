@@ -367,7 +367,7 @@ public class PloyeeProfileActivity extends BaseActivity implements View.OnClickL
     private void refreshData(Context context) {
         if (null != context && isReady()) {
             showRefreshing();
-            RetrofitCallUtils.with(mAccountApi.getProfileGson(mUserId), mCallbackLoadData).enqueue(context);
+            RetrofitCallUtils.with(mAccountApi.getProfileGson(mUserId), mCallbackLoadData).enqueueDontToast(context);
             refreshSlider();
         }
 
@@ -589,7 +589,7 @@ public class PloyeeProfileActivity extends BaseActivity implements View.OnClickL
                 Bundle bundle = new Bundle();
                 ProviderUserListGson.Data.UserService mockUserService = new ProviderUserListGson.Data.UserService(mUserId, data, mCurrentLatLng);
                 bundle.putParcelable(ProviderProfileActivity.KEY_PLOYEE_USER_SERVICE_DATA, mockUserService);
-                bundle.putBoolean(ProviderProfileActivity.KEY_IS_PREVIEW,true);
+                bundle.putBoolean(ProviderProfileActivity.KEY_IS_PREVIEW, true);
                 IntentUtils.startActivity(context, ProviderProfileActivity.class, bundle);
             }
         });
