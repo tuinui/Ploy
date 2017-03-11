@@ -354,7 +354,7 @@ public class FilterFragment extends BaseFragment implements View.OnClickListener
             setRightPinValue(data.getPriceMax());
             mButtonEmail.setActivated(data.isContactEmail());
             mButtonPhone.setActivated(data.isContactPhone());
-            mRatingAdapter.replaceData(data.getReview(),false);
+            mRatingAdapter.replaceData(data.getReview());
             for (TransportGsonVm transportVm : mTransportVms) {
                 if (data.getTransportIds().contains(transportVm.getId())) {
                     transportVm.setCheck(true);
@@ -537,6 +537,7 @@ public class FilterFragment extends BaseFragment implements View.OnClickListener
 
     private void onClickClear() {
         bindData(new PostProviderFilterGson());
+        getListener().onFilterClear();
     }
 
     private FilterLanguageFragment getLanguageFragment() {
@@ -583,5 +584,7 @@ public class FilterFragment extends BaseFragment implements View.OnClickListener
 
     public static interface OnFilterConfirmListener {
         public void onFilterConfirm(PostProviderFilterGson data);
+
+        void onFilterClear();
     }
 }

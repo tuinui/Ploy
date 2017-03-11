@@ -149,7 +149,7 @@ public class ProviderServiceRecyclerAdapter extends RecyclerView.Adapter<Provide
                 } else {
                     toolbar.setTitle(data.getServiceName());
                 }
-                tvPrice.setText(mLanguage.serviceScreenFrom + data.getPriceMin() + " " + mLanguage.currencyLabel + " " + data.getPriceUnit());
+                tvPrice.setText(mLanguage.serviceScreenFrom + " " + data.getPriceMin() + mLanguage.currencyLabel + " " + data.getPriceUnit());
                 tvDescription.setText(data.getDescription());
                 tvCertificate.setText(data.getCertificate());
                 tvEquipment.setText(data.getEquipment());

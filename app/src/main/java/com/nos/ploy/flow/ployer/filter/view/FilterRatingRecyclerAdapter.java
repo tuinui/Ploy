@@ -26,7 +26,7 @@ public class FilterRatingRecyclerAdapter extends RecyclerView.Adapter<FilterRati
 
     private final Action1<Long> onRatingChangeListener;
     private List<FilterRatingViewModel> mDatas = new ArrayList<>();
-    private long mCurrentRating;
+    private long mCurrentRating = -404;
 
     public FilterRatingRecyclerAdapter(Action1<Long> onRatingChange) {
         super();
@@ -38,14 +38,12 @@ public class FilterRatingRecyclerAdapter extends RecyclerView.Adapter<FilterRati
         this.onRatingChangeListener = onRatingChange;
     }
 
-    public void replaceData(Long data,boolean toggle) {
+    public void onClickRating(Long data) {
         notifyDataSetChanged();
-        if(toggle){
-            if (mCurrentRating == data) {
-                mCurrentRating = -404;
-            } else {
-                mCurrentRating = data;
-            }
+        if (mCurrentRating == data) {
+            mCurrentRating = -404;
+        } else {
+            mCurrentRating = data;
         }
 
 
@@ -53,7 +51,29 @@ public class FilterRatingRecyclerAdapter extends RecyclerView.Adapter<FilterRati
 
 
         for (FilterRatingViewModel vm : mDatas) {
-            if (mCurrentRating == -404 && toggle) {
+            if (mCurrentRating == -404) {
+                vm.setChecked(false);
+            } else {
+                if (vm.getRating() >= mCurrentRating) {
+                    vm.setChecked(true);
+                } else {
+                    vm.setChecked(false);
+                }
+            }
+
+        }
+        notifyDataSetChanged();
+    }
+
+    public void replaceData(Long data) {
+        notifyDataSetChanged();
+        if (null == data) {
+            mCurrentRating = -404;
+        } else {
+            mCurrentRating = data;
+        }
+        for (FilterRatingViewModel vm : mDatas) {
+            if (mCurrentRating == -404) {
                 vm.setChecked(false);
             } else {
                 if (vm.getRating() >= mCurrentRating) {
@@ -107,7 +127,7 @@ public class FilterRatingRecyclerAdapter extends RecyclerView.Adapter<FilterRati
             if (id == btnRating.getId()) {
                 if (RecyclerUtils.isAvailableData(mDatas, getAdapterPosition())) {
                     FilterRatingViewModel data = mDatas.get(getAdapterPosition());
-                    replaceData(data.getRating(),true);
+                    onClickRating(data.getRating());
                 }
             }
         }

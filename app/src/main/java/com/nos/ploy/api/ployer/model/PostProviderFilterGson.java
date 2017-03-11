@@ -165,8 +165,7 @@ public class PostProviderFilterGson implements Parcelable {
     }
 
     public Long getReview() {
-        return null != review ? review : 0
-                ;
+        return review;
     }
 
     public long getServiceId() {

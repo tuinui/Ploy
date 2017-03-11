@@ -431,6 +431,12 @@ public class PloyerPersonActivity extends BaseActivity implements SearchView.OnQ
                 mPostData = data;
                 refreshData();
             }
+
+            @Override
+            public void onFilterClear() {
+                mPostData = null;
+                refreshData();
+            }
         }));
     }
 
