@@ -38,19 +38,22 @@ public class FilterRatingRecyclerAdapter extends RecyclerView.Adapter<FilterRati
         this.onRatingChangeListener = onRatingChange;
     }
 
-    public void replaceData(Long data) {
+    public void replaceData(Long data,boolean toggle) {
         notifyDataSetChanged();
-        if (mCurrentRating == data) {
-            mCurrentRating = -404;
-        } else {
-            mCurrentRating = data;
+        if(toggle){
+            if (mCurrentRating == data) {
+                mCurrentRating = -404;
+            } else {
+                mCurrentRating = data;
+            }
         }
+
 
         onRatingChangeListener.call(mCurrentRating);
 
 
         for (FilterRatingViewModel vm : mDatas) {
-            if (mCurrentRating == -404) {
+            if (mCurrentRating == -404 && toggle) {
                 vm.setChecked(false);
             } else {
                 if (vm.getRating() >= mCurrentRating) {
@@ -104,7 +107,7 @@ public class FilterRatingRecyclerAdapter extends RecyclerView.Adapter<FilterRati
             if (id == btnRating.getId()) {
                 if (RecyclerUtils.isAvailableData(mDatas, getAdapterPosition())) {
                     FilterRatingViewModel data = mDatas.get(getAdapterPosition());
-                    replaceData(data.getRating());
+                    replaceData(data.getRating(),true);
                 }
             }
         }

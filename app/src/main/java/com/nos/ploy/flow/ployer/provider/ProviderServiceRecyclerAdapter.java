@@ -33,11 +33,12 @@ import butterknife.ButterKnife;
 public class ProviderServiceRecyclerAdapter extends RecyclerView.Adapter<ProviderServiceRecyclerAdapter.ViewHolder> {
 
     private List<PloyerServiceDetailGson.Data> mDatas = new ArrayList<>();
-    private LanguageAppLabelGson.Data language;
+    private LanguageAppLabelGson.Data mLanguage;
 
     public ProviderServiceRecyclerAdapter() {
         super();
     }
+
 
     public void replaceData(List<PloyerServiceDetailGson.Data> datas) {
         mDatas.clear();
@@ -67,7 +68,7 @@ public class ProviderServiceRecyclerAdapter extends RecyclerView.Adapter<Provide
     }
 
     public void setLanguage(LanguageAppLabelGson.Data language) {
-        this.language = language;
+        this.mLanguage = language;
     }
 
 
@@ -132,11 +133,11 @@ public class ProviderServiceRecyclerAdapter extends RecyclerView.Adapter<Provide
             recyclerViewSubService.setLayoutManager(gridLayoutManager);
         }
 
-        private void bindLanguage(){
-            tvDescriptionLabel.setText(language.serviceScreenDescriptLabel);
-            tvCertificateLabel.setText(language.serviceScreenCertificateLabel);
-            tvEquipmentLabel.setText(language.serviceScreenEquipmentLabel);
-            tvSubServicesHeader.setText(language.servicesLabel);
+        private void bindLanguage() {
+            tvDescriptionLabel.setText(mLanguage.serviceScreenDescriptLabel);
+            tvCertificateLabel.setText(mLanguage.serviceScreenCertificateLabel);
+            tvEquipmentLabel.setText(mLanguage.serviceScreenEquipmentLabel);
+            tvSubServicesHeader.setText(mLanguage.servicesLabel);
         }
 
 
@@ -148,7 +149,7 @@ public class ProviderServiceRecyclerAdapter extends RecyclerView.Adapter<Provide
                 } else {
                     toolbar.setTitle(data.getServiceName());
                 }
-                tvPrice.setText(language.serviceScreenFrom +data.getPriceMin() +"$ "+data.getPriceUnit());
+                tvPrice.setText(mLanguage.serviceScreenFrom + data.getPriceMin() + " " + mLanguage.currencyLabel + " " + data.getPriceUnit());
                 tvDescription.setText(data.getDescription());
                 tvCertificate.setText(data.getCertificate());
                 tvEquipment.setText(data.getEquipment());

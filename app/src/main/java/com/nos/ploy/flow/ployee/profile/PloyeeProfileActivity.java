@@ -15,6 +15,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -298,7 +299,7 @@ public class PloyeeProfileActivity extends BaseActivity implements View.OnClickL
                     String languageSupports = "";
                     if (mOriginalData.getLanguage() != null && !mOriginalData.getLanguage().isEmpty()) {
                         for (PloyeeProfileGson.Data.Language language : mOriginalData.getLanguage()) {
-                            languageSupports += language.getSpokenLanguageValue() + " ,";
+                            languageSupports += " "+language.getSpokenLanguageValue() + ",";
                         }
                     }
                     languageSupports = removeLastCharacter(languageSupports);
@@ -557,12 +558,22 @@ public class PloyeeProfileActivity extends BaseActivity implements View.OnClickL
 
 
     @Override
-    public void onClick(View v) {
+    public void onClick(final View v) {
         int id = v.getId();
         if (id == mButtonEmail.getId()) {
             mButtonEmail.setActivated(!mButtonEmail.isActivated());
         } else if (id == mButtonPhone.getId()) {
-            mButtonPhone.setActivated(!mButtonPhone.isActivated());
+            AccountInfoLoader.getAccountGson(v.getContext(), mUserId, new Action1<AccountGson.Data>() {
+                @Override
+                public void call(AccountGson.Data data) {
+                    if(!TextUtils.isEmpty(data.getPhone())){
+                        mButtonPhone.setActivated(!mButtonPhone.isActivated());
+                    }else{
+                        PopupMenuUtils.showConfirmationAlertMenu(v.getContext(),null,mLanguageData.profileScreenNoPhone,mLanguageData.okLabel,null,null);
+                    }
+                }
+            });
+
         } else if (id == mFabProfileImage.getId()) {
             showUploadPhotoFragment();
         } else if (id == mImageButtonCheckin.getId()) {

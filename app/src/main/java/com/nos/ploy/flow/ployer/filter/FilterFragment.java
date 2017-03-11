@@ -109,9 +109,9 @@ public class FilterFragment extends BaseFragment implements View.OnClickListener
     private FilterRatingRecyclerAdapter mRatingAdapter = new FilterRatingRecyclerAdapter(new Action1<Long>() {
         @Override
         public void call(Long aLong) {
-            if(aLong == -404){
+            if (aLong == -404) {
                 mPostData.setReview(null);
-            }else{
+            } else {
                 mPostData.setReview(aLong);
             }
 
@@ -279,7 +279,7 @@ public class FilterFragment extends BaseFragment implements View.OnClickListener
             requestTransportData();
         }
 
-        if(mServiceDetail  == null){
+        if (mServiceDetail == null) {
             refreshDataPriceUnit();
         }
     }
@@ -354,7 +354,7 @@ public class FilterFragment extends BaseFragment implements View.OnClickListener
             setRightPinValue(data.getPriceMax());
             mButtonEmail.setActivated(data.isContactEmail());
             mButtonPhone.setActivated(data.isContactPhone());
-            mRatingAdapter.replaceData(data.getReview());
+            mRatingAdapter.replaceData(data.getReview(),false);
             for (TransportGsonVm transportVm : mTransportVms) {
                 if (data.getTransportIds().contains(transportVm.getId())) {
                     transportVm.setCheck(true);
@@ -431,11 +431,14 @@ public class FilterFragment extends BaseFragment implements View.OnClickListener
         } else if (id == mTextViewServices.getId()) {
             showFragment(getServicesFragment());
         } else if (id == mButtonPhone.getId()) {
-            mPostData.setContactPhone(!mButtonPhone.isActivated());
-            bindData(mPostData);
+            boolean newValue = !mButtonPhone.isActivated();
+            mPostData.setContactPhone(newValue);
+            mButtonPhone.setActivated(newValue);
         } else if (id == mButtonEmail.getId()) {
-            mPostData.setContactEmail(!mButtonEmail.isActivated());
-            bindData(mPostData);
+            boolean newValue = !mButtonEmail.isActivated();
+            mPostData.setContactEmail(newValue);
+            mButtonEmail.setActivated(newValue);
+
         } else if (id == mButtonClear.getId()) {
             onClickClear();
         } else if (id == mButtonFilter.getId()) {

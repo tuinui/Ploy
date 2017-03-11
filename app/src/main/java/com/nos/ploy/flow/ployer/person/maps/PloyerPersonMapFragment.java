@@ -132,7 +132,7 @@ public class PloyerPersonMapFragment extends BaseFragment implements OnMapReadyC
 
     private void initView() {
         mBottomSheetBehavior = BottomSheetBehavior.from(mNestedScrollView);
-        mBottomSheetBehavior.setPeekHeight(dp24);
+        mBottomSheetBehavior.setPeekHeight(0);
         mCardViewSheetContainer.setOnClickListener(this);
     }
 
@@ -187,7 +187,7 @@ public class PloyerPersonMapFragment extends BaseFragment implements OnMapReadyC
         }
         View v = LayoutInflater.from(getContext()).inflate(R.layout.view_maps_pin_box, null);
         TextView tvMarkerTitle = (TextView) v.findViewById(R.id.textview_maps_pin_box);
-        tvMarkerTitle.setText("$ " + data.getMinPrice());
+        tvMarkerTitle.setText(mLanguageData.currencyLabel+" " + data.getMinPrice());
         MarkerOptions marker = new MarkerOptions();
         marker.position(new LatLng(data.getLocationLat(), data.getLocationLng()));
         marker.icon(BitmapDescriptorFactory.fromBitmap(DrawableUtils.createBitmapFromView(getContext(), v)));
@@ -201,7 +201,7 @@ public class PloyerPersonMapFragment extends BaseFragment implements OnMapReadyC
             mTextViewSheetTitle.setText(data.getFullName());
             mTExtViewSheetSubTitle.setText(mServiceData.getServiceName());
             mTextViewDescription.setText(data.getDescription());
-            mTextViewPrice.setText("$" + data.getMinPrice());
+            mTextViewPrice.setText(mLanguageData.currencyLabel + data.getMinPrice());
             mTextViewReviewCount.setText("" + data.getReviewCount());
             mTextViewRating.setText(data.getReviewPoint() + "/5");
             mRatingBarRate.setRating(RatingBarUtils.getRatingbarRoundingNumber(data.getReviewPoint()));

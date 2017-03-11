@@ -83,6 +83,7 @@ public class PloyerPersonActivity extends BaseActivity implements SearchView.OnQ
     private ProviderUserListGson.Data mData;
     private PostProviderFilterGson mPostData;
     private long mTotal = 0;
+    private boolean didPagerSet;
 
 
     @Retention(RetentionPolicy.SOURCE)
@@ -384,6 +385,7 @@ public class PloyerPersonActivity extends BaseActivity implements SearchView.OnQ
     }
 
     private void initPager() {
+        didPagerSet = true;
         mViewPager.setPagingEnabled(false);
         mContentFragments.clear();
         mPersonListFragment = PloyerPersonListFragment.newInstance(mParentData, mGoogleApiClient, mPersonFragmentInteractionListener);
@@ -557,7 +559,10 @@ public class PloyerPersonActivity extends BaseActivity implements SearchView.OnQ
 
     @Override
     public void onConnected(@Nullable Bundle bundle) {
-        initPager();
+        if(!didPagerSet){
+            initPager();
+        }
+
         if (mData == null) {
             refreshData();
         } else {

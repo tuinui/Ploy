@@ -14,25 +14,24 @@
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab_ployee_maps_direction"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        android:layout_margin="@dimen/fab_margin"
-        android:scaleType="fitCenter"
-        android:src="@drawable/ic_directory_arrow_right_black_24dp"
-        app:fab_type="normal"
-        app:useCompatPadding="true" />
+    <!--<android.support.design.widget.FloatingActionButton-->
+    <!--android:id="@+id/fab_ployee_maps_direction"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_gravity="bottom|end"-->
+    <!--android:layout_margin="@dimen/fab_margin"-->
+    <!--android:scaleType="fitCenter"-->
+    <!--android:src="@drawable/ic_directory_arrow_right_black_24dp"-->
+    <!--app:fab_type="normal"-->
+    <!--app:useCompatPadding="true" />-->
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab_ployee_maps_my_location"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="left"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="16dp"
         android:scaleType="fitCenter"
         android:src="@drawable/ic_near_me_black_24dp"
-        app:layout_anchor="@id/fab_ployee_maps_direction"
-        app:layout_anchorGravity="bottom"
         app:useCompatPadding="true" />
 </android.support.design.widget.CoordinatorLayout>

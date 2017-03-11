@@ -464,10 +464,10 @@ public class PloyeeServiceDetailFragment extends BaseFragment implements PloyeeS
                 @Override
                 public void run() {
                     mTextViewPricePerHour.setText(data.getPriceUnit());
-                    mEditTextPriceFrom.setHint(mLanguageData.serviceScreenFrom + " ($)");
-                    mEditTextPriceTo.setHint(mLanguageData.serviceScreenTo + " ($)");
-                    mEditTextPriceFrom.setFloatingLabelText(mLanguageData.serviceScreenFrom + " ($)");
-                    mEditTextPriceTo.setFloatingLabelText(mLanguageData.serviceScreenTo + " ($)");
+                    mEditTextPriceFrom.setHint(mLanguageData.serviceScreenFrom + " ("+mLanguageData.currencyLabel+")");
+                    mEditTextPriceTo.setHint(mLanguageData.serviceScreenTo + " ("+mLanguageData.currencyLabel+")");
+                    mEditTextPriceFrom.setFloatingLabelText(mLanguageData.serviceScreenFrom + " ("+mLanguageData.currencyLabel+")");
+                    mEditTextPriceTo.setFloatingLabelText(mLanguageData.serviceScreenTo + " ("+mLanguageData.currencyLabel+")");
 
                     mEditTextDescription.setText(data.getDescription());
                     mEditTextCertificate.setText(data.getCertificate());

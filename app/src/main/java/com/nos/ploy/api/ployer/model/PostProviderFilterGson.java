@@ -63,7 +63,7 @@ public class PostProviderFilterGson implements Parcelable {
     @SerializedName("avai")
     private ArrayList<PloyeeAvailiabilityGson.Data.AvailabilityItem> availabilityItems = new ArrayList<>();
 
-    private PostProviderFilterGson(ArrayList<PloyeeAvailiabilityGson.Data.AvailabilityItem> availabilityItems, boolean certificate, boolean contactEmail, boolean contactPhone, boolean equipment, ArrayList<String> languages, long pageNo, long pageSize, long priceMax, long priceMin, long review, long serviceId, List<Long> subServices, List<Long> transportIds) {
+    private PostProviderFilterGson(ArrayList<PloyeeAvailiabilityGson.Data.AvailabilityItem> availabilityItems, boolean certificate, boolean contactEmail, boolean contactPhone, boolean equipment, ArrayList<String> languages, long pageNo, long pageSize, long priceMax, long priceMin, Long review, long serviceId, List<Long> subServices, List<Long> transportIds) {
         this.availabilityItems = availabilityItems;
         this.certificate = certificate;
         this.contactEmail = contactEmail;
@@ -74,7 +74,12 @@ public class PostProviderFilterGson implements Parcelable {
         this.pageSize = pageSize;
         this.priceMax = priceMax;
         this.priceMin = priceMin;
-        this.review = review;
+        if (null == review) {
+            this.review = 0L;
+        } else {
+            this.review = review;
+        }
+
         this.serviceId = serviceId;
         this.subServices = subServices;
         this.transportIds = transportIds;

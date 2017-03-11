@@ -40,8 +40,8 @@ public class LocalizationMapsFragment extends BaseFragment implements OnMapReady
     @BindView(R.id.textview_main_appbar_title)
     TextView mTextViewToolbarTitle;
 
-    @BindView(R.id.fab_ployee_maps_direction)
-    FloatingActionButton mFabDirection;
+//    @BindView(R.id.fab_ployee_maps_direction)
+//    FloatingActionButton mFabDirection;
     @BindView(R.id.fab_ployee_maps_my_location)
     FloatingActionButton mFabMyLocation;
 
@@ -106,7 +106,7 @@ public class LocalizationMapsFragment extends BaseFragment implements OnMapReady
 
     private void initView() {
         mFabMyLocation.setOnClickListener(this);
-        mFabDirection.setOnClickListener(this);
+//        mFabDirection.setOnClickListener(this);
     }
 
     private void initToolbar() {
@@ -204,18 +204,19 @@ public class LocalizationMapsFragment extends BaseFragment implements OnMapReady
         int id = v.getId();
         if (id == mFabMyLocation.getId()) {
             goToMyLocation();
-        } else if (id == mFabDirection.getId()) {
-            getDirection(v.getContext());
         }
+//        else if (id == mFabDirection.getId()) {
+//            getDirection(v.getContext());
+//        }
     }
 
 
-    private void getDirection(Context context) {
-        if (null != mGoogleMap && mGoogleMap.getMyLocation() != null) {
-            IntentUtils.getDirection(context, new LatLng(mGoogleMap.getMyLocation().getLatitude(), mGoogleMap.getMyLocation().getLongitude()), mLatlng);
-        }
-
-    }
+//    private void getDirection(Context context) {
+//        if (null != mGoogleMap && mGoogleMap.getMyLocation() != null) {
+//            IntentUtils.getDirection(context, new LatLng(mGoogleMap.getMyLocation().getLatitude(), mGoogleMap.getMyLocation().getLongitude()), mLatlng);
+//        }
+//
+//    }
 
 
     private void goToMyLocation() {

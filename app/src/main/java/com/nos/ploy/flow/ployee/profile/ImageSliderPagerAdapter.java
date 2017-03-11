@@ -43,7 +43,11 @@ public class ImageSliderPagerAdapter extends PagerAdapter {
 
     @Override
     public int getCount() {
-        return RecyclerUtils.getSize(mDatas);
+        int size = RecyclerUtils.getSize(mDatas);
+        if(size >= 3){
+            size = 3;
+        }
+        return size;
     }
 
     @Override

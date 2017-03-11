@@ -451,5 +451,11 @@ public class LanguageAppLabelGson extends BaseResponse<LanguageAppLabelGson.Data
 
         @SerializedName("review_screen_hint_msg")
         public String reviewScreenHintMsg;
+
+        @SerializedName("profile_screen_no_phone")
+        public String profileScreenNoPhone;
+
+        @SerializedName("currency_label")
+        public String currencyLabel;
     }
 }

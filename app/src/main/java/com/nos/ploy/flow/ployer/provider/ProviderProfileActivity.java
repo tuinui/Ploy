@@ -222,7 +222,7 @@ public class ProviderProfileActivity extends BaseActivity implements GoogleApiCl
         mButtonEmail.setText(data.profileScreenEmail);
         mTextViewRatingCount.setText(mUserServiceData.getReviewCount() + " " + mLanguageData.profileScreenReviews);
         if (null != mUserServiceData && mIsPreviewMode) {
-            mTextViewTitle.setText(mUserServiceData.getFullName() + "(" + mLanguageData.profileScreenPreview + ")");
+            mTextViewTitle.setText(mUserServiceData.getFullName() + " (" + mLanguageData.profileScreenPreview + ")");
         } else {
             mTextViewTitle.setText(mUserServiceData.getFullName());
         }
