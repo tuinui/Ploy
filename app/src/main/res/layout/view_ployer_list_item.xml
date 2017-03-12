@@ -128,7 +128,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:drawableLeft="@drawable/ic_price_gray_30dp"
                     android:drawablePadding="4dp"
                     android:gravity="center_vertical"
                     app:compoundDrawableHeight="16dp"

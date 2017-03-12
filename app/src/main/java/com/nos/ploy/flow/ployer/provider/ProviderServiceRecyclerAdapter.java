@@ -2,6 +2,7 @@ package com.nos.ploy.flow.ployer.provider;
 
 import android.animation.LayoutTransition;
 import android.graphics.drawable.Drawable;
+import android.support.annotation.ColorInt;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -22,6 +23,7 @@ import com.nos.ploy.utils.RecyclerUtils;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.BindColor;
 import butterknife.BindDrawable;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -103,9 +105,11 @@ public class ProviderServiceRecyclerAdapter extends RecyclerView.Adapter<Provide
         @BindDrawable(R.drawable.ic_expand_less_white_24dp)
         Drawable mDrawableLess;
 
+
         public ViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
+
             GridLayoutManager gridLayoutManager = new GridLayoutManager(itemView.getContext(), 2) {
                 @Override
                 public boolean isAutoMeasureEnabled() {
@@ -149,7 +153,7 @@ public class ProviderServiceRecyclerAdapter extends RecyclerView.Adapter<Provide
                 } else {
                     toolbar.setTitle(data.getServiceName());
                 }
-                tvPrice.setText(mLanguage.serviceScreenFrom + " " + data.getPriceMin() + mLanguage.currencyLabel + " " + data.getPriceUnit());
+                tvPrice.setText(mLanguage.serviceScreenFrom + " " + data.getPriceMin() + " " + mLanguage.currencyLabel + " (" + data.getPriceUnit() + ")");
                 tvDescription.setText(data.getDescription());
                 tvCertificate.setText(data.getCertificate());
                 tvEquipment.setText(data.getEquipment());

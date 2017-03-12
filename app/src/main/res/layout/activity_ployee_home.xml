@@ -13,7 +13,7 @@
         layout="@layout/view_main_drawer_ployee"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_gravity="end"
+        android:layout_gravity="right"
         android:fitsSystemWindows="true" />
 
 </android.support.v4.widget.DrawerLayout>

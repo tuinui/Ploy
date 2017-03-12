@@ -12,6 +12,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -25,6 +26,7 @@ import com.nos.ploy.cache.UserTokenManager;
 import com.nos.ploy.utils.FragmentTransactionUtils;
 import com.nos.ploy.utils.NetworkUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Retrofit;
@@ -65,8 +67,8 @@ public class BaseActivity extends LocalizationActivity {
                         if (null != data) {
                             mLanguageData = data;
                             bindLanguage(data);
-                            changeRightMenuLabel(data,DrawerController.PLOYEE_MENUS);
-                            changeRightMenuLabel(data,DrawerController.PLOYER_MENUS);
+                            changeRightMenuLabel(data, DrawerController.PLOYEE_MENUS);
+                            changeRightMenuLabel(data, DrawerController.PLOYER_MENUS);
                         }
                     }
                 });
@@ -74,9 +76,32 @@ public class BaseActivity extends LocalizationActivity {
         });
     }
 
-    private void changeRightMenuLabel(LanguageAppLabelGson.Data data, List<DrawerController.DrawerMenuItem> items){
-        if(null != items){
-            for(DrawerController.DrawerMenuItem item : items){
+    protected List<EditText> getAllEditTexts(View v) {
+        if (null == v || !(v instanceof ViewGroup)) {
+            return null;
+        }
+
+        ViewGroup vg = (ViewGroup) v;
+        List<EditText> editTextList = new ArrayList<>();
+        for (int i = 0; i < vg.getChildCount(); i++) {
+            View child = vg.getChildAt(i);
+
+            if (null == child) {
+                continue;
+            }
+
+            if (child instanceof EditText) {
+                editTextList.add((EditText) child);
+            } else if (child instanceof ViewGroup) {
+                editTextList.addAll(getAllEditTexts(child));
+            }
+        }
+        return editTextList;
+    }
+
+    private void changeRightMenuLabel(LanguageAppLabelGson.Data data, List<DrawerController.DrawerMenuItem> items) {
+        if (null != items) {
+            for (DrawerController.DrawerMenuItem item : items) {
                 @DrawerController.Menu int menu = item.getMenu();
                 switch (menu) {
 
@@ -148,13 +173,20 @@ public class BaseActivity extends LocalizationActivity {
     }
 
     protected void enableBackButton(Toolbar toolbar) {
-        toolbar.setNavigationIcon(R.drawable.ic_chevron_left_white_40dp);
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+        enableBackButton(toolbar, new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
+            public void onClick(View v) {
                 finishThisActivity();
             }
         });
+    }
+
+    protected void enableBackButton(Toolbar toolbar, View.OnClickListener onNavigationClick) {
+        toolbar.setNavigationIcon(R.drawable.ic_chevron_left_white_40dp);
+
+
+        toolbar.setNavigationOnClickListener(onNavigationClick);
+
     }
 
 //    private

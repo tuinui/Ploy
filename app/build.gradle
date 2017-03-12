@@ -17,8 +17,8 @@ android {
         applicationId "com.nos.ploy"
         minSdkVersion 17
         targetSdkVersion 22
-        versionCode 1016
-        versionName "1.0.16"
+        versionCode 1019
+        versionName "1.0.19"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
     }
@@ -36,6 +36,7 @@ android {
             keyPassword "nos1234"
             storeFile file('../key/noskeystore.jks')
             storePassword "nos1234"
+            v2SigningEnabled false
         }
     }
 
@@ -56,11 +57,11 @@ dependencies {
     })
     testCompile 'junit:junit:4.12'
     //    support library
-    compile 'com.android.support:appcompat-v7:25.2.0'
-    compile 'com.android.support:design:25.2.0'
-    compile 'com.android.support:recyclerview-v7:25.2.0'
-    compile 'com.android.support:cardview-v7:25.2.0'
-    compile 'com.android.support:support-annotations:25.2.0'
+    compile 'com.android.support:appcompat-v7:25.0.0'
+    compile 'com.android.support:design:25.0.0'
+    compile 'com.android.support:recyclerview-v7:25.0.0'
+    compile 'com.android.support:cardview-v7:25.0.0'
+    compile 'com.android.support:support-annotations:25.0.0'
     //    support library
     //ui//
     compile 'com.rengwuxian.materialedittext:library:2.1.4'
@@ -70,7 +71,7 @@ dependencies {
     compile 'com.github.wrdlbrnft:sorted-list-adapter:0.1.0.5'
     compile 'com.squareup.picasso:picasso:2.3.2'
     compile 'com.nineoldandroids:library:2.4.0'
-    compile 'com.daimajia.slider:library:1.1.5@aar'
+//    compile 'com.daimajia.slider:library:1.1.5@aar'
     //ui//
     //code helper//
     compile 'com.jakewharton:butterknife:8.4.0'
@@ -80,7 +81,7 @@ dependencies {
     compile 'com.hbb20:ccp:1.7.1'
     //https://github.com/hbb20/CountryCodePickerProject
     compile 'com.akexorcist:localizationactivity:1.1.1'
-    compile 'com.facebook.android:facebook-android-sdk:4.17.0'
+    compile 'com.facebook.android:facebook-android-sdk:4.+'
     compile 'com.github.bumptech.glide:glide:3.7.0'
     compile 'com.squareup.retrofit2:retrofit:2.1.0'
     compile 'com.squareup.retrofit2:converter-gson:2.1.0'
@@ -88,12 +89,12 @@ dependencies {
     compile 'com.squareup.okhttp3:logging-interceptor:3.4.1'
     compile 'io.reactivex:rxjava:1.1.6'
     compile 'io.reactivex:rxandroid:1.2.1'
-    compile 'com.android.support.constraint:constraint-layout:1.0.0-beta4'
+    compile 'com.android.support.constraint:constraint-layout:1.0.2'
     compile 'com.google.code.gson:gson:2.8.0'
     compile 'com.android.support:multidex:1.0.1'
 
-    compile 'com.google.android.gms:play-services-maps:10.2.0'
-    compile 'com.google.android.gms:play-services-location:10.2.0'
+    compile 'com.google.android.gms:play-services-maps:10.0.0'
+    compile 'com.google.android.gms:play-services-location:10.0.0'
     compile('com.crashlytics.sdk.android:crashlytics:2.6.5@aar') {
         transitive = true;
     }

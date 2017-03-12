@@ -3,6 +3,7 @@ package com.nos.ploy.flow.ployee.home.content.service.detail;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.annotation.ColorInt;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
@@ -23,8 +24,11 @@ import android.widget.TextView;
 
 import com.appyvet.rangebar.RangeBar;
 import com.nos.ploy.R;
+import com.nos.ploy.api.base.RetrofitCallUtils;
+import com.nos.ploy.api.base.response.BaseResponse;
 import com.nos.ploy.api.masterdata.model.LanguageAppLabelGson;
 import com.nos.ploy.api.ployee.PloyeeApi;
+import com.nos.ploy.api.ployee.model.DeleteServiceGson;
 import com.nos.ploy.api.ployer.PloyerApi;
 import com.nos.ploy.api.ployer.model.PloyerServiceDetailGson;
 import com.nos.ploy.api.ployer.model.PostSavePloyerServiceDetailGson;
@@ -41,6 +45,7 @@ import com.rengwuxian.materialedittext.MaterialEditText;
 
 import java.util.List;
 
+import butterknife.BindColor;
 import butterknife.BindString;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -69,6 +74,8 @@ public class PloyeeServiceDetailFragment extends BaseFragment implements PloyeeS
     MaterialEditText mEditTextCertificate;
     @BindView(R.id.edittext_ployee_service_equipment_needed)
     MaterialEditText mEditTextEquipmentNeeded;
+    @BindView(R.id.button_ployee_service_delete)
+    Button mButtonDelete;
     @BindView(R.id.toolbar_main)
     Toolbar mToolbar;
     @BindView(R.id.textview_main_appbar_subtitle)
@@ -85,6 +92,11 @@ public class PloyeeServiceDetailFragment extends BaseFragment implements PloyeeS
     Button mButtonReset;
     @BindString(R.string.This_field_is_required)
     String LThis_field_is_required;
+    @BindColor(R.color.colorPrimary)
+    @ColorInt
+    int mColorPrimary;
+
+
     private RangeBar.OnRangeBarChangeListener mRangeBarListener = new RangeBar.OnRangeBarChangeListener() {
         @Override
         public void onRangeChangeListener(RangeBar rangeBar, int leftPinIndex, int rightPinIndex, String leftPinValue, String rightPinValue) {
@@ -194,6 +206,7 @@ public class PloyeeServiceDetailFragment extends BaseFragment implements PloyeeS
 
         PopupMenuUtils.setMenuTitle(mToolbar.getMenu(), R.id.menu_done_item_done, data.doneLabel);
         mTextViewSubtitle.setText(data.serviceScreenHeader);
+        mButtonDelete.setText(data.serviceScreenDelete);
         mEditTextOthers.setFloatingLabelText(data.serviceScreenServicesHint);
         mEditTextOthers.setHint(data.serviceScreenServicesHint);
         mEditTextDescription.setFloatingLabelText(data.serviceScreenDescriptLabel);
@@ -235,7 +248,7 @@ public class PloyeeServiceDetailFragment extends BaseFragment implements PloyeeS
         disableEditable(mEditTextPriceFrom);
         disableEditable(mEditTextPriceTo);
 
-
+        mTextViewSubServicesHeader.setBackgroundColor(mColorPrimary);
         mEditTextPriceFrom.setOnClickListener(this);
         mEditTextPriceFrom.addTextChangedListener(new NumberTextWatcher(mEditTextPriceFrom));
 //        mEditTextPriceFrom.setFilters(mInputMinMaxFilter);
@@ -245,6 +258,8 @@ public class PloyeeServiceDetailFragment extends BaseFragment implements PloyeeS
 //        mEditTextPriceTo.setFilters(mInputMinMaxFilter);
         mButtonReset.setOnClickListener(this);
         mSwipeRefreshLayout.setOnRefreshListener(mOnRefreshListener);
+
+        mButtonDelete.setOnClickListener(this);
 
     }
 
@@ -318,7 +333,39 @@ public class PloyeeServiceDetailFragment extends BaseFragment implements PloyeeS
             });
         } else if (id == mButtonReset.getId()) {
             onClickReset();
+        } else if (id == mButtonDelete.getId()) {
+            attempDeleteService();
         }
+    }
+
+    private void attempDeleteService() {
+//        mService.delete
+        PopupMenuUtils.showConfirmationAlertMenu(getContext(), null, mLanguageData.serviceScreenConfirmDelete, mLanguageData.okLabel, mLanguageData.cancelLabel, new Action1<Boolean>() {
+            @Override
+            public void call(Boolean ok) {
+                if (ok) {
+                    requestDeleteService();
+                }
+            }
+        });
+    }
+
+    private void requestDeleteService() {
+        showLoading();
+        RetrofitCallUtils.with(mService.deleteServiceMapping(DeleteServiceGson.with(mServiceId, mUserId)), new RetrofitCallUtils.RetrofitCallback<BaseResponse>() {
+            @Override
+            public void onDataSuccess(BaseResponse data) {
+                dismissLoading();
+                if (data.isSuccess()) {
+                    dismiss();
+                }
+            }
+
+            @Override
+            public void onDataFailure(String failCause) {
+                dismissLoading();
+            }
+        }).enqueue(getContext());
     }
 
     private void showPopupAlertEditTextMenu(Context context, String title, String defaultValue, final Action1<String> onConfirm) {
@@ -463,11 +510,16 @@ public class PloyeeServiceDetailFragment extends BaseFragment implements PloyeeS
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
+                    if (!TextUtils.isEmpty(data.getDescription())) {
+                        mButtonDelete.setVisibility(View.VISIBLE);
+                    } else {
+                        mButtonDelete.setVisibility(View.GONE);
+                    }
                     mTextViewPricePerHour.setText(data.getPriceUnit());
-                    mEditTextPriceFrom.setHint(mLanguageData.serviceScreenFrom + " ("+mLanguageData.currencyLabel+")");
-                    mEditTextPriceTo.setHint(mLanguageData.serviceScreenTo + " ("+mLanguageData.currencyLabel+")");
-                    mEditTextPriceFrom.setFloatingLabelText(mLanguageData.serviceScreenFrom + " ("+mLanguageData.currencyLabel+")");
-                    mEditTextPriceTo.setFloatingLabelText(mLanguageData.serviceScreenTo + " ("+mLanguageData.currencyLabel+")");
+                    mEditTextPriceFrom.setHint(mLanguageData.serviceScreenFrom + " (" + mLanguageData.currencyLabel + ")");
+                    mEditTextPriceTo.setHint(mLanguageData.serviceScreenTo + " (" + mLanguageData.currencyLabel + ")");
+                    mEditTextPriceFrom.setFloatingLabelText(mLanguageData.serviceScreenFrom + " (" + mLanguageData.currencyLabel + ")");
+                    mEditTextPriceTo.setFloatingLabelText(mLanguageData.serviceScreenTo + " (" + mLanguageData.currencyLabel + ")");
 
                     mEditTextDescription.setText(data.getDescription());
                     mEditTextCertificate.setText(data.getCertificate());
@@ -497,31 +549,6 @@ public class PloyeeServiceDetailFragment extends BaseFragment implements PloyeeS
         }
     }
 
-
-//    private boolean isContentChanged(){
-//
-//        PostSavePloyerServiceDetailGson data = gatheredData();
-//        if(null == data || null == mData || null == mData.getData()){
-//            return false;
-//        }else{
-//            boolean isContentChanged = false;
-//            PloyerServiceDetailGson.Data originalData =  mData.getData();
-//            if (!TextUtils.equals(originalData.getCertificate(), data.getCertificate())) {
-//                isContentChanged = true;
-//            }else if(!TextUtils.equals(originalData.getDescription(), data.getDescription())){
-//                isContentChanged = true;
-//            }else if(!TextUtils.equals(originalData.getEquipment(), data.getEquipment())){
-//                isContentChanged = true;
-//            }else if(originalData.getPriceMax() != data.getPriceMax()){
-//                isContentChanged = true;
-//            }else if(originalData.getPriceMin() != data.getPriceMin()){
-//                isContentChanged = true;
-//            }else if(originalData.getServiceNameOthers() != data.getServiceNameOthers()){
-//                isContentChanged = true;
-//            }
-//            return isContentChanged;
-//        }
-//    }
 
     private PostSavePloyerServiceDetailGson gatheredData() {
         PostSavePloyerServiceDetailGson data = null;

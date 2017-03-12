@@ -210,7 +210,6 @@ public class ProviderProfileActivity extends BaseActivity implements GoogleApiCl
         mTransportRecyclerAdapter.setLanguage(data);
         mServiceAdapter.setLanguage(data);
         mAvailabilityAdapter.setLanguage(data);
-        PopupMenuUtils.setMenuTitle(mToolbar.getMenu(), R.id.menu_done_item_done, data.doneLabel);
         mButtonEmail.setText(data.profileScreenEmail);
         mTextViewAboutMeHeader.setText(data.profileScreenAboutMe);
         mTextViewLanguagesHeader.setText(data.profileScreenLanguage);

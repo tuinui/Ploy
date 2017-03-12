@@ -6,6 +6,7 @@
 
     <color name="gray_background_light">#EBECEC</color>
     <color name="gray_splash_screen">#3B464A</color>
+    <color name="gray_555">#555</color>
 
     <drawable name="blue_availability">#89BBC1</drawable>
     <drawable name="gray_availability">#EBECEC</drawable>
@@ -20,4 +21,5 @@
 
     <color name="orange_pin_maps">#FC5518</color>
     <color name="orange_stars">@color/orange_pin_maps</color>
+    <color name="red_delete">#C3143D</color>
 </resources>

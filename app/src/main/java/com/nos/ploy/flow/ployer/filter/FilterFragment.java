@@ -538,6 +538,7 @@ public class FilterFragment extends BaseFragment implements View.OnClickListener
     private void onClickClear() {
         bindData(new PostProviderFilterGson());
         getListener().onFilterClear();
+        dismiss();
     }
 
     private FilterLanguageFragment getLanguageFragment() {

@@ -9,7 +9,7 @@ import com.google.gson.annotations.SerializedName;
 public class BaseResponse<T> {
 //    @SerializedName("responseMsg")
 //    private ResponseMessage responseMessage;
-    @SerializedName("isSucesss")
+    @SerializedName("isSuccess")
     private Boolean isSuccess;
 
     @SerializedName("userMessage")

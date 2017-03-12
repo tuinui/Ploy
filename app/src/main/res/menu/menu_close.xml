@@ -5,6 +5,8 @@
     <item
         android:id="@+id/menuitem_close_close"
         android:title="@string/Close"
+        android:capitalize="none"
+
         app:showAsAction="always" />
 
 

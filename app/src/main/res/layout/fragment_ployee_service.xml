@@ -166,6 +166,16 @@
 
                 <include layout="@layout/view_sub_services" />
 
+
+                <android.support.v7.widget.AppCompatButton
+                    android:id="@+id/button_ployee_service_delete"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="8dp"
+                    android:text="Delete Service"
+                    android:textAllCaps="false"
+                    android:textColor="@android:color/white"
+                    app:backgroundTint="@color/red_delete" />
             </LinearLayout>
 
 

@@ -16,9 +16,11 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -120,6 +122,7 @@ public class PloyeeProfileActivity extends BaseActivity implements View.OnClickL
     TextView mTextViewContactMethod;
     //    private GoogleMap mGoogleMap;
 //    private SupportMapFragment mMapFragment = SupportMapFragment.newInstance();
+    private boolean isContentChanged = false;
     private AccountApi mAccountApi;
     private PostUpdateProfileGson mData;
     private MasterApi mMasterApi;
@@ -127,6 +130,16 @@ public class PloyeeProfileActivity extends BaseActivity implements View.OnClickL
     public LatLng mCurrentLatLng;
     private GoogleApiClient mGoogleApiClient;
     private List<TransportGsonVm> mAllDataTransports = new ArrayList<>();
+    private View.OnKeyListener mContentChangedListener = new View.OnKeyListener() {
+
+        @Override
+        public boolean onKey(View v, int keyCode, KeyEvent event) {
+            //key listening stuff
+            isContentChanged = true;
+            return false;
+        }
+    };
+
     private TransportRecyclerAdapter mTransportRecyclerAdapter = new TransportRecyclerAdapter() {
         @Override
         public void onBindViewHolder(final ViewHolder holder, int position) {
@@ -142,6 +155,7 @@ public class PloyeeProfileActivity extends BaseActivity implements View.OnClickL
                         if (RecyclerUtils.isAvailableData(mAllDataTransports, holder.getAdapterPosition())) {
                             TransportGsonVm data = mAllDataTransports.get(holder.getAdapterPosition());
                             toggleEnableTransport(data.getId(), holder.getAdapterPosition());
+                            isContentChanged = true;
                         }
                     }
                 });
@@ -226,6 +240,7 @@ public class PloyeeProfileActivity extends BaseActivity implements View.OnClickL
             dismissLoading();
             showToastLong("Success");
             refreshData(PloyeeProfileActivity.this);
+            isContentChanged = false;
 
         }
 
@@ -234,6 +249,7 @@ public class PloyeeProfileActivity extends BaseActivity implements View.OnClickL
             dismissLoading();
         }
     };
+
 
     private void bindData(PloyeeProfileGson.Data data) {
         mOriginalData = data;
@@ -299,7 +315,7 @@ public class PloyeeProfileActivity extends BaseActivity implements View.OnClickL
                     String languageSupports = "";
                     if (mOriginalData.getLanguage() != null && !mOriginalData.getLanguage().isEmpty()) {
                         for (PloyeeProfileGson.Data.Language language : mOriginalData.getLanguage()) {
-                            languageSupports += " "+language.getSpokenLanguageValue() + ",";
+                            languageSupports += " " + language.getSpokenLanguageValue() + ",";
                         }
                     }
                     languageSupports = removeLastCharacter(languageSupports);
@@ -385,8 +401,18 @@ public class PloyeeProfileActivity extends BaseActivity implements View.OnClickL
         initView();
         initSlider();
         initRecyclerView();
+
         if (GoogleApiAvailabilityUtils.checkPlayServices(this)) {
             mGoogleApiClient = new GoogleApiClient.Builder(this, this, this).addApi(LocationServices.API).build();
+        }
+        detectContentChanged();
+    }
+
+    private void detectContentChanged() {
+
+        List<EditText> editTextList = getAllEditTexts(mSwipeRefreshLayout);
+        for (EditText editText : editTextList) {
+            editText.setOnKeyListener(mContentChangedListener);
         }
     }
 
@@ -469,7 +495,13 @@ public class PloyeeProfileActivity extends BaseActivity implements View.OnClickL
 
     private void initToolbar() {
         mTextViewTitle.setText(LProfile);
-        enableBackButton(mToolbar);
+        enableBackButton(mToolbar, new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        });
+
         mToolbar.inflateMenu(R.menu.menu_done);
         mToolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
             @Override
@@ -558,18 +590,36 @@ public class PloyeeProfileActivity extends BaseActivity implements View.OnClickL
 
 
     @Override
+    public void onBackPressed() {
+        if (isContentChanged) {
+            PopupMenuUtils.showConfirmationAlertMenu(this, null, mLanguageData.accountScreenConfirmBeforeBack, mLanguageData.okLabel, mLanguageData.cancelLabel, new Action1<Boolean>() {
+                @Override
+                public void call(Boolean yes) {
+                    if (yes) {
+                        finishThisActivity();
+                    }
+                }
+            });
+        } else {
+            finishThisActivity();
+        }
+    }
+
+    @Override
     public void onClick(final View v) {
         int id = v.getId();
         if (id == mButtonEmail.getId()) {
             mButtonEmail.setActivated(!mButtonEmail.isActivated());
+            isContentChanged = true;
         } else if (id == mButtonPhone.getId()) {
             AccountInfoLoader.getAccountGson(v.getContext(), mUserId, new Action1<AccountGson.Data>() {
                 @Override
                 public void call(AccountGson.Data data) {
-                    if(!TextUtils.isEmpty(data.getPhone())){
+                    if (!TextUtils.isEmpty(data.getPhone())) {
                         mButtonPhone.setActivated(!mButtonPhone.isActivated());
-                    }else{
-                        PopupMenuUtils.showConfirmationAlertMenu(v.getContext(),null,mLanguageData.profileScreenNoPhone,mLanguageData.okLabel,null,null);
+                        isContentChanged = true;
+                    } else {
+                        PopupMenuUtils.showConfirmationAlertMenu(v.getContext(), null, mLanguageData.profileScreenNoPhone, mLanguageData.okLabel, null, null);
                     }
                 }
             });
@@ -578,6 +628,7 @@ public class PloyeeProfileActivity extends BaseActivity implements View.OnClickL
             showUploadPhotoFragment();
         } else if (id == mImageButtonCheckin.getId()) {
             getLocationAndSetToAddressView();
+            isContentChanged = true;
         } else if (id == mTextViewLanguageSupport.getId()) {
             showLanguageChooser();
         } else if (id == mImageViewStaticMaps.getId()) {
@@ -585,6 +636,7 @@ public class PloyeeProfileActivity extends BaseActivity implements View.OnClickL
                 @Override
                 public void onFinishChoosingLocation(LatLng latLng) {
                     setCurrentLatLng(latLng);
+                    isContentChanged = true;
                 }
             }));
         } else if (id == mButtonPreview.getId()) {
@@ -614,6 +666,7 @@ public class PloyeeProfileActivity extends BaseActivity implements View.OnClickL
                 mData = gatheredData();
                 mData.setLanguage(datas);
                 bindData(mData);
+                isContentChanged = true;
                 PloyeeProfileActivity.this.onClickDone();
             }
         }));
@@ -650,6 +703,7 @@ public class PloyeeProfileActivity extends BaseActivity implements View.OnClickL
                             @Override
                             public void onDataChange() {
                                 refreshSlider();
+                                isContentChanged = true;
                             }
                         }));
                     }
