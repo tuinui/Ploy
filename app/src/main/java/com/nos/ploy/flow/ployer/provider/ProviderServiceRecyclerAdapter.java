@@ -2,7 +2,6 @@ package com.nos.ploy.flow.ployer.provider;
 
 import android.animation.LayoutTransition;
 import android.graphics.drawable.Drawable;
-import android.support.annotation.ColorInt;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -23,7 +22,6 @@ import com.nos.ploy.utils.RecyclerUtils;
 import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.BindColor;
 import butterknife.BindDrawable;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -157,7 +155,7 @@ public class ProviderServiceRecyclerAdapter extends RecyclerView.Adapter<Provide
                 tvDescription.setText(data.getDescription());
                 tvCertificate.setText(data.getCertificate());
                 tvEquipment.setText(data.getEquipment());
-                PloyeeServiceDetailSubServiceRecyclerAdapter adapter = new PloyeeServiceDetailSubServiceRecyclerAdapter(true);
+                PloyeeServiceDetailSubServiceRecyclerAdapter adapter = new PloyeeServiceDetailSubServiceRecyclerAdapter(true, null);
                 adapter.replaceData(data.getSubServices());
                 recyclerViewSubService.setAdapter(adapter);
                 tvPrice.setOnClickListener(this);

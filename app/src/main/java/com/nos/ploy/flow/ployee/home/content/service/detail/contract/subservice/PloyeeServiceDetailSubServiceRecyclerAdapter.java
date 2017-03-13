@@ -24,6 +24,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import rx.functions.Action1;
 
 /**
  * Created by Saran on 1/12/2559.
@@ -31,15 +32,21 @@ import butterknife.ButterKnife;
 
 public class PloyeeServiceDetailSubServiceRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private final boolean mDisableMode;
+    private final Action1<Boolean> mOnContentChangedListener;
     private List<PloyeeServiceDetailSubServiceItemBaseViewModel> mDatas = new ArrayList<>();
     private LanguageAppLabelGson.Data language;
 
-    public PloyeeServiceDetailSubServiceRecyclerAdapter() {
-        this.mDisableMode = false;
+    public PloyeeServiceDetailSubServiceRecyclerAdapter(Action1<Boolean> onContentChangedListener) {
+        this(false,onContentChangedListener);
     }
 
-    public PloyeeServiceDetailSubServiceRecyclerAdapter(boolean disableMode) {
+    public PloyeeServiceDetailSubServiceRecyclerAdapter() {
+        this(false,null);
+    }
+
+    public PloyeeServiceDetailSubServiceRecyclerAdapter(boolean disableMode, Action1<Boolean> onContentChangedListener) {
         this.mDisableMode = disableMode;
+        this.mOnContentChangedListener = onContentChangedListener;
     }
 
     public void replaceData(List<PloyerServiceDetailGson.Data.SubService> datas) {
@@ -152,6 +159,10 @@ public class PloyeeServiceDetailSubServiceRecyclerAdapter extends RecyclerView.A
                 @Override
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                     data.setChecked(isChecked);
+                    if(null != mOnContentChangedListener){
+                        mOnContentChangedListener.call(true);
+                    }
+
                 }
             });
         }
@@ -199,7 +210,6 @@ public class PloyeeServiceDetailSubServiceRecyclerAdapter extends RecyclerView.A
             if (disableMode) {
                 radioSubService.setButtonDrawable(null);
                 radioSubService.setClickable(false);
-//                radioSubService.setEnabled(false);
             }
         }
     }

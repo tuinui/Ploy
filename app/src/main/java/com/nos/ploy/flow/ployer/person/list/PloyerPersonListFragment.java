@@ -59,7 +59,7 @@ public class PloyerPersonListFragment extends BaseFragment implements SearchView
             Glide.with(holder.imgPhoto.getContext()).load(data.getImagePath()).error(R.drawable.ic_ployer_item_placeholder).into(holder.imgPhoto);
             holder.tvTitle.setText(data.getFullName());
             holder.tvDescription.setText(data.getDescription());
-            holder.tvPrice.setText(mLanguageData.currencyLabel + data.getMinPrice());
+            holder.tvPrice.setText(mLanguageData.currencyLabel+" " + data.getMinPrice());
             holder.tvReviewCount.setText("" + data.getReviewCount());
             holder.tvRate.setText(data.getReviewPoint() + "/5");
             holder.ratingBar.setRating(RatingBarUtils.getRatingbarRoundingNumber(data.getReviewPoint()));

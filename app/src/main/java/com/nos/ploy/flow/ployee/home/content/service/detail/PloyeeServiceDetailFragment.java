@@ -10,10 +10,11 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
 import android.text.InputFilter;
 import android.text.InputType;
 import android.text.TextUtils;
-import android.view.KeyEvent;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -42,8 +43,6 @@ import com.nos.ploy.flow.ployee.home.content.service.detail.contract.subservice.
 import com.nos.ploy.flow.ployee.home.content.service.detail.contract.subservice.viewmodel.PloyeeServiceDetailSubServiceItemBaseViewModel;
 import com.nos.ploy.utils.PopupMenuUtils;
 import com.rengwuxian.materialedittext.MaterialEditText;
-
-import java.util.List;
 
 import butterknife.BindColor;
 import butterknife.BindString;
@@ -100,8 +99,9 @@ public class PloyeeServiceDetailFragment extends BaseFragment implements PloyeeS
     private RangeBar.OnRangeBarChangeListener mRangeBarListener = new RangeBar.OnRangeBarChangeListener() {
         @Override
         public void onRangeChangeListener(RangeBar rangeBar, int leftPinIndex, int rightPinIndex, String leftPinValue, String rightPinValue) {
-            setPriceText(mEditTextPriceFrom, leftPinValue);
-            setPriceText(mEditTextPriceTo, rightPinValue);
+            isContentChanged = true;
+            setText(mEditTextPriceFrom, leftPinValue);
+            setText(mEditTextPriceTo, rightPinValue);
         }
     };
     private PloyeeApi mService;
@@ -113,7 +113,12 @@ public class PloyeeServiceDetailFragment extends BaseFragment implements PloyeeS
         }
     };
     private PloyeeServiceDetailContract.ViewModel mData;
-    private PloyeeServiceDetailSubServiceRecyclerAdapter mAdapter = new PloyeeServiceDetailSubServiceRecyclerAdapter();
+    private PloyeeServiceDetailSubServiceRecyclerAdapter mAdapter = new PloyeeServiceDetailSubServiceRecyclerAdapter(new Action1<Boolean>() {
+        @Override
+        public void call(Boolean aBoolean) {
+            isContentChanged = true;
+        }
+    });
     private long mUserId;
     private long mServiceId;
     private String mToolbarTitle;
@@ -152,25 +157,37 @@ public class PloyeeServiceDetailFragment extends BaseFragment implements PloyeeS
         return v;
     }
 
-    private View.OnKeyListener mContentChangedListener = new View.OnKeyListener() {
+
+    private TextWatcher mContentChangedTextWatcher = new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+        }
 
         @Override
-        public boolean onKey(View v, int keyCode, KeyEvent event) {
-            //key listening stuff
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
             isContentChanged = true;
-            return false;
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+
         }
     };
 
     private void detectContentChanged() {
-        View v = getView();
-        if (null == getView()) {
-            return;
-        }
-        List<EditText> editTextList = getAllEditTexts(v);
-        for (EditText editText : editTextList) {
-            editText.setOnKeyListener(mContentChangedListener);
-        }
+        mEditTextCertificate.addTextChangedListener(mContentChangedTextWatcher);
+        mEditTextDescription.addTextChangedListener(mContentChangedTextWatcher);
+        mEditTextEquipmentNeeded.addTextChangedListener(mContentChangedTextWatcher);
+        mEditTextOthers.addTextChangedListener(mContentChangedTextWatcher);
+        mEditTextPriceFrom.addTextChangedListener(mContentChangedTextWatcher);
+        mEditTextPriceTo.addTextChangedListener(mContentChangedTextWatcher);
+    }
+
+    private void setText(EditText editText,String text){
+        editText.removeTextChangedListener(mContentChangedTextWatcher);
+        editText.setText(text);
+        editText.addTextChangedListener(mContentChangedTextWatcher);
     }
 
 
@@ -295,9 +312,9 @@ public class PloyeeServiceDetailFragment extends BaseFragment implements PloyeeS
         });
     }
 
-    private void setPriceText(MaterialEditText et, String price) {
-        et.setText(price);
-    }
+//    private void setPriceText(MaterialEditText et, String price) {
+//        et.setText(price);
+//    }
 
     private void initRangeBar() {
 //        setPriceText(mEditTextPriceFrom, mRangeBar.getLeftPinValue());
@@ -474,35 +491,39 @@ public class PloyeeServiceDetailFragment extends BaseFragment implements PloyeeS
     }
 
     private void setLeftPinValue(long min) {
+        mRangeBar.setOnRangeBarChangeListener(null);
         int minValueToSet;
         if (min >= 1000) {
             minValueToSet = 1000;
         } else {
             minValueToSet = (int) min;
         }
-        mEditTextPriceFrom.setText(String.valueOf(minValueToSet));
+        setText(mEditTextPriceFrom,String.valueOf(minValueToSet));
+
         if (minValueToSet > Integer.valueOf(mRangeBar.getRightPinValue())) {
             mRangeBar.setRangePinsByValue(Float.parseFloat(mRangeBar.getRightPinValue()), minValueToSet);
         } else {
             mRangeBar.setRangePinsByValue(minValueToSet, Float.parseFloat(mRangeBar.getRightPinValue()));
         }
-
+        mRangeBar.setOnRangeBarChangeListener(mRangeBarListener);
     }
 
     private void setRightPinValue(long max) {
+        mRangeBar.setOnRangeBarChangeListener(null);
         int maxValueToSet;
         if (max >= 1000) {
             maxValueToSet = 1000;
         } else {
             maxValueToSet = (int) max;
         }
-        mEditTextPriceTo.setText(String.valueOf(maxValueToSet));
+        setText(mEditTextPriceTo,String.valueOf(maxValueToSet));
         mRangeBar.setRangePinsByValue(Float.parseFloat(mRangeBar.getLeftPinValue()), maxValueToSet);
         if (Integer.valueOf(mRangeBar.getLeftPinValue()) > maxValueToSet) {
             mRangeBar.setRangePinsByValue(maxValueToSet, Float.parseFloat(mRangeBar.getLeftPinValue()));
         } else {
             mRangeBar.setRangePinsByValue(Float.parseFloat(mRangeBar.getLeftPinValue()), maxValueToSet);
         }
+        mRangeBar.setOnRangeBarChangeListener(mRangeBarListener);
     }
 
     private void bindDataToView(final PloyeeServiceDetailContract.ViewModel data) {
@@ -521,9 +542,9 @@ public class PloyeeServiceDetailFragment extends BaseFragment implements PloyeeS
                     mEditTextPriceFrom.setFloatingLabelText(mLanguageData.serviceScreenFrom + " (" + mLanguageData.currencyLabel + ")");
                     mEditTextPriceTo.setFloatingLabelText(mLanguageData.serviceScreenTo + " (" + mLanguageData.currencyLabel + ")");
 
-                    mEditTextDescription.setText(data.getDescription());
-                    mEditTextCertificate.setText(data.getCertificate());
-                    mEditTextEquipmentNeeded.setText(data.getEquipmentNeeded());
+                    setText(mEditTextDescription,data.getDescription());
+                    setText(mEditTextCertificate,data.getCertificate());
+                    setText(mEditTextEquipmentNeeded,data.getEquipmentNeeded());
 
                     setLeftPinValue(data.getPriceMin());
                     setRightPinValue(data.getPriceMax());
@@ -538,7 +559,7 @@ public class PloyeeServiceDetailFragment extends BaseFragment implements PloyeeS
 
                     if (mServiceId == -1) {
                         mEditTextOthers.setVisibility(View.VISIBLE);
-                        mEditTextOthers.setText(data.getServiceOthersName());
+                        setText(mEditTextOthers,data.getServiceOthersName());
 
                     } else {
                         mEditTextOthers.setVisibility(View.GONE);

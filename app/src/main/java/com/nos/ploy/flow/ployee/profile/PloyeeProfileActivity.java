@@ -15,7 +15,9 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
@@ -130,16 +132,22 @@ public class PloyeeProfileActivity extends BaseActivity implements View.OnClickL
     public LatLng mCurrentLatLng;
     private GoogleApiClient mGoogleApiClient;
     private List<TransportGsonVm> mAllDataTransports = new ArrayList<>();
-    private View.OnKeyListener mContentChangedListener = new View.OnKeyListener() {
+    private TextWatcher mContentChangedTextWatcher = new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+        }
 
         @Override
-        public boolean onKey(View v, int keyCode, KeyEvent event) {
-            //key listening stuff
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
             isContentChanged = true;
-            return false;
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+
         }
     };
-
     private TransportRecyclerAdapter mTransportRecyclerAdapter = new TransportRecyclerAdapter() {
         @Override
         public void onBindViewHolder(final ViewHolder holder, int position) {
@@ -281,15 +289,22 @@ public class PloyeeProfileActivity extends BaseActivity implements View.OnClickL
         mButtonPreview.setText(data.profileScreenPreview);
     }
 
+    private void setText(EditText editText,String text){
+        editText.removeTextChangedListener(mContentChangedTextWatcher);
+        editText.setText(text);
+        editText.addTextChangedListener(mContentChangedTextWatcher);
+    }
+
     private void bindData(final PostUpdateProfileGson data) {
         if (null != data) {
             runOnUiThread(new Runnable() {
                               @Override
                               public void run() {
-                                  mEditTextAboutMe.setText(data.getAboutMe());
-                                  mEditTextEducation.setText(data.getEducation());
-                                  mEditTextInterest.setText(data.getInterest());
-                                  mEditTextProfileWork.setText(data.getWork());
+
+                                  setText(mEditTextAboutMe,data.getAboutMe());
+                                  setText(mEditTextEducation,data.getEducation());
+                                  setText(mEditTextInterest,data.getInterest());
+                                  setText(mEditTextProfileWork,data.getWork());
                                   mButtonEmail.setActivated(data.isContactEmail());
                                   mButtonPhone.setActivated(data.isContactPhone());
 
@@ -410,10 +425,14 @@ public class PloyeeProfileActivity extends BaseActivity implements View.OnClickL
 
     private void detectContentChanged() {
 
-        List<EditText> editTextList = getAllEditTexts(mSwipeRefreshLayout);
-        for (EditText editText : editTextList) {
-            editText.setOnKeyListener(mContentChangedListener);
-        }
+//        List<EditText> editTextList = getAllEditTexts(mSwipeRefreshLayout);
+//        for (EditText editText : editTextList) {
+//            editText.addTextChangedListener(mContentChangedTextWatcher);
+//        }
+        mEditTextAboutMe.addTextChangedListener(mContentChangedTextWatcher);
+        mEditTextEducation.addTextChangedListener(mContentChangedTextWatcher);
+        mEditTextInterest.addTextChangedListener(mContentChangedTextWatcher);
+        mEditTextProfileWork.addTextChangedListener(mContentChangedTextWatcher);
     }
 
     private void showStaticMaps(LatLng latLng) {
