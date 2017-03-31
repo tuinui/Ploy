@@ -462,5 +462,8 @@ public class LanguageAppLabelGson extends BaseResponse<LanguageAppLabelGson.Data
 
         @SerializedName("service_screen_confirm_delete")
         public String serviceScreenConfirmDelete;
+
+        @SerializedName("login_reset_password_success")
+        public String loginResetPasswordSuccess = "Your password has been reset";
     }
 }
