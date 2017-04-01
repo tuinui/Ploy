@@ -132,6 +132,7 @@ public class SignInSignupActivity extends BaseActivity implements View.OnClickLi
 
                             @Override
                             public void onDataFailure(String failCause) {
+                                UserTokenManager.clearData(SignInSignupActivity.this);
                                 dismissLoading();
                             }
                         })

@@ -157,6 +157,7 @@ public class SignInFragment extends BaseFragment implements View.OnClickListener
 
                             @Override
                             public void onDataFailure(String failCause) {
+                                UserTokenManager.clearData(getActivity());
                                 dismissLoading();
                             }
                         })
@@ -221,6 +222,7 @@ public class SignInFragment extends BaseFragment implements View.OnClickListener
 
             @Override
             public void onDataFailure(String failCause) {
+                UserTokenManager.clearData(getActivity());
                 dismissLoading();
             }
         }).enqueue(context);
