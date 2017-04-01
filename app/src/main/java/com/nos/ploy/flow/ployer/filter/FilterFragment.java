@@ -18,6 +18,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.appyvet.rangebar.RangeBar;
 import com.nos.ploy.R;
@@ -509,16 +510,39 @@ public class FilterFragment extends BaseFragment implements View.OnClickListener
             defaultValue = String.valueOf(defaultValue.replaceAll(",", ""));
         }
         editText.setText(defaultValue);
-        editText.setFilters(new InputFilter[]{new InputFilterMinMax(0, Integer.MAX_VALUE, editText)});
+//        editText.setFilters(new InputFilter[]{new InputFilterMinMax(0, Integer.MAX_VALUE, editText)});
 
         alert.setView(view);
         alert.setTitle(title);
         alert.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-                if (onConfirm != null) {
-                    onConfirm.call(editText.getText().toString());
+                String str = editText.getText().toString();
+                if (TextUtils.isEmpty(str)) {
+
+                    dialog.dismiss();
+                    if (onConfirm != null) {
+                        onConfirm.call("0");
+                    }
+
+                } else {
+                    long data = Long.parseLong(str);
+
+                    if (data > 1000) {
+
+                        Toast.makeText(getActivity(), "Max value : " + 1000, Toast.LENGTH_SHORT).show();
+
+                        dialog.dismiss();
+                        if (onConfirm != null) {
+                            onConfirm.call("1000");
+                        }
+
+                    } else {
+                        dialog.dismiss();
+                        if (onConfirm != null) {
+                            onConfirm.call(editText.getText().toString());
+                        }
+                    }
                 }
 
             }

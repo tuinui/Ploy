@@ -11,7 +11,6 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
-import android.text.InputFilter;
 import android.text.InputType;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -22,6 +21,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.appyvet.rangebar.RangeBar;
 import com.nos.ploy.R;
@@ -34,7 +34,6 @@ import com.nos.ploy.api.ployer.PloyerApi;
 import com.nos.ploy.api.ployer.model.PloyerServiceDetailGson;
 import com.nos.ploy.api.ployer.model.PostSavePloyerServiceDetailGson;
 import com.nos.ploy.base.BaseFragment;
-import com.nos.ploy.custom.view.InputFilterMinMax;
 import com.nos.ploy.custom.view.NumberTextWatcher;
 import com.nos.ploy.flow.ployee.home.content.service.detail.contract.PloyeeServiceDetailContract;
 import com.nos.ploy.flow.ployee.home.content.service.detail.contract.PloyeeServiceDetailPresenter;
@@ -400,16 +399,39 @@ public class PloyeeServiceDetailFragment extends BaseFragment implements PloyeeS
         }
         editText.setText(defaultValue);
 //        editText.addTextChangedListener(new NumberTextWatcher(editText));
-        editText.setFilters(new InputFilter[]{new InputFilterMinMax(0, Integer.MAX_VALUE, editText)});
+//        editText.setFilters(new InputFilter[]{new InputFilterMinMax(0, Integer.MAX_VALUE, editText)});
 
         alert.setView(view);
         alert.setTitle(title);
         alert.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-                if (onConfirm != null) {
-                    onConfirm.call(editText.getText().toString());
+                String str = editText.getText().toString();
+                if (TextUtils.isEmpty(str)) {
+
+                    dialog.dismiss();
+                    if (onConfirm != null) {
+                        onConfirm.call("0");
+                    }
+
+                } else {
+                    long data = Long.parseLong(str);
+
+                    if (data > 1000) {
+
+                        Toast.makeText(getActivity(), "Max value : " + 1000, Toast.LENGTH_SHORT).show();
+
+                        dialog.dismiss();
+                        if (onConfirm != null) {
+                            onConfirm.call("1000");
+                        }
+
+                    } else {
+                        dialog.dismiss();
+                        if (onConfirm != null) {
+                            onConfirm.call(editText.getText().toString());
+                        }
+                    }
                 }
 
             }
