@@ -62,6 +62,18 @@ public class AccountGson extends BaseResponse<AccountGson.Data> {
         @SerializedName("fbUserId")
         private String fbUserId;
 
+        public boolean isActive() {
+            return isActive;
+        }
+
+        public void setActive(boolean active) {
+            isActive = active;
+        }
+
+        @SerializedName("isActive")
+        private boolean isActive = true;
+
+
         public Data() {
         }
 

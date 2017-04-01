@@ -244,6 +244,14 @@ public class LanguageAppLabelGson extends BaseResponse<LanguageAppLabelGson.Data
         @SerializedName("account_screen_logout")
 
         public String accountScreenLogout;
+
+        @SerializedName("account_screen_delete")
+        public String accountScreenDelete = "Delete Account";
+
+
+        @SerializedName("account_screen_delete_msg_confirm")
+        public String accountScreenDeleteMsgConfirm = "Are you sure you want to delete your account?";
+
         @SerializedName("phone_screen_header")
 
         public String phoneScreenHeader;

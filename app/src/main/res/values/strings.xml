@@ -72,6 +72,8 @@
     <string name="Invalid_email_address">Invalid email address</string>
     <string name="Password_reset">Password reset</string>
     <string name="Log_out">Log out</string>
+    <string name="Delete_account">Delete Account</string>
+
     <string name="Availability">Availability</string>
     <string name="Profile">Profile</string>
     <string name="Upload_photo">Upload photo</string>

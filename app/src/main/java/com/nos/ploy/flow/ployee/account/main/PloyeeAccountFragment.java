@@ -77,12 +77,19 @@ public class PloyeeAccountFragment extends BaseFragment implements View.OnClickL
     MaterialEditText mEdittextPassword;
     @BindView(R.id.button_ployee_account_logout)
     Button mButtonLogout;
+    @BindView(R.id.button_ployee_account_delete)
+    Button mButtonDelete;
+
     @BindView(R.id.textview_ployee_account_notices)
     TextView mTextViewNotices;
     @BindView(R.id.textview_ployee_account_main_obligatory)
     TextView mTextViewObligatory;
     @BindView(R.id.framelayout_ployee_account_main_connect_facebook_container)
     FrameLayout mFrameLayoutFacebookContainer;
+
+    private String txtAccountScreenDeleteMsgConfirm = "Are you sure you want to delete your account?";
+
+
     private AccountGson.Data mData;
     private CallbackManager mCallbackManager;
     private AuthenticationApi mAuthenApi;
@@ -113,6 +120,27 @@ public class PloyeeAccountFragment extends BaseFragment implements View.OnClickL
             dismissLoading();
         }
     };
+
+
+    private RetrofitCallUtils.RetrofitCallback<BaseResponse> mCallbackDeleteData = new RetrofitCallUtils.RetrofitCallback<BaseResponse>() {
+        @Override
+        public void onDataSuccess(BaseResponse data) {
+            dismissLoading();
+            showToast("Success");
+            isDataChanged = false;
+
+            UserTokenManager.clearData(getActivity());
+            ActivityCompat.finishAfterTransition(getActivity());
+
+        }
+
+        @Override
+        public void onDataFailure(String failCause) {
+            dismissLoading();
+        }
+    };
+
+
     private FacebookCallback<LoginResult> mLoginResultCallback = new FacebookCallback<LoginResult>() {
 
         @Override
@@ -132,6 +160,7 @@ public class PloyeeAccountFragment extends BaseFragment implements View.OnClickL
         }
     };
     private boolean isDataChanged;
+
 
     public static PloyeeAccountFragment newInstance(AccountGson.Data data) {
 
@@ -185,11 +214,14 @@ public class PloyeeAccountFragment extends BaseFragment implements View.OnClickL
         mEditTextPhone.setHint(data.accountScreenPhone);
         mEditTextPhone.setFloatingLabelText(data.accountScreenPhone);
         mButtonLogout.setText(data.accountScreenLogout);
+        mButtonDelete.setText(data.accountScreenDelete);
         mButtonFacebookFake.setText(data.accountScreenConnectFacebook);
         mEdittextPassword.setHint(data.accountScreenChangepass);
         mEdittextPassword.setFloatingLabelText(data.accountScreenChangepass);
         mTextViewNotices.setText(data.accountScreenDescript);
         mTextViewObligatory.setText(data.accountScreenObligatory);
+
+        txtAccountScreenDeleteMsgConfirm=  data.accountScreenDeleteMsgConfirm;
     }
 
     private void initFacebookButton() {
@@ -217,6 +249,7 @@ public class PloyeeAccountFragment extends BaseFragment implements View.OnClickL
         mEditTextPhone.setOnClickListener(this);
         mEdittextPassword.setOnClickListener(this);
         mButtonLogout.setOnClickListener(this);
+        mButtonDelete.setOnClickListener(this);
         mButtonFacebookFake.setOnClickListener(this);
 
         mEditTextFirstname.setFocusFraction(1f);
@@ -359,6 +392,14 @@ public class PloyeeAccountFragment extends BaseFragment implements View.OnClickL
         RetrofitCallUtils.with(mAccountApi.postUpdateAccountGson(data), mCallbackUpdateData).enqueue(getContext());
     }
 
+    private void requestDeleteAccount() {
+        AccountGson.Data data = mData.cloneThis();
+
+        data.setActive(false);
+        showLoading();
+        RetrofitCallUtils.with(mAccountApi.postUpdateAccountGson(data), mCallbackDeleteData).enqueue(getContext());
+    }
+
     private void requestFacebookMapping(LoginResult loginResult) {
         if (null != loginResult && null != loginResult.getAccessToken() && null != loginResult.getAccessToken().getUserId()) {
             showLoading();
@@ -397,7 +438,21 @@ public class PloyeeAccountFragment extends BaseFragment implements View.OnClickL
         }*/ else if (id == mButtonLogout.getId()) {
             UserTokenManager.clearData(v.getContext());
             ActivityCompat.finishAfterTransition(getActivity());
-        } else if (id == mButtonFacebookFake.getId()) {
+        } else if (id == mButtonDelete.getId()) {
+
+            PopupMenuUtils.showConfirmationAlertMenu(getActivity(), getString(R.string.app_name), txtAccountScreenDeleteMsgConfirm,
+                    new Action1<Boolean>() {
+                        @Override
+                        public void call(Boolean aBoolean) {
+                            if (aBoolean){
+                                requestDeleteAccount();
+                            }
+                        }
+                    }
+                );
+
+
+        }else if (id == mButtonFacebookFake.getId()) {
             mLoginButtonFacebook.callOnClick();
         } else if (id == mEdittextPassword.getId()) {
             showFragment(ChangePasswordFragment.newInstance());
