@@ -570,6 +570,8 @@ public class PloyeeProfileActivity extends BaseActivity implements View.OnClickL
         mTextViewLanguageSupport.setOnClickListener(this);
         mImageViewStaticMaps.setOnClickListener(this);
         mButtonPreview.setOnClickListener(this);
+
+        mSwipeRefreshLayout.setEnabled(false);
         setRefreshLayout(mSwipeRefreshLayout, new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {

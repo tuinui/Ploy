@@ -117,6 +117,7 @@ public class PloyeeAvailabilityFragment extends BaseFragment implements View.OnC
 
     private void initView() {
         mButtonNoPref.setOnClickListener(this);
+        mSwipRefreshlayout.setEnabled(false);
         setRefreshLayout(mSwipRefreshlayout, new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {

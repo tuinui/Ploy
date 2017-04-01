@@ -275,6 +275,7 @@ public class PloyeeServiceDetailFragment extends BaseFragment implements PloyeeS
 //        mEditTextPriceTo.setFilters(mInputMinMaxFilter);
         mButtonReset.setOnClickListener(this);
         mSwipeRefreshLayout.setOnRefreshListener(mOnRefreshListener);
+        mSwipeRefreshLayout.setEnabled(false);
 
         mButtonDelete.setOnClickListener(this);
 
