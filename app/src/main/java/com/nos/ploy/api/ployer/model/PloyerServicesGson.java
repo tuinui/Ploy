@@ -29,6 +29,8 @@ public class PloyerServicesGson extends BaseResponse<ArrayList<PloyerServicesGso
         private String imgUrl;
         @SerializedName("ployeeCount")
         private Long ployeeCount;
+        @SerializedName("priceUnit")
+        private String priceUnit;
 
         public Data() {
         }
@@ -47,6 +49,14 @@ public class PloyerServicesGson extends BaseResponse<ArrayList<PloyerServicesGso
 
         public long getPloyeeCount() {
             return null == ployeeCount ? 0 : ployeeCount;
+        }
+
+        public String getPriceUnit() {
+            return priceUnit;
+        }
+
+        public void setPriceUnit(String priceUnit) {
+            this.priceUnit = priceUnit;
         }
 
 //        public String getPloyeeCountDisplay() {
@@ -70,6 +80,7 @@ public class PloyerServicesGson extends BaseResponse<ArrayList<PloyerServicesGso
             dest.writeString(this.serviceName);
             dest.writeString(this.imgUrl);
             dest.writeLong(this.ployeeCount);
+            dest.writeString(this.priceUnit);
         }
 
         protected Data(Parcel in) {
@@ -77,6 +88,8 @@ public class PloyerServicesGson extends BaseResponse<ArrayList<PloyerServicesGso
             this.serviceName = in.readString();
             this.imgUrl = in.readString();
             this.ployeeCount = in.readLong();
+            this.priceUnit = in.readString();
+
         }
 
         public static final Parcelable.Creator<Data> CREATOR = new Parcelable.Creator<Data>() {
