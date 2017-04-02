@@ -75,6 +75,10 @@ public class FilterLanguageFragment extends BaseFragment implements View.OnClick
 
                         }
 
+                        if (null != mOnDataChangedListener) {
+                            mOnDataChangedListener.onClickDone(mCheckedLanguages);
+                        }
+
                     }
                 });
             }
@@ -112,6 +116,7 @@ public class FilterLanguageFragment extends BaseFragment implements View.OnClick
     private List<PloyeeProfileGson.Data.Language> mDatas = new ArrayList<>();
     private OnDataChangedListener mOnDataChangedListener;
     private long mTotal;
+    private String strProvidersLabel = "";
 
     public static FilterLanguageFragment newInstance(PloyerServicesGson.Data data, long total, ArrayList<String> languages, OnDataChangedListener onDataChangedListener) {
 
@@ -195,21 +200,21 @@ public class FilterLanguageFragment extends BaseFragment implements View.OnClick
     private void initToolbar() {
         mTextViewTitle.setText(R.string.Language_spoken);
         mTextViewSubTitle.setVisibility(View.VISIBLE);
-        mToolbar.inflateMenu(R.menu.menu_done);
-        mToolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                int id = item.getItemId();
-                if (id == R.id.menu_done_item_done) {
-                    if (null != mOnDataChangedListener) {
-                        mOnDataChangedListener.onClickDone(mCheckedLanguages);
-                    }
-
-                    dismiss();
-                }
-                return false;
-            }
-        });
+//        mToolbar.inflateMenu(R.menu.menu_done);
+//        mToolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+//            @Override
+//            public boolean onMenuItemClick(MenuItem item) {
+//                int id = item.getItemId();
+//                if (id == R.id.menu_done_item_done) {
+//                    if (null != mOnDataChangedListener) {
+//                        mOnDataChangedListener.onClickDone(mCheckedLanguages);
+//                    }
+//
+////                    dismiss();
+//                }
+//                return false;
+//            }
+//        });
         enableBackButton(mToolbar);
     }
 
@@ -221,6 +226,8 @@ public class FilterLanguageFragment extends BaseFragment implements View.OnClick
         mButtonNoPref.setText(data.avaliabilityScreenNoPrefer);
         mTextViewSubTitle.setText(mTotal + " " + data.providersLabel);
 
+        strProvidersLabel = data.providersLabel;
+
     }
 
     @Override
@@ -229,11 +236,20 @@ public class FilterLanguageFragment extends BaseFragment implements View.OnClick
         if (id == mButtonNoPref.getId()) {
             mCheckedLanguages.clear();
             mAdapter.notifyItemRangeChanged(0, mAdapter.getItemCount());
+
+            if (null != mOnDataChangedListener) {
+                mOnDataChangedListener.onClickDone(mCheckedLanguages);
+            }
         }
     }
 
     public void setListener(OnDataChangedListener listener) {
         this.mOnDataChangedListener = listener;
+    }
+
+    public void updateCountProviders(long mTotalCount) {
+        mTextViewSubTitle.setText(mTotalCount + " " + strProvidersLabel);
+
     }
 
     public static interface OnDataChangedListener {

@@ -194,6 +194,7 @@ public class FilterFragment extends BaseFragment implements View.OnClickListener
     private String strProvidersLabel = "";
     private FilterServicesFragment filterServicesFragment;
     private FilterAvailabilityFragment filterAvailabilityFragment;
+    private FilterLanguageFragment filterLanguageFragment;
 
     public static FilterFragment newInstance(PloyerServicesGson.Data data, PostProviderFilterGson postData, long totalCount, OnFilterConfirmListener listener) {
         Bundle args = new Bundle();
@@ -595,7 +596,7 @@ public class FilterFragment extends BaseFragment implements View.OnClickListener
 
     private FilterLanguageFragment getLanguageFragment() {
 
-        return FilterLanguageFragment.newInstance(mData, mTotalCount, mPostData.cloneThis().getLanguages(), new FilterLanguageFragment.OnDataChangedListener() {
+        filterLanguageFragment =  FilterLanguageFragment.newInstance(mData, mTotalCount, mPostData.cloneThis().getLanguages(), new FilterLanguageFragment.OnDataChangedListener() {
             @Override
             public void onClickDone(ArrayList<String> datas) {
                 mPostData.setLanguages(datas);
@@ -605,6 +606,8 @@ public class FilterFragment extends BaseFragment implements View.OnClickListener
 
             }
         });
+
+        return filterLanguageFragment;
     }
 
     private FilterServicesFragment getServicesFragment() {
@@ -664,6 +667,13 @@ public class FilterFragment extends BaseFragment implements View.OnClickListener
         try {
             if (filterAvailabilityFragment != null){
                 filterAvailabilityFragment.updateCountProviders(mTotalCount);
+            }
+        } catch (Exception ignored) {}
+
+
+        try {
+            if (filterLanguageFragment != null){
+                filterLanguageFragment.updateCountProviders(mTotalCount);
             }
         } catch (Exception ignored) {}
 

@@ -117,16 +117,16 @@ public class FilterAvailabilityFragment extends BaseFragment implements View.OnC
         mTextViewSubtitle.setVisibility(View.VISIBLE);
         mTextViewTitle.setText(R.string.Availability);
 
-        mToolbar.inflateMenu(R.menu.menu_done);
-        mToolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                int id = item.getItemId();
-                if (id == R.id.menu_done_item_done)
-                    onClickDone();
-                return false;
-            }
-        });
+//        mToolbar.inflateMenu(R.menu.menu_done);
+//        mToolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+//            @Override
+//            public boolean onMenuItemClick(MenuItem item) {
+//                int id = item.getItemId();
+//                if (id == R.id.menu_done_item_done)
+//                    onClickDone();
+//                return false;
+//            }
+//        });
     }
 
     private void initRecyclerView() {
