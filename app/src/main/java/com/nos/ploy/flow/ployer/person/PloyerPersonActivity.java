@@ -72,6 +72,7 @@ import rx.functions.Action1;
 
 /**
  * Created by Saran on 8/1/2560.
+ * Modified by adisit on 02/04/2560
  */
 
 public class PloyerPersonActivity extends BaseActivity implements SearchView.OnQueryTextListener, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, View.OnClickListener {
@@ -84,6 +85,7 @@ public class PloyerPersonActivity extends BaseActivity implements SearchView.OnQ
     private PostProviderFilterGson mPostData;
     private long mTotal = 0;
     private boolean didPagerSet;
+    private FilterFragment filterFragment;
 
 
     @Retention(RetentionPolicy.SOURCE)
@@ -425,7 +427,7 @@ public class PloyerPersonActivity extends BaseActivity implements SearchView.OnQ
     }
 
     private void onClickFilterMenu() {
-        showFragment(FilterFragment.newInstance(mParentData, mPostData, mTotal, new FilterFragment.OnFilterConfirmListener() {
+        filterFragment = FilterFragment.newInstance(mParentData, mPostData, mTotal, new FilterFragment.OnFilterConfirmListener() {
             @Override
             public void onFilterConfirm(PostProviderFilterGson data) {
                 mPostData = data;
@@ -437,7 +439,9 @@ public class PloyerPersonActivity extends BaseActivity implements SearchView.OnQ
                 mPostData = null;
                 refreshData();
             }
-        }));
+        });
+
+        showFragment(filterFragment);
     }
 
     @Override
@@ -498,6 +502,13 @@ public class PloyerPersonActivity extends BaseActivity implements SearchView.OnQ
                 @Override
                 public void run() {
                     mData = data;
+
+                    try {
+                        filterFragment.updateCountProviders(mData.getPagination().getTotal());
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
                     mTextViewSubTitle.setText(mData.getPagination().getTotal() + " " + mLanguageData.providersLabel);
                     if (null != mPersonListFragment) {
                         mPersonListFragment.bindData(data);

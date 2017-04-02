@@ -6,23 +6,20 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.RadioButton;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
 import com.nos.ploy.R;
-import com.nos.ploy.api.base.RetrofitCallUtils;
 import com.nos.ploy.api.masterdata.model.LanguageAppLabelGson;
-import com.nos.ploy.api.ployer.PloyerApi;
 import com.nos.ploy.api.ployer.model.PloyerServiceDetailGson;
 import com.nos.ploy.api.ployer.model.PloyerServicesGson;
-import com.nos.ploy.api.ployer.model.PostGetPloyerServiceDetailGson;
 import com.nos.ploy.api.ployer.model.PostProviderFilterGson;
 import com.nos.ploy.base.BaseFragment;
-import com.nos.ploy.cache.SharePreferenceUtils;
 import com.nos.ploy.flow.ployee.home.content.service.detail.contract.subservice.PloyeeServiceDetailSubServiceRecyclerAdapter;
 import com.nos.ploy.flow.ployee.home.content.service.detail.contract.subservice.viewmodel.PloyeeServiceDetailSubServiceItemBaseViewModel;
 import com.nos.ploy.utils.PopupMenuUtils;
@@ -32,13 +29,16 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import rx.functions.Action1;
 
 /**
  * Created by Saran on 15/1/2560.
+ * Modified by adisit on 02/04/2560
  */
 
-public class FilterServicesFragment extends BaseFragment implements View.OnClickListener {
+public class FilterServicesFragment extends BaseFragment implements View.OnClickListener, Action1<Boolean>, CompoundButton.OnCheckedChangeListener {
 
+    private static final String KEY_SERVICE_DETAIL = "KEY_SERVICE_DETAIL";
     private static final String KEY_SERVICE_DATA = "KEY_SERVICE_DATA";
     private static final String KEY_FILTERED_DATA = "SERVICE_IDS";
     private static final String KEY_TOTAL_COUNT = "TOTCAL";
@@ -57,37 +57,21 @@ public class FilterServicesFragment extends BaseFragment implements View.OnClick
     @BindView(R.id.recyclerview_filter_services)
     RecyclerView mRecyclerView;
     private PloyerServicesGson.Data mServiceData;
-    private PloyerApi mApi;
-    private String mLgCode;
+    private PloyerServiceDetailGson.Data mServiceDetail;
     private List<PloyerServiceDetailGson.Data.SubService> mDatas = new ArrayList<>();
-    private PloyeeServiceDetailSubServiceRecyclerAdapter mAdapter = new PloyeeServiceDetailSubServiceRecyclerAdapter();
+    private PloyeeServiceDetailSubServiceRecyclerAdapter mAdapter;
     private OnClickDoneListener listener;
 
-    private RetrofitCallUtils.RetrofitCallback<PloyerServiceDetailGson> mCallbackRefresh = new RetrofitCallUtils.RetrofitCallback<PloyerServiceDetailGson>() {
-        @Override
-        public void onDataSuccess(PloyerServiceDetailGson data) {
-            dismissRefreshing();
-            if (null != data && null != data.getData() && null != data.getData().getSubServices()) {
-                if (null != mServiceData) {
-                    mTextViewSubtitle.setText(mServiceData.getPloyeeCount() + " " + mLanguageData.providersLabel);
-                }
-
-                bindData(data.getData().getSubServices());
-            }
-        }
-
-
-        @Override
-        public void onDataFailure(String failCause) {
-            dismissRefreshing();
-        }
-    };
     private PostProviderFilterGson mFilteredData = new PostProviderFilterGson();
     private long mTotal;
+    private String strProvidersLabel = "";
 
-    public static FilterServicesFragment newInstance(PloyerServicesGson.Data data, long total, PostProviderFilterGson filterData, OnClickDoneListener listener) {
+    public static FilterServicesFragment newInstance(PloyerServiceDetailGson.Data mServiceDetail, PloyerServicesGson.Data data, long total, PostProviderFilterGson filterData, OnClickDoneListener listener) {
 
         Bundle args = new Bundle();
+        Gson gson = new Gson();
+
+        args.putString(KEY_SERVICE_DETAIL, gson.toJson(mServiceDetail));
         args.putParcelable(KEY_SERVICE_DATA, data);
         args.putParcelable(KEY_FILTERED_DATA, filterData);
         args.putLong(KEY_TOTAL_COUNT, total);
@@ -114,6 +98,8 @@ public class FilterServicesFragment extends BaseFragment implements View.OnClick
         mRadioButtonEquipment.setText(data.serviceScreenEquipmentLabel);
         mButtonNoPref.setText(data.avaliabilityScreenNoPrefer);
         mTextViewSubtitle.setText(mTotal + " " + data.providersLabel);
+
+        strProvidersLabel = data.providersLabel;
     }
 
     @Override
@@ -122,6 +108,11 @@ public class FilterServicesFragment extends BaseFragment implements View.OnClick
         if (null != getArguments()) {
             mServiceData = getArguments().getParcelable(KEY_SERVICE_DATA);
             mTotal = getArguments().getLong(KEY_TOTAL_COUNT, 0);
+
+            Gson gson = new Gson();
+            String strKeyServiceDetail  = getArguments().getString(KEY_SERVICE_DETAIL);
+            mServiceDetail = gson.fromJson(strKeyServiceDetail, PloyerServiceDetailGson.Data.class);
+
             PostProviderFilterGson filterData = getArguments().getParcelable(KEY_FILTERED_DATA);
             if (filterData != null) {
                 mFilteredData.setCertificate(filterData.isCertificate());
@@ -134,8 +125,8 @@ public class FilterServicesFragment extends BaseFragment implements View.OnClick
 
 
         }
-        mApi = getRetrofit().create(PloyerApi.class);
-        mLgCode = SharePreferenceUtils.getCurrentActiveAppLanguageCode(getContext());
+
+        mAdapter = new PloyeeServiceDetailSubServiceRecyclerAdapter(this);
     }
 
     @Override
@@ -144,6 +135,12 @@ public class FilterServicesFragment extends BaseFragment implements View.OnClick
         initToolbar();
         initRecyclerView();
         initView();
+
+        bindData(mServiceDetail.getSubServices());
+
+        mRadioButtonCertificate.setOnCheckedChangeListener(this);
+        mRadioButtonEquipment.setOnCheckedChangeListener(this);
+
     }
 
     private void initToolbar() {
@@ -153,20 +150,20 @@ public class FilterServicesFragment extends BaseFragment implements View.OnClick
             mTextViewSubtitle.setVisibility(View.VISIBLE);
 
         }
-        mToolbar.inflateMenu(R.menu.menu_done);
-        mToolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                int id = item.getItemId();
-                if (id == R.id.menu_done_item_done) {
-                    if (null != mAdapter) {
-                        getListener().onClickDone(mAdapter.gatheredSubServiceIds(), mRadioButtonCertificate.isChecked(), mRadioButtonEquipment.isChecked());
-                    }
-                    dismiss();
-                }
-                return false;
-            }
-        });
+//        mToolbar.inflateMenu(R.menu.menu_done);
+//        mToolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+//            @Override
+//            public boolean onMenuItemClick(MenuItem item) {
+//                int id = item.getItemId();
+//                if (id == R.id.menu_done_item_done) {
+//                    if (null != mAdapter) {
+//                        getListener().onClickDone(mAdapter.gatheredSubServiceIds(), mRadioButtonCertificate.isChecked(), mRadioButtonEquipment.isChecked());
+//                    }
+//                    dismiss();
+//                }
+//                return false;
+//            }
+//        });
     }
 
     private void initRecyclerView() {
@@ -206,15 +203,9 @@ public class FilterServicesFragment extends BaseFragment implements View.OnClick
     @Override
     public void onResume() {
         super.onResume();
-        if (mDatas.isEmpty()) {
-            refreshData();
-        }
-    }
-
-    private void refreshData() {
-        showRefreshing();
-
-        RetrofitCallUtils.with(mApi.getServiceDetail(new PostGetPloyerServiceDetailGson(mServiceData.getId(), -1L, mLgCode)), mCallbackRefresh).enqueue(getContext());
+//        if (mDatas.isEmpty()) {
+//            refreshData();
+//        }
     }
 
     private void bindData(List<PloyerServiceDetailGson.Data.SubService> datas) {
@@ -280,6 +271,22 @@ public class FilterServicesFragment extends BaseFragment implements View.OnClick
 
     public OnClickDoneListener getListener() {
         return listener;
+    }
+
+    @Override
+    public void call(Boolean aBoolean) {
+        getListener().onClickDone(mAdapter.gatheredSubServiceIds(), mRadioButtonCertificate.isChecked(), mRadioButtonEquipment.isChecked());
+    }
+
+    @Override
+    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+
+        getListener().onClickDone(mAdapter.gatheredSubServiceIds(), mRadioButtonCertificate.isChecked(), mRadioButtonEquipment.isChecked());
+    }
+
+    public void updateCountProviders(long mTotalCount) {
+
+        mTextViewSubtitle.setText(mTotalCount + " " + strProvidersLabel);
     }
 
     public static interface OnClickDoneListener {

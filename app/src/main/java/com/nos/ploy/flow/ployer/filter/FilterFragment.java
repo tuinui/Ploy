@@ -55,6 +55,7 @@ import rx.functions.Action1;
 
 /**
  * Created by Saran on 14/1/2560.
+ * Modified by adisit on 02/04/2560
  */
 
 public class FilterFragment extends BaseFragment implements View.OnClickListener {
@@ -115,7 +116,7 @@ public class FilterFragment extends BaseFragment implements View.OnClickListener
             } else {
                 mPostData.setReview(aLong);
             }
-
+            attemptRequestPostFilter();
         }
     });
     private TransportRecyclerAdapter mTransportAdapter = new TransportRecyclerAdapter() {
@@ -136,16 +137,24 @@ public class FilterFragment extends BaseFragment implements View.OnClickListener
                             if (newValue) {
                                 if (!mPostData.getTransportIds().contains(data.getId())) {
                                     mPostData.getTransportIds().add(data.getId());
+
                                 }
                             } else {
                                 if (mPostData.getTransportIds().contains(data.getId())) {
                                     mPostData.getTransportIds().remove(data.getId());
+
                                 }
                             }
+                            attemptRequestPostFilter();
                             notifyItemChanged(holder.getAdapterPosition());
+
+
+
                         }
                     }
                 });
+
+
             }
         }
 
@@ -182,6 +191,8 @@ public class FilterFragment extends BaseFragment implements View.OnClickListener
     private OnFilterConfirmListener listener;
     private long mTotalCount;
     private PloyerServiceDetailGson.Data mServiceDetail;
+    private String strProvidersLabel = "";
+    private FilterServicesFragment filterServicesFragment;
 
     public static FilterFragment newInstance(PloyerServicesGson.Data data, PostProviderFilterGson postData, long totalCount, OnFilterConfirmListener listener) {
         Bundle args = new Bundle();
@@ -253,6 +264,8 @@ public class FilterFragment extends BaseFragment implements View.OnClickListener
         mTextViewRatingLabel.setText(data.filterScreenRating);
         mTextViewTransport.setText(data.profileScreenTransport);
         mTextViewSubTitle.setText(mTotalCount + " " + data.providersLabel);
+
+        strProvidersLabel = data.providersLabel;
     }
 
     @Override
@@ -402,6 +415,8 @@ public class FilterFragment extends BaseFragment implements View.OnClickListener
             mRangeBar.setRangePinsByValue(minValueToSet, Float.parseFloat(mRangeBar.getRightPinValue()));
         }
         mPostData.setPriceMin(min);
+
+        attemptRequestPostFilter();
     }
 
     private void setRightPinValue(long max) {
@@ -419,6 +434,8 @@ public class FilterFragment extends BaseFragment implements View.OnClickListener
             mRangeBar.setRangePinsByValue(Float.parseFloat(mRangeBar.getLeftPinValue()), maxValueToSet);
         }
         mPostData.setPriceMax(max);
+
+        attemptRequestPostFilter();
     }
 
 
@@ -435,10 +452,15 @@ public class FilterFragment extends BaseFragment implements View.OnClickListener
             boolean newValue = !mButtonPhone.isActivated();
             mPostData.setContactPhone(newValue);
             mButtonPhone.setActivated(newValue);
+
+            attemptRequestPostFilter();
+
         } else if (id == mButtonEmail.getId()) {
             boolean newValue = !mButtonEmail.isActivated();
             mPostData.setContactEmail(newValue);
             mButtonEmail.setActivated(newValue);
+
+            attemptRequestPostFilter();
 
         } else if (id == mButtonClear.getId()) {
             onClickClear();
@@ -458,6 +480,8 @@ public class FilterFragment extends BaseFragment implements View.OnClickListener
                     mPostData.setPriceMin(value);
                     bindData(mPostData);
 
+                    attemptRequestPostFilter();
+
                 }
             });
 
@@ -475,6 +499,9 @@ public class FilterFragment extends BaseFragment implements View.OnClickListener
                     }
                     mPostData.setPriceMax(value);
                     bindData(mPostData);
+
+                    attemptRequestPostFilter();
+
                 }
             });
 
@@ -494,7 +521,7 @@ public class FilterFragment extends BaseFragment implements View.OnClickListener
             }
         }
         getListener().onFilterConfirm(mPostData);
-        dismiss();
+//        dismiss();
     }
 
     private void showPopupAlertEditTextMenu(Context context, String title, String defaultValue, final Action1<String> onConfirm) {
@@ -572,20 +599,29 @@ public class FilterFragment extends BaseFragment implements View.OnClickListener
             public void onClickDone(ArrayList<String> datas) {
                 mPostData.setLanguages(datas);
                 bindData(mPostData);
+
+                attemptRequestPostFilter();
+
             }
         });
     }
 
     private FilterServicesFragment getServicesFragment() {
-        return FilterServicesFragment.newInstance(mData, mTotalCount, mPostData.cloneThis(), new FilterServicesFragment.OnClickDoneListener() {
+        filterServicesFragment = FilterServicesFragment.newInstance(mServiceDetail, mData, mTotalCount, mPostData.cloneThis(), new FilterServicesFragment.OnClickDoneListener() {
             @Override
             public void onClickDone(List<Long> subServiceLv2Ids, boolean certificate, boolean equipment) {
                 mPostData.setCertificate(certificate);
                 mPostData.setEquipment(equipment);
                 mPostData.setSubServices(subServiceLv2Ids);
                 bindData(mPostData);
+
+                attemptRequestPostFilter();
+
+
             }
         });
+
+        return filterServicesFragment;
     }
 
     private FilterAvailabilityFragment getAvailabilityFragment() {
@@ -595,6 +631,9 @@ public class FilterFragment extends BaseFragment implements View.OnClickListener
                 mPostData.addAllAvailabilityItem(data.getAvailabilityItems());
 
                 bindData(mPostData);
+
+                attemptRequestPostFilter();
+
             }
         });
     }
@@ -605,6 +644,22 @@ public class FilterFragment extends BaseFragment implements View.OnClickListener
 
     public OnFilterConfirmListener getListener() {
         return listener;
+    }
+
+    public void updateCountProviders(Long total) {
+        mTotalCount = total;
+
+        mTextViewSubTitle.setText(mTotalCount + " " + strProvidersLabel);
+
+
+        try {
+            if (filterServicesFragment != null){
+                filterServicesFragment.updateCountProviders(mTotalCount);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 
     public static interface OnFilterConfirmListener {
