@@ -13,6 +13,7 @@ import android.text.InputFilter;
 import android.text.InputType;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -285,7 +286,21 @@ public class FilterFragment extends BaseFragment implements View.OnClickListener
             mTextViewSubTitle.setVisibility(View.VISIBLE);
 //            mTextViewSubTitle.setText(mData.getPloyeeCountDisplay());
         }
-        enableBackButton(mToolbar);
+//        enableBackButton(mToolbar);
+
+        mToolbar.inflateMenu(R.menu.menu_clear);
+        mToolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                int id = item.getItemId();
+                if (id == R.id.menu_done_item_clear) {
+                    onClickClear();
+                }
+                return false;
+            }
+        });
+            enableBackButton(mToolbar);
+
     }
 
     @Override
@@ -366,6 +381,11 @@ public class FilterFragment extends BaseFragment implements View.OnClickListener
     private void bindData(PostProviderFilterGson data) {
         mPostData = data;
         if (null != data) {
+
+            if (mData != null) {
+                mPostData.setServiceId(mData.getId());
+            }
+
             setLeftPinValue(data.getPriceMin());
             setRightPinValue(data.getPriceMax());
             mButtonEmail.setActivated(data.isContactEmail());
@@ -418,7 +438,6 @@ public class FilterFragment extends BaseFragment implements View.OnClickListener
         }
         mPostData.setPriceMin(min);
 
-        attemptRequestPostFilter();
     }
 
     private void setRightPinValue(long max) {
@@ -437,7 +456,6 @@ public class FilterFragment extends BaseFragment implements View.OnClickListener
         }
         mPostData.setPriceMax(max);
 
-        attemptRequestPostFilter();
     }
 
 
@@ -589,9 +607,8 @@ public class FilterFragment extends BaseFragment implements View.OnClickListener
     }
 
     private void onClickClear() {
-        bindData(new PostProviderFilterGson());
         getListener().onFilterClear();
-        dismiss();
+        bindData(new PostProviderFilterGson());
     }
 
     private FilterLanguageFragment getLanguageFragment() {

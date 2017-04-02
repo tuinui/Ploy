@@ -505,9 +505,7 @@ public class PloyerPersonActivity extends BaseActivity implements SearchView.OnQ
 
                     try {
                         filterFragment.updateCountProviders(mData.getPagination().getTotal());
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
+                    } catch (Exception ignored) {}
 
                     mTextViewSubTitle.setText(mData.getPagination().getTotal() + " " + mLanguageData.providersLabel);
                     if (null != mPersonListFragment) {
