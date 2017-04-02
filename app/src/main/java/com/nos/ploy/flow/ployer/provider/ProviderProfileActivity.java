@@ -68,6 +68,21 @@ public class ProviderProfileActivity extends BaseActivity implements GoogleApiCl
     public static final String KEY_PLOYEEPROFILEGSON_DATA = "PLOYEEPROFILEGSON_DATA";
     public static final String KEY_IS_PREVIEW = "IS_PREVIEW";
     private ProviderUserListGson.Data.UserService mUserServiceData;
+
+
+    @BindView(R.id.viewZoneAbout)
+    View viewZoneAbout;
+    @BindView(R.id.viewZoneLanguages)
+    View viewZoneLanguages;
+    @BindView(R.id.viewZoneEdu)
+    View viewZoneEdu;
+    @BindView(R.id.viewZoneWork)
+    View viewZoneWork;
+    @BindView(R.id.viewZoneInterests)
+    View viewZoneInterests;
+    @BindView(R.id.viewZoneTransport)
+    View viewZoneTransport;
+
     @BindView(R.id.viewpager_profile_image_slider)
     ViewPager mViewPagerSlider;
     @BindView(R.id.tablayout_profile_image_slider_indicator)
@@ -226,6 +241,8 @@ public class ProviderProfileActivity extends BaseActivity implements GoogleApiCl
             mTextViewTitle.setText(mUserServiceData.getFullName());
         }
 
+
+
     }
 
     private void requestReviewData() {
@@ -329,6 +346,15 @@ public class ProviderProfileActivity extends BaseActivity implements GoogleApiCl
         mButtonPhone.setOnClickListener(this);
         mImageViewStaticMaps.setOnClickListener(this);
         mCardViewReview.setOnClickListener(this);
+
+
+
+
+
+
+
+
+
     }
 
     //userId=1&serviceId=1&lgCode=en
@@ -433,11 +459,12 @@ public class ProviderProfileActivity extends BaseActivity implements GoogleApiCl
                 int size = data.getLanguage().size();
                 for (int i = 0; i < size; i++) {
                     PloyeeProfileGson.Data.Language language = data.getLanguage().get(i);
-                    if (i == size - 1) {
-                        languageSupports += language.getSpokenLanguageValue();
-                    } else {
-                        languageSupports += language.getSpokenLanguageValue() + " ,";
+
+                    if (!TextUtils.isEmpty(languageSupports)){
+                        languageSupports +=  ", ";
                     }
+
+                    languageSupports += language.getSpokenLanguageValue();
 
                 }
             }
@@ -458,6 +485,32 @@ public class ProviderProfileActivity extends BaseActivity implements GoogleApiCl
             }
 
             mTextViewEducation.setText(data.getEducation());
+
+
+            if (TextUtils.isEmpty(data.getAboutMe())){
+                viewZoneAbout.setVisibility(View.GONE);
+            }
+
+            if (TextUtils.isEmpty(languageSupports)){
+                viewZoneLanguages.setVisibility(View.GONE);
+            }
+
+            if (TextUtils.isEmpty(data.getEducation())){
+                viewZoneEdu.setVisibility(View.GONE);
+            }
+
+            if (TextUtils.isEmpty(data.getWork())){
+                viewZoneWork.setVisibility(View.GONE);
+            }
+
+            if (TextUtils.isEmpty(data.getInterest())){
+                viewZoneInterests.setVisibility(View.GONE);
+            }
+
+            if (mTransportDatas.size() == 0){
+                viewZoneTransport.setVisibility(View.GONE);
+            }
+
         }
     }
 
