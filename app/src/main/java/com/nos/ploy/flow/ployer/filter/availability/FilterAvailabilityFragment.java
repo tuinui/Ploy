@@ -33,12 +33,14 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import rx.functions.Action1;
 
 /**
  * Created by Saran on 14/1/2560.
+ * Modified by Adisit on 02/04/2560
  */
 
-public class FilterAvailabilityFragment extends BaseFragment implements View.OnClickListener {
+public class FilterAvailabilityFragment extends BaseFragment implements View.OnClickListener, Action1<Void> {
 
 
     @BindView(R.id.swiperefreshlayout_ployer_filter_availability)
@@ -56,13 +58,14 @@ public class FilterAvailabilityFragment extends BaseFragment implements View.OnC
     private MasterApi mApi;
     private PloyeeAvailiabilityGson.Data mData;
     private PloyerServicesGson.Data mServiceData;
-    private AvailabilityRecyclerAdapter mAdapter = new AvailabilityRecyclerAdapter(null);
+    private AvailabilityRecyclerAdapter mAdapter = new AvailabilityRecyclerAdapter(this);
     private static final String KEY_SERVICE_DATA = "SERVICE_DATA";
     private static final String KEY_AVAILABILITY_ITEMS = "AVAILABILITY_ITEMS";
     private static final String KEY_TOTAL_COUNT = "TOTAL_COUNT";
     private OnClickDoneListener listener;
     private ArrayList<PloyeeAvailiabilityGson.Data.AvailabilityItem> mAvailabilityItems = new ArrayList<>();
     private long mTotal;
+    private String strProvidersLabel = "";
 
     public static FilterAvailabilityFragment newInstance(PloyerServicesGson.Data data, long total, ArrayList<PloyeeAvailiabilityGson.Data.AvailabilityItem> availabilityItems, OnClickDoneListener listener) {
 
@@ -167,6 +170,8 @@ public class FilterAvailabilityFragment extends BaseFragment implements View.OnC
         mAdapter.setLanguage(data);
         mButtonNoPref.setText(data.avaliabilityScreenNoPrefer);
         mTextViewSubtitle.setText(mTotal +" " +data.providersLabel);
+
+        strProvidersLabel = data.providersLabel;
     }
 
     @Override
@@ -184,7 +189,7 @@ public class FilterAvailabilityFragment extends BaseFragment implements View.OnC
                 data.setAvailabilityItems(mAdapter.gatheredData());
             }
             getListener().onClickDone(data);
-            dismiss();
+//            dismiss();
         }
     }
 
@@ -203,6 +208,8 @@ public class FilterAvailabilityFragment extends BaseFragment implements View.OnC
             item.setSun(false);
         }
         bindData(data);
+
+        onClickDone();
     }
 
     @Override
@@ -240,7 +247,16 @@ public class FilterAvailabilityFragment extends BaseFragment implements View.OnC
         return listener;
     }
 
+    public void updateCountProviders(long mTotalCount) {
 
+        mTextViewSubtitle.setText(mTotalCount + " " + strProvidersLabel);
+
+    }
+
+    @Override
+    public void call(Void aVoid) {
+        onClickDone();
+    }
 
 
     public static interface OnClickDoneListener {

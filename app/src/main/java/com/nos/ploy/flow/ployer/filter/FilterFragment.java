@@ -193,6 +193,7 @@ public class FilterFragment extends BaseFragment implements View.OnClickListener
     private PloyerServiceDetailGson.Data mServiceDetail;
     private String strProvidersLabel = "";
     private FilterServicesFragment filterServicesFragment;
+    private FilterAvailabilityFragment filterAvailabilityFragment;
 
     public static FilterFragment newInstance(PloyerServicesGson.Data data, PostProviderFilterGson postData, long totalCount, OnFilterConfirmListener listener) {
         Bundle args = new Bundle();
@@ -625,7 +626,7 @@ public class FilterFragment extends BaseFragment implements View.OnClickListener
     }
 
     private FilterAvailabilityFragment getAvailabilityFragment() {
-        return FilterAvailabilityFragment.newInstance(mData, mTotalCount, mPostData.cloneThis().getAvailabilityItems(), new FilterAvailabilityFragment.OnClickDoneListener() {
+        filterAvailabilityFragment = FilterAvailabilityFragment.newInstance(mData, mTotalCount, mPostData.cloneThis().getAvailabilityItems(), new FilterAvailabilityFragment.OnClickDoneListener() {
             @Override
             public void onClickDone(PloyeeAvailiabilityGson.Data data) {
                 mPostData.addAllAvailabilityItem(data.getAvailabilityItems());
@@ -636,6 +637,8 @@ public class FilterFragment extends BaseFragment implements View.OnClickListener
 
             }
         });
+
+        return filterAvailabilityFragment;
     }
 
     public void setListener(OnFilterConfirmListener listener) {
@@ -656,9 +659,13 @@ public class FilterFragment extends BaseFragment implements View.OnClickListener
             if (filterServicesFragment != null){
                 filterServicesFragment.updateCountProviders(mTotalCount);
             }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        } catch (Exception ignored) {}
+
+        try {
+            if (filterAvailabilityFragment != null){
+                filterAvailabilityFragment.updateCountProviders(mTotalCount);
+            }
+        } catch (Exception ignored) {}
 
     }
 
