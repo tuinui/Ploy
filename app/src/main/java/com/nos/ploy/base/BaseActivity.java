@@ -360,6 +360,19 @@ public class BaseActivity extends LocalizationActivity {
         }
     }
 
+    protected void runOnUiThread(final Action1<Context> action){
+        if(isReady()){
+            super.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    if(null != action){
+                        action.call(BaseActivity.this);
+                    }
+                }
+            });
+        }
+    }
+
     protected double extractDouble(String s) {
         if (!TextUtils.isEmpty(s)) {
             try {

@@ -194,8 +194,10 @@ public class SignInFragment extends BaseFragment implements View.OnClickListener
                             String firstName = response.getJSONObject().getString("first_name");
                             String lastName = response.getJSONObject().getString("last_name");
 
-                            Profile profile = Profile.getCurrentProfile();
-                            String id = profile.getId();
+                            String id = response.getJSONObject().getString("id");
+                            if (TextUtils.isEmpty(id) && null != Profile.getCurrentProfile()) {
+                                id = Profile.getCurrentProfile().getId();
+                            }
 
                             requestSigninWithFacebook(getActivity(), email, firstName, lastName, id);
 

@@ -123,21 +123,26 @@ public class UploadPhotoFragment extends BaseFragment {
                 public void onClick(final View v) {
                     ImagePickerUtils.pickImage(v.getContext(), new Action1<ImageEntry>() {
                         @Override
-                        public void call(ImageEntry imageEntry) {
+                        public void call(final ImageEntry imageEntry) {
                             if (null != imageEntry && !TextUtils.isEmpty(imageEntry.path)) {
-                                Glide.with(v.getContext()).load(imageEntry.path).asBitmap().into(new BitmapImageViewTarget(holder.imgUpload) {
+                                runOnUiThread(new Runnable() {
                                     @Override
-                                    public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
-                                        super.onResourceReady(resource, glideAnimation);
-                                        holder.imgUpload.setImageBitmap(resource);
-                                        if (RecyclerUtils.isAvailableData(mDatas, holder.getAdapterPosition())) {
-                                            ProfileImageGson.Data data = mDatas.get(holder.getAdapterPosition());
-                                            mImageToUploads.add(new PostUploadProfileImageGson.ImageBody(data.getImgId(), MyFileUtils.encodeToBase64(resource)));
-                                        } else {
-                                            mImageToUploads.add(new PostUploadProfileImageGson.ImageBody(MyFileUtils.encodeToBase64(resource)));
-                                        }
+                                    public void run() {
+                                        Glide.with(v.getContext()).load(imageEntry.path).asBitmap().into(new BitmapImageViewTarget(holder.imgUpload) {
+                                            @Override
+                                            public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
+                                                super.onResourceReady(resource, glideAnimation);
+                                                holder.imgUpload.setImageBitmap(resource);
+                                                if (RecyclerUtils.isAvailableData(mDatas, holder.getAdapterPosition())) {
+                                                    ProfileImageGson.Data data = mDatas.get(holder.getAdapterPosition());
+                                                    mImageToUploads.add(new PostUploadProfileImageGson.ImageBody(data.getImgId(), MyFileUtils.encodeToBase64(resource)));
+                                                } else {
+                                                    mImageToUploads.add(new PostUploadProfileImageGson.ImageBody(MyFileUtils.encodeToBase64(resource)));
+                                                }
 
 
+                                            }
+                                        });
                                     }
                                 });
                             }

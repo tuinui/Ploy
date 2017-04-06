@@ -150,10 +150,10 @@ public class PloyerPersonActivity extends BaseActivity implements SearchView.OnQ
         public void call(List<ProfileImageGson.Data> datas) {
             if (null != datas && !datas.isEmpty()) {
                 final ProfileImageGson.Data data = datas.get(0);
-                runOnUiThread(new Runnable() {
+                runOnUiThread(new Action1<Context>() {
                     @Override
-                    public void run() {
-                        Glide.with(PloyerPersonActivity.this).load(data.getImagePath()).into(mImageViewProfile);
+                    public void call(Context context) {
+                        Glide.with(context).load(data.getImagePath()).into(mImageViewProfile);
                     }
                 });
             }
@@ -164,11 +164,12 @@ public class PloyerPersonActivity extends BaseActivity implements SearchView.OnQ
         @Override
         public void call(final AccountGson.Data data) {
             if (null != data) {
-                runOnUiThread(new Runnable() {
+                runOnUiThread(new Action1<Context>() {
                     @Override
-                    public void run() {
+                    public void call(Context context) {
                         mTextViewUsername.setText(data.getFullName());
                     }
+
                 });
             }
         }
@@ -498,14 +499,15 @@ public class PloyerPersonActivity extends BaseActivity implements SearchView.OnQ
                 mTotal = data.getPagination().getTotal();
             }
 
-            runOnUiThread(new Runnable() {
+            runOnUiThread(new Action1<Context>() {
                 @Override
-                public void run() {
+                public void call(Context context) {
                     mData = data;
 
                     try {
                         filterFragment.updateCountProviders(mData.getPagination().getTotal());
-                    } catch (Exception ignored) {}
+                    } catch (Exception ignored) {
+                    }
 
                     mTextViewSubTitle.setText(mData.getPagination().getTotal() + " " + mLanguageData.providersLabel);
                     if (null != mPersonListFragment) {
@@ -574,7 +576,7 @@ public class PloyerPersonActivity extends BaseActivity implements SearchView.OnQ
 
     @Override
     public void onConnected(@Nullable Bundle bundle) {
-        if(!didPagerSet){
+        if (!didPagerSet) {
             initPager();
         }
 

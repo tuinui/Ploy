@@ -194,10 +194,16 @@ public class PloyerPersonMapFragment extends BaseFragment implements OnMapReadyC
         return marker;
     }
 
-    private void onClickMarker(ProviderUserListGson.Data.UserService data) {
+    private void onClickMarker(final ProviderUserListGson.Data.UserService data) {
         if (null != data) {
             mCurrentSelectedData = data;
-            Glide.with(mImageViewProfilePhoto.getContext()).load(data.getImagePath()).error(R.drawable.ic_ployer_item_placeholder).into(mImageViewProfilePhoto);
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    Glide.with(mImageViewProfilePhoto.getContext()).load(data.getImagePath()).error(R.drawable.ic_ployer_item_placeholder).into(mImageViewProfilePhoto);
+                }
+            });
+
             mTextViewSheetTitle.setText(data.getFullName());
             mTExtViewSheetSubTitle.setText(mServiceData.getServiceName());
             mTextViewDescription.setText(data.getDescription());

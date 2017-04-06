@@ -71,10 +71,10 @@ public class DrawerController {
     }
 
     public static void initDrawer(final BaseActivity activity, final List<DrawerMenuItem> menus, final DrawerLayout drawerLayout, RecyclerView recyclerViewMenu, Toolbar toolbar, View toggleButton, @ColorInt int textColor, final OnMenuItemSelectedListener listener) {
-        final ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                activity, drawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawerLayout.addDrawerListener(toggle);
-        toggle.syncState();
+//        final ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+//                activity, drawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+//        drawerLayout.addDrawerListener(toggle);
+//        toggle.syncState();
         DrawerRecyclerAdapter adapter = new DrawerRecyclerAdapter(textColor) {
             @Override
             public void onBindViewHolder(final ViewHolder holder, int position) {
@@ -131,8 +131,8 @@ public class DrawerController {
 //    }
 
     private static void toggleDrawer(DrawerLayout dl) {
-        if (null != dl) {
-            if (dl.isDrawerOpen(GravityCompat.END)) {
+        if (null != dl && null != dl.getContext()) {
+            if (dl.isDrawerVisible(GravityCompat.END)) {
                 closeDrawer(dl);
             } else {
                 openDrawer(dl);
@@ -141,14 +141,14 @@ public class DrawerController {
     }
 
     private static void openDrawer(DrawerLayout dl) {
-        if (null != dl) {
+        if (null != dl && null != dl.getContext()) {
             dl.openDrawer(GravityCompat.END);
         }
     }
 
     private static void closeDrawer(DrawerLayout dl) {
-        if (null != dl) {
-            dl.closeDrawers();
+        if (null != dl && null != dl.getContext()) {
+            dl.closeDrawer(GravityCompat.END);
         }
     }
 

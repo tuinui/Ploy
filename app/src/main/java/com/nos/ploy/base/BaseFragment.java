@@ -146,7 +146,7 @@ public abstract class BaseFragment extends AppCompatDialogFragment {
 
     protected void runOnUiThread(Runnable action) {
         FragmentActivity activity = getActivity();
-        if (null != activity && !activity.isFinishing()) {
+        if (null != activity && !activity.isFinishing() && !isActivityDestroyed()) {
             activity.runOnUiThread(action);
         }
     }

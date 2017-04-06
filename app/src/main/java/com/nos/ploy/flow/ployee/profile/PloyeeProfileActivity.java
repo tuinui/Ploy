@@ -18,7 +18,6 @@ import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -232,11 +231,10 @@ public class PloyeeProfileActivity extends BaseActivity implements View.OnClickL
         @Override
         public void call(final List<ProfileImageGson.Data> datas) {
             if (null != datas) {
-                runOnUiThread(new Runnable() {
+                runOnUiThread(new Action1<Context>() {
                     @Override
-                    public void run() {
+                    public void call(Context context) {
                         mAdapter.replaceData(datas);
-//                        setUiPageViewController();
                     }
                 });
             }
@@ -289,7 +287,7 @@ public class PloyeeProfileActivity extends BaseActivity implements View.OnClickL
         mButtonPreview.setText(data.profileScreenPreview);
     }
 
-    private void setText(EditText editText,String text){
+    private void setText(EditText editText, String text) {
         editText.removeTextChangedListener(mContentChangedTextWatcher);
         editText.setText(text);
         editText.addTextChangedListener(mContentChangedTextWatcher);
@@ -297,14 +295,14 @@ public class PloyeeProfileActivity extends BaseActivity implements View.OnClickL
 
     private void bindData(final PostUpdateProfileGson data) {
         if (null != data) {
-            runOnUiThread(new Runnable() {
+            runOnUiThread(new Action1<Context>() {
                               @Override
-                              public void run() {
+                              public void call(Context context) {
 
-                                  setText(mEditTextAboutMe,data.getAboutMe());
-                                  setText(mEditTextEducation,data.getEducation());
-                                  setText(mEditTextInterest,data.getInterest());
-                                  setText(mEditTextProfileWork,data.getWork());
+                                  setText(mEditTextAboutMe, data.getAboutMe());
+                                  setText(mEditTextEducation, data.getEducation());
+                                  setText(mEditTextInterest, data.getInterest());
+                                  setText(mEditTextProfileWork, data.getWork());
                                   mButtonEmail.setActivated(data.isContactEmail());
                                   mButtonPhone.setActivated(data.isContactPhone());
 
@@ -317,6 +315,7 @@ public class PloyeeProfileActivity extends BaseActivity implements View.OnClickL
                                   }
 
                               }
+
                           }
             );
 
@@ -324,9 +323,9 @@ public class PloyeeProfileActivity extends BaseActivity implements View.OnClickL
         }
 
         if (null != mOriginalData) {
-            runOnUiThread(new Runnable() {
+            runOnUiThread(new Action1<Context>() {
                 @Override
-                public void run() {
+                public void call(Context context) {
                     String languageSupports = "";
                     if (mOriginalData.getLanguage() != null && !mOriginalData.getLanguage().isEmpty()) {
                         for (PloyeeProfileGson.Data.Language language : mOriginalData.getLanguage()) {
@@ -336,6 +335,7 @@ public class PloyeeProfileActivity extends BaseActivity implements View.OnClickL
                     languageSupports = removeLastCharacter(languageSupports);
                     mTextViewLanguageSupport.setText(languageSupports);
                 }
+
             });
         }
 
@@ -435,8 +435,16 @@ public class PloyeeProfileActivity extends BaseActivity implements View.OnClickL
         mEditTextProfileWork.addTextChangedListener(mContentChangedTextWatcher);
     }
 
-    private void showStaticMaps(LatLng latLng) {
-        Glide.with(mImageViewStaticMaps.getContext()).load(MyLocationUtils.getStaticMapsUrl(latLng)).into(mImageViewStaticMaps);
+    private void showStaticMaps(final LatLng latLng) {
+        runOnUiThread(new Action1<Context>() {
+            @Override
+            public void call(Context context) {
+                Glide.with(context).load(MyLocationUtils.getStaticMapsUrl(latLng)).into(mImageViewStaticMaps);
+            }
+
+
+        });
+
     }
 
     private void initRecyclerView() {

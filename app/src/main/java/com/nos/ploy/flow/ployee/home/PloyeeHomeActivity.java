@@ -111,11 +111,12 @@ public class PloyeeHomeActivity extends BaseActivity implements View.OnClickList
         public void call(List<ProfileImageGson.Data> datas) {
             if (null != datas && !datas.isEmpty()) {
                 final ProfileImageGson.Data data = datas.get(0);
-                runOnUiThread(new Runnable() {
+                runOnUiThread(new Action1<Context>() {
                     @Override
-                    public void run() {
-                        Glide.with(PloyeeHomeActivity.this).load(data.getImagePath()).into(mImageViewProfile);
+                    public void call(Context context) {
+                        Glide.with(context).load(data.getImagePath()).into(mImageViewProfile);
                     }
+
                 });
             }
         }
@@ -125,11 +126,12 @@ public class PloyeeHomeActivity extends BaseActivity implements View.OnClickList
         @Override
         public void call(final AccountGson.Data data) {
             if (null != data) {
-                runOnUiThread(new Runnable() {
+                runOnUiThread(new Action1<Context>() {
                     @Override
-                    public void run() {
+                    public void call(Context context) {
                         mTextViewUsername.setText(data.getFullName());
                     }
+
                 });
             }
         }

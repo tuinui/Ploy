@@ -8,10 +8,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.iarcuschin.simpleratingbar.SimpleRatingBar;
 import com.nos.ploy.R;
 import com.nos.ploy.api.base.RetrofitCallUtils;
 import com.nos.ploy.api.masterdata.model.LanguageAppLabelGson;
@@ -30,7 +30,7 @@ import butterknife.ButterKnife;
  * Created by Saran on 13/1/2560.
  */
 
-public class LeaveReviewFragment extends BaseFragment implements View.OnClickListener {
+public class LeaveReviewFragment extends BaseFragment implements View.OnClickListener, SimpleRatingBar.OnRatingBarChangeListener {
 
 
     @BindView(R.id.imageview_ployee_leave_review_profile_image)
@@ -38,15 +38,15 @@ public class LeaveReviewFragment extends BaseFragment implements View.OnClickLis
     @BindView(R.id.textview_ployee_leave_review_name)
     TextView mTextViewName;
     @BindView(R.id.ratingbar_ployee_leave_review_competence)
-    RatingBar mRatingBarCompetence;
+    SimpleRatingBar mRatingBarCompetence;
     @BindView(R.id.ratingbar_ployee_leave_review_communication)
-    RatingBar mRatingCommunication;
+    SimpleRatingBar mRatingBarCommunication;
     @BindView(R.id.ratingbar_ployee_leave_review_politeness)
-    RatingBar mRatingBarPoliteness;
+    SimpleRatingBar mRatingBarPoliteness;
     @BindView(R.id.ratingbar_ployee_leave_review_professionalism)
-    RatingBar mRatingBarProfessional;
+    SimpleRatingBar mRatingBarProfessional;
     @BindView(R.id.ratingbar_ployee_leave_review_punctuality)
-    RatingBar mRatingBarPunctuality;
+    SimpleRatingBar mRatingBarPunctuality;
     @BindView(R.id.edittext_ployee_leave_a_review)
     MaterialEditText mEditTextReview;
     @BindView(R.id.textview_ployee_leave_review_competence_title)
@@ -75,6 +75,11 @@ public class LeaveReviewFragment extends BaseFragment implements View.OnClickLis
     private long mUserIdToReview;
     private ProviderUserListGson.Data.UserService mUserServiceData;
     private OnReviewFinishListener listener;
+    private float mRatingCompetence;
+    private float mRatingCommunication;
+    private float mRatingPunctuality;
+    private float mRatingProfessional;
+    private float mRatingPoliteness;
 
     public static LeaveReviewFragment newInstance(long userIdToReview, ProviderUserListGson.Data.UserService userData, OnReviewFinishListener listener) {
 
@@ -134,7 +139,13 @@ public class LeaveReviewFragment extends BaseFragment implements View.OnClickLis
     private void bindData() {
         if (mReviewerUserId != null) {
             mTextViewName.setText(mUserServiceData.getFullName());
-            Glide.with(mImageViewProfileImage.getContext()).load(mUserServiceData.getImagePath()).error(R.drawable.ic_circle_profile_120dp).into(mImageViewProfileImage);
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    Glide.with(mImageViewProfileImage.getContext()).load(mUserServiceData.getImagePath()).error(R.drawable.ic_circle_profile_120dp).into(mImageViewProfileImage);
+                }
+            });
+
         }
 
     }
@@ -146,6 +157,11 @@ public class LeaveReviewFragment extends BaseFragment implements View.OnClickLis
 
     private void initView() {
         mButtonPost.setOnClickListener(this);
+        mRatingBarCompetence.setOnRatingBarChangeListener(this);
+        mRatingBarCommunication.setOnRatingBarChangeListener(this);
+        mRatingBarPoliteness.setOnRatingBarChangeListener(this);
+        mRatingBarProfessional.setOnRatingBarChangeListener(this);
+        mRatingBarPunctuality.setOnRatingBarChangeListener(this);
     }
 
     @Override
@@ -180,7 +196,7 @@ public class LeaveReviewFragment extends BaseFragment implements View.OnClickLis
     }
 
     private ReviewGson.Data.ReviewData.Review gatheredCurrentData() {
-        return new ReviewGson.Data.ReviewData.Review(mUserIdToReview, mReviewerUserId, mRatingBarCompetence.getNumStars(), mRatingBarPunctuality.getNumStars(), mRatingBarPoliteness.getNumStars(), mRatingCommunication.getNumStars(), mRatingBarProfessional.getNumStars(), extractString(mEditTextReview));
+        return new ReviewGson.Data.ReviewData.Review(mUserIdToReview, mReviewerUserId, (long) mRatingCompetence, (long) mRatingPunctuality, (long) mRatingPoliteness, (long) mRatingCommunication, (long) mRatingProfessional, extractString(mEditTextReview));
     }
 
     public void setListener(OnReviewFinishListener listener) {
@@ -191,7 +207,23 @@ public class LeaveReviewFragment extends BaseFragment implements View.OnClickLis
         return listener;
     }
 
-    public static interface OnReviewFinishListener{
+    @Override
+    public void onRatingChanged(SimpleRatingBar simpleRatingBar, float rating, boolean fromUser) {
+        int id = simpleRatingBar.getId();
+        if(id == mRatingBarCompetence.getId()){
+            mRatingCompetence = rating;
+        }else if(id == mRatingBarPoliteness.getId()){
+            mRatingPoliteness = rating;
+        }else if(id == mRatingBarProfessional.getId()){
+            mRatingProfessional = rating;
+        }else if(id == mRatingBarPunctuality.getId()){
+            mRatingPunctuality = rating;
+        }else if(id == mRatingBarCommunication.getId()){
+            mRatingCommunication = rating;
+        }
+    }
+
+    public static interface OnReviewFinishListener {
         public void onReviewFinish();
     }
 }

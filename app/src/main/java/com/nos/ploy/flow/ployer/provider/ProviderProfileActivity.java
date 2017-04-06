@@ -1,5 +1,6 @@
 package com.nos.ploy.flow.ployer.provider;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
@@ -50,7 +51,6 @@ import com.nos.ploy.flow.ployer.provider.review.ProviderReviewFragment;
 import com.nos.ploy.utils.GoogleApiAvailabilityUtils;
 import com.nos.ploy.utils.IntentUtils;
 import com.nos.ploy.utils.MyLocationUtils;
-import com.nos.ploy.utils.PopupMenuUtils;
 import com.nos.ploy.utils.RatingBarUtils;
 import com.nos.ploy.utils.RecyclerUtils;
 
@@ -60,6 +60,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import rx.functions.Action1;
 
 public class ProviderProfileActivity extends BaseActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, View.OnClickListener {
 
@@ -242,7 +243,6 @@ public class ProviderProfileActivity extends BaseActivity implements GoogleApiCl
         }
 
 
-
     }
 
     private void requestReviewData() {
@@ -348,13 +348,6 @@ public class ProviderProfileActivity extends BaseActivity implements GoogleApiCl
         mCardViewReview.setOnClickListener(this);
 
 
-
-
-
-
-
-
-
     }
 
     //userId=1&serviceId=1&lgCode=en
@@ -390,9 +383,9 @@ public class ProviderProfileActivity extends BaseActivity implements GoogleApiCl
             return;
         }
         mData = data;
-        runOnUiThread(new Runnable() {
+        runOnUiThread(new Action1<Context>() {
             @Override
-            public void run() {
+            public void call(Context context) {
 
                 if (null != data.getReviewAverage()) {
                     mRatingBarRate.setRating(RatingBarUtils.getRatingbarRoundingNumber(data.getReviewAverage().getAll()));
@@ -460,8 +453,8 @@ public class ProviderProfileActivity extends BaseActivity implements GoogleApiCl
                 for (int i = 0; i < size; i++) {
                     PloyeeProfileGson.Data.Language language = data.getLanguage().get(i);
 
-                    if (!TextUtils.isEmpty(languageSupports)){
-                        languageSupports +=  ", ";
+                    if (!TextUtils.isEmpty(languageSupports)) {
+                        languageSupports += ", ";
                     }
 
                     languageSupports += language.getSpokenLanguageValue();
@@ -471,43 +464,56 @@ public class ProviderProfileActivity extends BaseActivity implements GoogleApiCl
             mTextViewLanguages.setText(languageSupports);
             mTextViewWork.setText(data.getWork());
             if (null != data.getLocation()) {
-                LatLng latLng = new LatLng(data.getLocation().getLat(), data.getLocation().getLng());
+                final LatLng latLng = new LatLng(data.getLocation().getLat(), data.getLocation().getLng());
                 mTextViewAddress.setText(MyLocationUtils.getCompleteAddressString(this, data.getLocation().getLat(), data.getLocation().getLng()));
                 if (MyLocationUtils.locationProviderEnabled(this)) {
                     mTextViewDistance.setText(MyLocationUtils.getDistanceFromCurrentLocation(this, mGoogleApiClient, latLng));
                 }
+                runOnUiThread(new Action1<Context>() {
+                    @Override
+                    public void call(Context context) {
+                        Glide.with(context).load(MyLocationUtils.getStaticMapsUrl(latLng)).into(mImageViewStaticMaps);
+                    }
 
-                Glide.with(mImageViewStaticMaps.getContext()).load(MyLocationUtils.getStaticMapsUrl(latLng)).into(mImageViewStaticMaps);
+                });
+
             } else {
                 mTextViewDistance.setText("");
                 mTextViewAddress.setText(mLanguageData.profileScreenLocation);
-                Glide.with(mImageViewStaticMaps.getContext()).load(MyLocationUtils.getStaticMapsUrl(new LatLng(0, 0))).into(mImageViewStaticMaps);
+                runOnUiThread(new Action1<Context>() {
+                    @Override
+                    public void call(Context context) {
+                        Glide.with(context).load(MyLocationUtils.getStaticMapsUrl(new LatLng(0, 0))).into(mImageViewStaticMaps);
+                    }
+
+                });
+
             }
 
             mTextViewEducation.setText(data.getEducation());
 
 
-            if (TextUtils.isEmpty(data.getAboutMe())){
+            if (TextUtils.isEmpty(data.getAboutMe())) {
                 viewZoneAbout.setVisibility(View.GONE);
             }
 
-            if (TextUtils.isEmpty(languageSupports)){
+            if (TextUtils.isEmpty(languageSupports)) {
                 viewZoneLanguages.setVisibility(View.GONE);
             }
 
-            if (TextUtils.isEmpty(data.getEducation())){
+            if (TextUtils.isEmpty(data.getEducation())) {
                 viewZoneEdu.setVisibility(View.GONE);
             }
 
-            if (TextUtils.isEmpty(data.getWork())){
+            if (TextUtils.isEmpty(data.getWork())) {
                 viewZoneWork.setVisibility(View.GONE);
             }
 
-            if (TextUtils.isEmpty(data.getInterest())){
+            if (TextUtils.isEmpty(data.getInterest())) {
                 viewZoneInterests.setVisibility(View.GONE);
             }
 
-            if (mTransportDatas.size() == 0){
+            if (mTransportDatas.size() == 0) {
                 viewZoneTransport.setVisibility(View.GONE);
             }
 

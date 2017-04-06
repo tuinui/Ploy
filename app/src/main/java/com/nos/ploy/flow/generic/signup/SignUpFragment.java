@@ -325,14 +325,19 @@ public class SignUpFragment extends BaseFragment implements View.OnClickListener
     private void chooseImage(final Context context) {
         ImagePickerUtils.pickImage(context, new Action1<ImageEntry>() {
             @Override
-            public void call(ImageEntry imageEntry) {
+            public void call(final ImageEntry imageEntry) {
                 if (null != imageEntry && !TextUtils.isEmpty(imageEntry.path)) {
-                    Glide.with(context).load(imageEntry.path).asBitmap().into(new BitmapImageViewTarget(mImageViewProfile) {
+                    runOnUiThread(new Runnable() {
                         @Override
-                        public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
-                            super.onResourceReady(resource, glideAnimation);
-                            mBitmapToUpload = resource;
-                            mImageViewProfile.setImageBitmap(mBitmapToUpload);
+                        public void run() {
+                            Glide.with(context).load(imageEntry.path).asBitmap().into(new BitmapImageViewTarget(mImageViewProfile) {
+                                @Override
+                                public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
+                                    super.onResourceReady(resource, glideAnimation);
+                                    mBitmapToUpload = resource;
+                                    mImageViewProfile.setImageBitmap(mBitmapToUpload);
+                                }
+                            });
                         }
                     });
                 }
