@@ -87,7 +87,7 @@ public class DrawerController {
                             if (RecyclerUtils.isAvailableData(menus, holder.getAdapterPosition())) {
                                 @DrawerController.Menu int menu = menus.get(holder.getAdapterPosition()).getMenu();
                                 listener.onMenuItemSelected(menu);
-                                closeDrawer(drawerLayout);
+//                                closeDrawer(drawerLayout);
                             }
                         }
                     });

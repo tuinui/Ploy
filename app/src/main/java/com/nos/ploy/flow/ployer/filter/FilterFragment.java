@@ -9,11 +9,11 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.text.InputFilter;
 import android.text.InputType;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -37,7 +37,6 @@ import com.nos.ploy.api.ployer.model.PostGetPloyerServiceDetailGson;
 import com.nos.ploy.api.ployer.model.PostProviderFilterGson;
 import com.nos.ploy.base.BaseFragment;
 import com.nos.ploy.cache.SharePreferenceUtils;
-import com.nos.ploy.custom.view.InputFilterMinMax;
 import com.nos.ploy.custom.view.NumberTextWatcher;
 import com.nos.ploy.flow.ployee.profile.TransportRecyclerAdapter;
 import com.nos.ploy.flow.ployer.filter.availability.FilterAvailabilityFragment;
@@ -105,6 +104,18 @@ public class FilterFragment extends BaseFragment implements View.OnClickListener
         public void onRangeChangeListener(RangeBar rangeBar, int leftPinIndex, int rightPinIndex, String leftPinValue, String rightPinValue) {
             mEditTextFrom.setText(leftPinValue);
             mEditTextTo.setText(rightPinValue);
+            mPostData.setPriceMin(Long.valueOf(leftPinValue));
+            mPostData.setPriceMax(Long.valueOf(rightPinValue));
+        }
+    };
+    private View.OnTouchListener mOnRangebarTouchListener = new View.OnTouchListener() {
+        @Override
+        public boolean onTouch(View v, MotionEvent event) {
+            if (event.getAction() == MotionEvent.ACTION_UP) {
+                attemptRequestPostFilter();
+                return true;
+            }
+            return false;
         }
     };
 
@@ -148,7 +159,6 @@ public class FilterFragment extends BaseFragment implements View.OnClickListener
                             }
                             attemptRequestPostFilter();
                             notifyItemChanged(holder.getAdapterPosition());
-
 
 
                         }
@@ -228,7 +238,7 @@ public class FilterFragment extends BaseFragment implements View.OnClickListener
     }
 
     private void refreshDataPriceUnit() {
-        RetrofitCallUtils.with(getRetrofit().create(PloyerApi.class).getServiceDetail(new PostGetPloyerServiceDetailGson(mData.getId(), -1L, SharePreferenceUtils.getCurrentActiveAppLanguageCode(getContext()))), new RetrofitCallUtils.RetrofitCallback<PloyerServiceDetailGson>() {
+        RetrofitCallUtils.with(mPloyerApi.getServiceDetail(new PostGetPloyerServiceDetailGson(mData.getId(), -1L, SharePreferenceUtils.getCurrentActiveAppLanguageCode(getContext()))), new RetrofitCallUtils.RetrofitCallback<PloyerServiceDetailGson>() {
             @Override
             public void onDataSuccess(PloyerServiceDetailGson data) {
                 mServiceDetail = data.getData();
@@ -271,6 +281,7 @@ public class FilterFragment extends BaseFragment implements View.OnClickListener
         strProvidersLabel = data.providersLabel;
     }
 
+
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -284,9 +295,7 @@ public class FilterFragment extends BaseFragment implements View.OnClickListener
         if (null != mData) {
             mTextViewTitle.setText(mData.getServiceName());
             mTextViewSubTitle.setVisibility(View.VISIBLE);
-//            mTextViewSubTitle.setText(mData.getPloyeeCountDisplay());
         }
-//        enableBackButton(mToolbar);
 
         mToolbar.inflateMenu(R.menu.menu_clear);
         mToolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
@@ -299,7 +308,13 @@ public class FilterFragment extends BaseFragment implements View.OnClickListener
                 return false;
             }
         });
-            enableBackButton(mToolbar);
+
+        enableBackButton(mToolbar, new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
 
     }
 
@@ -406,6 +421,7 @@ public class FilterFragment extends BaseFragment implements View.OnClickListener
 
     private void initView() {
         mRangeBar.setOnRangeBarChangeListener(mRangeBarListener);
+        mRangeBar.setOnTouchListener(mOnRangebarTouchListener);
         disableEditable(mEditTextFrom);
         disableEditable(mEditTextTo);
         mEditTextFrom.setOnClickListener(this);
@@ -437,7 +453,6 @@ public class FilterFragment extends BaseFragment implements View.OnClickListener
             mRangeBar.setRangePinsByValue(minValueToSet, Float.parseFloat(mRangeBar.getRightPinValue()));
         }
         mPostData.setPriceMin(min);
-
     }
 
     private void setRightPinValue(long max) {
@@ -541,7 +556,6 @@ public class FilterFragment extends BaseFragment implements View.OnClickListener
             }
         }
         getListener().onFilterConfirm(mPostData);
-//        dismiss();
     }
 
     private void showPopupAlertEditTextMenu(Context context, String title, String defaultValue, final Action1<String> onConfirm) {
@@ -613,7 +627,7 @@ public class FilterFragment extends BaseFragment implements View.OnClickListener
 
     private FilterLanguageFragment getLanguageFragment() {
 
-        filterLanguageFragment =  FilterLanguageFragment.newInstance(mData, mTotalCount, mPostData.cloneThis().getLanguages(), new FilterLanguageFragment.OnDataChangedListener() {
+        filterLanguageFragment = FilterLanguageFragment.newInstance(mData, mTotalCount, mPostData.cloneThis().getLanguages(), new FilterLanguageFragment.OnDataChangedListener() {
             @Override
             public void onClickDone(ArrayList<String> datas) {
                 mPostData.setLanguages(datas);
@@ -676,25 +690,29 @@ public class FilterFragment extends BaseFragment implements View.OnClickListener
 
 
         try {
-            if (filterServicesFragment != null){
+            if (filterServicesFragment != null) {
                 filterServicesFragment.updateCountProviders(mTotalCount);
             }
-        } catch (Exception ignored) {}
+        } catch (Exception ignored) {
+        }
 
         try {
-            if (filterAvailabilityFragment != null){
+            if (filterAvailabilityFragment != null) {
                 filterAvailabilityFragment.updateCountProviders(mTotalCount);
             }
-        } catch (Exception ignored) {}
+        } catch (Exception ignored) {
+        }
 
 
         try {
-            if (filterLanguageFragment != null){
+            if (filterLanguageFragment != null) {
                 filterLanguageFragment.updateCountProviders(mTotalCount);
             }
-        } catch (Exception ignored) {}
+        } catch (Exception ignored) {
+        }
 
     }
+
 
     public static interface OnFilterConfirmListener {
         public void onFilterConfirm(PostProviderFilterGson data);

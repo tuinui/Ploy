@@ -169,14 +169,19 @@ public class PloyerPersonMapFragment extends BaseFragment implements OnMapReadyC
     private void bindDataToMap() {
         if (mGoogleMap != null && !mDatas.isEmpty()) {
             LatLngBounds.Builder latlngBoundBuilder = new LatLngBounds.Builder();
+            boolean isInclude = false;
             for (PloyerPersonMapViewModel data : mDatas) {
                 if (null != data.getData() && null != data.getMarkerOptions()) {
                     Marker marker = mGoogleMap.addMarker(data.getMarkerOptions());
                     marker.setTag(data.getData());
                     latlngBoundBuilder.include(marker.getPosition());
+                    isInclude = true;
                 }
             }
-            mGoogleMap.animateCamera(CameraUpdateFactory.newLatLngBounds(latlngBoundBuilder.build(), 20));
+            if(isInclude){
+                mGoogleMap.animateCamera(CameraUpdateFactory.newLatLngBounds(latlngBoundBuilder.build(), 20));
+            }
+
         }
 
     }
