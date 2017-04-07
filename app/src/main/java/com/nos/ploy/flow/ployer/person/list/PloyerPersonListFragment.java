@@ -151,10 +151,17 @@ public class PloyerPersonListFragment extends BaseFragment implements SearchView
         }
     }
 
+    public List<ProviderUserListGson.Data.UserService> getDatas(){
+        return mDatas;
+    }
+
     private void initRecyclerView() {
         mAdapter = new PloyerPersonListRecyclerAdapter(mOnDataBindListener);
-        mRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
+        GridLayoutManager glm = new GridLayoutManager(getContext(), 2);
+        mRecyclerView.setLayoutManager(glm);
         mRecyclerView.setAdapter(mAdapter);
+        getListener().onRecyclerViewCreated(mRecyclerView,glm);
+
     }
 
     @Override
@@ -206,7 +213,7 @@ public class PloyerPersonListFragment extends BaseFragment implements SearchView
 
 
     public static interface OnFragmentInteractionListener {
-
+        public void onRecyclerViewCreated(RecyclerView recyclerView,GridLayoutManager layoutManager);
         public void onRefreshData();
     }
 }

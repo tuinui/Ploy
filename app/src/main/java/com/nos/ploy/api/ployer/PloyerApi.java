@@ -37,8 +37,8 @@ public interface PloyerApi {
     Call<PloyerServicesGson> getServiceList(@Query("lgCode") String languageCode);
 
     //{{endpoint_ploy}}/api/ployer/list?serviceId=1
-    @GET("/api/ployer/list?pageNo=1&pageSize=9999")
-    Call<ProviderUserListGson> getProviderList(@Query("serviceId") long serviceId);
+    @GET("/api/ployer/list?pageSize=10")
+    Call<ProviderUserListGson> getProviderList(@Query("serviceId") long serviceId , @Query("pageNo") long pageNo);
 
     //{{endpoint_ploy}}/api/ployer/filterPloyeeListByCriteria
     @POST("/api/ployer/filterPloyeeListByCriteria")

@@ -127,6 +127,11 @@ public class BaseActivity extends LocalizationActivity {
         }
     }
 
+
+    protected boolean isRefreshing(){
+        return isRefreshing;
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

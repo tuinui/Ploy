@@ -52,7 +52,7 @@ public class ProviderUserListGson extends BaseResponse<ProviderUserListGson.Data
             }
 
             public Long getPageNo() {
-                return null == pageNo ? 0 : pageNo;
+                return null == pageNo ? 1 : pageNo;
             }
 
             public Long getTotal() {

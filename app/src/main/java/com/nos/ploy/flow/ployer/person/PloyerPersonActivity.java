@@ -14,6 +14,7 @@ import android.support.design.internal.ForegroundLinearLayout;
 import android.support.v4.widget.CursorAdapter;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SimpleCursorAdapter;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
@@ -57,6 +58,7 @@ import com.nos.ploy.flow.ployer.person.maps.PloyerPersonMapFragment;
 import com.nos.ploy.utils.GoogleApiAvailabilityUtils;
 import com.nos.ploy.utils.IntentUtils;
 import com.nos.ploy.utils.PopupMenuUtils;
+import com.nos.ploy.utils.RecyclerUtils;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -86,7 +88,9 @@ public class PloyerPersonActivity extends BaseActivity implements SearchView.OnQ
     private long mTotal = 0;
     private boolean didPagerSet;
     private FilterFragment filterFragment;
-
+    private boolean isNoMoreItem;
+    private boolean loadBottomFinish;
+    private long mCurrentPageNumber = 1;
 
     @Retention(RetentionPolicy.SOURCE)
     @IntDef({LIST, MAPS})
@@ -136,8 +140,15 @@ public class PloyerPersonActivity extends BaseActivity implements SearchView.OnQ
     private PloyerServicesGson.Data mParentData = null;
     private PloyerPersonListFragment.OnFragmentInteractionListener mPersonFragmentInteractionListener = new PloyerPersonListFragment.OnFragmentInteractionListener() {
         @Override
+        public void onRecyclerViewCreated(RecyclerView recyclerView, GridLayoutManager layoutManager) {
+            setPagingBottom(recyclerView, layoutManager);
+        }
+
+        @Override
         public void onRefreshData() {
-            refreshData();
+            setNoMoreItem(false);
+            mCurrentPageNumber = 1;
+            refreshData(mCurrentPageNumber);
         }
     };
     private PloyerPersonListFragment mPersonListFragment;
@@ -432,13 +443,13 @@ public class PloyerPersonActivity extends BaseActivity implements SearchView.OnQ
             @Override
             public void onFilterConfirm(PostProviderFilterGson data) {
                 mPostData = data;
-                refreshData();
+                refreshData(mCurrentPageNumber);
             }
 
             @Override
             public void onFilterClear() {
                 mPostData = null;
-                refreshData();
+                refreshData(mCurrentPageNumber);
             }
         });
 
@@ -464,15 +475,16 @@ public class PloyerPersonActivity extends BaseActivity implements SearchView.OnQ
     }
 
 
-    private void refreshData() {
+    private void refreshData(final long currentPageNumber) {
         if (null == mParentData || isRequesting) {
             return;
         }
+
         showRefreshing();
         isRequesting = true;
         Call<ProviderUserListGson> call;
         if (mPostData == null) {
-            call = mApi.getProviderList(mParentData.getId());
+            call = mApi.getProviderList(mParentData.getId(), currentPageNumber);
         } else {
             call = mApi.postGetFilteredProvider(mPostData);
         }
@@ -480,29 +492,41 @@ public class PloyerPersonActivity extends BaseActivity implements SearchView.OnQ
             @Override
             public void onDataSuccess(ProviderUserListGson data) {
                 isRequesting = false;
+                loadBottomFinish = true;
                 dismissRefreshing();
-                bindData(data.getData());
-
+                bindData(data.getData(), currentPageNumber > 1);
             }
 
             @Override
             public void onDataFailure(String failCause) {
                 isRequesting = false;
+                loadBottomFinish = true;
                 dismissRefreshing();
             }
         }).enqueue(this);
     }
 
-    private void bindData(final ProviderUserListGson.Data data) {
+
+    private void bindData(final ProviderUserListGson.Data data, final boolean addMore) {
         if (null != data && null != data.getUserServiceList()) {
             if (null != data.getPagination()) {
                 mTotal = data.getPagination().getTotal();
+                mCurrentPageNumber = data.getPagination().getPageNo();
             }
 
             runOnUiThread(new Action1<Context>() {
                 @Override
                 public void call(Context context) {
-                    mData = data;
+                    if (addMore && null != data.getUserServiceList()) {
+                        mData.getUserServiceList().addAll(data.getUserServiceList());
+                        if(data.getUserServiceList().isEmpty()){
+                            setNoMoreItem(true);
+                        }
+
+                    } else {
+                        mData = data;
+                    }
+
 
                     try {
                         filterFragment.updateCountProviders(mData.getPagination().getTotal());
@@ -511,19 +535,20 @@ public class PloyerPersonActivity extends BaseActivity implements SearchView.OnQ
 
                     mTextViewSubTitle.setText(mData.getPagination().getTotal() + " " + mLanguageData.providersLabel);
                     if (null != mPersonListFragment) {
-                        mPersonListFragment.bindData(data);
+                        mPersonListFragment.bindData(mData);
                     }
 
                     if (null != mPersonMapFragment) {
-                        mPersonMapFragment.bindData(data.getUserServiceList());
+                        mPersonMapFragment.bindData(mData.getUserServiceList());
                     }
 
                     mSuggestions = new ArrayList<>();
-                    for (ProviderUserListGson.Data.UserService service : data.getUserServiceList()) {
+                    for (ProviderUserListGson.Data.UserService service : mData.getUserServiceList()) {
                         if (null != service) {
                             mSuggestions.add(service.getFullName());
                         }
                     }
+
 
                     int[] to = new int[]{android.R.id.text1};
                     String[] from = new String[]{mSuggestionFrom};
@@ -545,6 +570,37 @@ public class PloyerPersonActivity extends BaseActivity implements SearchView.OnQ
         }
     }
 
+    public void setPagingBottom(RecyclerView view, final GridLayoutManager lm) {
+        view.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                if (dy > 0) //check for scroll down
+                {
+                    int visibleItemCount = lm.getChildCount();
+                    int totalItemCount = lm.getItemCount();
+                    int pastVisibleItems = lm.findFirstVisibleItemPosition();
+                    int lastInScreen = pastVisibleItems + visibleItemCount;
+
+                    if (lastInScreen == 0) {
+                        return;
+                    }
+
+                    if (lastInScreen == totalItemCount && !isRefreshing() && !isNoMoreItem) {
+
+                        if (loadBottomFinish) {
+                            if (RecyclerUtils.getSize(mPersonListFragment.getDatas()) > 0) {
+                                showRefreshing();
+                                loadBottomFinish = false;
+                                refreshData(mCurrentPageNumber + 1);
+                            }
+                        }
+                    }
+
+                }
+            }
+        });
+
+    }
 
     // You must implements your logic to get data using OrmLite
     private void populateSuggestionAdapter(String query) {
@@ -581,9 +637,9 @@ public class PloyerPersonActivity extends BaseActivity implements SearchView.OnQ
         }
 
         if (mData == null) {
-            refreshData();
+            refreshData(mCurrentPageNumber);
         } else {
-            bindData(mData);
+            bindData(mData, false);
         }
 
     }
@@ -616,4 +672,10 @@ public class PloyerPersonActivity extends BaseActivity implements SearchView.OnQ
 
         }
     }
+
+    private void setNoMoreItem(boolean isNoMoreItem) {
+        this.isNoMoreItem = isNoMoreItem;
+
+    }
+
 }
