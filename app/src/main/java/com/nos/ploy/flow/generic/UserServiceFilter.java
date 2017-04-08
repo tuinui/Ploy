@@ -31,8 +31,8 @@ public class UserServiceFilter extends Filter {
 
         //here you need to add proper items do filteredContactList
         for (final ProviderUserListGson.Data.UserService item : contactList) {
-            String name = item.getFirstName().toLowerCase()+item.getLastName().toLowerCase();
-            if (name.trim().contains(constraint)) {
+            String name = item.getFullName().toLowerCase();
+            if (name.trim().contains(String.valueOf(constraint).toLowerCase())) {
                 filteredContactList.add(item);
             }
         }

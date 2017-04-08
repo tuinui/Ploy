@@ -88,7 +88,7 @@ public class PloyerPersonActivity extends BaseActivity implements SearchView.OnQ
     private long mTotal = 0;
     private boolean didPagerSet;
     private FilterFragment filterFragment;
-    private boolean isNoMoreItem;
+    private boolean shouldRequestMore;
     private boolean loadBottomFinish;
     private long mCurrentPageNumber = 1;
 
@@ -146,7 +146,7 @@ public class PloyerPersonActivity extends BaseActivity implements SearchView.OnQ
 
         @Override
         public void onRefreshData() {
-            setNoMoreItem(false);
+            setShouldRequestMore(true);
             mCurrentPageNumber = 1;
             refreshData(mCurrentPageNumber);
         }
@@ -449,6 +449,7 @@ public class PloyerPersonActivity extends BaseActivity implements SearchView.OnQ
             @Override
             public void onFilterClear() {
                 mPostData = null;
+                setShouldRequestMore(true);
                 refreshData(mCurrentPageNumber);
             }
         });
@@ -479,22 +480,25 @@ public class PloyerPersonActivity extends BaseActivity implements SearchView.OnQ
         if (null == mParentData || isRequesting) {
             return;
         }
-
+        long pageNumber = -404;
         showRefreshing();
         isRequesting = true;
         Call<ProviderUserListGson> call;
         if (mPostData == null) {
             call = mApi.getProviderList(mParentData.getId(), currentPageNumber);
+            pageNumber = currentPageNumber;
         } else {
             call = mApi.postGetFilteredProvider(mPostData);
+            setShouldRequestMore(false);
         }
+        final long finalPageNumber = pageNumber;
         RetrofitCallUtils.with(call, new RetrofitCallUtils.RetrofitCallback<ProviderUserListGson>() {
             @Override
             public void onDataSuccess(ProviderUserListGson data) {
                 isRequesting = false;
                 loadBottomFinish = true;
                 dismissRefreshing();
-                bindData(data.getData(), currentPageNumber > 1);
+                bindData(data.getData(), finalPageNumber > 1);
             }
 
             @Override
@@ -519,8 +523,8 @@ public class PloyerPersonActivity extends BaseActivity implements SearchView.OnQ
                 public void call(Context context) {
                     if (addMore && null != data.getUserServiceList()) {
                         mData.getUserServiceList().addAll(data.getUserServiceList());
-                        if(data.getUserServiceList().isEmpty()){
-                            setNoMoreItem(true);
+                        if (data.getUserServiceList().isEmpty()) {
+                            setShouldRequestMore(false);
                         }
 
                     } else {
@@ -585,7 +589,7 @@ public class PloyerPersonActivity extends BaseActivity implements SearchView.OnQ
                         return;
                     }
 
-                    if (lastInScreen == totalItemCount && !isRefreshing() && !isNoMoreItem) {
+                    if (lastInScreen == totalItemCount && !isRefreshing() && shouldRequestMore) {
 
                         if (loadBottomFinish) {
                             if (RecyclerUtils.getSize(mPersonListFragment.getDatas()) > 0) {
@@ -673,8 +677,8 @@ public class PloyerPersonActivity extends BaseActivity implements SearchView.OnQ
         }
     }
 
-    private void setNoMoreItem(boolean isNoMoreItem) {
-        this.isNoMoreItem = isNoMoreItem;
+    private void setShouldRequestMore(boolean isNoMoreItem) {
+        this.shouldRequestMore = isNoMoreItem;
 
     }
 
