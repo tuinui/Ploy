@@ -37,6 +37,7 @@ import com.nos.ploy.api.ployer.PloyerApi;
 import com.nos.ploy.api.ployer.model.PloyerServiceDetailGson;
 import com.nos.ploy.api.ployer.model.ProviderUserListGson;
 import com.nos.ploy.api.ployer.model.ReviewGson;
+import com.nos.ploy.api.utils.loader.AccountInfoLoader;
 import com.nos.ploy.base.BaseActivity;
 import com.nos.ploy.cache.SharePreferenceUtils;
 import com.nos.ploy.flow.generic.maps.LocalizationMapsFragment;
@@ -411,8 +412,16 @@ public class ProviderProfileActivity extends BaseActivity implements GoogleApiCl
                     bindAvailability(data.getAvailability());
                 }
 
-                if (null != data.getImages()) {
+                if (RecyclerUtils.getSize(data.getImages()) > 0) {
                     bindProfileImages(data.getImages());
+                } else if (null != data.getUserProfile()) {
+                    AccountInfoLoader.getProfileImage(ProviderProfileActivity.this, data.getUserProfile().getUserId(), true, new Action1<List<ProfileImageGson.Data>>() {
+                        @Override
+                        public void call(List<ProfileImageGson.Data> datas) {
+                            data.setImages(datas);
+                            bindProfileImages(data.getImages());
+                        }
+                    });
                 }
 
                 if (null != data.getServiceDetails()) {

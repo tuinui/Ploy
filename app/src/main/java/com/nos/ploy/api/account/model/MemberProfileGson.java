@@ -34,7 +34,6 @@ public class MemberProfileGson extends BaseResponse<MemberProfileGson.Data> {
 
         public Data(ProviderUserListGson.Data.UserService data) {
             userProfile = new PloyeeProfileGson.Data(data);
-            images.add(new ProfileImageGson.Data(data.getImagePath()));
             reviewAverage = new ReviewGson.Data.ReviewAverage(data);
         }
 
@@ -56,6 +55,10 @@ public class MemberProfileGson extends BaseResponse<MemberProfileGson.Data> {
 
         public ReviewGson.Data.ReviewAverage getReviewAverage() {
             return reviewAverage;
+        }
+
+        public void setImages(List<ProfileImageGson.Data> images) {
+            this.images = images;
         }
     }
 }
