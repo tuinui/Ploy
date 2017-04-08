@@ -30,6 +30,8 @@ public class FirstScreenActivity extends BaseActivity implements View.OnClickLis
     @BindView(R.id.button_first_screen_search_jobs)
     Button mButtonSearchJobs;
 
+
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,6 +57,11 @@ public class FirstScreenActivity extends BaseActivity implements View.OnClickLis
 
         Uri browsableData = getIntent().getData();
         if (browsableData != null) {
+
+            getIntent().replaceExtras(new Bundle());
+            getIntent().setAction("");
+            getIntent().setData(null);
+            getIntent().setFlags(0);
 
             String action = browsableData.getQueryParameter("action");
             String msg = browsableData.getQueryParameter("msg");
