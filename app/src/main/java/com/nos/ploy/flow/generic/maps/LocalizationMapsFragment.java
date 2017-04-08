@@ -1,6 +1,5 @@
 package com.nos.ploy.flow.generic.maps;
 
-import android.content.Context;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -22,11 +21,11 @@ import com.nos.ploy.R;
 import com.nos.ploy.api.masterdata.model.LanguageAppLabelGson;
 import com.nos.ploy.base.BaseFragment;
 import com.nos.ploy.utils.FragmentTransactionUtils;
-import com.nos.ploy.utils.IntentUtils;
 import com.nos.ploy.utils.PopupMenuUtils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import rx.functions.Action1;
 
 /**
  * Created by Saran on 3/1/2560.
@@ -40,7 +39,7 @@ public class LocalizationMapsFragment extends BaseFragment implements OnMapReady
     @BindView(R.id.textview_main_appbar_title)
     TextView mTextViewToolbarTitle;
 
-//    @BindView(R.id.fab_ployee_maps_direction)
+    //    @BindView(R.id.fab_ployee_maps_direction)
 //    FloatingActionButton mFabDirection;
     @BindView(R.id.fab_ployee_maps_my_location)
     FloatingActionButton mFabMyLocation;
@@ -53,6 +52,7 @@ public class LocalizationMapsFragment extends BaseFragment implements OnMapReady
     private OnChooseLocationFinishListener listener;
     private MarkerOptions mMarkerOptions;
     private boolean mCanChangeLocation;
+    private boolean isLocationChanged = false;
 
     public static LocalizationMapsFragment newInstance(LatLng latlng, OnChooseLocationFinishListener listener) {
         return newInstance(latlng, true, listener);
@@ -72,7 +72,7 @@ public class LocalizationMapsFragment extends BaseFragment implements OnMapReady
     @Override
     protected void bindLanguage(LanguageAppLabelGson.Data data) {
         super.bindLanguage(data);
-        PopupMenuUtils.setMenuTitle(mToolbar.getMenu(),R.id.menu_done_item_done,data.doneLabel);
+        PopupMenuUtils.setMenuTitle(mToolbar.getMenu(), R.id.menu_done_item_done, data.doneLabel);
         mTextViewToolbarTitle.setText(data.profileScreenLocalization);
     }
 
@@ -111,7 +111,14 @@ public class LocalizationMapsFragment extends BaseFragment implements OnMapReady
 
     private void initToolbar() {
         mTextViewToolbarTitle.setText(R.string.Localization);
-        enableBackButton(mToolbar);
+        enableBackButton(mToolbar, new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!onBackPressed()) {
+                    dismiss();
+                }
+            }
+        });
         mToolbar.inflateMenu(R.menu.menu_done);
         mToolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
             @Override
@@ -124,6 +131,23 @@ public class LocalizationMapsFragment extends BaseFragment implements OnMapReady
                 return false;
             }
         });
+    }
+
+    @Override
+    public boolean onBackPressed() {
+        if (mCanChangeLocation && isLocationChanged) {
+            PopupMenuUtils.showConfirmationAlertMenu(getContext(), null, mLanguageData.accountScreenConfirmBeforeBack, mLanguageData.okLabel, mLanguageData.cancelLabel, new Action1<Boolean>() {
+                @Override
+                public void call(Boolean yes) {
+                    if (yes) {
+                        dismiss();
+                    }
+                }
+            });
+            return true;
+        }
+        return super.onBackPressed();
+
     }
 
     private void initMap() {
@@ -156,6 +180,7 @@ public class LocalizationMapsFragment extends BaseFragment implements OnMapReady
             mGoogleMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
                 @Override
                 public void onMapClick(LatLng latLng) {
+                    isLocationChanged = true;
                     onChangeLocation(latLng);
                 }
             });

@@ -139,7 +139,7 @@ public class PloyeeProfileActivity extends BaseActivity implements View.OnClickL
 
         @Override
         public void onTextChanged(CharSequence s, int start, int before, int count) {
-            isContentChanged = true;
+            setIsContentChanged(true);
         }
 
         @Override
@@ -162,7 +162,7 @@ public class PloyeeProfileActivity extends BaseActivity implements View.OnClickL
                         if (RecyclerUtils.isAvailableData(mAllDataTransports, holder.getAdapterPosition())) {
                             TransportGsonVm data = mAllDataTransports.get(holder.getAdapterPosition());
                             toggleEnableTransport(data.getId(), holder.getAdapterPosition());
-                            isContentChanged = true;
+                            setIsContentChanged(true);
                         }
                     }
                 });
@@ -246,7 +246,7 @@ public class PloyeeProfileActivity extends BaseActivity implements View.OnClickL
             dismissLoading();
             showToastLong("Success");
             refreshData(PloyeeProfileActivity.this);
-            isContentChanged = false;
+            setIsContentChanged(false);
 
         }
 
@@ -528,20 +528,6 @@ public class PloyeeProfileActivity extends BaseActivity implements View.OnClickL
                 onBackPressed();
             }
         });
-
-        mToolbar.inflateMenu(R.menu.menu_done);
-        mToolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                int id = item.getItemId();
-                if (id == R.id.menu_done_item_done) {
-                    onClickDone();
-                }
-                return false;
-            }
-
-
-        });
     }
 
     private void onClickDone() {
@@ -639,14 +625,14 @@ public class PloyeeProfileActivity extends BaseActivity implements View.OnClickL
         int id = v.getId();
         if (id == mButtonEmail.getId()) {
             mButtonEmail.setActivated(!mButtonEmail.isActivated());
-            isContentChanged = true;
+            setIsContentChanged(true);
         } else if (id == mButtonPhone.getId()) {
             AccountInfoLoader.getAccountGson(v.getContext(), mUserId, new Action1<AccountGson.Data>() {
                 @Override
                 public void call(AccountGson.Data data) {
                     if (!TextUtils.isEmpty(data.getPhone())) {
                         mButtonPhone.setActivated(!mButtonPhone.isActivated());
-                        isContentChanged = true;
+                        setIsContentChanged(true);
                     } else {
                         PopupMenuUtils.showConfirmationAlertMenu(v.getContext(), null, mLanguageData.profileScreenNoPhone, mLanguageData.okLabel, null, null);
                     }
@@ -657,7 +643,7 @@ public class PloyeeProfileActivity extends BaseActivity implements View.OnClickL
             showUploadPhotoFragment();
         } else if (id == mImageButtonCheckin.getId()) {
             getLocationAndSetToAddressView();
-            isContentChanged = true;
+            setIsContentChanged(true);
         } else if (id == mTextViewLanguageSupport.getId()) {
             showLanguageChooser();
         } else if (id == mImageViewStaticMaps.getId()) {
@@ -665,11 +651,28 @@ public class PloyeeProfileActivity extends BaseActivity implements View.OnClickL
                 @Override
                 public void onFinishChoosingLocation(LatLng latLng) {
                     setCurrentLatLng(latLng);
-                    isContentChanged = true;
+                    onClickDone();
                 }
             }));
         } else if (id == mButtonPreview.getId()) {
             onClickPreview(v.getContext());
+        }
+    }
+
+    private void setIsContentChanged(boolean isContentChanged) {
+        if (isContentChanged) {
+            PopupMenuUtils.clearAndInflateMenu(mToolbar, R.menu.menu_done, new Toolbar.OnMenuItemClickListener() {
+                @Override
+                public boolean onMenuItemClick(MenuItem item) {
+                    int id = item.getItemId();
+                    if (id == R.id.menu_done_item_done) {
+                        onClickDone();
+                    }
+                    return false;
+                }
+            });
+        } else {
+            PopupMenuUtils.clearMenu(mToolbar);
         }
     }
 
@@ -695,7 +698,7 @@ public class PloyeeProfileActivity extends BaseActivity implements View.OnClickL
                 mData = gatheredData();
                 mData.setLanguage(datas);
                 bindData(mData);
-                isContentChanged = true;
+                setIsContentChanged(true);
                 PloyeeProfileActivity.this.onClickDone();
             }
         }));
@@ -732,7 +735,7 @@ public class PloyeeProfileActivity extends BaseActivity implements View.OnClickL
                             @Override
                             public void onDataChange() {
                                 refreshSlider();
-                                isContentChanged = true;
+                                setIsContentChanged(true);
                             }
                         }));
                     }
