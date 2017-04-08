@@ -87,8 +87,8 @@ public class PloyerPersonActivity extends BaseActivity implements SearchView.OnQ
     private PostProviderFilterGson mPostData;
     private long mTotal = 0;
     private boolean didPagerSet;
-    private FilterFragment filterFragment;
-    private boolean shouldRequestMore;
+    private FilterFragment mFilterFragment;
+    private boolean shouldRequestMore = true;
     private boolean loadBottomFinish;
     private long mCurrentPageNumber = 1;
 
@@ -439,7 +439,7 @@ public class PloyerPersonActivity extends BaseActivity implements SearchView.OnQ
     }
 
     private void onClickFilterMenu() {
-        filterFragment = FilterFragment.newInstance(mParentData, mPostData, mTotal, new FilterFragment.OnFilterConfirmListener() {
+        mFilterFragment = FilterFragment.newInstance(mParentData, mPostData, mTotal, new FilterFragment.OnFilterConfirmListener() {
             @Override
             public void onFilterConfirm(PostProviderFilterGson data) {
                 mPostData = data;
@@ -454,7 +454,7 @@ public class PloyerPersonActivity extends BaseActivity implements SearchView.OnQ
             }
         });
 
-        showFragment(filterFragment);
+        showFragment(mFilterFragment);
     }
 
     @Override
@@ -484,21 +484,24 @@ public class PloyerPersonActivity extends BaseActivity implements SearchView.OnQ
         showRefreshing();
         isRequesting = true;
         Call<ProviderUserListGson> call;
+        boolean isFilteredRequest = false;
         if (mPostData == null) {
             call = mApi.getProviderList(mParentData.getId(), currentPageNumber);
             pageNumber = currentPageNumber;
         } else {
             call = mApi.postGetFilteredProvider(mPostData);
+            isFilteredRequest = true;
             setShouldRequestMore(false);
         }
         final long finalPageNumber = pageNumber;
+        final boolean finalIsFilteredRequest = isFilteredRequest;
         RetrofitCallUtils.with(call, new RetrofitCallUtils.RetrofitCallback<ProviderUserListGson>() {
             @Override
             public void onDataSuccess(ProviderUserListGson data) {
                 isRequesting = false;
                 loadBottomFinish = true;
                 dismissRefreshing();
-                bindData(data.getData(), finalPageNumber > 1);
+                bindData(data.getData(), finalPageNumber > 1, finalIsFilteredRequest);
             }
 
             @Override
@@ -511,11 +514,15 @@ public class PloyerPersonActivity extends BaseActivity implements SearchView.OnQ
     }
 
 
-    private void bindData(final ProviderUserListGson.Data data, final boolean addMore) {
+    private void bindData(final ProviderUserListGson.Data data, final boolean addMore, final boolean isFilteredRequest) {
         if (null != data && null != data.getUserServiceList()) {
             if (null != data.getPagination()) {
                 mTotal = data.getPagination().getTotal();
                 mCurrentPageNumber = data.getPagination().getPageNo();
+            }
+
+            if (isFilteredRequest) {
+                mTotal = RecyclerUtils.getSize(data.getUserServiceList());
             }
 
             runOnUiThread(new Action1<Context>() {
@@ -531,13 +538,12 @@ public class PloyerPersonActivity extends BaseActivity implements SearchView.OnQ
                         mData = data;
                     }
 
-
                     try {
-                        filterFragment.updateCountProviders(mData.getPagination().getTotal());
+                        mFilterFragment.updateCountProviders(mTotal);
                     } catch (Exception ignored) {
                     }
 
-                    mTextViewSubTitle.setText(mData.getPagination().getTotal() + " " + mLanguageData.providersLabel);
+                    mTextViewSubTitle.setText(mTotal + " " + mLanguageData.providersLabel);
                     if (null != mPersonListFragment) {
                         mPersonListFragment.bindData(mData);
                     }
@@ -643,7 +649,7 @@ public class PloyerPersonActivity extends BaseActivity implements SearchView.OnQ
         if (mData == null) {
             refreshData(mCurrentPageNumber);
         } else {
-            bindData(mData, false);
+            bindData(mData, false, false);
         }
 
     }

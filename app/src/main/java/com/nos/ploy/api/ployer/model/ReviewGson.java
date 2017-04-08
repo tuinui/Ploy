@@ -63,6 +63,14 @@ public class ReviewGson extends BaseResponse<ReviewGson.Data> {
             public ReviewAverage() {
             }
 
+            public ReviewAverage(ProviderUserListGson.Data.UserService data) {
+                if (null != data) {
+                    all = data.getReviewPoint();
+                    userId = data.getUserId();
+                }
+
+            }
+
             public Float getAll() {
                 return null == all ? 0 : all;
             }
@@ -107,7 +115,7 @@ public class ReviewGson extends BaseResponse<ReviewGson.Data> {
                 dest.writeValue(this.professionalism);
             }
 
-            protected ReviewAverage(Parcel in) {
+            public ReviewAverage(Parcel in) {
                 this.userId = (Long) in.readValue(Long.class.getClassLoader());
                 this.all = (Float) in.readValue(Float.class.getClassLoader());
                 this.competence = (Float) in.readValue(Float.class.getClassLoader());

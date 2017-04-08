@@ -143,6 +143,7 @@ public class ProviderProfileActivity extends BaseActivity implements GoogleApiCl
     @BindView(R.id.textview_member_profile_rate_count)
     TextView mTextViewRatingCount;
     private boolean mIsPreviewMode;
+    private boolean isFirstTimeLoaded;
 //    private PloyeeProfileGson.Data mPreviewData;
 
     @OnClick(R.id.view_activity_member_profile_availability_block)
@@ -186,7 +187,10 @@ public class ProviderProfileActivity extends BaseActivity implements GoogleApiCl
         @Override
         public void onDataSuccess(MemberProfileGson data) {
             dismissRefreshing();
-            bindData(data.getData());
+            if (null != data && null != data.getData()) {
+                mData = data.getData();
+                bindData(mData);
+            }
         }
 
 
@@ -214,6 +218,12 @@ public class ProviderProfileActivity extends BaseActivity implements GoogleApiCl
         initView();
         initRecyclerView();
         initSlider();
+        bindUserServiceData(mUserServiceData);
+    }
+
+    private void bindUserServiceData(ProviderUserListGson.Data.UserService data) {
+        mData = new MemberProfileGson.Data(data);
+        bindData(mData);
     }
 
     private void initToolbar() {
@@ -354,6 +364,7 @@ public class ProviderProfileActivity extends BaseActivity implements GoogleApiCl
     private void refreshData() {
         showRefreshing();
         RetrofitCallUtils.with(mApi.getProviderProfileGson(mUserServiceData.getUserId(), SharePreferenceUtils.getCurrentActiveAppLanguageCode(this)), mCallbackRefreshData).enqueue(this);
+        requestReviewData();
     }
 
 
@@ -382,7 +393,7 @@ public class ProviderProfileActivity extends BaseActivity implements GoogleApiCl
         if (null == data) {
             return;
         }
-        mData = data;
+
         runOnUiThread(new Action1<Context>() {
             @Override
             public void call(Context context) {
@@ -495,26 +506,38 @@ public class ProviderProfileActivity extends BaseActivity implements GoogleApiCl
 
             if (TextUtils.isEmpty(data.getAboutMe())) {
                 viewZoneAbout.setVisibility(View.GONE);
+            } else {
+                viewZoneAbout.setVisibility(View.VISIBLE);
             }
 
             if (TextUtils.isEmpty(languageSupports)) {
                 viewZoneLanguages.setVisibility(View.GONE);
+            } else {
+                viewZoneLanguages.setVisibility(View.VISIBLE);
             }
 
             if (TextUtils.isEmpty(data.getEducation())) {
                 viewZoneEdu.setVisibility(View.GONE);
+            } else {
+                viewZoneEdu.setVisibility(View.VISIBLE);
             }
 
             if (TextUtils.isEmpty(data.getWork())) {
                 viewZoneWork.setVisibility(View.GONE);
+            } else {
+                viewZoneWork.setVisibility(View.VISIBLE);
             }
 
             if (TextUtils.isEmpty(data.getInterest())) {
                 viewZoneInterests.setVisibility(View.GONE);
+            } else {
+                viewZoneInterests.setVisibility(View.VISIBLE);
             }
 
             if (mTransportDatas.size() == 0) {
                 viewZoneTransport.setVisibility(View.GONE);
+            } else {
+                viewZoneTransport.setVisibility(View.VISIBLE);
             }
 
         }
@@ -539,13 +562,20 @@ public class ProviderProfileActivity extends BaseActivity implements GoogleApiCl
 
     @Override
     public void onConnected(@Nullable Bundle bundle) {
-        if (mData == null) {
+        if (!isFirstTimeLoaded) {
+            isFirstTimeLoaded = true;
             refreshData();
         }
 
         if (mUserServiceData == null || mUserServiceData.getReviewPoint() == 0) {
             requestReviewData();
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        isFirstTimeLoaded = false;
     }
 
     @Override

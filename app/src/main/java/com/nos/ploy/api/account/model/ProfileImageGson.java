@@ -95,6 +95,10 @@ public class ProfileImageGson extends BaseResponse<List<ProfileImageGson.Data>> 
             this.imageName = in.readString();
         }
 
+        public Data(String imagePath) {
+            this.imagePath = imagePath;
+        }
+
         public Long getImgId() {
             return imgId;
         }

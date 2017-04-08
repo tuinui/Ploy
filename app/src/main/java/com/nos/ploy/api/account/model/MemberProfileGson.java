@@ -4,6 +4,7 @@ import com.google.gson.annotations.SerializedName;
 import com.nos.ploy.api.base.response.BaseResponse;
 import com.nos.ploy.api.ployee.model.PloyeeAvailiabilityGson;
 import com.nos.ploy.api.ployer.model.PloyerServiceDetailGson;
+import com.nos.ploy.api.ployer.model.ProviderUserListGson;
 import com.nos.ploy.api.ployer.model.ReviewGson;
 
 import java.util.ArrayList;
@@ -14,7 +15,7 @@ import java.util.List;
  */
 
 public class MemberProfileGson extends BaseResponse<MemberProfileGson.Data> {
-    public class Data {
+    public static class Data {
 
         @SerializedName("userProfile")
         private PloyeeProfileGson.Data userProfile;
@@ -23,7 +24,7 @@ public class MemberProfileGson extends BaseResponse<MemberProfileGson.Data> {
         private PloyeeAvailiabilityGson.Data availability;
 
         @SerializedName("images")
-        private List<ProfileImageGson.Data> images;
+        private List<ProfileImageGson.Data> images = new ArrayList<>();
 
         @SerializedName("serviceMapping")
         private List<PloyerServiceDetailGson.Data> serviceDetails = new ArrayList<>();
@@ -31,7 +32,10 @@ public class MemberProfileGson extends BaseResponse<MemberProfileGson.Data> {
         @SerializedName("reviewAVG")
         private ReviewGson.Data.ReviewAverage reviewAverage;
 
-        public Data() {
+        public Data(ProviderUserListGson.Data.UserService data) {
+            userProfile = new PloyeeProfileGson.Data(data);
+            images.add(new ProfileImageGson.Data(data.getImagePath()));
+            reviewAverage = new ReviewGson.Data.ReviewAverage(data);
         }
 
         public PloyeeAvailiabilityGson.Data getAvailability() {

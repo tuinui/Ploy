@@ -5,6 +5,7 @@ import android.os.Parcelable;
 
 import com.google.gson.annotations.SerializedName;
 import com.nos.ploy.api.base.response.BaseResponse;
+import com.nos.ploy.api.ployer.model.ProviderUserListGson;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -72,7 +73,7 @@ public class PloyeeProfileGson extends BaseResponse<PloyeeProfileGson.Data> {
         public Data() {
         }
 
-        private Data(Long userProfileId, long userId, String aboutMe, String education, String work, String interest, ArrayList<Language> language, List<Transport> transport, Location location, boolean contactPhone, boolean contactEmail,String phone,String email) {
+        private Data(Long userProfileId, long userId, String aboutMe, String education, String work, String interest, ArrayList<Language> language, List<Transport> transport, Location location, boolean contactPhone, boolean contactEmail, String phone, String email) {
             this.userProfileId = userProfileId;
             this.userId = userId;
             this.aboutMe = aboutMe;
@@ -84,12 +85,23 @@ public class PloyeeProfileGson extends BaseResponse<PloyeeProfileGson.Data> {
             this.location = location;
             this.contactEmail = contactEmail;
             this.contactPhone = contactPhone;
-            this.phone  = phone;
+            this.phone = phone;
             this.email = email;
         }
 
+        public Data(ProviderUserListGson.Data.UserService data) {
+            this.userProfileId = data.getUserId();
+            this.userId = data.getUserId();
+            this.email = data.getEmail();
+            this.phone = data.getPhone();
+            if (null != data.getLocationLat() && null != data.getLocationLng()) {
+                this.location = new Location(data.getLocationLat(), data.getLocationLng());
+            }
+
+        }
+
         public Data cloneThis() {
-            return new Data(null, userId, aboutMe, education, work, interest, language, transport, location, contactEmail, contactPhone,phone,email);
+            return new Data(null, userId, aboutMe, education, work, interest, language, transport, location, contactEmail, contactPhone, phone, email);
         }
 
         public Boolean isContactPhone() {

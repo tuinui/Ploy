@@ -223,7 +223,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
-                        android:text="Hello I’m a Spanish student studying in Paris at Sorbonne in Philosophy. 24 years old. I have been in Paris for 3 years and loving it " />
+                        tools:text="Hello I’m a Spanish student studying in Paris at Sorbonne in Philosophy. 24 years old. I have been in Paris for 3 years and loving it " />
                 </LinearLayout>
 
                 <LinearLayout
@@ -247,7 +247,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
-                        android:text="French, English, Chinese" />
+                        tools:text="French, English, Chinese" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -271,7 +271,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
-                        android:text="BAC+5 Sciences Paris CUD high school" />
+                        tools:text="BAC+5 Sciences Paris CUD high school" />
                 </LinearLayout>
 
 
@@ -296,7 +296,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
-                        android:text="I did 2 years in maketing at KPMG Paris." />
+                        tools:text="I did 2 years in maketing at KPMG Paris." />
                 </LinearLayout>
 
                 <LinearLayout
@@ -320,7 +320,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
-                        android:text="Fashion, Economy, Gardening, Music, Shopping, Volunteering, Book, Movies" />
+                        tools:text="Fashion, Economy, Gardening, Music, Shopping, Volunteering, Book, Movies" />
                 </LinearLayout>
 
 
