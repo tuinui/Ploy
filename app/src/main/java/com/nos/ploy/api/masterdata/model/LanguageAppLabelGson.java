@@ -473,5 +473,8 @@ public class LanguageAppLabelGson extends BaseResponse<LanguageAppLabelGson.Data
 
         @SerializedName("login_reset_password_success")
         public String loginResetPasswordSuccess = "Your password has been reset";
+
+        @SerializedName("provider_availability_not_select")
+        public String providerAvailabilityNotSelect;
     }
 }

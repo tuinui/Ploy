@@ -13,15 +13,18 @@ import android.view.ViewGroup;
 
 import com.nos.ploy.R;
 import com.nos.ploy.api.base.RetrofitCallUtils;
+import com.nos.ploy.api.masterdata.MasterApi;
 import com.nos.ploy.api.ployee.PloyeeApi;
+import com.nos.ploy.api.ployee.model.PloyeeAvailiabilityGson;
 import com.nos.ploy.api.ployee.model.PloyeeServiceListGson;
 import com.nos.ploy.base.BaseFragment;
 import com.nos.ploy.cache.SharePreferenceUtils;
 import com.nos.ploy.flow.ployee.home.content.service.detail.PloyeeServiceDetailFragment;
 import com.nos.ploy.flow.ployee.home.content.service.list.viewmodel.PloyeeServiceItemViewModel;
+import com.nos.ploy.utils.PopupMenuUtils;
+import com.nos.ploy.utils.RecyclerUtils;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 
 import butterknife.BindView;
@@ -35,12 +38,12 @@ import rx.functions.Action1;
 public class PloyeeServiceListFragment extends BaseFragment implements SearchView.OnQueryTextListener {
 
 
-    private static final Comparator<PloyeeServiceItemViewModel> ALPHABETICAL_COMPARATOR = new Comparator<PloyeeServiceItemViewModel>() {
-        @Override
-        public int compare(PloyeeServiceItemViewModel a, PloyeeServiceItemViewModel b) {
-            return a.getId().compareTo(b.getId());
-        }
-    };
+    //    private static final Comparator<PloyeeServiceItemViewModel> ALPHABETICAL_COMPARATOR = new Comparator<PloyeeServiceItemViewModel>() {
+//        @Override
+//        public int compare(PloyeeServiceItemViewModel a, PloyeeServiceItemViewModel b) {
+//            return a.getId().compareTo(b.getId());
+//        }
+//    };
     @BindView(R.id.recyclerview_swipe_recycler)
     RecyclerView mRecyclerView;
     @BindView(R.id.swiperefreshlayout_swipe_recycler)
@@ -50,8 +53,18 @@ public class PloyeeServiceListFragment extends BaseFragment implements SearchVie
     private long mUserId;
     private Action1<PloyeeServiceItemViewModel> mActionOnClickServiceItem = new Action1<PloyeeServiceItemViewModel>() {
         @Override
-        public void call(PloyeeServiceItemViewModel data) {
-            showFragment(PloyeeServiceDetailFragment.newInstance(mUserId, data.getId(), SharePreferenceUtils.getCurrentActiveAppLanguageCode(getContext()), data.getText()));
+        public void call(final PloyeeServiceItemViewModel data) {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    if (isCanWork) {
+                        showFragment(PloyeeServiceDetailFragment.newInstance(mUserId, data.getId(), SharePreferenceUtils.getCurrentActiveAppLanguageCode(getContext()), data.getText()));
+                    } else {
+                        PopupMenuUtils.showConfirmationAlertMenu(getContext(), null, mLanguageData.providerAvailabilityNotSelect, mLanguageData.okLabel, null, null);
+                    }
+                }
+            });
+
         }
     };
     private PloyeeHomeRecyclerAdapter mAdapter;
@@ -79,6 +92,7 @@ public class PloyeeServiceListFragment extends BaseFragment implements SearchVie
             refreshData();
         }
     };
+    private boolean isCanWork = true;
 
     public static PloyeeServiceListFragment newInstance(Long userId) {
         Bundle args = new Bundle();
@@ -158,6 +172,35 @@ public class PloyeeServiceListFragment extends BaseFragment implements SearchVie
         return results;
     }
 
+    private void requestAvailability() {
+        RetrofitCallUtils.with(getRetrofit().create(MasterApi.class).getAvailability(mUserId), new RetrofitCallUtils.RetrofitCallback<PloyeeAvailiabilityGson>() {
+            @Override
+            public void onDataSuccess(PloyeeAvailiabilityGson data) {
+                dismissRefreshing();
+                if (null != data && null != data.getData()) {
+                    isCanWork = isCanWork(data.getData().getAvailabilityItems());
+                }
+            }
+
+            @Override
+            public void onDataFailure(String failCause) {
+                dismissRefreshing();
+            }
+        }).enqueue(getContext());
+    }
+
+    private boolean isCanWork(ArrayList<PloyeeAvailiabilityGson.Data.AvailabilityItem> items) {
+        boolean canWork = false;
+        if (RecyclerUtils.getSize(items) > 0) {
+            for (PloyeeAvailiabilityGson.Data.AvailabilityItem item : items) {
+                if (item.isMon() || item.isTues() || item.isWed() || item.isThurs() || item.isFri() || item.isSat() || item.isSun()) {
+                    canWork = true;
+                }
+            }
+        }
+        return canWork;
+    }
+
     private void initRecyclerview(RecyclerView recyclerView) {
         if (null == recyclerView) {
             return;
@@ -181,6 +224,7 @@ public class PloyeeServiceListFragment extends BaseFragment implements SearchVie
                 mSwipeRefreshLayout.setRefreshing(false);
             }
         }).enqueue(getContext());
+        requestAvailability();
     }
 
     @Override
