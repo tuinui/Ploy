@@ -111,9 +111,9 @@ public class FilterFragment extends BaseFragment implements View.OnClickListener
     private View.OnTouchListener mOnRangebarTouchListener = new View.OnTouchListener() {
         @Override
         public boolean onTouch(View v, MotionEvent event) {
-            if (event.getAction() == MotionEvent.ACTION_UP) {
+            int action = event.getAction();
+            if (action == MotionEvent.ACTION_UP || action == MotionEvent.ACTION_OUTSIDE || action == MotionEvent.ACTION_CANCEL) {
                 attemptRequestPostFilter();
-                return true;
             }
             return false;
         }
@@ -309,12 +309,7 @@ public class FilterFragment extends BaseFragment implements View.OnClickListener
             }
         });
 
-        enableBackButton(mToolbar, new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
+        enableBackButton(mToolbar);
 
     }
 
@@ -446,12 +441,14 @@ public class FilterFragment extends BaseFragment implements View.OnClickListener
         } else {
             minValueToSet = (int) min;
         }
+        mRangeBar.setOnRangeBarChangeListener(null);
         mEditTextFrom.setText(String.valueOf(minValueToSet));
         if (minValueToSet > Integer.valueOf(mRangeBar.getRightPinValue())) {
             mRangeBar.setRangePinsByValue(Float.parseFloat(mRangeBar.getRightPinValue()), minValueToSet);
         } else {
             mRangeBar.setRangePinsByValue(minValueToSet, Float.parseFloat(mRangeBar.getRightPinValue()));
         }
+        mRangeBar.setOnRangeBarChangeListener(mRangeBarListener);
         mPostData.setPriceMin(min);
     }
 
@@ -462,6 +459,7 @@ public class FilterFragment extends BaseFragment implements View.OnClickListener
         } else {
             maxValueToSet = (int) max;
         }
+        mRangeBar.setOnRangeBarChangeListener(null);
         mEditTextTo.setText(String.valueOf(maxValueToSet));
         mRangeBar.setRangePinsByValue(Float.parseFloat(mRangeBar.getLeftPinValue()), maxValueToSet);
         if (Integer.valueOf(mRangeBar.getLeftPinValue()) > maxValueToSet) {
@@ -469,8 +467,8 @@ public class FilterFragment extends BaseFragment implements View.OnClickListener
         } else {
             mRangeBar.setRangePinsByValue(Float.parseFloat(mRangeBar.getLeftPinValue()), maxValueToSet);
         }
+        mRangeBar.setOnRangeBarChangeListener(mRangeBarListener);
         mPostData.setPriceMax(max);
-
     }
 
 
