@@ -48,4 +48,16 @@
 
         </LinearLayout>
     </android.support.v4.widget.NestedScrollView>
+
+    <Button
+        android:id="@+id/btnSetLang"
+        style="@style/PloyButtonTransparentWhiteBorder"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:textSize="14sp"
+        android:layout_gravity="bottom|right"
+        android:layout_margin="@dimen/activity_horizontal_margin"
+        android:text="Zz"
+
+        />
 </FrameLayout>

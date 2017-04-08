@@ -144,7 +144,7 @@ public class LanguageChooserFragment extends BaseFragment {
     protected void bindLanguage(LanguageAppLabelGson.Data data) {
         super.bindLanguage(data);
         mTextViewTitle.setText(data.settingLangHeader);
-        PopupMenuUtils.setMenuTitle(mToolbar.getMenu(),R.id.menu_done_item_done,data.doneLabel);
+        PopupMenuUtils.setMenuIcon(mToolbar.getMenu(),R.id.menu_done_item_done,R.drawable.ic_cab_done_holo_dark);
     }
 
     private void initRecyclerView() {
