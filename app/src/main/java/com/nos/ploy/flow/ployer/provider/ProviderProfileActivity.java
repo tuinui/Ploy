@@ -649,12 +649,22 @@ public class ProviderProfileActivity extends BaseActivity implements GoogleApiCl
             openLocalizationMaps();
         } else if (id == mCardViewReview.getId()) {
             if (null != mData && null != mData.getUserProfile() && null != mData.getUserProfile().getUserId()) {
-                showFragment(ProviderReviewFragment.newInstance(mData.getUserProfile().getUserId(), mUserServiceData, new LeaveReviewFragment.OnReviewFinishListener() {
-                    @Override
-                    public void onReviewFinish() {
-                        refreshData();
-                    }
-                }));
+                if(mUserServiceData.getReviewCount() > 0){
+                    showFragment(ProviderReviewFragment.newInstance(mData.getUserProfile().getUserId(), mUserServiceData, new LeaveReviewFragment.OnReviewFinishListener() {
+                        @Override
+                        public void onReviewFinish() {
+                            refreshData();
+                        }
+                    }));
+
+                }else{
+                    showFragment(LeaveReviewFragment.newInstance(mData.getUserProfile().getUserId(), mUserServiceData, new LeaveReviewFragment.OnReviewFinishListener() {
+                        @Override
+                        public void onReviewFinish() {
+                            refreshData();
+                        }
+                    }));
+                }
             }
         }
     }
