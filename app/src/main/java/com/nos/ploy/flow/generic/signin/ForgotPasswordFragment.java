@@ -127,11 +127,22 @@ public class ForgotPasswordFragment extends BaseFragment implements View.OnClick
         String email = extractAndCheckError(mEditTextEmail);
         String password = extractAndCheckError(mEditTextPassword);
         String rePassword = extractAndCheckError(mEditTextRePassword);
+
         boolean canSubmit = !TextUtils.isEmpty(email) && !TextUtils.isEmpty(password) && !TextUtils.isEmpty(rePassword);
         if (!isEmailValid(email)) {
             mEditTextEmail.setError(getString(R.string.Invalid_email_address));
             canSubmit = false;
         }
+        if (mEditTextRePassword.length() < mEditTextRePassword.getMinCharacters()) {
+            canSubmit = false;
+            mEditTextRePassword.requestFocus();
+        }
+
+        if (mEditTextPassword.length() < mEditTextPassword.getMinCharacters()) {
+            canSubmit = false;
+            mEditTextPassword.requestFocus();
+        }
+
 
         if (canSubmit) {
             if (TextUtils.equals(password, rePassword)) {

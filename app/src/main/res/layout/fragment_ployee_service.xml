@@ -36,6 +36,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/Reset"
+                        android:visibility="gone"
                         android:textAllCaps="false" />
 
                     <com.rengwuxian.materialedittext.MaterialEditText
@@ -173,9 +174,10 @@
                     android:layout_height="wrap_content"
                     android:layout_margin="8dp"
                     android:text="Delete Service"
+
                     android:textAllCaps="false"
                     android:textColor="@android:color/white"
-                    app:backgroundTint="@color/red_delete" />
+                    app:backgroundTint="@color/colorPrimary" />
             </LinearLayout>
 
 
