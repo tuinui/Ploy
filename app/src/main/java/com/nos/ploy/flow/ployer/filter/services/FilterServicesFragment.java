@@ -259,10 +259,16 @@ public class FilterServicesFragment extends BaseFragment implements View.OnClick
 //                }
 //            }
 //        }
+        mRadioButtonCertificate.setOnCheckedChangeListener(null);
+        mRadioButtonEquipment.setOnCheckedChangeListener(null);
         mFilteredData.setCertificate(false);
         mFilteredData.setEquipment(false);
         mFilteredData.setSubServices(new ArrayList<Long>());
+
         bindData(new ArrayList<>(mDatas));
+        mRadioButtonCertificate.setOnCheckedChangeListener(this);
+        mRadioButtonEquipment.setOnCheckedChangeListener(this);
+        getListener().onClickDone(mAdapter.gatheredSubServiceIds(), mRadioButtonCertificate.isChecked(), mRadioButtonEquipment.isChecked());
     }
 
     public void setListener(OnClickDoneListener listener) {

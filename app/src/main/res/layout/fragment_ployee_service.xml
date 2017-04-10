@@ -174,9 +174,10 @@
                     android:layout_height="wrap_content"
                     android:layout_margin="8dp"
                     android:text="Delete Service"
+
                     android:textAllCaps="false"
                     android:textColor="@android:color/white"
-                    app:backgroundTint="@color/colorPrimaryDark" />
+                    app:backgroundTint="@color/colorPrimary" />
             </LinearLayout>
 
 

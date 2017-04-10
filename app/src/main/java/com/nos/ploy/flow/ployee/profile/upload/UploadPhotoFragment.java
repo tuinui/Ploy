@@ -5,7 +5,6 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -59,8 +58,8 @@ public class UploadPhotoFragment extends BaseFragment {
     Toolbar mToolbar;
     @BindView(R.id.textview_main_appbar_title)
     TextView mTextViewTitle;
-    @BindView(R.id.swiperefreshlayout_upload_photo)
-    SwipeRefreshLayout mSwipreRefreshLaayout;
+    //    @BindView(R.id.swiperefreshlayout_upload_photo)
+//    SwipeRefreshLayout mSwipreRefreshLaayout;
     @BindString(R.string.Upload_photo)
     String LUpload_photo;
     @BindDrawable(R.drawable.ic_add_gray_48dp)
@@ -111,7 +110,7 @@ public class UploadPhotoFragment extends BaseFragment {
     protected void bindLanguage(LanguageAppLabelGson.Data data) {
         super.bindLanguage(data);
         mTextViewTitle.setText(data.profileScreenUploadHeader);
-        PopupMenuUtils.setMenuTitle(mToolbar.getMenu(),R.id.menu_done_item_done,data.doneLabel);
+        PopupMenuUtils.setMenuTitle(mToolbar.getMenu(), R.id.menu_done_item_done, data.doneLabel);
     }
 
     private UploadPhotoRecyclerAdapter mAdapter = new UploadPhotoRecyclerAdapter() {
@@ -213,19 +212,10 @@ public class UploadPhotoFragment extends BaseFragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        initView();
         initToolbar();
         initRecyclerView();
     }
 
-    private void initView() {
-        setRefreshLayout(mSwipreRefreshLaayout, new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                refreshData();
-            }
-        });
-    }
 
     private void refreshData() {
         showRefreshing();

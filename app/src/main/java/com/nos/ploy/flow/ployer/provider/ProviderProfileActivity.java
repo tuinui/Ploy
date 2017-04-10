@@ -364,7 +364,7 @@ public class ProviderProfileActivity extends BaseActivity implements GoogleApiCl
     //userId=1&serviceId=1&lgCode=en
     private void refreshData() {
         showRefreshing();
-        RetrofitCallUtils.with(mApi.getProviderProfileGson(mUserServiceData.getUserId(), SharePreferenceUtils.getCurrentActiveAppLanguageCode(this)), mCallbackRefreshData).enqueue(this);
+        RetrofitCallUtils.with(mApi.getProviderProfileGson(mUserServiceData.getUserId(), SharePreferenceUtils.getCurrentActiveAppLanguageCode(this)), mCallbackRefreshData).enqueueDontToast(this);
         requestReviewData();
     }
 
