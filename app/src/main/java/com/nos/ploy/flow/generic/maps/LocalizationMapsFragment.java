@@ -21,6 +21,7 @@ import com.nos.ploy.R;
 import com.nos.ploy.api.masterdata.model.LanguageAppLabelGson;
 import com.nos.ploy.base.BaseFragment;
 import com.nos.ploy.utils.FragmentTransactionUtils;
+import com.nos.ploy.utils.MyLocationUtils;
 import com.nos.ploy.utils.PopupMenuUtils;
 
 import butterknife.BindView;
@@ -83,7 +84,7 @@ public class LocalizationMapsFragment extends BaseFragment implements OnMapReady
             mLatlng = getArguments().getParcelable(KEY_LAT_LNG);
             mCanChangeLocation = getArguments().getBoolean(KEY_CAN_CHANGE_LOCATION, true);
             if (mLatlng == null) {
-                mLatlng = new LatLng(0, 0);
+                mLatlng = MyLocationUtils.DEFAULT_LATLNG;
             }
         }
     }
