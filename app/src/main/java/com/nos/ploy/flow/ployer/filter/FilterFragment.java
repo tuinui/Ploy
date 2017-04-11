@@ -44,7 +44,6 @@ import com.nos.ploy.flow.ployer.filter.language.FilterLanguageFragment;
 import com.nos.ploy.flow.ployer.filter.services.FilterServicesFragment;
 import com.nos.ploy.flow.ployer.filter.view.FilterRatingRecyclerAdapter;
 import com.nos.ploy.utils.RecyclerUtils;
-import com.rengwuxian.materialedittext.MaterialEditText;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -76,10 +75,14 @@ public class FilterFragment extends BaseFragment implements View.OnClickListener
     Button mButtonPhone;
     @BindView(R.id.button_filter_email)
     Button mButtonEmail;
+    @BindView(R.id.edittext_filter_from_unit)
+    TextView mEdittextFilterFromUnit;
+    @BindView(R.id.edittext_filter_to_unit)
+    TextView mEdittextFilterToUnit;
     @BindView(R.id.edittext_filter_to)
-    MaterialEditText mEditTextTo;
+    EditText mEditTextTo;
     @BindView(R.id.edittext_filter_from)
-    MaterialEditText mEditTextFrom;
+    EditText mEditTextFrom;
     @BindView(R.id.recyclerview_filter_rating)
     RecyclerView mRecyclerViewRating;
     @BindView(R.id.recyclerview_filter_transportation)
@@ -279,6 +282,9 @@ public class FilterFragment extends BaseFragment implements View.OnClickListener
         mTextViewSubTitle.setText(mTotalCount + " " + data.providersLabel);
 
         strProvidersLabel = data.providersLabel;
+
+        mEdittextFilterFromUnit.setText(mLanguageData.currencyLabel);
+        mEdittextFilterToUnit.setText(mLanguageData.currencyLabel);
     }
 
 

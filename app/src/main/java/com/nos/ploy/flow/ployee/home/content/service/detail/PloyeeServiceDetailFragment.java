@@ -58,10 +58,15 @@ public class PloyeeServiceDetailFragment extends BaseFragment implements PloyeeS
     private static final String KEY_TOOLBAR_TITLE = "TOOLBAR_TITLE";
     @BindView(R.id.materialrangebar_ployee_service_rate)
     RangeBar mRangeBar;
+
+    @BindView(R.id.edittext_ployee_service_price_from_unit)
+    TextView mEdittextPloyeeServicePriceFromUnit;
+    @BindView(R.id.edittext_ployee_service_price_to_unit)
+    TextView mEdittextPloyeeServicePriceToUnit;
     @BindView(R.id.edittext_ployee_service_price_from)
-    MaterialEditText mEditTextPriceFrom;
+    EditText mEditTextPriceFrom;
     @BindView(R.id.edittext_ployee_service_price_to)
-    MaterialEditText mEditTextPriceTo;
+    EditText mEditTextPriceTo;
     @BindView(R.id.edittext_ployee_service_others)
     MaterialEditText mEditTextOthers;
     @BindView(R.id.textview_ployee_service_price_per_hour)
@@ -562,9 +567,8 @@ public class PloyeeServiceDetailFragment extends BaseFragment implements PloyeeS
                     mTextViewPricePerHour.setText(data.getPriceUnit());
                     mEditTextPriceFrom.setHint(mLanguageData.serviceScreenFrom + " (" + mLanguageData.currencyLabel + ")");
                     mEditTextPriceTo.setHint(mLanguageData.serviceScreenTo + " (" + mLanguageData.currencyLabel + ")");
-                    mEditTextPriceFrom.setFloatingLabelText(mLanguageData.serviceScreenFrom + " (" + mLanguageData.currencyLabel + ")");
-                    mEditTextPriceTo.setFloatingLabelText(mLanguageData.serviceScreenTo + " (" + mLanguageData.currencyLabel + ")");
-
+                    mEdittextPloyeeServicePriceFromUnit.setText( mLanguageData.currencyLabel );
+                    mEdittextPloyeeServicePriceToUnit.setText(  mLanguageData.currencyLabel );
                     setText(mEditTextDescription, data.getDescription());
                     setText(mEditTextCertificate, data.getCertificate());
                     setText(mEditTextEquipmentNeeded, data.getEquipmentNeeded());
