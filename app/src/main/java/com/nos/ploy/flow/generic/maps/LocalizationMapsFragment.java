@@ -120,18 +120,22 @@ public class LocalizationMapsFragment extends BaseFragment implements OnMapReady
                 }
             }
         });
-        mToolbar.inflateMenu(R.menu.menu_done);
-        mToolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                int itemId = item.getItemId();
-                if (itemId == R.id.menu_done_item_done) {
-                    getListener().onFinishChoosingLocation(mLatlng);
-                    dismiss();
+
+        if (mCanChangeLocation){
+
+            mToolbar.inflateMenu(R.menu.menu_done);
+            mToolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+                @Override
+                public boolean onMenuItemClick(MenuItem item) {
+                    int itemId = item.getItemId();
+                    if (itemId == R.id.menu_done_item_done) {
+                        getListener().onFinishChoosingLocation(mLatlng);
+                        dismiss();
+                    }
+                    return false;
                 }
-                return false;
-            }
-        });
+            });
+        }
     }
 
     @Override
