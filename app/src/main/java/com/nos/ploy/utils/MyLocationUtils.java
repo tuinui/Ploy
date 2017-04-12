@@ -54,15 +54,15 @@ public class MyLocationUtils {
                 "&sensor=false";
     }
 
-    public static String getStaticMapsWithNoMarker(LatLng latLng) {
-        double lat = DEFAULT_LATLNG.latitude;
-        double lng = DEFAULT_LATLNG.longitude;
-        if (null != latLng) {
-            lat = latLng.latitude;
-            lng = latLng.longitude;
-        }
+    public static String getParisStaticMaps() {
+//        double lat = DEFAULT_LATLNG.latitude;
+//        double lng = DEFAULT_LATLNG.longitude;
+//        if (null != latLng) {
+//            lat = latLng.latitude;
+//            lng = latLng.longitude;
+//        }
         return "http://maps.googleapis.com/maps/api/staticmap?" +
-                "center=" + lat + "," + lng +
+                "center=" + DEFAULT_LATLNG.latitude + "," + DEFAULT_LATLNG.longitude +
                 "&zoom=17" +
                 "&size=640x360" +
                 "&scale=2" +

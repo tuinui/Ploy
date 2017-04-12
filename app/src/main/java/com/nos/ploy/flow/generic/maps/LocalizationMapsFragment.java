@@ -24,8 +24,11 @@ import com.nos.ploy.utils.FragmentTransactionUtils;
 import com.nos.ploy.utils.MyLocationUtils;
 import com.nos.ploy.utils.PopupMenuUtils;
 
+import butterknife.BindDimen;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import io.nlopez.smartlocation.OnLocationUpdatedListener;
+import io.nlopez.smartlocation.SmartLocation;
 import rx.functions.Action1;
 
 /**
@@ -40,11 +43,10 @@ public class LocalizationMapsFragment extends BaseFragment implements OnMapReady
     Toolbar mToolbar;
     @BindView(R.id.textview_main_appbar_title)
     TextView mTextViewToolbarTitle;
-
-    //    @BindView(R.id.fab_ployee_maps_direction)
-//    FloatingActionButton mFabDirection;
     @BindView(R.id.fab_ployee_maps_my_location)
     FloatingActionButton mFabMyLocation;
+    @BindDimen(R.dimen.fab_margin)
+    int dp16;
 
     private SupportMapFragment mMapFragment = SupportMapFragment.newInstance();
     private GoogleMap mGoogleMap;
@@ -54,8 +56,9 @@ public class LocalizationMapsFragment extends BaseFragment implements OnMapReady
     private OnChooseLocationFinishListener listener;
     private MarkerOptions mMarkerOptions;
     private boolean mCanChangeLocation;
-    private boolean isLocationChanged = false;
+    private boolean isContentChanged = false;
     private boolean mIsNeverSetLocationBefore;
+    //
 
     public static LocalizationMapsFragment newInstance(LatLng latlng, boolean canChangeLocation, boolean neverSetLocationBefore, OnChooseLocationFinishListener listener) {
         Bundle args = new Bundle();
@@ -140,12 +143,12 @@ public class LocalizationMapsFragment extends BaseFragment implements OnMapReady
 
     @Override
     public boolean onBackPressed() {
-        if (mCanChangeLocation && isLocationChanged) {
+        if (mCanChangeLocation && isContentChanged) {
             PopupMenuUtils.showConfirmationAlertMenu(getContext(), null, mLanguageData.accountScreenConfirmBeforeBack, mLanguageData.okLabel, mLanguageData.cancelLabel, new Action1<Boolean>() {
                 @Override
                 public void call(Boolean yes) {
                     if (yes) {
-                        isLocationChanged = false;
+                        isContentChanged = false;
                         dismiss();
                     }
                 }
@@ -167,8 +170,18 @@ public class LocalizationMapsFragment extends BaseFragment implements OnMapReady
     public void onMapReady(GoogleMap googleMap) {
         mGoogleMap = googleMap;
         if (mGoogleMap != null) {
-            boolean setMarker = !mIsNeverSetLocationBefore && MyLocationUtils.locationProviderEnabled(getContext());
-            setCurrentLatLng(mLatlng, setMarker);
+            final boolean setMarker = !mIsNeverSetLocationBefore || MyLocationUtils.locationProviderEnabled(getContext());
+            if (mIsNeverSetLocationBefore && MyLocationUtils.locationProviderEnabled(getContext())) {
+                SmartLocation.with(getContext()).location().start(new OnLocationUpdatedListener() {
+                    @Override
+                    public void onLocationUpdated(Location location) {
+                        isContentChanged = true;
+                        setCurrentLatLng(new LatLng(location.getLatitude(), location.getLongitude()), setMarker);
+                    }
+                });
+            } else {
+                setCurrentLatLng(mLatlng, setMarker);
+            }
 
 
             mGoogleMap.setMyLocationEnabled(true);
@@ -189,7 +202,7 @@ public class LocalizationMapsFragment extends BaseFragment implements OnMapReady
             mGoogleMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
                 @Override
                 public void onMapClick(LatLng latLng) {
-                    isLocationChanged = true;
+                    isContentChanged = true;
                     onChangeLocation(latLng);
                 }
             });
@@ -209,9 +222,9 @@ public class LocalizationMapsFragment extends BaseFragment implements OnMapReady
             return;
         }
         mLatlng = latLng;
-        if(setMarker){
+        if (setMarker) {
             setMarker(latLng);
-        }else{
+        } else {
             animateCameraTo(latLng);
         }
 

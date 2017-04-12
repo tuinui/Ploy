@@ -63,6 +63,8 @@ import butterknife.BindDrawable;
 import butterknife.BindString;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import io.nlopez.smartlocation.OnLocationUpdatedListener;
+import io.nlopez.smartlocation.SmartLocation;
 import rx.functions.Action1;
 
 /**
@@ -329,7 +331,7 @@ public class PloyeeProfileActivity extends BaseActivity implements View.OnClickL
 
 
                                   PloyeeProfileGson.Data.Location locationData = mData.getLocation();
-                                  if (null != locationData && null != mOriginalData && null != mOriginalData.getLocation() && !mOriginalData.getLocation().neverPinLocationBefore() && !MyLocationUtils.locationProviderEnabled(PloyeeProfileActivity.this)) {
+                                  if (null != locationData && null != mOriginalData && null != mOriginalData.getLocation() && mOriginalData.getLocation().neverPinLocationBefore()) {
                                       setCurrentLatLng(new LatLng(locationData.getLat(), locationData.getLng()));
                                   } else {
                                       getLocationAndSetToAddressView();
@@ -448,10 +450,18 @@ public class PloyeeProfileActivity extends BaseActivity implements View.OnClickL
         runOnUiThread(new Action1<Context>() {
             @Override
             public void call(Context context) {
-                if (null != mOriginalData && null != mOriginalData.getLocation() && mOriginalData.getLocation().neverPinLocationBefore() && !MyLocationUtils.locationProviderEnabled(PloyeeProfileActivity.this)) {
-                    Glide.with(context).load(MyLocationUtils.getStaticMapsWithNoMarker(latLng)).into(mImageViewStaticMaps);
+                String address = MyLocationUtils.getCompleteAddressString(PloyeeProfileActivity.this, mCurrentLatLng.latitude, mCurrentLatLng.longitude);
+//                if (null != mOriginalData && null != mOriginalData.getLocation() && mOriginalData.getLocation().neverPinLocationBefore() && !MyLocationUtils.locationProviderEnabled(this)) {
+//                    mTextViewAddress.setText(mLanguageData.profileScreenLocation);
+//                } else {
+//                    mTextViewAddress.setText(address);
+//                }
+                if (null != mOriginalData && null != mOriginalData.getLocation() && mOriginalData.getLocation().neverPinLocationBefore()) {
+                    Glide.with(context).load(MyLocationUtils.getParisStaticMaps()).into(mImageViewStaticMaps);
+                    mTextViewAddress.setText(mLanguageData.profileScreenLocation);
                 } else {
                     Glide.with(context).load(MyLocationUtils.getStaticMapsUrl(latLng)).into(mImageViewStaticMaps);
+                    mTextViewAddress.setText(address);
                 }
 
             }
@@ -513,14 +523,14 @@ public class PloyeeProfileActivity extends BaseActivity implements View.OnClickL
     @Override
     protected void onStart() {
         super.onStart();
-        if (null != mGoogleApiClient && !mGoogleApiClient.isConnected()) {
+        if (null != mGoogleApiClient) {
             mGoogleApiClient.connect();
         }
     }
 
     @Override
     protected void onStop() {
-        if (null != mGoogleApiClient && mGoogleApiClient.isConnected()) {
+        if (null != mGoogleApiClient) {
             mGoogleApiClient.disconnect();
         }
         super.onStop();
@@ -770,31 +780,22 @@ public class PloyeeProfileActivity extends BaseActivity implements View.OnClickL
     }
 
     private void getLocationAndSetToAddressView() {
-        Location location = MyLocationUtils.getLastKnownLocation(this, mGoogleApiClient, true);
-        if (null != location) {
-            setCurrentLatLng(new LatLng(location.getLatitude(), location.getLongitude()));
-        }
+        MyLocationUtils.getLastKnownLocation(this, mGoogleApiClient, true);
+        SmartLocation.with(this).location().oneFix().start(new OnLocationUpdatedListener() {
+            @Override
+            public void onLocationUpdated(Location location) {
+                if (null != location) {
+                    setCurrentLatLng(new LatLng(location.getLatitude(), location.getLongitude()));
+                }
+            }
+        });
     }
 
 
     private void setCurrentLatLng(LatLng latlng) {
         mCurrentLatLng = latlng;
         showStaticMaps(latlng);
-        String address = MyLocationUtils.getCompleteAddressString(PloyeeProfileActivity.this, mCurrentLatLng.latitude, mCurrentLatLng.longitude);
-        if (null != mOriginalData && null != mOriginalData.getLocation() && mOriginalData.getLocation().neverPinLocationBefore() && !MyLocationUtils.locationProviderEnabled(this)) {
-            mTextViewAddress.setText(mLanguageData.profileScreenLocation);
-        } else {
-            mTextViewAddress.setText(address);
-        }
-
     }
-
-//    private void dummyData() {
-//        mEditTextProfileWork.setText("workๆๆๆๆ");
-//        mEditTextInterest.setText("ก้สนใจยู่อิอิ");
-//        mEditTextEducation.setText("เอดูดุ้000");
-//        mEditTextAboutMe.setText("หล่อ");
-//    }
 
     private void showUploadPhotoFragment() {
         AccountInfoLoader.getProfileImage(this, mUserId, false, new Action1<List<ProfileImageGson.Data>>() {
