@@ -35,6 +35,7 @@ import rx.functions.Action1;
 public class LocalizationMapsFragment extends BaseFragment implements OnMapReadyCallback, View.OnClickListener {
 
     private static String KEY_CAN_CHANGE_LOCATION = "CAN_CHANGE_LOCATION";
+    private static final String KEY_NEVER_SET_LOCATION_BEFORE = "NEVER_SET_LOCATION_BEFORE";
     @BindView(R.id.toolbar_main)
     Toolbar mToolbar;
     @BindView(R.id.textview_main_appbar_title)
@@ -54,16 +55,13 @@ public class LocalizationMapsFragment extends BaseFragment implements OnMapReady
     private MarkerOptions mMarkerOptions;
     private boolean mCanChangeLocation;
     private boolean isLocationChanged = false;
+    private boolean mIsNeverSetLocationBefore;
 
-    public static LocalizationMapsFragment newInstance(LatLng latlng, OnChooseLocationFinishListener listener) {
-        return newInstance(latlng, true, listener);
-    }
-
-    public static LocalizationMapsFragment newInstance(LatLng latlng, boolean canChangeLocation, OnChooseLocationFinishListener listener) {
-
+    public static LocalizationMapsFragment newInstance(LatLng latlng, boolean canChangeLocation, boolean neverSetLocationBefore, OnChooseLocationFinishListener listener) {
         Bundle args = new Bundle();
         args.putParcelable(KEY_LAT_LNG, latlng);
         args.putBoolean(KEY_CAN_CHANGE_LOCATION, canChangeLocation);
+        args.putBoolean(KEY_NEVER_SET_LOCATION_BEFORE, neverSetLocationBefore);
         LocalizationMapsFragment fragment = new LocalizationMapsFragment();
         fragment.setArguments(args);
         fragment.setListener(listener);
@@ -83,9 +81,11 @@ public class LocalizationMapsFragment extends BaseFragment implements OnMapReady
         if (null != getArguments()) {
             mLatlng = getArguments().getParcelable(KEY_LAT_LNG);
             mCanChangeLocation = getArguments().getBoolean(KEY_CAN_CHANGE_LOCATION, true);
+            mIsNeverSetLocationBefore = getArguments().getBoolean(KEY_NEVER_SET_LOCATION_BEFORE, false);
             if (mLatlng == null) {
                 mLatlng = MyLocationUtils.DEFAULT_LATLNG;
             }
+
         }
     }
 
@@ -121,7 +121,7 @@ public class LocalizationMapsFragment extends BaseFragment implements OnMapReady
             }
         });
 
-        if (mCanChangeLocation){
+        if (mCanChangeLocation) {
 
             mToolbar.inflateMenu(R.menu.menu_done);
             mToolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
@@ -145,6 +145,7 @@ public class LocalizationMapsFragment extends BaseFragment implements OnMapReady
                 @Override
                 public void call(Boolean yes) {
                     if (yes) {
+                        isLocationChanged = false;
                         dismiss();
                     }
                 }
@@ -166,7 +167,10 @@ public class LocalizationMapsFragment extends BaseFragment implements OnMapReady
     public void onMapReady(GoogleMap googleMap) {
         mGoogleMap = googleMap;
         if (mGoogleMap != null) {
-            setCurrentLatLng(mLatlng);
+            boolean setMarker = !mIsNeverSetLocationBefore && MyLocationUtils.locationProviderEnabled(getContext());
+            setCurrentLatLng(mLatlng, setMarker);
+
+
             mGoogleMap.setMyLocationEnabled(true);
             mGoogleMap.setOnMyLocationButtonClickListener(new GoogleMap.OnMyLocationButtonClickListener() {
                 @Override
@@ -194,18 +198,21 @@ public class LocalizationMapsFragment extends BaseFragment implements OnMapReady
 
     private void onChangeLocation(LatLng latLng) {
         if (mCanChangeLocation) {
-            setCurrentLatLng(latLng);
+            setCurrentLatLng(latLng, true);
         } else {
             animateCameraTo(latLng);
         }
     }
 
-    private void setCurrentLatLng(LatLng latLng) {
+    private void setCurrentLatLng(LatLng latLng, boolean setMarker) {
         if (latLng == null) {
             return;
         }
         mLatlng = latLng;
-        setMarker(latLng);
+        if(setMarker){
+            setMarker(latLng);
+        }
+
     }
 
     private void setMarker(LatLng latLng) {

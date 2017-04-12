@@ -29,6 +29,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import rx.functions.Action1;
 
 /**
  * Created by Saran on 25/12/2559.
@@ -49,6 +50,7 @@ public class SpokenLanguageChooserFragment extends BaseFragment {
     private OnDataChangedListener listener;
     private MasterApi mApi;
     private List<PloyeeProfileGson.Data.Language> mDatas = new ArrayList<>();
+    boolean isContentChanged = false;
     private LanguageChooserRecyclerAdapter mAdapter = new LanguageChooserRecyclerAdapter() {
         @Override
         public void onBindViewHolder(final LanguageChooserRecyclerAdapter.ViewHolder holder, int position) {
@@ -60,14 +62,17 @@ public class SpokenLanguageChooserFragment extends BaseFragment {
                     @Override
                     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                         if (RecyclerUtils.isAvailableData(mDatas, holder.getAdapterPosition())) {
+
                             PloyeeProfileGson.Data.Language language = mDatas.get(holder.getAdapterPosition());
                             if (isChecked) {
                                 if (!mSpokenCheckedCodes.contains(language.getSpokenLanguageCode())) {
                                     mSpokenCheckedCodes.add(language.getSpokenLanguageCode());
+                                    isContentChanged = true;
                                 }
                             } else {
                                 if (mSpokenCheckedCodes.contains(language.getSpokenLanguageCode())) {
                                     mSpokenCheckedCodes.remove(language.getSpokenLanguageCode());
+                                    isContentChanged = true;
                                 }
                             }
 
@@ -102,6 +107,7 @@ public class SpokenLanguageChooserFragment extends BaseFragment {
         }
     };
 
+
     private boolean mSingleChoiceMode = false;
 
     public static SpokenLanguageChooserFragment newInstance(long userId, ArrayList<String> datas, OnDataChangedListener listener) {
@@ -124,15 +130,42 @@ public class SpokenLanguageChooserFragment extends BaseFragment {
         super.onCreate(savedInstanceState);
         if (null != getArguments()) {
             mUserId = getArguments().getLong(KEY_USER_ID, 0);
-            mSpokenCheckedCodes = getArguments().getStringArrayList(KEY_SPOKEN_LANGUAGE_DATA);
+
+            ArrayList<String> codes = getArguments().getStringArrayList(KEY_SPOKEN_LANGUAGE_DATA);
+            if (RecyclerUtils.getSize(codes) > 0) {
+                mSpokenCheckedCodes.clear();
+                mSpokenCheckedCodes.addAll(codes);
+            }
+
         }
         mApi = getRetrofit().create(MasterApi.class);
     }
 
+
+    @Override
+    public boolean onBackPressed() {
+        if (isContentChanged) {
+            PopupMenuUtils.showConfirmationAlertMenu(getContext(), null, mLanguageData.accountScreenConfirmBeforeBack, mLanguageData.okLabel, mLanguageData.cancelLabel, new Action1<Boolean>() {
+                @Override
+                public void call(Boolean yes) {
+                    if (yes) {
+                        isContentChanged = false;
+                        dismiss();
+                    }
+                }
+            });
+
+            return true;
+        } else {
+            return SpokenLanguageChooserFragment.super.onBackPressed();
+        }
+    }
+
+
     @Override
     protected void bindLanguage(LanguageAppLabelGson.Data data) {
         super.bindLanguage(data);
-        PopupMenuUtils.setMenuTitle(mToolbar.getMenu(),R.id.menu_done_item_done,data.doneLabel);
+        PopupMenuUtils.setMenuTitle(mToolbar.getMenu(), R.id.menu_done_item_done, data.doneLabel);
         mTextViewTitle.setText(data.profileScreenLanguage);
     }
 
@@ -213,7 +246,13 @@ public class SpokenLanguageChooserFragment extends BaseFragment {
                 return false;
             }
         });
-        enableBackButton(mToolbar);
+        enableBackButton(mToolbar, new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        });
+
     }
 
 

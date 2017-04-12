@@ -245,7 +245,7 @@ public class PloyeeProfileActivity extends BaseActivity implements View.OnClickL
         public void onDataSuccess(BaseResponse data) {
             dismissLoading();
             showToastLong("Success");
-            refreshData(PloyeeProfileActivity.this);
+            refreshData(PloyeeProfileActivity.this, mCallbackLoadData);
             setIsContentChanged(false);
 
         }
@@ -255,13 +255,34 @@ public class PloyeeProfileActivity extends BaseActivity implements View.OnClickL
             dismissLoading();
         }
     };
+    private PostUpdateProfileGson mOriginalPostData;
+    private boolean isFirstLoaded;
 
 
     private void bindData(PloyeeProfileGson.Data data) {
         mOriginalData = data;
+        mOriginalPostData = new PostUpdateProfileGson(data, mUserId);
         mData = new PostUpdateProfileGson(data, mUserId);
         requestTransportData();
         bindData(mData);
+    }
+
+    private void onFinishChangeLanguage(final PloyeeProfileGson.Data data) {
+        runOnUiThread(new Action1<Context>() {
+            @Override
+            public void call(Context context) {
+                String languageSupports = "";
+                if (data.getLanguage() != null && !data.getLanguage().isEmpty()) {
+                    for (PloyeeProfileGson.Data.Language language : data.getLanguage()) {
+                        languageSupports += " " + language.getSpokenLanguageValue() + ",";
+                    }
+                }
+                languageSupports = removeLastCharacter(languageSupports);
+                mTextViewLanguageSupport.setText(languageSupports);
+            }
+
+        });
+
     }
 
     @Override
@@ -323,23 +344,11 @@ public class PloyeeProfileActivity extends BaseActivity implements View.OnClickL
         }
 
         if (null != mOriginalData) {
-            runOnUiThread(new Action1<Context>() {
-                @Override
-                public void call(Context context) {
-                    String languageSupports = "";
-                    if (mOriginalData.getLanguage() != null && !mOriginalData.getLanguage().isEmpty()) {
-                        for (PloyeeProfileGson.Data.Language language : mOriginalData.getLanguage()) {
-                            languageSupports += " " + language.getSpokenLanguageValue() + ",";
-                        }
-                    }
-                    languageSupports = removeLastCharacter(languageSupports);
-                    mTextViewLanguageSupport.setText(languageSupports);
-                }
-
-            });
+            onFinishChangeLanguage(mOriginalData);
         }
 
     }
+
 
     public String removeLastCharacter(String str) {
         if (str != null && str.length() > 0 && str.charAt(str.length() - 1) == ',') {
@@ -396,10 +405,10 @@ public class PloyeeProfileActivity extends BaseActivity implements View.OnClickL
         return null != mData && null != mData.getTransport() && !mData.getTransport().isEmpty() && mData.getTransport().contains(transportId);
     }
 
-    private void refreshData(Context context) {
+    private void refreshData(Context context, RetrofitCallUtils.RetrofitCallback<PloyeeProfileGson> onfinish) {
         if (null != context && isReady()) {
             showRefreshing();
-            RetrofitCallUtils.with(mAccountApi.getProfileGson(mUserId), mCallbackLoadData).enqueueDontToast(context);
+            RetrofitCallUtils.with(mAccountApi.getProfileGson(mUserId), onfinish).enqueueDontToast(context);
             refreshSlider();
         }
 
@@ -499,14 +508,14 @@ public class PloyeeProfileActivity extends BaseActivity implements View.OnClickL
     @Override
     protected void onStart() {
         super.onStart();
-        if (null != mGoogleApiClient) {
+        if (null != mGoogleApiClient && !mGoogleApiClient.isConnected()) {
             mGoogleApiClient.connect();
         }
     }
 
     @Override
     protected void onStop() {
-        if (null != mGoogleApiClient) {
+        if (null != mGoogleApiClient && mGoogleApiClient.isConnected()) {
             mGoogleApiClient.disconnect();
         }
         super.onStop();
@@ -533,8 +542,44 @@ public class PloyeeProfileActivity extends BaseActivity implements View.OnClickL
     private void onClickDone() {
         showLoading();
         RetrofitCallUtils.with(mAccountApi.postSaveProfileGson(gatheredData()), mCallbackUpdateData).enqueue(this);
-
     }
+
+    private void postSaveProfileGson(PostUpdateProfileGson data, final Action1<PloyeeProfileGson> onFinish) {
+        showLoading();
+        RetrofitCallUtils.with(mAccountApi.postSaveProfileGson(data), new RetrofitCallUtils.RetrofitCallback<BaseResponse>() {
+            @Override
+            public void onDataSuccess(BaseResponse data) {
+                dismissLoading();
+                showToastLong("Success");
+                refreshData(PloyeeProfileActivity.this, new RetrofitCallUtils.RetrofitCallback<PloyeeProfileGson>() {
+                    @Override
+                    public void onDataSuccess(PloyeeProfileGson data) {
+                        dismissLoading();
+                        dismissRefreshing();
+                        if (null != data && null != data.getData()) {
+                            onFinish.call(data);
+                        }
+                    }
+
+                    @Override
+                    public void onDataFailure(String failCause) {
+                        dismissLoading();
+                        dismissRefreshing();
+//                        bindData(new PostUpdateProfileGson());
+                        onFinish.call(null);
+
+                    }
+                });
+            }
+
+            @Override
+            public void onDataFailure(String failCause) {
+                dismissLoading();
+                dismissRefreshing();
+            }
+        }).enqueue(this);
+    }
+
 
     private PostUpdateProfileGson gatheredData() {
         if (mData != null) {
@@ -569,7 +614,7 @@ public class PloyeeProfileActivity extends BaseActivity implements View.OnClickL
         setRefreshLayout(mSwipeRefreshLayout, new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                refreshData(mSwipeRefreshLayout.getContext());
+                refreshData(mSwipeRefreshLayout.getContext(), mCallbackLoadData);
             }
         });
         mFabProfileImage.setOnClickListener(this);
@@ -647,11 +692,20 @@ public class PloyeeProfileActivity extends BaseActivity implements View.OnClickL
         } else if (id == mTextViewLanguageSupport.getId()) {
             showLanguageChooser();
         } else if (id == mImageViewStaticMaps.getId()) {
-            showFragment(LocalizationMapsFragment.newInstance(mCurrentLatLng, new LocalizationMapsFragment.OnChooseLocationFinishListener() {
+            showFragment(LocalizationMapsFragment.newInstance(mCurrentLatLng,true,mOriginalData.getLocation().neverPinLocationBefore(), new LocalizationMapsFragment.OnChooseLocationFinishListener() {
                 @Override
                 public void onFinishChoosingLocation(LatLng latLng) {
                     setCurrentLatLng(latLng);
-                    onClickDone();
+                    mData.setLocation(new PloyeeProfileGson.Data.Location(latLng.latitude, latLng.longitude));
+                    postSaveProfileGson(mData, new Action1<PloyeeProfileGson>() {
+                        @Override
+                        public void call(PloyeeProfileGson data) {
+                            if (null != data.getData().getLocation()) {
+                                setCurrentLatLng(new LatLng(data.getData().getLocation().getLat(), data.getData().getLocation().getLng()));
+                            }
+
+                        }
+                    });
                 }
             }));
         } else if (id == mButtonPreview.getId()) {
@@ -660,6 +714,7 @@ public class PloyeeProfileActivity extends BaseActivity implements View.OnClickL
     }
 
     private void setIsContentChanged(boolean isContentChanged) {
+        this.isContentChanged = isContentChanged;
         if (isContentChanged) {
             PopupMenuUtils.clearAndInflateMenu(mToolbar, R.menu.menu_done, new Toolbar.OnMenuItemClickListener() {
                 @Override
@@ -695,11 +750,15 @@ public class PloyeeProfileActivity extends BaseActivity implements View.OnClickL
         showFragment(SpokenLanguageChooserFragment.newInstance(mUserId, mData.getLanguage(), new SpokenLanguageChooserFragment.OnDataChangedListener() {
             @Override
             public void onClickDone(ArrayList<String> datas) {
-                mData = gatheredData();
                 mData.setLanguage(datas);
-                bindData(mData);
-                setIsContentChanged(true);
-                PloyeeProfileActivity.this.onClickDone();
+                postSaveProfileGson(mData, new Action1<PloyeeProfileGson>() {
+                    @Override
+                    public void call(PloyeeProfileGson ployeeProfileGson) {
+                        if (null != ployeeProfileGson && null != ployeeProfileGson.getData()) {
+                            onFinishChangeLanguage(ployeeProfileGson.getData());
+                        }
+                    }
+                });
             }
         }));
 
@@ -735,7 +794,6 @@ public class PloyeeProfileActivity extends BaseActivity implements View.OnClickL
                             @Override
                             public void onDataChange() {
                                 refreshSlider();
-                                setIsContentChanged(true);
                             }
                         }));
                     }
@@ -747,7 +805,11 @@ public class PloyeeProfileActivity extends BaseActivity implements View.OnClickL
     @Override
     public void onConnected(@Nullable Bundle bundle) {
 //        initMap();
-        refreshData(this);
+        if(!isFirstLoaded){
+            isFirstLoaded = true;
+            refreshData(this, mCallbackLoadData);
+        }
+
     }
 
 

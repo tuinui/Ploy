@@ -309,6 +309,10 @@ public class PloyeeProfileGson extends BaseResponse<PloyeeProfileGson.Data> {
             public Double getLng() {
                 return null != lng ? lng : Double.valueOf(MyLocationUtils.DEFAULT_LATLNG.longitude);
             }
+
+            public boolean neverPinLocationBefore() {
+                return null == lng || null == lat;
+            }
         }
     }
 }

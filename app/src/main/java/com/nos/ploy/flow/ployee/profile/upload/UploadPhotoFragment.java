@@ -64,6 +64,8 @@ public class UploadPhotoFragment extends BaseFragment {
     String LUpload_photo;
     @BindDrawable(R.drawable.ic_add_gray_48dp)
     Drawable mDrawableAddGray;
+
+    private boolean isContentChanged = false;
     private List<ProfileImageGson.Data> mDatas = new ArrayList<>();
     private List<PostUploadProfileImageGson.ImageBody> mImageToUploads = new ArrayList<>();
     private long mUserId;
@@ -127,6 +129,7 @@ public class UploadPhotoFragment extends BaseFragment {
                                 runOnUiThread(new Runnable() {
                                     @Override
                                     public void run() {
+                                        isContentChanged = true;
                                         Glide.with(v.getContext()).load(imageEntry.path).asBitmap().into(new BitmapImageViewTarget(holder.imgUpload) {
                                             @Override
                                             public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
@@ -242,7 +245,12 @@ public class UploadPhotoFragment extends BaseFragment {
 
     private void initToolbar() {
         mTextViewTitle.setText(LUpload_photo);
-        enableBackButton(mToolbar);
+        enableBackButton(mToolbar, new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        });
         mToolbar.inflateMenu(R.menu.menu_done);
         mToolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
             @Override
@@ -254,6 +262,25 @@ public class UploadPhotoFragment extends BaseFragment {
                 return false;
             }
         });
+    }
+
+    @Override
+    public boolean onBackPressed() {
+        if (isContentChanged) {
+            isContentChanged = false;
+            PopupMenuUtils.showConfirmationAlertMenu(getContext(), null, mLanguageData.accountScreenConfirmBeforeBack, mLanguageData.okLabel, mLanguageData.cancelLabel, new Action1<Boolean>() {
+                @Override
+                public void call(Boolean yes) {
+                    if (yes) {
+                        dismiss();
+                    }
+                }
+            });
+            return true;
+        } else {
+            dismiss();
+            return false;
+        }
     }
 
     private void requestSaveProfileImage() {

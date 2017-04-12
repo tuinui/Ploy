@@ -676,7 +676,7 @@ public class ProviderProfileActivity extends BaseActivity implements GoogleApiCl
     private void openLocalizationMaps() {
         if (null != mData && null != mData.getUserProfile() && null != mData.getUserProfile().getLocation()) {
             LatLng latLng = new LatLng(mData.getUserProfile().getLocation().getLat(), mData.getUserProfile().getLocation().getLng());
-            showFragment(LocalizationMapsFragment.newInstance(latLng, false, new LocalizationMapsFragment.OnChooseLocationFinishListener() {
+            showFragment(LocalizationMapsFragment.newInstance(latLng, false,false, new LocalizationMapsFragment.OnChooseLocationFinishListener() {
                 @Override
                 public void onFinishChoosingLocation(LatLng latLng) {
 
