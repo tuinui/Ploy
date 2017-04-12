@@ -110,5 +110,6 @@
     <string name="Close">Close</string>
     <string name="Introduction">Introduction</string>
     <string name="Preview">Preview</string>
+    <string name="Location_not_found">Location not found</string>
 
 </resources>

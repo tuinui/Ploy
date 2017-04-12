@@ -168,6 +168,7 @@ public class PloyerPersonMapFragment extends BaseFragment implements OnMapReadyC
 
     private void bindDataToMap() {
         if (mGoogleMap != null && !mDatas.isEmpty()) {
+            mGoogleMap.clear();
             LatLngBounds.Builder latlngBoundBuilder = new LatLngBounds.Builder();
             boolean isInclude = false;
             for (PloyerPersonMapViewModel data : mDatas) {
@@ -178,7 +179,7 @@ public class PloyerPersonMapFragment extends BaseFragment implements OnMapReadyC
                     isInclude = true;
                 }
             }
-            if(isInclude){
+            if (isInclude) {
                 mGoogleMap.animateCamera(CameraUpdateFactory.newLatLngBounds(latlngBoundBuilder.build(), 20));
             }
 
@@ -192,7 +193,7 @@ public class PloyerPersonMapFragment extends BaseFragment implements OnMapReadyC
         }
         View v = LayoutInflater.from(getContext()).inflate(R.layout.view_maps_pin_box, null);
         TextView tvMarkerTitle = (TextView) v.findViewById(R.id.textview_maps_pin_box);
-        tvMarkerTitle.setText(mLanguageData.currencyLabel+" " + data.getMinPrice());
+        tvMarkerTitle.setText(mLanguageData.currencyLabel + " " + data.getMinPrice());
         MarkerOptions marker = new MarkerOptions();
         marker.position(new LatLng(data.getLocationLat(), data.getLocationLng()));
         marker.icon(BitmapDescriptorFactory.fromBitmap(DrawableUtils.createBitmapFromView(getContext(), v)));

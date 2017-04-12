@@ -211,6 +211,8 @@ public class LocalizationMapsFragment extends BaseFragment implements OnMapReady
         mLatlng = latLng;
         if(setMarker){
             setMarker(latLng);
+        }else{
+            animateCameraTo(latLng);
         }
 
     }
