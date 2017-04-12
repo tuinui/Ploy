@@ -5,8 +5,6 @@ import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.DrawableRes;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
@@ -26,9 +24,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.model.LatLng;
 import com.nos.ploy.R;
 import com.nos.ploy.api.account.AccountApi;
@@ -49,7 +44,6 @@ import com.nos.ploy.flow.generic.maps.LocalizationMapsFragment;
 import com.nos.ploy.flow.ployee.profile.language.SpokenLanguageChooserFragment;
 import com.nos.ploy.flow.ployee.profile.upload.UploadPhotoFragment;
 import com.nos.ploy.flow.ployer.provider.ProviderProfileActivity;
-import com.nos.ploy.utils.GoogleApiAvailabilityUtils;
 import com.nos.ploy.utils.IntentUtils;
 import com.nos.ploy.utils.MyLocationUtils;
 import com.nos.ploy.utils.PopupMenuUtils;
@@ -71,7 +65,7 @@ import rx.functions.Action1;
  * Created by Saran on 15/12/2559.
  */
 
-public class PloyeeProfileActivity extends BaseActivity implements View.OnClickListener, GoogleApiClient.OnConnectionFailedListener, GoogleApiClient.ConnectionCallbacks {
+public class PloyeeProfileActivity extends BaseActivity implements View.OnClickListener {
 
     @BindView(R.id.button_ployee_profile_show_email)
     Button mButtonEmail;
@@ -131,7 +125,6 @@ public class PloyeeProfileActivity extends BaseActivity implements View.OnClickL
     private MasterApi mMasterApi;
     private ImageSliderPagerAdapter mAdapter;
     public LatLng mCurrentLatLng;
-    private GoogleApiClient mGoogleApiClient;
     private List<TransportGsonVm> mAllDataTransports = new ArrayList<>();
     private TextWatcher mContentChangedTextWatcher = new TextWatcher() {
         @Override
@@ -331,10 +324,12 @@ public class PloyeeProfileActivity extends BaseActivity implements View.OnClickL
 
 
                                   PloyeeProfileGson.Data.Location locationData = mData.getLocation();
-                                  if (null != locationData && null != mOriginalData && null != mOriginalData.getLocation() && mOriginalData.getLocation().neverPinLocationBefore()) {
-                                      setCurrentLatLng(new LatLng(locationData.getLat(), locationData.getLng()));
-                                  } else {
-                                      getLocationAndSetToAddressView();
+                                  if (null != mOriginalData && null != mOriginalData.getLocation()) {
+                                      if (mOriginalData.getLocation().neverPinLocationBefore()) {
+                                          setCurrentLatLng(MyLocationUtils.DEFAULT_LATLNG);
+                                      } else if (null != locationData) {
+                                          setCurrentLatLng(new LatLng(locationData.getLat(), locationData.getLng()));
+                                      }
                                   }
 
                               }
@@ -428,10 +423,16 @@ public class PloyeeProfileActivity extends BaseActivity implements View.OnClickL
         initSlider();
         initRecyclerView();
 
-        if (GoogleApiAvailabilityUtils.checkPlayServices(this)) {
-            mGoogleApiClient = new GoogleApiClient.Builder(this, this, this).addApi(LocationServices.API).build();
-        }
         detectContentChanged();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if (!isFirstLoaded) {
+            isFirstLoaded = true;
+            refreshData(this, mCallbackLoadData);
+        }
     }
 
     private void detectContentChanged() {
@@ -520,21 +521,6 @@ public class PloyeeProfileActivity extends BaseActivity implements View.OnClickL
         AccountInfoLoader.getProfileImage(this, mUserId, true, mOnLoadProfileImageFinish);
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        if (null != mGoogleApiClient) {
-            mGoogleApiClient.connect();
-        }
-    }
-
-    @Override
-    protected void onStop() {
-        if (null != mGoogleApiClient) {
-            mGoogleApiClient.disconnect();
-        }
-        super.onStop();
-    }
 
     @Override
     public void onResume() {
@@ -780,12 +766,21 @@ public class PloyeeProfileActivity extends BaseActivity implements View.OnClickL
     }
 
     private void getLocationAndSetToAddressView() {
-        MyLocationUtils.getLastKnownLocation(this, mGoogleApiClient, true);
+//        MyLocationUtils.getLastKnownLocation(this, mGoogleApiClient, true);
         SmartLocation.with(this).location().oneFix().start(new OnLocationUpdatedListener() {
             @Override
-            public void onLocationUpdated(Location location) {
+            public void onLocationUpdated(final Location location) {
                 if (null != location) {
-                    setCurrentLatLng(new LatLng(location.getLatitude(), location.getLongitude()));
+                    runOnUiThread(new Action1<Context>() {
+                        @Override
+                        public void call(Context context) {
+                            mCurrentLatLng = new LatLng(location.getLatitude(), location.getLongitude());
+                            String address = MyLocationUtils.getCompleteAddressString(PloyeeProfileActivity.this, mCurrentLatLng.latitude, mCurrentLatLng.longitude);
+                            Glide.with(PloyeeProfileActivity.this).load(MyLocationUtils.getStaticMapsUrl(mCurrentLatLng)).into(mImageViewStaticMaps);
+                            mTextViewAddress.setText(address);
+                        }
+                    });
+
                 }
             }
         });
@@ -813,24 +808,4 @@ public class PloyeeProfileActivity extends BaseActivity implements View.OnClickL
     }
 
 
-    @Override
-    public void onConnected(@Nullable Bundle bundle) {
-//        initMap();
-        if (!isFirstLoaded) {
-            isFirstLoaded = true;
-            refreshData(this, mCallbackLoadData);
-        }
-
-    }
-
-
-    @Override
-    public void onConnectionSuspended(int i) {
-
-    }
-
-    @Override
-    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-
-    }
 }
