@@ -121,8 +121,6 @@ public class PloyeeProfileActivity extends BaseActivity implements View.OnClickL
     Drawable mDrawableSelectedDot;
     @BindView(R.id.textview_ployee_profile_contact_method_label)
     TextView mTextViewContactMethod;
-    @BindString(R.string.Location_not_found)
-    String LLocation_not_found;
     //    private GoogleMap mGoogleMap;
 //    private SupportMapFragment mMapFragment = SupportMapFragment.newInstance();
     private boolean isContentChanged = false;
@@ -450,9 +448,9 @@ public class PloyeeProfileActivity extends BaseActivity implements View.OnClickL
         runOnUiThread(new Action1<Context>() {
             @Override
             public void call(Context context) {
-                if(null != mOriginalData && null != mOriginalData.getLocation() && mOriginalData.getLocation().neverPinLocationBefore()){
-                    Glide.with(context).load(MyLocationUtils.getEmptyMaps()).into(mImageViewStaticMaps);
-                }else{
+                if (null != mOriginalData && null != mOriginalData.getLocation() && mOriginalData.getLocation().neverPinLocationBefore()) {
+                    Glide.with(context).load(MyLocationUtils.getStaticMapsWithNoMarker(latLng)).into(mImageViewStaticMaps);
+                } else {
                     Glide.with(context).load(MyLocationUtils.getStaticMapsUrl(latLng)).into(mImageViewStaticMaps);
                 }
 
@@ -699,7 +697,7 @@ public class PloyeeProfileActivity extends BaseActivity implements View.OnClickL
         } else if (id == mTextViewLanguageSupport.getId()) {
             showLanguageChooser();
         } else if (id == mImageViewStaticMaps.getId()) {
-            showFragment(LocalizationMapsFragment.newInstance(mCurrentLatLng,true,mOriginalData.getLocation().neverPinLocationBefore(), new LocalizationMapsFragment.OnChooseLocationFinishListener() {
+            showFragment(LocalizationMapsFragment.newInstance(mCurrentLatLng, true, mOriginalData.getLocation().neverPinLocationBefore(), new LocalizationMapsFragment.OnChooseLocationFinishListener() {
                 @Override
                 public void onFinishChoosingLocation(LatLng latLng) {
                     setCurrentLatLng(latLng);
@@ -783,9 +781,9 @@ public class PloyeeProfileActivity extends BaseActivity implements View.OnClickL
         mCurrentLatLng = latlng;
         showStaticMaps(latlng);
         String address = MyLocationUtils.getCompleteAddressString(PloyeeProfileActivity.this, mCurrentLatLng.latitude, mCurrentLatLng.longitude);
-        if(null != mOriginalData && null != mOriginalData.getLocation() && mOriginalData.getLocation().neverPinLocationBefore()){
-            mTextViewAddress.setText(LLocation_not_found);
-        }else{
+        if (null != mOriginalData && null != mOriginalData.getLocation() && mOriginalData.getLocation().neverPinLocationBefore()) {
+            mTextViewAddress.setText(mLanguageData.profileScreenLocation);
+        } else {
             mTextViewAddress.setText(address);
         }
 
@@ -817,7 +815,7 @@ public class PloyeeProfileActivity extends BaseActivity implements View.OnClickL
     @Override
     public void onConnected(@Nullable Bundle bundle) {
 //        initMap();
-        if(!isFirstLoaded){
+        if (!isFirstLoaded) {
             isFirstLoaded = true;
             refreshData(this, mCallbackLoadData);
         }

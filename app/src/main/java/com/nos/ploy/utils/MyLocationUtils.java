@@ -54,15 +54,15 @@ public class MyLocationUtils {
                 "&sensor=false";
     }
 
-    public static String getEmptyMaps() {
-//        double lat = DEFAULT_LATLNG.latitude;
-//        double lng = DEFAULT_LATLNG.longitude;
-//        if (null != latLng) {
-//            lat = latLng.latitude;
-//            lng = latLng.longitude;
-//        }
+    public static String getStaticMapsWithNoMarker(LatLng latLng) {
+        double lat = DEFAULT_LATLNG.latitude;
+        double lng = DEFAULT_LATLNG.longitude;
+        if (null != latLng) {
+            lat = latLng.latitude;
+            lng = latLng.longitude;
+        }
         return "http://maps.googleapis.com/maps/api/staticmap?" +
-                "center=-1.0,-1.0" +
+                "center=" + lat + "," + lng +
                 "&zoom=17" +
                 "&size=640x360" +
                 "&scale=2" +

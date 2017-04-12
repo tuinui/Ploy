@@ -157,7 +157,8 @@ public class SpokenLanguageChooserFragment extends BaseFragment {
 
             return true;
         } else {
-            return SpokenLanguageChooserFragment.super.onBackPressed();
+            dismiss();
+            return false;
         }
     }
 
