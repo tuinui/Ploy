@@ -152,25 +152,27 @@
 
                             <com.nos.ploy.custom.view.TextViewDrawableSize
                                 android:id="@+id/textview_ployer_person_maps_bottom_sheet_item_price"
-                                android:layout_width="wrap_content"
+                                android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
                                 android:drawablePadding="4dp"
                                 android:gravity="center_vertical"
                                 app:compoundDrawableHeight="16dp"
                                 app:compoundDrawableWidth="16dp"
+                                android:textSize="10sp"
                                 tools:text="$300/h" />
 
                             <com.nos.ploy.custom.view.TextViewDrawableSize
                                 android:id="@+id/textview_ployer_person_maps_bottom_sheet_distance"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_weight="1"
+                                android:layout_marginRight="8dp"
                                 android:drawableLeft="@drawable/ic_pin_gray_30dp"
                                 android:drawablePadding="4dp"
                                 android:gravity="center_vertical"
                                 app:compoundDrawableHeight="16dp"
                                 app:compoundDrawableWidth="16dp"
+                                android:textSize="10sp"
                                 tools:text="999 m" />
 
 

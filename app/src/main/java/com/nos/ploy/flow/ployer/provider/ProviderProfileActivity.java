@@ -40,6 +40,7 @@ import com.nos.ploy.api.ployer.model.ReviewGson;
 import com.nos.ploy.api.utils.loader.AccountInfoLoader;
 import com.nos.ploy.base.BaseActivity;
 import com.nos.ploy.cache.SharePreferenceUtils;
+import com.nos.ploy.cache.UserTokenManager;
 import com.nos.ploy.flow.generic.maps.LocalizationMapsFragment;
 import com.nos.ploy.flow.ployee.home.content.availability.contract.AvailabilityViewModel;
 import com.nos.ploy.flow.ployee.home.content.availability.contract.NormalItemAvailabilityVM;
@@ -649,21 +650,23 @@ public class ProviderProfileActivity extends BaseActivity implements GoogleApiCl
             openLocalizationMaps();
         } else if (id == mCardViewReview.getId()) {
             if (null != mData && null != mData.getUserProfile() && null != mData.getUserProfile().getUserId()) {
-                if(mUserServiceData.getReviewCount() > 0){
-                    showFragment(ProviderReviewFragment.newInstance(mData.getUserProfile().getUserId(), mUserServiceData, new LeaveReviewFragment.OnReviewFinishListener() {
-                        @Override
-                        public void onReviewFinish() {
-                            refreshData();
-                        }
-                    }));
+                if (UserTokenManager.isLogin(v.getContext())) {
+                    if (mUserServiceData.getReviewCount() > 0) {
+                        showFragment(ProviderReviewFragment.newInstance(mData.getUserProfile().getUserId(), mUserServiceData, new LeaveReviewFragment.OnReviewFinishListener() {
+                            @Override
+                            public void onReviewFinish() {
+                                refreshData();
+                            }
+                        }));
 
-                }else{
-                    showFragment(LeaveReviewFragment.newInstance(mData.getUserProfile().getUserId(), mUserServiceData, new LeaveReviewFragment.OnReviewFinishListener() {
-                        @Override
-                        public void onReviewFinish() {
-                            refreshData();
-                        }
-                    }));
+                    } else {
+                        showFragment(LeaveReviewFragment.newInstance(mData.getUserProfile().getUserId(), mUserServiceData, new LeaveReviewFragment.OnReviewFinishListener() {
+                            @Override
+                            public void onReviewFinish() {
+                                refreshData();
+                            }
+                        }));
+                    }
                 }
             }
         }

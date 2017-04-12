@@ -7,6 +7,7 @@ import android.support.annotation.ColorInt;
 import android.support.annotation.IntDef;
 import android.support.design.internal.ForegroundLinearLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
@@ -245,6 +246,20 @@ public class PloyeeHomeActivity extends BaseActivity implements View.OnClickList
 
         mPagerAdapter = new CommonFragmentStatePagerAdapter(getSupportFragmentManager(), mContentFragments);
         mViewPager.setAdapter(mPagerAdapter);
+        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {}
+
+            @Override
+            public void onPageSelected(int position) {
+                if (position == 0){
+                    mListFragment.refreshData();
+                }
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {}
+        });
     }
 
 

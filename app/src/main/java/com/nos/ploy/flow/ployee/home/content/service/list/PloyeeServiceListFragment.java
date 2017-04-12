@@ -210,7 +210,7 @@ public class PloyeeServiceListFragment extends BaseFragment implements SearchVie
         recyclerView.setAdapter(mAdapter);
     }
 
-    private void refreshData() {
+    public void refreshData() {
         mSwipeRefreshLayout.setRefreshing(true);
         RetrofitCallUtils.with(mService.getServiceList(SharePreferenceUtils.getCurrentActiveAppLanguageCode(getContext())), new RetrofitCallUtils.RetrofitCallback<PloyeeServiceListGson>() {
             @Override

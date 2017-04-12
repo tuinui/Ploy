@@ -22,6 +22,7 @@ import java.util.Locale;
 
 public class MyLocationUtils {
 
+    public static LatLng DEFAULT_LATLNG = new LatLng(48.858951, 2.293986);
     public static Location CURRENT_LOCATION;
 
     public static Address getGetCoder(Context context, LatLng latLng) {
@@ -38,8 +39,8 @@ public class MyLocationUtils {
     }
 
     public static String getStaticMapsUrl(LatLng latLng) {
-        double lat = 0;
-        double lng = 0;
+        double lat = DEFAULT_LATLNG.latitude;
+        double lng = DEFAULT_LATLNG.longitude;
         if (null != latLng) {
             lat = latLng.latitude;
             lng = latLng.longitude;

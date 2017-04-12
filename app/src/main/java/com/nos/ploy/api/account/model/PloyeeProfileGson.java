@@ -6,6 +6,7 @@ import android.os.Parcelable;
 import com.google.gson.annotations.SerializedName;
 import com.nos.ploy.api.base.response.BaseResponse;
 import com.nos.ploy.api.ployer.model.ProviderUserListGson;
+import com.nos.ploy.utils.MyLocationUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -302,11 +303,11 @@ public class PloyeeProfileGson extends BaseResponse<PloyeeProfileGson.Data> {
             }
 
             public Double getLat() {
-                return null != lat ? lat : Double.valueOf(0D);
+                return null != lat ? lat : Double.valueOf(MyLocationUtils.DEFAULT_LATLNG.latitude);
             }
 
             public Double getLng() {
-                return null != lng ? lng : Double.valueOf(0D);
+                return null != lng ? lng : Double.valueOf(MyLocationUtils.DEFAULT_LATLNG.longitude);
             }
         }
     }

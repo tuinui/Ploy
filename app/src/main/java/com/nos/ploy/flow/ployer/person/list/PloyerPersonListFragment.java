@@ -60,7 +60,7 @@ public class PloyerPersonListFragment extends BaseFragment implements SearchView
             holder.tvTitle.setText(data.getFullName());
             holder.tvDescription.setText(data.getDescription());
 
-            holder.tvPrice.setText(mLanguageData.currencyLabel+  data.getMinPrice()  + " " + mServiceData.getPriceUnit());
+            holder.tvPrice.setText( "From " + mLanguageData.currencyLabel + " " +  data.getMinPrice()   + mServiceData.getPriceUnit());
 
 
             holder.tvReviewCount.setText("" + data.getReviewCount());
