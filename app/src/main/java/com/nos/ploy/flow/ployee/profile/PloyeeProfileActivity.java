@@ -329,7 +329,7 @@ public class PloyeeProfileActivity extends BaseActivity implements View.OnClickL
 
 
                                   PloyeeProfileGson.Data.Location locationData = mData.getLocation();
-                                  if (null != locationData) {
+                                  if (null != locationData && null != mOriginalData && null != mOriginalData.getLocation() && !mOriginalData.getLocation().neverPinLocationBefore() && !MyLocationUtils.locationProviderEnabled(PloyeeProfileActivity.this)) {
                                       setCurrentLatLng(new LatLng(locationData.getLat(), locationData.getLng()));
                                   } else {
                                       getLocationAndSetToAddressView();
@@ -448,7 +448,7 @@ public class PloyeeProfileActivity extends BaseActivity implements View.OnClickL
         runOnUiThread(new Action1<Context>() {
             @Override
             public void call(Context context) {
-                if (null != mOriginalData && null != mOriginalData.getLocation() && mOriginalData.getLocation().neverPinLocationBefore()) {
+                if (null != mOriginalData && null != mOriginalData.getLocation() && mOriginalData.getLocation().neverPinLocationBefore() && !MyLocationUtils.locationProviderEnabled(PloyeeProfileActivity.this)) {
                     Glide.with(context).load(MyLocationUtils.getStaticMapsWithNoMarker(latLng)).into(mImageViewStaticMaps);
                 } else {
                     Glide.with(context).load(MyLocationUtils.getStaticMapsUrl(latLng)).into(mImageViewStaticMaps);
@@ -781,7 +781,7 @@ public class PloyeeProfileActivity extends BaseActivity implements View.OnClickL
         mCurrentLatLng = latlng;
         showStaticMaps(latlng);
         String address = MyLocationUtils.getCompleteAddressString(PloyeeProfileActivity.this, mCurrentLatLng.latitude, mCurrentLatLng.longitude);
-        if (null != mOriginalData && null != mOriginalData.getLocation() && mOriginalData.getLocation().neverPinLocationBefore()) {
+        if (null != mOriginalData && null != mOriginalData.getLocation() && mOriginalData.getLocation().neverPinLocationBefore() && !MyLocationUtils.locationProviderEnabled(this)) {
             mTextViewAddress.setText(mLanguageData.profileScreenLocation);
         } else {
             mTextViewAddress.setText(address);

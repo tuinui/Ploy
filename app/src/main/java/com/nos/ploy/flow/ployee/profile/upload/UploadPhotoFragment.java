@@ -74,6 +74,7 @@ public class UploadPhotoFragment extends BaseFragment {
         @Override
         public void call(List<ProfileImageGson.Data> datas) {
             dismissRefreshing();
+            isContentChanged = false;
             bindData(datas);
         }
     };
