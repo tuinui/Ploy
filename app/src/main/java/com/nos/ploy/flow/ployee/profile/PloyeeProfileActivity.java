@@ -558,6 +558,7 @@ public class PloyeeProfileActivity extends BaseActivity implements View.OnClickL
                         dismissLoading();
                         dismissRefreshing();
                         if (null != data && null != data.getData()) {
+                            mOriginalData = data.getData();
                             onFinish.call(data);
                         }
                     }
@@ -689,7 +690,7 @@ public class PloyeeProfileActivity extends BaseActivity implements View.OnClickL
             showUploadPhotoFragment();
         } else if (id == mImageButtonCheckin.getId()) {
             getLocationAndSetToAddressView();
-            setIsContentChanged(true);
+
         } else if (id == mTextViewLanguageSupport.getId()) {
             showLanguageChooser();
         } else if (id == mImageViewStaticMaps.getId()) {
@@ -765,25 +766,30 @@ public class PloyeeProfileActivity extends BaseActivity implements View.OnClickL
 
     }
 
+
     private void getLocationAndSetToAddressView() {
 //        MyLocationUtils.getLastKnownLocation(this, mGoogleApiClient, true);
-        SmartLocation.with(this).location().oneFix().start(new OnLocationUpdatedListener() {
-            @Override
-            public void onLocationUpdated(final Location location) {
-                if (null != location) {
-                    runOnUiThread(new Action1<Context>() {
-                        @Override
-                        public void call(Context context) {
-                            mCurrentLatLng = new LatLng(location.getLatitude(), location.getLongitude());
-                            String address = MyLocationUtils.getCompleteAddressString(PloyeeProfileActivity.this, mCurrentLatLng.latitude, mCurrentLatLng.longitude);
-                            Glide.with(PloyeeProfileActivity.this).load(MyLocationUtils.getStaticMapsUrl(mCurrentLatLng)).into(mImageViewStaticMaps);
-                            mTextViewAddress.setText(address);
-                        }
-                    });
+        if (MyLocationUtils.checkLocationEnabled(this)) {
+            SmartLocation.with(this).location().oneFix().start(new OnLocationUpdatedListener() {
+                @Override
+                public void onLocationUpdated(final Location location) {
+                    if (null != location) {
+                        runOnUiThread(new Action1<Context>() {
+                            @Override
+                            public void call(Context context) {
+                                setIsContentChanged(true);
+                                mCurrentLatLng = new LatLng(location.getLatitude(), location.getLongitude());
+                                String address = MyLocationUtils.getCompleteAddressString(PloyeeProfileActivity.this, mCurrentLatLng.latitude, mCurrentLatLng.longitude);
+                                Glide.with(PloyeeProfileActivity.this).load(MyLocationUtils.getStaticMapsUrl(mCurrentLatLng)).into(mImageViewStaticMaps);
+                                mTextViewAddress.setText(address);
+                            }
+                        });
 
+                    }
                 }
-            }
-        });
+            });
+
+        }
     }
 
 

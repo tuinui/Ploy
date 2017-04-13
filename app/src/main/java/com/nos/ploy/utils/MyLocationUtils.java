@@ -211,9 +211,12 @@ public class MyLocationUtils {
         return gps_enabled || network_enabled;
     }
 
-    public static void checkLocationEnabled(Context context) {
+    public static boolean checkLocationEnabled(Context context) {
         if (!locationProviderEnabled(context)) {
             PopupMenuUtils.showDialogLocationSettings(context, null);
+            return false;
+        }else{
+            return true;
         }
     }
 

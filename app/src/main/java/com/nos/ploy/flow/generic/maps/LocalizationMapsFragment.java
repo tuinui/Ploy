@@ -3,7 +3,6 @@ package com.nos.ploy.flow.generic.maps;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -43,8 +42,8 @@ public class LocalizationMapsFragment extends BaseFragment implements OnMapReady
     Toolbar mToolbar;
     @BindView(R.id.textview_main_appbar_title)
     TextView mTextViewToolbarTitle;
-    @BindView(R.id.fab_ployee_maps_my_location)
-    FloatingActionButton mFabMyLocation;
+    //    @BindView(R.id.fab_ployee_maps_my_location)
+//    FloatingActionButton mFabMyLocation;
     @BindDimen(R.dimen.fab_margin)
     int dp16;
 
@@ -106,10 +105,19 @@ public class LocalizationMapsFragment extends BaseFragment implements OnMapReady
         initMap();
         initToolbar();
         initView();
+
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (MyLocationUtils.checkLocationEnabled(getContext()) && mIsNeverSetLocationBefore) {
+            setToCurrentGpsLatLng();
+        }
     }
 
     private void initView() {
-        mFabMyLocation.setOnClickListener(this);
+//        mFabMyLocation.setOnClickListener(this);
 //        mFabDirection.setOnClickListener(this);
     }
 
@@ -166,19 +174,23 @@ public class LocalizationMapsFragment extends BaseFragment implements OnMapReady
         }
     }
 
+    private void setToCurrentGpsLatLng() {
+        SmartLocation.with(getContext()).location().start(new OnLocationUpdatedListener() {
+            @Override
+            public void onLocationUpdated(Location location) {
+                isContentChanged = true;
+                setCurrentLatLng(new LatLng(location.getLatitude(), location.getLongitude()), true);
+            }
+        });
+    }
+
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mGoogleMap = googleMap;
         if (mGoogleMap != null) {
             final boolean setMarker = !mIsNeverSetLocationBefore || MyLocationUtils.locationProviderEnabled(getContext());
             if (mIsNeverSetLocationBefore && MyLocationUtils.locationProviderEnabled(getContext())) {
-                SmartLocation.with(getContext()).location().start(new OnLocationUpdatedListener() {
-                    @Override
-                    public void onLocationUpdated(Location location) {
-                        isContentChanged = true;
-                        setCurrentLatLng(new LatLng(location.getLatitude(), location.getLongitude()), setMarker);
-                    }
-                });
+                setToCurrentGpsLatLng();
             } else {
                 setCurrentLatLng(mLatlng, setMarker);
             }
@@ -254,9 +266,9 @@ public class LocalizationMapsFragment extends BaseFragment implements OnMapReady
     @Override
     public void onClick(View v) {
         int id = v.getId();
-        if (id == mFabMyLocation.getId()) {
-            goToMyLocation();
-        }
+//        if (id == mFabMyLocation.getId()) {
+//            goToMyLocation();
+//        }
 //        else if (id == mFabDirection.getId()) {
 //            getDirection(v.getContext());
 //        }
