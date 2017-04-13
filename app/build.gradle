@@ -17,8 +17,8 @@ android {
         applicationId "com.nos.ploy"
         minSdkVersion 17
         targetSdkVersion 22
-        versionCode 1030
-        versionName "1.0.30"
+        versionCode 1031
+        versionName "1.0.31"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
     }

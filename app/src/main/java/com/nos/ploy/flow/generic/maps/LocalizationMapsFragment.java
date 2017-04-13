@@ -200,13 +200,14 @@ public class LocalizationMapsFragment extends BaseFragment implements OnMapReady
             mGoogleMap.setOnMyLocationButtonClickListener(new GoogleMap.OnMyLocationButtonClickListener() {
                 @Override
                 public boolean onMyLocationButtonClick() {
-
+//                    if (MyLocationUtils.checkLocationEnabled(getContext())) {
                     if (null != mGoogleMap && null != mGoogleMap.getMyLocation()) {
+
                         LatLng latLng = new LatLng(mGoogleMap.getMyLocation().getLatitude(), mGoogleMap.getMyLocation().getLongitude());
                         onChangeLocation(latLng);
+                        isContentChanged = true;
                     }
-
-
+//                    }
                     return false;
                 }
             });
