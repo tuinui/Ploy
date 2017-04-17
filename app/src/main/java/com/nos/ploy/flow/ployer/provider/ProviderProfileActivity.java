@@ -35,6 +35,7 @@ import com.nos.ploy.api.masterdata.model.LanguageAppLabelGson;
 import com.nos.ploy.api.ployee.model.PloyeeAvailiabilityGson;
 import com.nos.ploy.api.ployer.PloyerApi;
 import com.nos.ploy.api.ployer.model.PloyerServiceDetailGson;
+import com.nos.ploy.api.ployer.model.PloyerServicesGson;
 import com.nos.ploy.api.ployer.model.ProviderUserListGson;
 import com.nos.ploy.api.ployer.model.ReviewGson;
 import com.nos.ploy.api.utils.loader.AccountInfoLoader;
@@ -68,10 +69,10 @@ public class ProviderProfileActivity extends BaseActivity implements GoogleApiCl
 
 
     public static final String KEY_PLOYEE_USER_SERVICE_DATA = "PLOYEE_USER_SERVICE_DATA";
-    public static final String KEY_PLOYEEPROFILEGSON_DATA = "PLOYEEPROFILEGSON_DATA";
+    public static final String KEY_PARENT_DATA = "PARENT_DATA";
     public static final String KEY_IS_PREVIEW = "IS_PREVIEW";
     private ProviderUserListGson.Data.UserService mUserServiceData;
-
+    private PloyerServicesGson.Data mParentData = null;
 
     @BindView(R.id.viewZoneAbout)
     View viewZoneAbout;
@@ -146,7 +147,9 @@ public class ProviderProfileActivity extends BaseActivity implements GoogleApiCl
     TextView mTextViewRatingCount;
     private boolean mIsPreviewMode;
     private boolean isFirstTimeLoaded;
+    private boolean isFirstTimeExpandedIfMatchServiceData = false;
 //    private PloyeeProfileGson.Data mPreviewData;
+
 
     @OnClick(R.id.view_activity_member_profile_availability_block)
     public void onClickAvailabilityBlock(View view) {
@@ -373,12 +376,8 @@ public class ProviderProfileActivity extends BaseActivity implements GoogleApiCl
     private void initData() {
         if (null != getIntent() && null != getIntent().getExtras()) {
             mUserServiceData = getIntent().getExtras().getParcelable(KEY_PLOYEE_USER_SERVICE_DATA);
-//            mPreviewData = getIntent().getExtras().getParcelable(KEY_PLOYEEPROFILEGSON_DATA);
+            mParentData = getIntent().getExtras().getParcelable(KEY_PARENT_DATA);
             mIsPreviewMode = getIntent().getExtras().getBoolean(KEY_IS_PREVIEW, false);
-//            if (null != mPreviewData) {
-//                mIsPreviewMode = true;
-//                bindUserProfile(mPreviewData);
-//            }
         }
     }
 
@@ -568,6 +567,10 @@ public class ProviderProfileActivity extends BaseActivity implements GoogleApiCl
 
     private void bindServices(List<PloyerServiceDetailGson.Data> datas) {
         mServiceAdapter.replaceData(datas);
+        if(!isFirstTimeExpandedIfMatchServiceData){
+            isFirstTimeExpandedIfMatchServiceData = true;
+            mServiceAdapter.expandWithData(mParentData);
+        }
     }
 
     @Override
@@ -652,7 +655,7 @@ public class ProviderProfileActivity extends BaseActivity implements GoogleApiCl
             if (null != mData && null != mData.getUserProfile() && null != mData.getUserProfile().getUserId()) {
                 if (UserTokenManager.isLogin(v.getContext())) {
                     if (mUserServiceData.getReviewCount() > 0) {
-                        showFragment(ProviderReviewFragment.newInstance(mData.getUserProfile().getUserId(), mUserServiceData, new LeaveReviewFragment.OnReviewFinishListener() {
+                        showFragment(ProviderReviewFragment.newInstance(mData.getUserProfile().getUserId(), mUserServiceData,mParentData, new LeaveReviewFragment.OnReviewFinishListener() {
                             @Override
                             public void onReviewFinish() {
                                 refreshData();

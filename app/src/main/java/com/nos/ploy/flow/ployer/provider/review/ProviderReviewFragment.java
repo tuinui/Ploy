@@ -19,6 +19,7 @@ import com.nos.ploy.api.authentication.model.UserTokenGson;
 import com.nos.ploy.api.base.RetrofitCallUtils;
 import com.nos.ploy.api.masterdata.model.LanguageAppLabelGson;
 import com.nos.ploy.api.ployer.PloyerApi;
+import com.nos.ploy.api.ployer.model.PloyerServicesGson;
 import com.nos.ploy.api.ployer.model.ProviderUserListGson;
 import com.nos.ploy.api.ployer.model.ReviewGson;
 import com.nos.ploy.base.BaseFragment;
@@ -26,6 +27,7 @@ import com.nos.ploy.cache.UserTokenManager;
 import com.nos.ploy.flow.ployer.provider.leavereview.LeaveReviewFragment;
 import com.nos.ploy.utils.LanguageFormatter;
 import com.nos.ploy.utils.RatingBarUtils;
+import com.nos.ploy.utils.RecyclerUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -98,16 +100,19 @@ public class ProviderReviewFragment extends BaseFragment implements View.OnClick
     private long mUserIdToReview;
     private PloyerApi mApi;
     private static final String KEY_USER_SERVICE_DATA = "USER_SERVICE_DATA";
-    private ProviderReviewRecyclerAdapter mAdapter = new ProviderReviewRecyclerAdapter();
+    private static final String KEY_PARENT_DATA = "PARENT_DATA";
+    private ProviderReviewRecyclerAdapter mAdapter ;
     private ReviewGson.Data mData;
     private ProviderUserListGson.Data.UserService mUserServiceData;
     private LeaveReviewFragment.OnReviewFinishListener listener;
+    private PloyerServicesGson.Data mParentData;
 
-    public static ProviderReviewFragment newInstance(long userId, ProviderUserListGson.Data.UserService userData, LeaveReviewFragment.OnReviewFinishListener listener) {
+    public static ProviderReviewFragment newInstance(long userId, ProviderUserListGson.Data.UserService userData, PloyerServicesGson.Data parentData, LeaveReviewFragment.OnReviewFinishListener listener) {
 
         Bundle args = new Bundle();
         args.putLong(KEY_USER_ID, userId);
         args.putParcelable(KEY_USER_SERVICE_DATA, userData);
+        args.putParcelable(KEY_PARENT_DATA,parentData);
         ProviderReviewFragment fragment = new ProviderReviewFragment();
         fragment.setArguments(args);
         fragment.setListener(listener);
@@ -120,6 +125,8 @@ public class ProviderReviewFragment extends BaseFragment implements View.OnClick
         if (null != getArguments()) {
             mUserIdToReview = getArguments().getLong(KEY_USER_ID, 0);
             mUserServiceData = getArguments().getParcelable(KEY_USER_SERVICE_DATA);
+            mParentData = getArguments().getParcelable(KEY_PARENT_DATA);
+            mAdapter = new ProviderReviewRecyclerAdapter(mParentData);
         }
         mApi = getRetrofit().create(PloyerApi.class);
 
@@ -270,14 +277,17 @@ public class ProviderReviewFragment extends BaseFragment implements View.OnClick
     }
     private void moveToFirstIfIsOwn(List<ReviewGson.Data.ReviewData> reviewDataList){
         UserTokenGson.Data token = UserTokenManager.getToken(getContext());
-        if(token != null){
+        if(token != null && RecyclerUtils.getSize(reviewDataList) > 0){
 
 //            List<ReviewGson.Data.ReviewData> results = new ArrayList<>();
             List<ReviewGson.Data.ReviewData> tempDatas = new ArrayList<>(reviewDataList);
             for(ReviewGson.Data.ReviewData data : tempDatas){
-                if(token.getUserId() == data.getUserReview().getUserId()){
-                    reviewDataList.remove(data);
-                    reviewDataList.add(0,data);
+                if(null != data && null != data.getUserReview()){
+                    if(token.getUserId() == data.getUserReview().getUserId()){
+                        reviewDataList.remove(data);
+                        reviewDataList.add(0,data);
+                    }
+
                 }
             }
         }

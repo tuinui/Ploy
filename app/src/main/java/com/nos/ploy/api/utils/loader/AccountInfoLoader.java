@@ -5,8 +5,10 @@ import android.content.Context;
 import com.nos.ploy.api.account.AccountApi;
 import com.nos.ploy.api.account.model.ProfileImageGson;
 import com.nos.ploy.api.authentication.model.AccountGson;
+import com.nos.ploy.api.authentication.model.UserTokenGson;
 import com.nos.ploy.api.base.RetrofitManager;
 import com.nos.ploy.cache.SharePreferenceUtils;
+import com.nos.ploy.cache.UserTokenManager;
 
 import java.util.List;
 
@@ -70,14 +72,18 @@ public class AccountInfoLoader {
         getProfileImage(context, userId, false, onFinish);
     }
 
-    public static void getProfileImage(final Context context, long userId, boolean forceRefresh, final Action1<List<ProfileImageGson.Data>> onFinish) {
+    public static void getProfileImage(final Context context, final long userId, boolean forceRefresh, final Action1<List<ProfileImageGson.Data>> onFinish) {
         List<ProfileImageGson.Data> results = SharePreferenceUtils.getProfileImages(context);
         Call<ProfileImageGson> call = RetrofitManager.getRetrofit(context).create(AccountApi.class).getProfileImage(userId);
         final Callback<ProfileImageGson> callbackSaveCache = new Callback<ProfileImageGson>() {
             @Override
             public void onResponse(Call<ProfileImageGson> call, Response<ProfileImageGson> response) {
                 if (response.isSuccessful() && null != response.body()) {
-                    SharePreferenceUtils.saveProfileImageGson(context, response.body());
+                    UserTokenGson.Data token = UserTokenManager.getToken(context);
+                    if (token != null && null != token.getUserId() && token.getUserId() == userId) {
+                        SharePreferenceUtils.saveProfileImageGson(context, response.body());
+                    }
+
                 }
             }
 

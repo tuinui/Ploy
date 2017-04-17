@@ -70,7 +70,7 @@ public class PloyerHomeActivity extends BaseActivity implements SearchView.OnQue
     ForegroundLinearLayout mForeGroundLinearLayoutSwitchToContainer;
     @BindView(R.id.foregroundlinearlayout_main_drawer_header_container)
     ForegroundLinearLayout mLinearLayoutHeaderContainer;
-    @BindView(R.id.imageview_main_drawer_profile)
+    @BindView(R.id.imageview_ployer_drawer_profile)
     ImageView mImageViewProfile;
     @BindView(R.id.textview_main_drawer_username)
     TextView mTextViewUsername;

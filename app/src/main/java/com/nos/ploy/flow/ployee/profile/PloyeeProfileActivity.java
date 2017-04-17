@@ -5,6 +5,7 @@ import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.DrawableRes;
+import android.support.design.internal.ForegroundLinearLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
@@ -21,6 +22,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -87,6 +89,8 @@ public class PloyeeProfileActivity extends BaseActivity implements View.OnClickL
     TextView mTextViewTransportLabel;
     @BindView(R.id.textview_ployee_profile_language_support)
     TextView mTextViewLanguageSupport;
+    @BindView(R.id.linearlayout_ployee_profile_language_label_container)
+    ForegroundLinearLayout mLinearLayoutLanguageContainer;
     @BindView(R.id.recyclerview_ployee_profile_tranportation)
     RecyclerView mRecyclerViewTransport;
     @BindView(R.id.toolbar_main)
@@ -608,7 +612,7 @@ public class PloyeeProfileActivity extends BaseActivity implements View.OnClickL
         mButtonEmail.setOnClickListener(this);
         mButtonPhone.setOnClickListener(this);
         mImageButtonCheckin.setOnClickListener(this);
-        mTextViewLanguageSupport.setOnClickListener(this);
+        mLinearLayoutLanguageContainer.setOnClickListener(this);
         mImageViewStaticMaps.setOnClickListener(this);
         mButtonPreview.setOnClickListener(this);
 
@@ -691,7 +695,7 @@ public class PloyeeProfileActivity extends BaseActivity implements View.OnClickL
         } else if (id == mImageButtonCheckin.getId()) {
             getLocationAndSetToAddressView();
 
-        } else if (id == mTextViewLanguageSupport.getId()) {
+        } else if (id == mLinearLayoutLanguageContainer.getId()) {
             showLanguageChooser();
         } else if (id == mImageViewStaticMaps.getId()) {
             showFragment(LocalizationMapsFragment.newInstance(mCurrentLatLng, true, mOriginalData.getLocation().neverPinLocationBefore(), new LocalizationMapsFragment.OnChooseLocationFinishListener() {

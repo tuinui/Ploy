@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -32,8 +31,7 @@
                 android:minHeight="?attr/listPreferredItemHeightSmall"
                 android:paddingLeft="16dp"
                 android:paddingRight="8dp"
-                android:text="@string/Services"
-                android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium" />
+                android:text="@string/Services" />
 
             <include layout="@layout/view_vertical_divider" />
 
@@ -48,8 +46,7 @@
                 android:minHeight="?attr/listPreferredItemHeightSmall"
                 android:paddingLeft="16dp"
                 android:paddingRight="8dp"
-                android:text="@string/Availability"
-                android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium" />
+                android:text="@string/Availability" />
 
             <include layout="@layout/view_vertical_divider" />
 
@@ -65,7 +62,7 @@
                 android:paddingLeft="16dp"
                 android:paddingRight="8dp"
                 android:text="@string/Language"
-                android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium" />
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Small" />
 
             <include layout="@layout/view_vertical_divider" />
 
@@ -117,17 +114,16 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingLeft="@dimen/activity_horizontal_margin"
-                android:paddingRight="@dimen/activity_horizontal_margin"
                 android:layout_marginTop="16dp"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:layout_weight="0"
+                android:paddingLeft="@dimen/activity_horizontal_margin"
+                android:paddingRight="@dimen/activity_horizontal_margin">
 
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-
-                    >
+                    android:orientation="horizontal">
 
 
                     <LinearLayout
@@ -140,6 +136,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Price" />
+
                         <TextView
                             android:id="@+id/textview_filter_price_unit"
                             android:layout_width="wrap_content"
@@ -177,11 +174,11 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:textSize="20sp"
-                            android:textStyle="bold"
                             android:layout_marginLeft="@dimen/activity_horizontal_margin"
                             android:layout_marginRight="@dimen/activity_horizontal_margin"
-                            android:text="-" />
+                            android:text="-"
+                            android:textSize="20sp"
+                            android:textStyle="bold" />
 
 
                         <TextView
@@ -266,8 +263,8 @@
     <android.support.v7.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:visibility="gone"
         android:layout_weight="0"
+        android:visibility="gone"
         app:cardElevation="4dp">
 
         <LinearLayout

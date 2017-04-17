@@ -117,7 +117,7 @@ public class PloyerPersonActivity extends BaseActivity implements SearchView.OnQ
     DrawerLayout mDrawerLayout;
     @BindView(R.id.viewpager_ployer_person)
     CustomViewPager mViewPager;
-    @BindView(R.id.imageview_main_drawer_profile)
+    @BindView(R.id.imageview_ployer_drawer_profile)
     ImageView mImageViewProfile;
     @BindView(R.id.textview_main_drawer_username)
     TextView mTextViewUsername;
@@ -335,7 +335,6 @@ public class PloyerPersonActivity extends BaseActivity implements SearchView.OnQ
             mImageViewProfile.setImageResource(R.drawable.ic_circle_profile_120dp);
             mImageViewProfile.setColorFilter(Color.TRANSPARENT);
             mImageViewSwitchIcon.setVisibility(View.VISIBLE);
-            mLinearLayoutHeaderContainer.setClickable(false);
             AccountInfoLoader.getProfileImage(this, mUserId, mOnLoadProfileFinish);
             AccountInfoLoader.getAccountGson(this, mUserId, mOnLoadAccountFinish);
         } else {
@@ -344,7 +343,6 @@ public class PloyerPersonActivity extends BaseActivity implements SearchView.OnQ
             mImageViewProfile.setImageResource(R.drawable.ic_geniz_logo_133dp);
             mImageViewProfile.setColorFilter(Color.WHITE);
             mImageViewSwitchIcon.setVisibility(View.GONE);
-            mLinearLayoutHeaderContainer.setClickable(false);
             mTextViewUsername.setText("");
         }
         DrawerController.initDrawer(this, menus, mDrawerLayout, mRecyclerViewDrawer, mToolbar, mImageViewMore, Color.BLACK, mOnMenuItemSelectedListener);

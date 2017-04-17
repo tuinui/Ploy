@@ -15,6 +15,7 @@ import android.widget.TextView;
 import com.nos.ploy.R;
 import com.nos.ploy.api.masterdata.model.LanguageAppLabelGson;
 import com.nos.ploy.api.ployer.model.PloyerServiceDetailGson;
+import com.nos.ploy.api.ployer.model.PloyerServicesGson;
 import com.nos.ploy.flow.ployee.home.content.service.detail.contract.subservice.PloyeeServiceDetailSubServiceRecyclerAdapter;
 import com.nos.ploy.flow.ployee.home.content.service.detail.contract.subservice.viewmodel.PloyeeServiceDetailSubServiceItemBaseViewModel;
 import com.nos.ploy.utils.RecyclerUtils;
@@ -34,6 +35,9 @@ public class ProviderServiceRecyclerAdapter extends RecyclerView.Adapter<Provide
 
     private List<PloyerServiceDetailGson.Data> mDatas = new ArrayList<>();
     private LanguageAppLabelGson.Data mLanguage;
+    private PloyerServicesGson.Data mParentData;
+    private RecyclerView mRecyclerView;
+
 
     public ProviderServiceRecyclerAdapter() {
         super();
@@ -45,7 +49,6 @@ public class ProviderServiceRecyclerAdapter extends RecyclerView.Adapter<Provide
 //        for (int i = 0; i < 2; i++) {
         mDatas.addAll(datas);
 //        }
-
         notifyDataSetChanged();
     }
 
@@ -61,6 +64,11 @@ public class ProviderServiceRecyclerAdapter extends RecyclerView.Adapter<Provide
         }
     }
 
+    @Override
+    public void onAttachedToRecyclerView(RecyclerView recyclerView) {
+        super.onAttachedToRecyclerView(recyclerView);
+        mRecyclerView = recyclerView;
+    }
 
     @Override
     public int getItemCount() {
@@ -69,6 +77,11 @@ public class ProviderServiceRecyclerAdapter extends RecyclerView.Adapter<Provide
 
     public void setLanguage(LanguageAppLabelGson.Data language) {
         this.mLanguage = language;
+    }
+
+    public void expandWithData(PloyerServicesGson.Data parentData) {
+        this.mParentData = parentData;
+        notifyItemRangeChanged(0, RecyclerUtils.getSize(mDatas));
     }
 
 
@@ -144,6 +157,7 @@ public class ProviderServiceRecyclerAdapter extends RecyclerView.Adapter<Provide
 
 
         public void bindData(PloyerServiceDetailGson.Data data) {
+
             bindLanguage();
             if (null != data) {
                 if (!TextUtils.isEmpty(data.getServiceNameOthers())) {
@@ -153,12 +167,37 @@ public class ProviderServiceRecyclerAdapter extends RecyclerView.Adapter<Provide
                 }
                 tvPrice.setText(mLanguage.serviceScreenFrom + " " + mLanguage.currencyLabel + data.getPriceMin() + " " + data.getPriceUnit() + "");
                 tvDescription.setText(data.getDescription());
-                tvCertificate.setText(data.getCertificate());
-                tvEquipment.setText(data.getEquipment());
+
+
+                if (!TextUtils.isEmpty(data.getCertificate())) {
+                    tvCertificateLabel.setVisibility(View.VISIBLE);
+                    tvCertificate.setVisibility(View.VISIBLE);
+                    tvCertificate.setText(data.getCertificate());
+                } else {
+                    tvCertificateLabel.setVisibility(View.GONE);
+                    tvCertificate.setVisibility(View.GONE);
+                    tvCertificate.setText("-");
+                }
+
+
+                if (!TextUtils.isEmpty(data.getEquipment())) {
+                    tvEquipmentLabel.setVisibility(View.VISIBLE);
+                    tvEquipment.setVisibility(View.VISIBLE);
+                    tvEquipment.setText(data.getEquipment());
+                } else {
+                    tvEquipmentLabel.setVisibility(View.GONE);
+                    tvEquipment.setVisibility(View.GONE);
+                    tvEquipment.setText("-");
+                }
+
                 PloyeeServiceDetailSubServiceRecyclerAdapter adapter = new PloyeeServiceDetailSubServiceRecyclerAdapter(true, null);
                 adapter.replaceData(data.getSubServices());
                 recyclerViewSubService.setAdapter(adapter);
                 tvPrice.setOnClickListener(this);
+                if (null != mParentData && mParentData.getId() == data.getServiceId()) {
+                    mParentData = null;
+                    expandServiceView();
+                }
             }
         }
 
@@ -170,25 +209,28 @@ public class ProviderServiceRecyclerAdapter extends RecyclerView.Adapter<Provide
             }
         }
 
+        private void expandServiceView() {
+            scrollview.setVisibility(View.VISIBLE);
+            tvPrice.setCompoundDrawablesWithIntrinsicBounds(null, null, mDrawableLess, null);
+//                scrollview.requestFocus();
+//                scrollview.fullScroll(View.FOCUS_DOWN);
+            rootView.getLayoutTransition().addTransitionListener(new LayoutTransition.TransitionListener() {
+                @Override
+                public void startTransition(LayoutTransition transition, ViewGroup container, View view, int transitionType) {
+//                        viewExpandListener.onServiceExpand(view);
+                    scrollview.requestFocus();
+                }
+
+                @Override
+                public void endTransition(LayoutTransition transition, ViewGroup container, View view, int transitionType) {
+
+                }
+            });
+        }
 
         private void toggleShowServiceDetail() {
             if (scrollview.getVisibility() == View.GONE) {
-                scrollview.setVisibility(View.VISIBLE);
-                tvPrice.setCompoundDrawablesWithIntrinsicBounds(null, null, mDrawableLess, null);
-//                scrollview.requestFocus();
-//                scrollview.fullScroll(View.FOCUS_DOWN);
-                rootView.getLayoutTransition().addTransitionListener(new LayoutTransition.TransitionListener() {
-                    @Override
-                    public void startTransition(LayoutTransition transition, ViewGroup container, View view, int transitionType) {
-//                        viewExpandListener.onServiceExpand(view);
-                        scrollview.requestFocus();
-                    }
-
-                    @Override
-                    public void endTransition(LayoutTransition transition, ViewGroup container, View view, int transitionType) {
-
-                    }
-                });
+                expandServiceView();
 
             } else if (scrollview.getVisibility() == View.VISIBLE) {
                 scrollview.setVisibility(View.GONE);

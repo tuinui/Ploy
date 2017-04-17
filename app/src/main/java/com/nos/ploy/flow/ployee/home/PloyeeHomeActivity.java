@@ -73,7 +73,7 @@ public class PloyeeHomeActivity extends BaseActivity implements View.OnClickList
     DrawerLayout mDrawerLayout;
     @BindView(R.id.foregroundlinearlayout_main_drawer_header_container)
     ForegroundLinearLayout mLinearLayoutHeaderContainer;
-    @BindView(R.id.imageview_main_drawer_profile)
+    @BindView(R.id.imageview_ployee_drawer_profile)
     ImageView mImageViewProfile;
     @BindView(R.id.textview_main_drawer_username)
     TextView mTextViewUsername;
