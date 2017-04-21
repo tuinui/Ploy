@@ -160,7 +160,7 @@ public class ProviderServiceRecyclerAdapter extends RecyclerView.Adapter<Provide
 
             bindLanguage();
             if (null != data) {
-                if (!TextUtils.isEmpty(data.getServiceNameOthers())) {
+                if (data.getServiceId() == -1) {
                     toolbar.setTitle(data.getServiceNameOthers());
                 } else {
                     toolbar.setTitle(data.getServiceName());
