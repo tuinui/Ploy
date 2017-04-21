@@ -99,14 +99,17 @@ public class AccountInfoLoader {
             call.enqueue(new Callback<ProfileImageGson>() {
                 @Override
                 public void onResponse(Call<ProfileImageGson> call, Response<ProfileImageGson> response) {
-                    callbackSaveCache.onResponse(call, response);
-                    if (null != onFinish) {
-                        List<ProfileImageGson.Data> data = SharePreferenceUtils.getProfileImages(context);
-                        if (null == data) {
-                            data = response.body().getData();
+                    if (response.isSuccessful() && null != response.body()) {
+                        callbackSaveCache.onResponse(call, response);
+                        if (null != onFinish) {
+                            UserTokenGson.Data token = UserTokenManager.getToken(context);
+                            if (token != null && null != token.getUserId() && token.getUserId() == userId) {
+                                SharePreferenceUtils.saveProfileImageGson(context, response.body());
+                            }
+                            onFinish.call(response.body().getData());
                         }
-                        onFinish.call(data);
                     }
+
                 }
 
                 @Override

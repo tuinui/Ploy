@@ -1,5 +1,8 @@
 package com.nos.ploy.api.ployer.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.gson.annotations.SerializedName;
 import com.nos.ploy.api.base.response.BaseResponse;
 
@@ -66,7 +69,7 @@ public class PloyerServiceDetailGson extends BaseResponse<PloyerServiceDetailGso
      */
 
 
-    public static class Data {
+    public static class Data implements Parcelable {
 
 
         @SerializedName("serviceId")
@@ -307,5 +310,54 @@ public class PloyerServiceDetailGson extends BaseResponse<PloyerServiceDetailGso
                 }
             }
         }
+
+        @Override
+        public int describeContents() {
+            return 0;
+        }
+
+        @Override
+        public void writeToParcel(Parcel dest, int flags) {
+            dest.writeLong(this.serviceId);
+            dest.writeLong(this.userId);
+            dest.writeLong(this.serviceMappingId);
+            dest.writeString(this.serviceName);
+            dest.writeString(this.serviceNameOthers);
+            dest.writeString(this.description);
+            dest.writeLong(this.priceMin);
+            dest.writeLong(this.priceMax);
+            dest.writeString(this.certificate);
+            dest.writeString(this.equipment);
+            dest.writeList(this.subServices);
+            dest.writeString(this.priceUnit);
+        }
+
+        protected Data(Parcel in) {
+            this.serviceId = in.readLong();
+            this.userId = in.readLong();
+            this.serviceMappingId = in.readLong();
+            this.serviceName = in.readString();
+            this.serviceNameOthers = in.readString();
+            this.description = in.readString();
+            this.priceMin = in.readLong();
+            this.priceMax = in.readLong();
+            this.certificate = in.readString();
+            this.equipment = in.readString();
+            this.subServices = new ArrayList<SubService>();
+            in.readList(this.subServices, SubService.class.getClassLoader());
+            this.priceUnit = in.readString();
+        }
+
+        public static final Parcelable.Creator<Data> CREATOR = new Parcelable.Creator<Data>() {
+            @Override
+            public Data createFromParcel(Parcel source) {
+                return new Data(source);
+            }
+
+            @Override
+            public Data[] newArray(int size) {
+                return new Data[size];
+            }
+        };
     }
 }

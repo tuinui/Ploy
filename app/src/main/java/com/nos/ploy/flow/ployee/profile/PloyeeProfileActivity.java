@@ -22,7 +22,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -301,8 +300,8 @@ public class PloyeeProfileActivity extends BaseActivity implements View.OnClickL
         mEditTextInterest.setFloatingLabelText(data.profileScreenInterest);
         mEditTextInterest.setHint(data.profileScreenInterestHint);
         mTextViewTransportLabel.setText(data.profileScreenTransport);
-        mButtonPhone.setText(data.profileScreenPhone);
-        mButtonEmail.setText(data.profileScreenEmail);
+        mButtonEmail.setText(data.profileScreenShowEmail);
+        mButtonPhone.setText(data.profileScreenShowPhone);
         mTextViewContactMethod.setText(data.profileScreenContactMethod);
         mButtonPreview.setText(data.profileScreenPreview);
     }

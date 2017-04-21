@@ -1,5 +1,6 @@
 package com.nos.ploy.flow.ployer.person.maps;
 
+import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetBehavior;
@@ -36,6 +37,7 @@ import com.nos.ploy.utils.FragmentTransactionUtils;
 import com.nos.ploy.utils.IntentUtils;
 import com.nos.ploy.utils.MyLocationUtils;
 import com.nos.ploy.utils.RatingBarUtils;
+import com.nos.ploy.utils.RecyclerUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -167,21 +169,33 @@ public class PloyerPersonMapFragment extends BaseFragment implements OnMapReadyC
     }
 
     private void bindDataToMap() {
-        if (mGoogleMap != null && !mDatas.isEmpty()) {
-            mGoogleMap.clear();
-            LatLngBounds.Builder latlngBoundBuilder = new LatLngBounds.Builder();
-            boolean isInclude = false;
-            for (PloyerPersonMapViewModel data : mDatas) {
-                if (null != data.getData() && null != data.getMarkerOptions()) {
-                    Marker marker = mGoogleMap.addMarker(data.getMarkerOptions());
-                    marker.setTag(data.getData());
-                    latlngBoundBuilder.include(marker.getPosition());
-                    isInclude = true;
+        if (mGoogleMap != null) {
+
+            if (RecyclerUtils.getSize(mDatas) > 0) {
+                mGoogleMap.clear();
+                LatLngBounds.Builder latlngBoundBuilder = new LatLngBounds.Builder();
+                boolean isInclude = false;
+                for (PloyerPersonMapViewModel data : mDatas) {
+                    if (null != data.getData() && null != data.getMarkerOptions()) {
+                        Marker marker = mGoogleMap.addMarker(data.getMarkerOptions());
+                        marker.setTag(data.getData());
+                        latlngBoundBuilder.include(marker.getPosition());
+                        isInclude = true;
+                    }
+                }
+                if (isInclude) {
+                    mGoogleMap.animateCamera(CameraUpdateFactory.newLatLngBounds(latlngBoundBuilder.build(), 20));
+                }
+            } else {
+                mGoogleMap.clear();
+                if (null != mGoogleMap.getMyLocation()) {
+                    Location location = mGoogleMap.getMyLocation();
+                    double lat = location.getLatitude();
+                    double lng = location.getLongitude();
+                    mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(lat, lng), 20));
                 }
             }
-            if (isInclude) {
-                mGoogleMap.animateCamera(CameraUpdateFactory.newLatLngBounds(latlngBoundBuilder.build(), 20));
-            }
+
 
         }
 
@@ -213,7 +227,7 @@ public class PloyerPersonMapFragment extends BaseFragment implements OnMapReadyC
             mTextViewSheetTitle.setText(data.getFullName());
             mTExtViewSheetSubTitle.setText(mServiceData.getServiceName());
             mTextViewDescription.setText(data.getDescription());
-            mTextViewPrice.setText( "From " +  mLanguageData.currencyLabel + " " + data.getMinPrice() + mServiceData.getPriceUnit());
+            mTextViewPrice.setText("From " + mLanguageData.currencyLabel + " " + data.getMinPrice() + mServiceData.getPriceUnit());
             mTextViewReviewCount.setText("" + data.getReviewCount());
             mTextViewRating.setText(data.getReviewPoint() + "/5");
             mRatingBarRate.setRating(RatingBarUtils.getRatingbarRoundingNumber(data.getReviewPoint()));
@@ -260,7 +274,7 @@ public class PloyerPersonMapFragment extends BaseFragment implements OnMapReadyC
             if (null != mCurrentSelectedData) {
                 Bundle bundle = new Bundle();
                 bundle.putParcelable(ProviderProfileActivity.KEY_PLOYEE_USER_SERVICE_DATA, mCurrentSelectedData);
-                bundle.putParcelable(ProviderProfileActivity.KEY_PARENT_DATA,mServiceData);
+                bundle.putParcelable(ProviderProfileActivity.KEY_PARENT_DATA, mServiceData);
                 IntentUtils.startActivity(getActivity(), ProviderProfileActivity.class, bundle);
             }
         }

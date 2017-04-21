@@ -14,24 +14,33 @@
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
-    <!--<android.support.design.widget.FloatingActionButton-->
-    <!--android:id="@+id/fab_ployee_maps_direction"-->
-    <!--android:layout_width="wrap_content"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:layout_gravity="bottom|end"-->
-    <!--android:layout_margin="@dimen/fab_margin"-->
-    <!--android:scaleType="fitCenter"-->
-    <!--android:src="@drawable/ic_directory_arrow_right_black_24dp"-->
-    <!--app:fab_type="normal"-->
-    <!--app:useCompatPadding="true" />-->
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end">
 
-    <!--<android.support.design.widget.FloatingActionButton-->
-        <!--android:id="@+id/fab_ployee_maps_my_location"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_gravity="bottom|end"-->
-        <!--android:layout_margin="16dp"-->
-        <!--android:scaleType="fitCenter"-->
-        <!--android:src="@drawable/ic_near_me_black_24dp"-->
-        <!--app:useCompatPadding="true" />-->
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fab_ployee_maps_my_location"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="8dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/ic_near_me_black_24dp"
+            android:visibility="visible" />
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fab_ployee_maps_direction"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:layout_marginRight="16dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/ic_directory_arrow_right_black_24dp"
+            android:visibility="visible" />
+
+    </LinearLayout>
+
+
 </android.support.design.widget.CoordinatorLayout>

@@ -57,6 +57,7 @@ import com.nos.ploy.flow.ployer.person.list.PloyerPersonListFragment;
 import com.nos.ploy.flow.ployer.person.maps.PloyerPersonMapFragment;
 import com.nos.ploy.utils.GoogleApiAvailabilityUtils;
 import com.nos.ploy.utils.IntentUtils;
+import com.nos.ploy.utils.MyLocationUtils;
 import com.nos.ploy.utils.PopupMenuUtils;
 import com.nos.ploy.utils.RecyclerUtils;
 
@@ -212,6 +213,13 @@ public class PloyerPersonActivity extends BaseActivity implements SearchView.OnQ
                 return true;
             } else if (id == R.id.menuitem_filter_maps_maps) {
                 changeMenu(MAPS);
+                runOnUiThread(new Action1<Context>() {
+                    @Override
+                    public void call(Context context) {
+                        MyLocationUtils.checkLocationEnabled(context);
+                    }
+                });
+
                 return true;
             }
             return false;

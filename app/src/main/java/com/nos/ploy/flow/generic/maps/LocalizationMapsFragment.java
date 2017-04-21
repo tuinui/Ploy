@@ -1,8 +1,10 @@
 package com.nos.ploy.flow.generic.maps;
 
+import android.content.Context;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -20,6 +22,7 @@ import com.nos.ploy.R;
 import com.nos.ploy.api.masterdata.model.LanguageAppLabelGson;
 import com.nos.ploy.base.BaseFragment;
 import com.nos.ploy.utils.FragmentTransactionUtils;
+import com.nos.ploy.utils.IntentUtils;
 import com.nos.ploy.utils.MyLocationUtils;
 import com.nos.ploy.utils.PopupMenuUtils;
 
@@ -36,14 +39,18 @@ import rx.functions.Action1;
 
 public class LocalizationMapsFragment extends BaseFragment implements OnMapReadyCallback, View.OnClickListener {
 
-    private static String KEY_CAN_CHANGE_LOCATION = "CAN_CHANGE_LOCATION";
+    private static String KEY_IS_PLOYEE_PROFILE = "IS_PLOYEE_PROFILE";
     private static final String KEY_NEVER_SET_LOCATION_BEFORE = "NEVER_SET_LOCATION_BEFORE";
     @BindView(R.id.toolbar_main)
     Toolbar mToolbar;
     @BindView(R.id.textview_main_appbar_title)
     TextView mTextViewToolbarTitle;
-    //    @BindView(R.id.fab_ployee_maps_my_location)
-//    FloatingActionButton mFabMyLocation;
+
+    @BindView(R.id.fab_ployee_maps_my_location)
+    FloatingActionButton mFabMyLocation;
+    @BindView(R.id.fab_ployee_maps_direction)
+    FloatingActionButton mFabDirection;
+
     @BindDimen(R.dimen.fab_margin)
     int dp16;
 
@@ -54,15 +61,15 @@ public class LocalizationMapsFragment extends BaseFragment implements OnMapReady
     private static final String TAG = "LocalizationMapsFragment";
     private OnChooseLocationFinishListener listener;
     private MarkerOptions mMarkerOptions;
-    private boolean mCanChangeLocation;
+    private boolean mIsPloyeeProfile;
     private boolean isContentChanged = false;
     private boolean mIsNeverSetLocationBefore;
     //
 
-    public static LocalizationMapsFragment newInstance(LatLng latlng, boolean canChangeLocation, boolean neverSetLocationBefore, OnChooseLocationFinishListener listener) {
+    public static LocalizationMapsFragment newInstance(LatLng latlng, boolean isPloyeeProfile, boolean neverSetLocationBefore, OnChooseLocationFinishListener listener) {
         Bundle args = new Bundle();
         args.putParcelable(KEY_LAT_LNG, latlng);
-        args.putBoolean(KEY_CAN_CHANGE_LOCATION, canChangeLocation);
+        args.putBoolean(KEY_IS_PLOYEE_PROFILE, isPloyeeProfile);
         args.putBoolean(KEY_NEVER_SET_LOCATION_BEFORE, neverSetLocationBefore);
         LocalizationMapsFragment fragment = new LocalizationMapsFragment();
         fragment.setArguments(args);
@@ -82,7 +89,7 @@ public class LocalizationMapsFragment extends BaseFragment implements OnMapReady
         super.onCreate(savedInstanceState);
         if (null != getArguments()) {
             mLatlng = getArguments().getParcelable(KEY_LAT_LNG);
-            mCanChangeLocation = getArguments().getBoolean(KEY_CAN_CHANGE_LOCATION, true);
+            mIsPloyeeProfile = getArguments().getBoolean(KEY_IS_PLOYEE_PROFILE, true);
             mIsNeverSetLocationBefore = getArguments().getBoolean(KEY_NEVER_SET_LOCATION_BEFORE, false);
             if (mLatlng == null) {
                 mLatlng = MyLocationUtils.DEFAULT_LATLNG;
@@ -117,8 +124,16 @@ public class LocalizationMapsFragment extends BaseFragment implements OnMapReady
     }
 
     private void initView() {
-//        mFabMyLocation.setOnClickListener(this);
-//        mFabDirection.setOnClickListener(this);
+        if (mIsPloyeeProfile) {
+            mFabDirection.setVisibility(View.GONE);
+            mFabMyLocation.setVisibility(View.GONE);
+        } else {
+            mFabMyLocation.setVisibility(View.VISIBLE);
+            mFabDirection.setVisibility(View.VISIBLE);
+            mFabMyLocation.setOnClickListener(this);
+            mFabDirection.setOnClickListener(this);
+        }
+
     }
 
     private void initToolbar() {
@@ -132,7 +147,7 @@ public class LocalizationMapsFragment extends BaseFragment implements OnMapReady
             }
         });
 
-        if (mCanChangeLocation) {
+        if (mIsPloyeeProfile) {
 
             mToolbar.inflateMenu(R.menu.menu_done);
             mToolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
@@ -151,7 +166,7 @@ public class LocalizationMapsFragment extends BaseFragment implements OnMapReady
 
     @Override
     public boolean onBackPressed() {
-        if (mCanChangeLocation && isContentChanged) {
+        if (mIsPloyeeProfile && isContentChanged) {
             PopupMenuUtils.showConfirmationAlertMenu(getContext(), null, mLanguageData.accountScreenConfirmBeforeBack, mLanguageData.okLabel, mLanguageData.cancelLabel, new Action1<Boolean>() {
                 @Override
                 public void call(Boolean yes) {
@@ -223,7 +238,7 @@ public class LocalizationMapsFragment extends BaseFragment implements OnMapReady
     }
 
     private void onChangeLocation(LatLng latLng) {
-        if (mCanChangeLocation) {
+        if (mIsPloyeeProfile) {
             setCurrentLatLng(latLng, true);
         } else {
             animateCameraTo(latLng);
@@ -267,31 +282,32 @@ public class LocalizationMapsFragment extends BaseFragment implements OnMapReady
     @Override
     public void onClick(View v) {
         int id = v.getId();
-//        if (id == mFabMyLocation.getId()) {
-//            goToMyLocation();
-//        }
-//        else if (id == mFabDirection.getId()) {
-//            getDirection(v.getContext());
-//        }
+        if (id == mFabMyLocation.getId()) {
+            goToCurrentMarkerLocation();
+        } else if (id == mFabDirection.getId()) {
+            getDirection(v.getContext());
+        }
     }
 
 
-//    private void getDirection(Context context) {
-//        if (null != mGoogleMap && mGoogleMap.getMyLocation() != null) {
-//            IntentUtils.getDirection(context, new LatLng(mGoogleMap.getMyLocation().getLatitude(), mGoogleMap.getMyLocation().getLongitude()), mLatlng);
-//        }
-//
-//    }
+    private void getDirection(Context context) {
+        if (MyLocationUtils.checkLocationEnabled(getContext()) && null != mGoogleMap && mGoogleMap.getMyLocation() != null) {
+            IntentUtils.getDirection(context, new LatLng(mGoogleMap.getMyLocation().getLatitude(), mGoogleMap.getMyLocation().getLongitude()), mLatlng);
+        }
+
+    }
 
 
-    private void goToMyLocation() {
-        if (null != mGoogleMap && mGoogleMap.getMyLocation() != null) { // Check to ensure coordinates aren't null, probably a better way of doing this...
+    private void goToCurrentMarkerLocation() {
+        if (mMarkerOptions != null && null != mMarkerOptions.getPosition()) {
+            LatLng latLng = mMarkerOptions.getPosition();
+            onChangeLocation(latLng);
+        } else if (null != mGoogleMap && mGoogleMap.getMyLocation() != null) { // Check to ensure coordinates aren't null, probably a better way of doing this...
             Location location = mGoogleMap.getMyLocation();
             double lat = location.getLatitude();
             double lng = location.getLongitude();
             onChangeLocation(new LatLng(lat, lng));
         }
-
     }
 
     public static interface OnChooseLocationFinishListener {

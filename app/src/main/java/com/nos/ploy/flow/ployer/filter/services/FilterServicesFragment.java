@@ -13,7 +13,6 @@ import android.widget.CompoundButton;
 import android.widget.RadioButton;
 import android.widget.TextView;
 
-import com.google.gson.Gson;
 import com.nos.ploy.R;
 import com.nos.ploy.api.masterdata.model.LanguageAppLabelGson;
 import com.nos.ploy.api.ployer.model.PloyerServiceDetailGson;
@@ -66,12 +65,11 @@ public class FilterServicesFragment extends BaseFragment implements View.OnClick
     private long mTotal;
     private String strProvidersLabel = "";
 
-    public static FilterServicesFragment newInstance(PloyerServiceDetailGson.Data mServiceDetail, PloyerServicesGson.Data data, long total, PostProviderFilterGson filterData, OnClickDoneListener listener) {
+    public static FilterServicesFragment newInstance(PloyerServiceDetailGson.Data serviceDetail, PloyerServicesGson.Data data, long total, PostProviderFilterGson filterData, OnClickDoneListener listener) {
 
         Bundle args = new Bundle();
-        Gson gson = new Gson();
 
-        args.putString(KEY_SERVICE_DETAIL, gson.toJson(mServiceDetail));
+        args.putParcelable(KEY_SERVICE_DETAIL, serviceDetail);
         args.putParcelable(KEY_SERVICE_DATA, data);
         args.putParcelable(KEY_FILTERED_DATA, filterData);
         args.putLong(KEY_TOTAL_COUNT, total);
@@ -93,7 +91,7 @@ public class FilterServicesFragment extends BaseFragment implements View.OnClick
     @Override
     protected void bindLanguage(LanguageAppLabelGson.Data data) {
         super.bindLanguage(data);
-        PopupMenuUtils.setMenuTitle(mToolbar.getMenu(),R.id.menu_done_item_done,data.doneLabel);
+        PopupMenuUtils.setMenuTitle(mToolbar.getMenu(), R.id.menu_done_item_done, data.doneLabel);
         mRadioButtonCertificate.setText(data.serviceScreenCertificateLabel);
         mRadioButtonEquipment.setText(data.serviceScreenEquipmentLabel);
         mButtonNoPref.setText(data.avaliabilityScreenNoPrefer);
@@ -109,9 +107,7 @@ public class FilterServicesFragment extends BaseFragment implements View.OnClick
             mServiceData = getArguments().getParcelable(KEY_SERVICE_DATA);
             mTotal = getArguments().getLong(KEY_TOTAL_COUNT, 0);
 
-            Gson gson = new Gson();
-            String strKeyServiceDetail  = getArguments().getString(KEY_SERVICE_DETAIL);
-            mServiceDetail = gson.fromJson(strKeyServiceDetail, PloyerServiceDetailGson.Data.class);
+            mServiceDetail = getArguments().getParcelable(KEY_SERVICE_DETAIL);
 
             PostProviderFilterGson filterData = getArguments().getParcelable(KEY_FILTERED_DATA);
             if (filterData != null) {
@@ -136,7 +132,12 @@ public class FilterServicesFragment extends BaseFragment implements View.OnClick
         initRecyclerView();
         initView();
 
-        bindData(mServiceDetail.getSubServices());
+        if (null != mServiceData) {
+            bindData(mServiceDetail.getSubServices());
+        } else {
+            dismiss();
+        }
+
 
         mRadioButtonCertificate.setOnCheckedChangeListener(this);
         mRadioButtonEquipment.setOnCheckedChangeListener(this);
