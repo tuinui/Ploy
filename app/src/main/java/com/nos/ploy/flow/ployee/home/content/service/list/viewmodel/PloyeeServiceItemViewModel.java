@@ -11,12 +11,14 @@ public class PloyeeServiceItemViewModel implements SortedListAdapter.ViewModel {
     private Long mId;
     private String mText;
     private String mImageUrl;
+    private boolean selected = false;
 
     public PloyeeServiceItemViewModel(PloyeeServiceListGson.PloyeeServiceItemGson data) {
         if (null != data) {
             mId = data.getId();
             mText = data.getServiceName();
             mImageUrl = data.getImageUrl();
+            selected = data.isSeleced();
         }
 
     }
@@ -31,6 +33,14 @@ public class PloyeeServiceItemViewModel implements SortedListAdapter.ViewModel {
 
     public String getImageUrl() {
         return mImageUrl;
+    }
+
+    public boolean isSelected() {
+        return selected;
+    }
+
+    public void setSelected(boolean selected) {
+        this.selected = selected;
     }
 
 //    @Override
