@@ -238,7 +238,7 @@ public class PloyeeServiceDetailFragment extends BaseFragment implements PloyeeS
         mEditTextEquipmentNeeded.setHint(data.serviceScreenEquipmentHint);
         mAdapter.setLanguage(data);
         mEditTextPriceFrom.setHint(data.serviceScreenFrom);
-        mTextViewSubServicesHeader.setText(data.servicesLabel);
+        mTextViewSubServicesHeader.setText(data.serviceScreenHeader);
         mEditTextPriceTo.setHint(data.serviceScreenTo);
 //        mButtonReset.setText(data.serviceScreenReset);
     }

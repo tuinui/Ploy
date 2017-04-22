@@ -152,7 +152,7 @@ public class ProviderServiceRecyclerAdapter extends RecyclerView.Adapter<Provide
             tvDescriptionLabel.setText(mLanguage.serviceScreenDescriptLabel);
             tvCertificateLabel.setText(mLanguage.serviceScreenCertificateLabel);
             tvEquipmentLabel.setText(mLanguage.serviceScreenEquipmentLabel);
-            tvSubServicesHeader.setText(mLanguage.servicesLabel);
+            tvSubServicesHeader.setText(mLanguage.serviceScreenHeader);
         }
 
 
