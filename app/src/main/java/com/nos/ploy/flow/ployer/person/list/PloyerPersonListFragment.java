@@ -9,6 +9,7 @@ import android.support.v7.widget.SearchView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -42,6 +43,8 @@ public class PloyerPersonListFragment extends BaseFragment implements SearchView
     RecyclerView mRecyclerView;
     @BindView(R.id.swiperefreshlayout_ployer_home_list)
     SwipeRefreshLayout mSwipeRefreshLayout;
+    @BindView(R.id.empty_view)
+    TextView emptyView;
 
     public static final String KEY_SERVICE_DATA = "SERVICE_DATA";
     private PloyerServicesGson.Data mServiceData;
@@ -126,6 +129,9 @@ public class PloyerPersonListFragment extends BaseFragment implements SearchView
 
         initRecyclerView();
         initView();
+
+
+        emptyView.setText(mLanguageData.filtersscreenResultNotFound);
     }
 
 
@@ -140,7 +146,13 @@ public class PloyerPersonListFragment extends BaseFragment implements SearchView
     }
 
     public void bindData(ProviderUserListGson.Data data) {
+
         if (null != data && null != data.getUserServiceList()) {
+            if(data.getUserServiceList().size() == 0){
+                emptyView.setVisibility(View.VISIBLE);
+            }else {
+                emptyView.setVisibility(View.GONE);
+            }
             mDatas.clear();
             mDatas.addAll(data.getUserServiceList());
             if (null != mAdapter) {

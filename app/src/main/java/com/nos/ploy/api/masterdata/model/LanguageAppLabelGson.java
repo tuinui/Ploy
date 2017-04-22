@@ -476,5 +476,10 @@ public class LanguageAppLabelGson extends BaseResponse<LanguageAppLabelGson.Data
 
         @SerializedName("provider_availability_not_select")
         public String providerAvailabilityNotSelect;
+
+        @SerializedName("filter_screen_result_not_found")
+        public String filtersscreenResultNotFound = "Data not found";
+
+
     }
 }

@@ -10,6 +10,7 @@ import android.support.v7.widget.SearchView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.nos.ploy.R;
 import com.nos.ploy.api.base.RetrofitCallUtils;
@@ -37,6 +38,9 @@ public class PloyerServiceListFragment extends BaseFragment implements SearchVie
     SwipeRefreshLayout mSwipeRefreshLayout;
     @BindView(R.id.recyclerview_swipe_recycler)
     RecyclerView mRecyclerView;
+    @BindView(R.id.empty_view)
+    TextView emptyView;
+
     private PloyerApi mApi;
     private List<PloyerServicesGson.Data> mDatas = new ArrayList<>();
     private PloyerCategoryRecyclerAdapter mAdapter;
@@ -130,6 +134,12 @@ public class PloyerServiceListFragment extends BaseFragment implements SearchVie
         mDatas.clear();
         mDatas.addAll(data);
         mAdapter.replaceData(data);
+
+        if (data.size() == 0){
+            emptyView.setVisibility(View.VISIBLE);
+        }else {
+            emptyView.setVisibility(View.GONE);
+        }
 //        mAdapter.edit()
 //                .replaceAll(mDatas)
 //                .commit();
