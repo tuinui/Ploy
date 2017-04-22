@@ -50,6 +50,14 @@ public class PloyeeHomeRecyclerAdapter extends RecyclerView.Adapter<PloyeeHomeRe
     public void onBindViewHolder(final ViewHolder holder, final int position) {
         if (RecyclerUtils.isAvailableData(mFilteredData, position)) {
             final PloyeeServiceItemViewModel vm = mFilteredData.get(position);
+
+
+            if (vm.isSelected()){
+                holder.viewMark.setVisibility(View.VISIBLE);
+            }else{
+                holder.viewMark.setVisibility(View.INVISIBLE);
+            }
+
             holder.tvTitle.setText(vm.getText());
             holder.tvTitle.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -82,10 +90,13 @@ public class PloyeeHomeRecyclerAdapter extends RecyclerView.Adapter<PloyeeHomeRe
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         public TextView tvTitle;
+        public View viewMark;
 
         public ViewHolder(View itemView) {
             super(itemView);
             tvTitle = (TextView) itemView.findViewById(R.id.textview_list_item);
+            viewMark =  itemView.findViewById(R.id.viewMark);
+
         }
 
 

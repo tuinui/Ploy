@@ -20,6 +20,8 @@ public class PloyeeServiceListGson extends BaseResponseArray<PloyeeServiceListGs
         @SerializedName("imgUrl")
         private String imageUrl;
 
+        private boolean isSeleced = false;
+
         public PloyeeServiceItemGson() {
         }
 
@@ -33,6 +35,14 @@ public class PloyeeServiceListGson extends BaseResponseArray<PloyeeServiceListGs
 
         public String getServiceName() {
             return serviceName;
+        }
+
+        public boolean isSeleced() {
+            return isSeleced;
+        }
+
+        public void setSeleced(boolean seleced) {
+            isSeleced = seleced;
         }
     }
 

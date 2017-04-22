@@ -12,11 +12,14 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.nos.ploy.R;
+import com.nos.ploy.api.account.model.MemberProfileGson;
 import com.nos.ploy.api.base.RetrofitCallUtils;
 import com.nos.ploy.api.masterdata.MasterApi;
 import com.nos.ploy.api.ployee.PloyeeApi;
 import com.nos.ploy.api.ployee.model.PloyeeAvailiabilityGson;
 import com.nos.ploy.api.ployee.model.PloyeeServiceListGson;
+import com.nos.ploy.api.ployer.PloyerApi;
+import com.nos.ploy.api.ployer.model.PloyerServiceDetailGson;
 import com.nos.ploy.base.BaseFragment;
 import com.nos.ploy.cache.SharePreferenceUtils;
 import com.nos.ploy.flow.ployee.home.content.service.detail.PloyeeServiceDetailFragment;
@@ -49,6 +52,7 @@ public class PloyeeServiceListFragment extends BaseFragment implements SearchVie
     @BindView(R.id.swiperefreshlayout_swipe_recycler)
     SwipeRefreshLayout mSwipeRefreshLayout;
     private PloyeeApi mService;
+    private PloyerApi mApi;
     private List<PloyeeServiceItemViewModel> mDatas = new ArrayList<>();
     private long mUserId;
     private Action1<PloyeeServiceItemViewModel> mActionOnClickServiceItem = new Action1<PloyeeServiceItemViewModel>() {
@@ -122,6 +126,7 @@ public class PloyeeServiceListFragment extends BaseFragment implements SearchVie
             mUserId = getArguments().getLong(KEY_USER_ID, 0L);
         }
         mService = getRetrofit().create(PloyeeApi.class);
+        mApi = getRetrofit().create(PloyerApi.class);
         mAdapter = new PloyeeHomeRecyclerAdapter(mActionOnClickServiceItem);
     }
 
@@ -210,21 +215,60 @@ public class PloyeeServiceListFragment extends BaseFragment implements SearchVie
         recyclerView.setAdapter(mAdapter);
     }
 
-    public void refreshData() {
-        mSwipeRefreshLayout.setRefreshing(true);
-        RetrofitCallUtils.with(mService.getServiceList(SharePreferenceUtils.getCurrentActiveAppLanguageCode(getContext())), new RetrofitCallUtils.RetrofitCallback<PloyeeServiceListGson>() {
-            @Override
-            public void onDataSuccess(PloyeeServiceListGson data) {
-                mSwipeRefreshLayout.setRefreshing(false);
-                bindData(data.getData());
-            }
 
-            @Override
-            public void onDataFailure(String failCause) {
-                mSwipeRefreshLayout.setRefreshing(false);
+    private List<PloyerServiceDetailGson.Data> serviceOfUser = new ArrayList<>();
+    private RetrofitCallUtils.RetrofitCallback<MemberProfileGson> mCallbackRefreshData = new RetrofitCallUtils.RetrofitCallback<MemberProfileGson>() {
+        @Override
+        public void onDataSuccess(MemberProfileGson data) {
+            dismissRefreshing();
+            if (null != data && null != data.getData()) {
+                serviceOfUser = data.getData().getServiceDetails();
+
+                if (serviceOfUser == null){
+                    serviceOfUser = new ArrayList<>();
+                }
+
+                RetrofitCallUtils.with(mService.getServiceList(SharePreferenceUtils.getCurrentActiveAppLanguageCode(getContext())), new RetrofitCallUtils.RetrofitCallback<PloyeeServiceListGson>() {
+                    @Override
+                    public void onDataSuccess(PloyeeServiceListGson data) {
+                        mSwipeRefreshLayout.setRefreshing(false);
+
+                        List<PloyeeServiceListGson.PloyeeServiceItemGson> items = data.getData();
+
+                        for (int i = 0 ; i < serviceOfUser.size() ; i++){
+                            for (int j = 0 ; j < items.size() ; j ++){
+
+                                if (serviceOfUser.get(i).getServiceId() == items.get(j).getId()){
+                                    items.get(j).setSeleced(true);
+                                }
+                            }
+                        }
+
+                        bindData(items);
+                    }
+
+                    @Override
+                    public void onDataFailure(String failCause) {
+                        mSwipeRefreshLayout.setRefreshing(false);
+                    }
+                }).enqueue(getContext());
+                requestAvailability();
+
+
             }
-        }).enqueue(getContext());
-        requestAvailability();
+        }
+
+
+        @Override
+        public void onDataFailure(String failCause) {
+            dismissRefreshing();
+        }
+    };
+
+    public void refreshData() {
+
+        mSwipeRefreshLayout.setRefreshing(true);
+        RetrofitCallUtils.with(mApi.getProviderProfileGson(mUserId, SharePreferenceUtils.getCurrentActiveAppLanguageCode(getActivity())), mCallbackRefreshData).enqueueDontToast(getActivity());
     }
 
     @Override
