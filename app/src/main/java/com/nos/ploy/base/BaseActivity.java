@@ -291,7 +291,7 @@ public class BaseActivity extends LocalizationActivity {
 
     protected void showRefreshing() {
         if (mRefreshLayout == null) {
-            showLoading();
+//            showLoading();
             return;
         }
         if (!isRefreshing) {
