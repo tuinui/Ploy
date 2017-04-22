@@ -24,7 +24,6 @@ import com.nos.ploy.base.BaseFragment;
 import com.nos.ploy.cache.SharePreferenceUtils;
 import com.nos.ploy.flow.ployee.home.content.service.detail.PloyeeServiceDetailFragment;
 import com.nos.ploy.flow.ployee.home.content.service.list.viewmodel.PloyeeServiceItemViewModel;
-import com.nos.ploy.utils.PopupMenuUtils;
 import com.nos.ploy.utils.RecyclerUtils;
 
 import java.util.ArrayList;
@@ -61,11 +60,11 @@ public class PloyeeServiceListFragment extends BaseFragment implements SearchVie
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    if (isCanWork) {
+//                    if (isCanWork) {
                         showFragment(PloyeeServiceDetailFragment.newInstance(mUserId, data.getId(), SharePreferenceUtils.getCurrentActiveAppLanguageCode(getContext()), data.getText()));
-                    } else {
-                        PopupMenuUtils.showConfirmationAlertMenu(getContext(), null, mLanguageData.providerAvailabilityNotSelect, mLanguageData.okLabel, null, null);
-                    }
+//                    } else {
+//                        PopupMenuUtils.showConfirmationAlertMenu(getContext(), null, mLanguageData.providerAvailabilityNotSelect, mLanguageData.okLabel, null, null);
+//                    }
                 }
             });
 

@@ -15,6 +15,7 @@ import com.bumptech.glide.Glide;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.maps.model.LatLng;
 import com.nos.ploy.R;
+import com.nos.ploy.api.masterdata.model.LanguageAppLabelGson;
 import com.nos.ploy.api.ployer.PloyerApi;
 import com.nos.ploy.api.ployer.model.PloyerServicesGson;
 import com.nos.ploy.api.ployer.model.ProviderUserListGson;
@@ -131,9 +132,16 @@ public class PloyerPersonListFragment extends BaseFragment implements SearchView
         initView();
 
 
-        emptyView.setText(mLanguageData.filtersscreenResultNotFound);
+
     }
 
+    @Override
+    protected void bindLanguage(LanguageAppLabelGson.Data data) {
+        super.bindLanguage(data);
+
+        emptyView.setText(data.filtersscreenResultNotFound);
+
+    }
 
     private void initView() {
         setRefreshLayout(mSwipeRefreshLayout, new SwipeRefreshLayout.OnRefreshListener() {
