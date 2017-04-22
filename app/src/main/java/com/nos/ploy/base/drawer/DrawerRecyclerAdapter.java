@@ -29,7 +29,7 @@ public abstract class DrawerRecyclerAdapter extends RecyclerView.Adapter<DrawerR
 
     @Override
     public DrawerRecyclerAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.view_textview_list_item, parent, false),textColor);
+        return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.view_textview_list_item_sidemenu, parent, false),textColor);
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
