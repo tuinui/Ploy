@@ -368,12 +368,23 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
 
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="#F4F5F6"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:layout_marginTop="4dp"
+                    android:padding="@dimen/activity_horizontal_margin"
+                    android:text="End result"/>
+
             </LinearLayout>
 
 
         </android.support.v4.widget.NestedScrollView>
 
     </android.support.v4.widget.SwipeRefreshLayout>
+
 
 
 </LinearLayout>
