@@ -28,7 +28,7 @@
                 android:clickable="true"
                 android:drawableRight="@drawable/ic_chevron_right_gray_32dp"
                 android:gravity="center_vertical"
-                android:minHeight="?attr/listPreferredItemHeightSmall"
+                android:minHeight="40dp"
                 android:paddingLeft="16dp"
                 android:paddingRight="8dp"
                 android:text="@string/Services" />
@@ -43,7 +43,7 @@
                 android:clickable="true"
                 android:drawableRight="@drawable/ic_chevron_right_gray_32dp"
                 android:gravity="center_vertical"
-                android:minHeight="?attr/listPreferredItemHeightSmall"
+                android:minHeight="40dp"
                 android:paddingLeft="16dp"
                 android:paddingRight="8dp"
                 android:text="@string/Availability" />
@@ -58,7 +58,7 @@
                 android:clickable="true"
                 android:drawableRight="@drawable/ic_chevron_right_gray_32dp"
                 android:gravity="center_vertical"
-                android:minHeight="?attr/listPreferredItemHeightSmall"
+                android:minHeight="40dp"
                 android:paddingLeft="16dp"
                 android:paddingRight="8dp"
                 android:text="@string/Language"
@@ -210,7 +210,7 @@
                 <com.appyvet.rangebar.RangeBar
                     android:id="@+id/materialrangebar_filter_rate"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="50dp"
                     app:rangeBarPaddingBottom="8dp"
                     app:tickEnd="1000"
                     app:tickInterval="5"
