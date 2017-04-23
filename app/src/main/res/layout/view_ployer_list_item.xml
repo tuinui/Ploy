@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="4dp"
+    android:layout_margin="2dp"
     android:clickable="true"
     android:foreground="?attr/selectableItemBackground"
     android:orientation="vertical"
@@ -23,7 +23,7 @@
             android:layout_height="wrap_content"
             android:scaleType="centerCrop"
             android:src="@drawable/ic_ployer_item_placeholder"
-            app:ratioHeight="4"
+            app:ratioHeight="3"
             app:ratioWidth="5" />
 
         <View
@@ -45,9 +45,9 @@
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
                 android:maxLines="1"
-                android:padding="4dp"
                 android:paddingLeft="8dp"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                android:textSize="14sp"
                 android:textColor="@android:color/black"
                 tools:text="Adam levine" />
 
@@ -71,7 +71,7 @@
                 android:ellipsize="end"
                 android:maxLines="2"
                 android:minLines="2"
-                android:padding="4dp"
+                android:textSize="12sp"
                 android:paddingLeft="8dp"
                 android:textAppearance="@style/TextAppearance.AppCompat.Small"
                 tools:text="Description of experience and blahblahblahblahblahblahb" />
@@ -94,9 +94,11 @@
 
                 <TextView
                     android:id="@+id/textview_ployer_list_item_rate"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_weight="1"
                     android:layout_marginRight="4dp"
+                    android:textSize="10sp"
                     tools:text="4.5/5" />
 
                 <com.nos.ploy.custom.view.TextViewDrawableSize
@@ -106,6 +108,8 @@
                     android:layout_marginLeft="8dp"
                     android:drawableLeft="@drawable/ic_format_list_bulleted_gray_24dp"
                     android:gravity="center_vertical"
+                    android:textSize="10sp"
+                    android:layout_marginRight="4dp"
                     app:compoundDrawableHeight="16dp"
                     app:compoundDrawableWidth="16dp"
                     tools:text="19" />

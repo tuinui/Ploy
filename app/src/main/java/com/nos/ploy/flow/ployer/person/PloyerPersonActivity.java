@@ -18,10 +18,12 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.util.TypedValue;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewStub;
+import android.widget.AutoCompleteTextView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -420,6 +422,10 @@ public class PloyerPersonActivity extends BaseActivity implements SearchView.OnQ
         mSearchView = (SearchView) mStubSearchView.inflate().findViewById(R.id.searchview_main);
         mSearchView.setOnQueryTextListener(this);
         mSearchView.setOnSuggestionListener(mSuggestionClickListener);
+
+        AutoCompleteTextView search_text = (AutoCompleteTextView) mSearchView.findViewById(R.id.search_src_text);
+        search_text.setTextColor(Color.WHITE);
+        search_text.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimensionPixelSize(R.dimen.bottom_text_size));
     }
 
     private void initFooter() {

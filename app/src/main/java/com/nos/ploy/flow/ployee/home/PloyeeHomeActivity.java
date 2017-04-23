@@ -1,6 +1,7 @@
 package com.nos.ploy.flow.ployee.home;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.ColorInt;
@@ -12,9 +13,11 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.util.TypedValue;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewStub;
+import android.widget.AutoCompleteTextView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -210,6 +213,11 @@ public class PloyeeHomeActivity extends BaseActivity implements View.OnClickList
         initFragment();
         mSearchView = (SearchView) mViewStubSearchView.inflate().findViewById(R.id.searchview_main);
         mSearchView.setOnQueryTextListener(this);
+
+        AutoCompleteTextView search_text = (AutoCompleteTextView) mSearchView.findViewById(R.id.search_src_text);
+        search_text.setTextColor(Color.WHITE);
+        search_text.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimensionPixelSize(R.dimen.bottom_text_size));
+
         DrawerController.initDrawer(this, DrawerController.PLOYEE_MENUS, mDrawerLayout, mRecyclerViewDrawer, mToolbar, mImageViewMore, mOnMenuItemSelectedListener);
         initFooter();
         initToolbar();

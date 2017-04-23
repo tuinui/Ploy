@@ -8,19 +8,18 @@
     android:animateLayoutChanges="true"
     android:fitsSystemWindows="true"
     android:focusableInTouchMode="true"
-    android:minHeight="?attr/actionBarSize"
+
     android:orientation="vertical"
     app:theme="@style/AppTheme.AppBarOverlay">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar_main"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="44dp"
         android:background="@color/colorPrimary"
-        android:minHeight="?attr/actionBarSize"
+
         android:padding="0dp"
         app:contentInsetLeft="0dp"
-
         app:contentInsetStart="0dp"
         app:contentInsetStartWithNavigation="0dp"
         app:layout_scrollFlags="snap|enterAlways"
@@ -43,8 +42,10 @@
                 android:ellipsize="end"
                 android:gravity="center_vertical"
                 android:maxLines="1"
-                android:padding="2dp"
+                android:paddingLeft="2dp"
+                android:paddingRight="2dp"
                 android:textAppearance="@style/TextAppearance.Widget.AppCompat.Toolbar.Title"
+                android:textSize="16sp"
                 android:textColor="@android:color/white"
                 tools:text="@string/lorem_ipsum" />
 
@@ -54,11 +55,11 @@
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
                 android:maxLines="1"
-                android:paddingTop="2dp"
+
                 android:paddingLeft="2dp"
                 android:paddingRight="2dp"
-                android:paddingBottom="4dp"
                 android:textAppearance="@style/TextAppearance.Widget.AppCompat.Toolbar.Subtitle"
+                android:textSize="10sp"
                 android:textColor="@android:color/white"
                 android:visibility="gone"
                 tools:text="@string/lorem_ipsum" />
@@ -72,11 +73,10 @@
         android:id="@+id/viewstub_main_appbar_searchview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
         android:inflatedId="@+id/panel_import_tablayout_main"
         android:layout="@layout/view_main_searchview"
-        android:minHeight="?attr/actionBarSize"
-        android:paddingBottom="4dp" />
+
+         />
     <!--<include layout="@layout/view_main_searchview" />-->
 
 </android.support.design.widget.AppBarLayout>
