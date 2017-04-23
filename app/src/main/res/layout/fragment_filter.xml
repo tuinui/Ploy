@@ -165,9 +165,10 @@
                             android:layout_height="wrap_content"
                             android:background="@null"
                             android:gravity="right"
-
+                            android:textSize="16sp"
                             android:hint="@string/From"
                             android:inputType="number"
+                            android:textColor="#737373"
                             android:paddingRight="8dp"
                             android:text="0" />
 
@@ -197,6 +198,8 @@
                             android:gravity="left"
                             android:hint="@string/To"
                             android:inputType="number"
+                            android:textSize="16sp"
+                            android:textColor="#737373"
                             android:minWidth="50dp"
                             android:paddingLeft="8dp"
                             android:text="1000" />
