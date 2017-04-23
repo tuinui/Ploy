@@ -1,5 +1,7 @@
 package com.nos.ploy.flow.ployee.home.content.service.list;
 
+import android.content.Context;
+import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -53,9 +55,9 @@ public class PloyeeHomeRecyclerAdapter extends RecyclerView.Adapter<PloyeeHomeRe
 
 
             if (vm.isSelected()){
-                holder.viewMark.setVisibility(View.VISIBLE);
+                holder.tvTitle.setTextColor(Color.parseColor("#1B2C48"));
             }else{
-                holder.viewMark.setVisibility(View.INVISIBLE);
+                holder.tvTitle.setTextColor(Color.parseColor("#848484"));
             }
 
             holder.tvTitle.setText(vm.getText());
@@ -90,12 +92,11 @@ public class PloyeeHomeRecyclerAdapter extends RecyclerView.Adapter<PloyeeHomeRe
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         public TextView tvTitle;
-        public View viewMark;
 
         public ViewHolder(View itemView) {
             super(itemView);
             tvTitle = (TextView) itemView.findViewById(R.id.textview_list_item);
-            viewMark =  itemView.findViewById(R.id.viewMark);
+
 
         }
 

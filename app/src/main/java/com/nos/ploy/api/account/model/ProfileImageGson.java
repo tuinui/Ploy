@@ -81,7 +81,7 @@ public class ProfileImageGson extends BaseResponse<List<ProfileImageGson.Data>> 
         @SerializedName("userId")
         private Long userId;
         @SerializedName("imagePath")
-        private String imagePath;
+        private String imagePath = "https://images.backend.in.th/ic_circle_profile_120dp.png";
         @SerializedName("imageName")
         private String imageName;
 
