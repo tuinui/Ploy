@@ -101,6 +101,8 @@ public class FilterFragment extends BaseFragment implements View.OnClickListener
     RangeBar mRangeBar;
     @BindView(R.id.textview_filter_price_unit)
     TextView mTextViewPriceUnit;
+    @BindView(R.id.txtPriceLabel)
+    TextView txtPriceLabel;
 
     private RangeBar.OnRangeBarChangeListener mRangeBarListener = new RangeBar.OnRangeBarChangeListener() {
         @Override
@@ -285,6 +287,8 @@ public class FilterFragment extends BaseFragment implements View.OnClickListener
 
         mEdittextFilterFromUnit.setText(mLanguageData.currencyLabel);
         mEdittextFilterToUnit.setText(mLanguageData.currencyLabel);
+
+        txtPriceLabel.setText(data.priceLabel);
     }
 
 

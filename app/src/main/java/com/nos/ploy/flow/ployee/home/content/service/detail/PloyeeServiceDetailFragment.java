@@ -71,6 +71,8 @@ public class PloyeeServiceDetailFragment extends BaseFragment implements PloyeeS
     MaterialEditText mEditTextOthers;
     @BindView(R.id.textview_ployee_service_price_per_hour)
     TextView mTextViewPricePerHour;
+    @BindView(R.id.txtPriceLabel)
+    TextView txtPriceLabel;
     @BindView(R.id.edittext_ployee_service_description)
     MaterialEditText mEditTextDescription;
     @BindView(R.id.edittext_ployee_service_certificate)
@@ -240,6 +242,7 @@ public class PloyeeServiceDetailFragment extends BaseFragment implements PloyeeS
         mEditTextPriceFrom.setHint(data.serviceScreenFrom);
         mTextViewSubServicesHeader.setText(data.serviceScreenHeader);
         mEditTextPriceTo.setHint(data.serviceScreenTo);
+        txtPriceLabel.setText(data.priceLabel);
 //        mButtonReset.setText(data.serviceScreenReset);
     }
 

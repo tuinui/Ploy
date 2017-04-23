@@ -481,5 +481,7 @@ public class LanguageAppLabelGson extends BaseResponse<LanguageAppLabelGson.Data
         public String filtersscreenResultNotFound = "Data not found";
 
 
+        @SerializedName("price_label")
+        public String priceLabel = "Price";
     }
 }
