@@ -90,11 +90,13 @@
                                     android:id="@+id/txtPriceLabel"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
+                                    android:textColor="@color/colorPrimaryDark"
                                     android:text="Price" />
                                 <TextView
                                     android:id="@+id/textview_ployee_service_price_per_hour"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
+                                    android:textColor="@color/colorPrimaryDark"
                                     android:text="/Hour" />
 
                             </LinearLayout>
@@ -118,7 +120,8 @@
                                     android:layout_height="wrap_content"
                                     android:background="@null"
                                     android:gravity="right"
-
+                                    android:textSize="16sp"
+                                    android:textColor="#737373"
                                     android:hint="@string/From"
                                     android:inputType="number"
                                     android:paddingRight="8dp"
@@ -148,6 +151,8 @@
                                     android:layout_height="wrap_content"
                                     android:background="@null"
                                     android:gravity="left"
+                                    android:textSize="16sp"
+                                    android:textColor="#737373"
                                     android:hint="@string/To"
                                     android:inputType="number"
                                     android:minWidth="50dp"
@@ -197,7 +202,7 @@
                         android:inputType="text|textMultiLine"
                         app:met_floatingLabel="normal"
                         app:met_floatingLabelAlwaysShown="true"
-                        app:met_floatingLabelText="@string/Equipment_needed" />
+                        app:met_floatingLabelText="@string/Equipment_needed"/>
 
                 </LinearLayout>
 

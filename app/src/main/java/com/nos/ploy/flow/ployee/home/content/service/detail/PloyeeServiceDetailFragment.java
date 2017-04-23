@@ -188,6 +188,12 @@ public class PloyeeServiceDetailFragment extends BaseFragment implements PloyeeS
         mEditTextOthers.addTextChangedListener(mContentChangedTextWatcher);
         mEditTextPriceFrom.addTextChangedListener(mContentChangedTextWatcher);
         mEditTextPriceTo.addTextChangedListener(mContentChangedTextWatcher);
+
+        mEditTextCertificate.setFocusFraction(1f);
+        mEditTextDescription.setFocusFraction(1f);
+        mEditTextEquipmentNeeded.setFocusFraction(1f);
+        mEditTextOthers.setFocusFraction(1f);
+
     }
 
     private void setText(EditText editText, String text) {

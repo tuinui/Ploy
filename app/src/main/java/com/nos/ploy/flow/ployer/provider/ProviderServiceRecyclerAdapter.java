@@ -193,6 +193,15 @@ public class ProviderServiceRecyclerAdapter extends RecyclerView.Adapter<Provide
                 PloyeeServiceDetailSubServiceRecyclerAdapter adapter = new PloyeeServiceDetailSubServiceRecyclerAdapter(true, null);
                 adapter.replaceData(data.getSubServices());
                 recyclerViewSubService.setAdapter(adapter);
+
+                if (data.getServiceId() == -1){
+                    tvSubServicesHeader.setVisibility(View.GONE);
+                    recyclerViewSubService.setVisibility(View.GONE);
+                }else {
+                    tvSubServicesHeader.setVisibility(View.VISIBLE);
+                    recyclerViewSubService.setVisibility(View.VISIBLE);
+                }
+
                 tvPrice.setOnClickListener(this);
                 if (null != mParentData && mParentData.getId() == data.getServiceId()) {
                     mParentData = null;
