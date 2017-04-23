@@ -182,7 +182,7 @@
                         android:layout_weight="0"
                         android:gravity="center"
                         android:text="@string/Language"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+                        android:textColor="@color/colorPrimary" />
 
                     <TextView
                         android:id="@+id/textview_ployee_profile_language_support"
@@ -195,7 +195,7 @@
                         android:gravity="center_vertical|right"
                         android:maxLines="1"
                         android:padding="8dp"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Small" />
+                         />
 
 
                 </android.support.design.internal.ForegroundLinearLayout>
