@@ -57,16 +57,25 @@ public class ProviderReviewRecyclerAdapter extends RecyclerView.Adapter<Provider
             final ReviewGson.Data.ReviewData data = mDatas.get(position);
             if (null != data.getUserProfileImage()) {
                 Glide.with(holder.imgProfile.getContext()).load(data.getUserProfileImage().getImagePath()).error(R.drawable.ic_circle_profile_120dp).into(holder.imgProfile);
+            }else{
+                holder.imgProfile.setImageResource(R.drawable.ic_circle_profile_120dp);
             }
             if (null != data.getReview()) {
                 holder.tvMessage.setText(data.getReview().getReviewText());
                 if (data.getUserReview() != null) {
                     holder.tvName.setText(data.getUserReview().getFullName());
+                }else{
+                    holder.tvName.setText("unknown");
                 }
 
                 if (null != data.getReview().getCreatedDate()) {
                     holder.tvDate.setText(DateParseUtils.parseDateString(data.getReview().getCreatedDate(), "MMM dd, yyyy"));
+                }else{
+                    holder.tvDate.setText("");
                 }
+            }else{
+                holder.tvName.setText("");
+                holder.tvDate.setText("");
             }
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override

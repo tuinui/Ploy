@@ -46,6 +46,7 @@ public abstract class BaseFragment extends AppCompatDialogFragment {
     private SwipeRefreshLayout mRefreshLayout;
     private boolean isRefreshing;
     protected LanguageAppLabelGson.Data mLanguageData = new LanguageAppLabelGson.Data();
+    public long mTotalCount;
 
     protected void bindLanguage(LanguageAppLabelGson.Data data) {
         mLanguageData = data;

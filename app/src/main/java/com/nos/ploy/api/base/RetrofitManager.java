@@ -23,6 +23,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class RetrofitManager {
 
     public static final String HTTP_HOST_PRODUCTION = "http://138.68.72.222:8080";
+//    public static final String HTTP_HOST_PRODUCTION = "http://10.0.2.2:8080";
 
     public static Retrofit getRetrofit(Context context) {
         Retrofit.Builder builder = new Retrofit.Builder()

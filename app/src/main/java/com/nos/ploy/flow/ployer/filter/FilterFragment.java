@@ -211,6 +211,7 @@ public class FilterFragment extends BaseFragment implements View.OnClickListener
     private FilterServicesFragment filterServicesFragment;
     private FilterAvailabilityFragment filterAvailabilityFragment;
     private FilterLanguageFragment filterLanguageFragment;
+    private String providersLabel = "";
 
     public static FilterFragment newInstance(PloyerServicesGson.Data data, PostProviderFilterGson postData, long totalCount, OnFilterConfirmListener listener) {
         Bundle args = new Bundle();
@@ -282,7 +283,7 @@ public class FilterFragment extends BaseFragment implements View.OnClickListener
         mTextViewRatingLabel.setText(data.filterScreenRating);
         mTextViewTransport.setText(data.profileScreenTransport);
         mTextViewSubTitle.setText(mTotalCount + " " + data.providersLabel);
-
+        providersLabel = data.providersLabel;
         strProvidersLabel = data.providersLabel;
 
         mEdittextFilterFromUnit.setText(mLanguageData.currencyLabel);
@@ -332,6 +333,12 @@ public class FilterFragment extends BaseFragment implements View.OnClickListener
 
         if (mServiceDetail == null) {
             refreshDataPriceUnit();
+        }
+
+        try {
+            mTextViewSubTitle.setText(mTotalCount + " " + providersLabel);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 

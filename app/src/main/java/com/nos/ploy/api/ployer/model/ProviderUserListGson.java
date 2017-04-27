@@ -55,6 +55,10 @@ public class ProviderUserListGson extends BaseResponse<ProviderUserListGson.Data
                 return null == pageNo ? 1 : pageNo;
             }
 
+            public void setTotal(Long total) {
+                this.total = total;
+            }
+
             public Long getTotal() {
                 return null == total ? 0 : total;
             }

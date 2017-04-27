@@ -66,6 +66,7 @@ public class FilterAvailabilityFragment extends BaseFragment implements View.OnC
     private ArrayList<PloyeeAvailiabilityGson.Data.AvailabilityItem> mAvailabilityItems = new ArrayList<>();
     private long mTotal;
     private String strProvidersLabel = "";
+    private String providersLabel = "";
 
     public static FilterAvailabilityFragment newInstance(PloyerServicesGson.Data data, long total, ArrayList<PloyeeAvailiabilityGson.Data.AvailabilityItem> availabilityItems, OnClickDoneListener listener) {
 
@@ -170,6 +171,7 @@ public class FilterAvailabilityFragment extends BaseFragment implements View.OnC
         mAdapter.setLanguage(data);
         mButtonNoPref.setText(data.avaliabilityScreenNoPrefer);
         mTextViewSubtitle.setText(mTotal +" " +data.providersLabel);
+        providersLabel  = data.providersLabel;
 
         strProvidersLabel = data.providersLabel;
     }
@@ -218,6 +220,8 @@ public class FilterAvailabilityFragment extends BaseFragment implements View.OnC
         if (null == mData) {
             refreshData();
         }
+
+        mTextViewSubtitle.setText(mTotal +" " + providersLabel);
     }
 
     private void bindData(final PloyeeAvailiabilityGson.Data data) {

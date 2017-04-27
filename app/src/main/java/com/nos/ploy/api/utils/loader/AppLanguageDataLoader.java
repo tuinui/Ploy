@@ -74,6 +74,11 @@ public class AppLanguageDataLoader {
                 return data.getName();
             }
         }
+
+        if (languageCode.equalsIgnoreCase("en")){
+            return "English";
+        }
+
         return languageCode;
     }
 }

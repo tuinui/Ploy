@@ -333,7 +333,13 @@ public class PloyerPersonActivity extends BaseActivity implements SearchView.OnQ
     public void onResume() {
         super.onResume();
 
-        invalidateSideBar();
+
+
+        try {
+            mTextViewSubTitle.setText(mTotal + " " + mLanguageData.providersLabel);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void invalidateSideBar() {
@@ -362,6 +368,7 @@ public class PloyerPersonActivity extends BaseActivity implements SearchView.OnQ
     @Override
     protected void onStart() {
         super.onStart();
+        invalidateSideBar();
         if (null != mGoogleApiClient) {
             mGoogleApiClient.connect();
         }
@@ -661,6 +668,16 @@ public class PloyerPersonActivity extends BaseActivity implements SearchView.OnQ
         if (mData == null) {
             refreshData(mCurrentPageNumber);
         } else {
+            try {
+                int size = mData.getUserServiceList().size();
+
+                if (mData.getPagination().getTotal() == 0 && size > 0) {
+                    mData.getPagination().setTotal((long) size);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
             bindData(mData, false, false);
         }
 

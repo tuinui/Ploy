@@ -42,7 +42,8 @@
                     android:paddingLeft="16dp"
                     android:paddingRight="8dp"
                     android:text="Language"
-                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium" />
+                    android:textAppearance="@style/TextAppearance.AppCompat.Widget.TextView.SpinnerItem"
+                    android:minHeight="?attr/listPreferredItemHeightSmall"/>
 
                 <TextView
                     android:id="@+id/textview_ployee_settings_language_value"
@@ -55,7 +56,8 @@
                     android:paddingLeft="16dp"
                     android:paddingRight="8dp"
                     android:text="English"
-                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Widget.TextView.SpinnerItem"
+                    android:minHeight="?attr/listPreferredItemHeightSmall"
                     android:textColor="@android:color/darker_gray" />
 
             </android.support.design.internal.ForegroundLinearLayout>
@@ -83,11 +85,11 @@
                     android:clickable="true"
                     android:drawableRight="@drawable/ic_chevron_right_gray_32dp"
                     android:gravity="center_vertical"
-                    android:minHeight="?attr/listPreferredItemHeightSmall"
                     android:paddingLeft="16dp"
                     android:paddingRight="8dp"
                     android:text="Privacy Policy"
-                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium" />
+                    android:textAppearance="@style/TextAppearance.AppCompat.Widget.TextView.SpinnerItem"
+                    android:minHeight="?attr/listPreferredItemHeightSmall" />
 
                 <include layout="@layout/view_vertical_divider" />
 
@@ -99,11 +101,11 @@
                     android:clickable="true"
                     android:drawableRight="@drawable/ic_chevron_right_gray_32dp"
                     android:gravity="center_vertical"
-                    android:minHeight="?attr/listPreferredItemHeightSmall"
                     android:paddingLeft="16dp"
                     android:paddingRight="8dp"
                     android:text="Term&amp;Conditions"
-                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium" />
+                    android:textAppearance="@style/TextAppearance.AppCompat.Widget.TextView.SpinnerItem"
+                    android:minHeight="?attr/listPreferredItemHeightSmall" />
 
                 <include layout="@layout/view_vertical_divider" />
 
@@ -115,11 +117,11 @@
                     android:clickable="true"
                     android:drawableRight="@drawable/ic_chevron_right_gray_32dp"
                     android:gravity="center_vertical"
-                    android:minHeight="?attr/listPreferredItemHeightSmall"
                     android:paddingLeft="16dp"
                     android:paddingRight="8dp"
                     android:text="Legal"
-                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium" />
+                    android:textAppearance="@style/TextAppearance.AppCompat.Widget.TextView.SpinnerItem"
+                    android:minHeight="?attr/listPreferredItemHeightSmall"/>
 
                 <include layout="@layout/view_vertical_divider" />
 
@@ -131,11 +133,11 @@
                     android:clickable="true"
                     android:drawableRight="@drawable/ic_chevron_right_gray_32dp"
                     android:gravity="center_vertical"
-                    android:minHeight="?attr/listPreferredItemHeightSmall"
                     android:paddingLeft="16dp"
                     android:paddingRight="8dp"
                     android:text="FAQ"
-                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium" />
+                    android:textAppearance="@style/TextAppearance.AppCompat.Widget.TextView.SpinnerItem"
+                    android:minHeight="?attr/listPreferredItemHeightSmall" />
 
                 <include layout="@layout/view_vertical_divider" />
 

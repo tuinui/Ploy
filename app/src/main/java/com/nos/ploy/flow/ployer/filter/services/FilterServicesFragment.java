@@ -207,6 +207,12 @@ public class FilterServicesFragment extends BaseFragment implements View.OnClick
 //        if (mDatas.isEmpty()) {
 //            refreshData();
 //        }
+
+        try {
+            mTextViewSubtitle.setText(mTotalCount + " " + strProvidersLabel);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void bindData(List<PloyerServiceDetailGson.Data.SubService> datas) {
@@ -293,6 +299,7 @@ public class FilterServicesFragment extends BaseFragment implements View.OnClick
 
     public void updateCountProviders(long mTotalCount) {
 
+        this.mTotalCount = mTotalCount;
         mTextViewSubtitle.setText(mTotalCount + " " + strProvidersLabel);
     }
 

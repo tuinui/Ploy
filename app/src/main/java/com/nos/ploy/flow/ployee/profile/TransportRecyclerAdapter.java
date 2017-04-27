@@ -45,11 +45,11 @@ public abstract class TransportRecyclerAdapter extends RecyclerView.Adapter<Tran
         } else if (id == 2) {
             return language.profileScreenBicycle;
         } else if (id == 3) {
-            return language.profileScreenBicycle;
-        } else if (id == 4) {
             return language.profileScreenCar;
-        } else if (id == 5) {
+        } else if (id == 4) {
             return language.profileScreenMototbike;
+        } else if (id == 5) {
+            return language.profileScreenTruck;
         } else if (id == 6) {
             return language.profileScreenPublicTransport;
         } else {
