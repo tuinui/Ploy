@@ -331,6 +331,8 @@ public class FilterFragment extends BaseFragment implements View.OnClickListener
             requestTransportData();
         }
 
+
+
         if (mServiceDetail == null) {
             refreshDataPriceUnit();
         }
@@ -559,17 +561,6 @@ public class FilterFragment extends BaseFragment implements View.OnClickListener
     }
 
     private void attemptRequestPostFilter() {
-        if (null != mTransportVms && !mTransportVms.isEmpty()) {
-            for (TransportGsonVm vm : mTransportVms) {
-                if (vm.isCheck()) {
-                    mPostData.getTransportIds().add(vm.getId());
-                } else {
-                    if (mPostData.getTransportIds().contains(vm.getId())) {
-                        mPostData.getTransportIds().remove(vm.getId());
-                    }
-                }
-            }
-        }
         getListener().onFilterConfirm(mPostData);
     }
 
