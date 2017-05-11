@@ -77,7 +77,10 @@ dependencies {
     //code helper//
     compile 'com.jakewharton:butterknife:8.4.0'
     apt 'com.jakewharton:butterknife-compiler:8.4.0'
-    compile('net.yazeed44.imagepicker:imagepicker:1.3.0')
+    compile('net.yazeed44.imagepicker:imagepicker:1.3.0') {
+        exclude module: 'cam2' exclude group: 'commons-io', module: 'commons-io'
+    }
+
     //code helper//
     compile 'com.hbb20:ccp:1.7.1'
     //https://github.com/hbb20/CountryCodePickerProject
