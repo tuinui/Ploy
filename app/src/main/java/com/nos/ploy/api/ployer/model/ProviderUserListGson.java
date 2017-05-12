@@ -135,6 +135,8 @@ public class ProviderUserListGson extends BaseResponse<ProviderUserListGson.Data
             @SerializedName("serviceCount")
             private Long serviceCount = 0L;
 
+            @SerializedName("distance")
+            private double distance ;
 
             public UserService() {
             }
@@ -185,6 +187,10 @@ public class ProviderUserListGson extends BaseResponse<ProviderUserListGson.Data
 
             public String getFirstName() {
                 return StringUtils.capitalize(firstName);
+            }
+
+            public double getDistance() {
+                return distance;
             }
 
             public String getFullName() {

@@ -58,12 +58,18 @@ public class PostProviderFilterGson implements Parcelable {
     private boolean certificate;
     @SerializedName("equipment")
     private boolean equipment;
+
+    @SerializedName("latitude")
+    private double latitude;
+    @SerializedName("longitude")
+    private double longitude;
+
     @SerializedName("subServiceLV2IdList")
     private List<Long> subServices = new ArrayList<>();
     @SerializedName("avai")
     private ArrayList<PloyeeAvailiabilityGson.Data.AvailabilityItem> availabilityItems = new ArrayList<>();
 
-    private PostProviderFilterGson(ArrayList<PloyeeAvailiabilityGson.Data.AvailabilityItem> availabilityItems, boolean certificate, boolean contactEmail, boolean contactPhone, boolean equipment, ArrayList<String> languages, long pageNo, long pageSize, long priceMax, long priceMin, Long review, long serviceId, List<Long> subServices, List<Long> transportIds) {
+    private PostProviderFilterGson(ArrayList<PloyeeAvailiabilityGson.Data.AvailabilityItem> availabilityItems, boolean certificate, boolean contactEmail, boolean contactPhone, boolean equipment, ArrayList<String> languages, long pageNo, long pageSize, long priceMax, long priceMin, Long review, long serviceId, List<Long> subServices, List<Long> transportIds, double latitude, double longitude) {
         this.availabilityItems = availabilityItems;
         this.certificate = certificate;
         this.contactEmail = contactEmail;
@@ -74,6 +80,11 @@ public class PostProviderFilterGson implements Parcelable {
         this.pageSize = pageSize;
         this.priceMax = priceMax;
         this.priceMin = priceMin;
+
+        this.latitude = latitude;
+        this.longitude = longitude;
+
+
         if (null == review) {
             this.review = 0L;
         } else {
@@ -86,7 +97,7 @@ public class PostProviderFilterGson implements Parcelable {
     }
 
     public PostProviderFilterGson cloneThis() {
-        return new PostProviderFilterGson(new ArrayList<>(availabilityItems), isCertificate(), isContactEmail(), isContactPhone(), isEquipment(), new ArrayList<>(languages), pageNo, pageSize, getPriceMax(), getPriceMax(), review, getServiceId(), new ArrayList<>(subServices), new ArrayList<>(transportIds));
+        return new PostProviderFilterGson(new ArrayList<>(availabilityItems), isCertificate(), isContactEmail(), isContactPhone(), isEquipment(), new ArrayList<>(languages), pageNo, pageSize, getPriceMax(), getPriceMax(), review, getServiceId(), new ArrayList<>(subServices), new ArrayList<>(transportIds), latitude, longitude);
     }
 
     public PostProviderFilterGson() {
@@ -172,6 +183,9 @@ public class PostProviderFilterGson implements Parcelable {
         return serviceId;
     }
 
+
+
+
     public List<Long> getSubServices() {
         return subServices;
     }
@@ -181,6 +195,22 @@ public class PostProviderFilterGson implements Parcelable {
             transportIds = new ArrayList<>();
         }
         return transportIds;
+    }
+
+    public double getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(double latitude) {
+        this.latitude = latitude;
+    }
+
+    public double getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(double longitude) {
+        this.longitude = longitude;
     }
 
     public void setPageNo(long pageNo) {
@@ -236,6 +266,7 @@ public class PostProviderFilterGson implements Parcelable {
         dest.writeByte(this.equipment ? (byte) 1 : (byte) 0);
         dest.writeList(this.subServices);
         dest.writeList(this.availabilityItems);
+
     }
 
     protected PostProviderFilterGson(Parcel in) {
@@ -252,6 +283,7 @@ public class PostProviderFilterGson implements Parcelable {
         this.priceMax = in.readLong();
         this.certificate = in.readByte() != 0;
         this.equipment = in.readByte() != 0;
+
         this.subServices = new ArrayList<Long>();
         in.readList(this.subServices, Long.class.getClassLoader());
         this.availabilityItems = new ArrayList<PloyeeAvailiabilityGson.Data.AvailabilityItem>();

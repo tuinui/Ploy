@@ -38,7 +38,11 @@ public interface PloyerApi {
 
     //{{endpoint_ploy}}/api/ployer/list?serviceId=1
     @GET("/api/ployer/list?pageSize=10")
-    Call<ProviderUserListGson> getProviderList(@Query("serviceId") long serviceId , @Query("pageNo") long pageNo);
+    Call<ProviderUserListGson> getProviderList(
+            @Query("serviceId") long serviceId,
+            @Query("pageNo") long pageNo,
+            @Query("latitude") double latitude,
+            @Query("longitude") double longitude);
 
     //{{endpoint_ploy}}/api/ployer/filterPloyeeListByCriteria
     @POST("/api/ployer/filterPloyeeListByCriteria")
@@ -46,7 +50,10 @@ public interface PloyerApi {
 
     ///api/ployer/profile?userId=1&serviceId=1&lgCode=en
     @GET("/api/ployer/profile")
-    Call<MemberProfileGson> getProviderProfileGson(@Query("userId") long userId, @Query("lgCode") String languageCode);
+    Call<MemberProfileGson> getProviderProfileGson(
+            @Query("userId") long userId,
+            @Query("lgCode") String languageCode
+    );
 
     //{{endpoint_ploy}}/api/review/getReviewByUserId?userId=1
     @GET("/api/review/getReviewByUserId")
@@ -55,7 +62,6 @@ public interface PloyerApi {
     //{{endpoint_ploy}}/api/review/saveReview
     @POST("/api/review/saveReview")
     Call<SaveReviewResponseGson> postSaveReview(@Body ReviewGson.Data.ReviewData.Review data);
-
 
 
 }

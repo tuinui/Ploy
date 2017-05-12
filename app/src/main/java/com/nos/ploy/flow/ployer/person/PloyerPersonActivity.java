@@ -5,6 +5,7 @@ import android.database.Cursor;
 import android.database.MatrixCursor;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.location.Location;
 import android.os.Bundle;
 import android.provider.BaseColumns;
 import android.support.annotation.IntDef;
@@ -31,6 +32,7 @@ import com.bumptech.glide.Glide;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
+import com.google.gson.Gson;
 import com.nos.ploy.DrawerController;
 import com.nos.ploy.R;
 import com.nos.ploy.api.account.model.ProfileImageGson;
@@ -94,6 +96,7 @@ public class PloyerPersonActivity extends BaseActivity implements SearchView.OnQ
     private boolean shouldRequestMore = true;
     private boolean loadBottomFinish;
     private long mCurrentPageNumber = 1;
+
 
     @Retention(RetentionPolicy.SOURCE)
     @IntDef({LIST, MAPS})
@@ -334,7 +337,6 @@ public class PloyerPersonActivity extends BaseActivity implements SearchView.OnQ
         super.onResume();
 
 
-
         try {
             mTextViewSubTitle.setText(mTotal + " " + mLanguageData.providersLabel);
         } catch (Exception e) {
@@ -462,6 +464,20 @@ public class PloyerPersonActivity extends BaseActivity implements SearchView.OnQ
             @Override
             public void onFilterConfirm(PostProviderFilterGson data) {
                 mPostData = data;
+
+                Location location = MyLocationUtils.getLastKnownLocation(PloyerPersonActivity.this, mGoogleApiClient);
+
+                double latitude = MyLocationUtils.DEFAULT_LATLNG.latitude;
+                double longitude = MyLocationUtils.DEFAULT_LATLNG.longitude;
+
+                if (location != null) {
+                    latitude = location.getLatitude();
+                    longitude = location.getLongitude();
+                }
+
+                mPostData.setLatitude(latitude);
+                mPostData.setLongitude(longitude);
+
                 refreshData(mCurrentPageNumber);
             }
 
@@ -504,8 +520,20 @@ public class PloyerPersonActivity extends BaseActivity implements SearchView.OnQ
         isRequesting = true;
         Call<ProviderUserListGson> call;
         boolean isFilteredRequest = false;
+
+        Location location = MyLocationUtils.getLastKnownLocation(this, mGoogleApiClient);
+
+        double latitude = MyLocationUtils.DEFAULT_LATLNG.latitude;
+        double longitude = MyLocationUtils.DEFAULT_LATLNG.longitude;
+
+        if (location != null) {
+            latitude = location.getLatitude();
+            longitude = location.getLongitude();
+        }
+
+
         if (mPostData == null) {
-            call = mApi.getProviderList(mParentData.getId(), currentPageNumber);
+            call = mApi.getProviderList(mParentData.getId(), currentPageNumber, latitude, longitude);
             pageNumber = currentPageNumber;
         } else {
             call = mApi.postGetFilteredProvider(mPostData);
