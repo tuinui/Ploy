@@ -34,7 +34,11 @@ public interface PloyerApi {
 
     //{{endpoint_ploy}}/api/ployer/home?lgCode=en
     @GET("/api/ployer/home")
-    Call<PloyerServicesGson> getServiceList(@Query("lgCode") String languageCode);
+    Call<PloyerServicesGson> getServiceList(
+            @Query("lgCode") String languageCode,
+            @Query("latitude") double latitude,
+            @Query("longitude") double longitude
+    );
 
     //{{endpoint_ploy}}/api/ployer/list?serviceId=1
     @GET("/api/ployer/list?pageSize=10")

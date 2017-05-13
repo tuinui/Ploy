@@ -1,7 +1,9 @@
 package com.nos.ploy.flow.ployer.service;
 
 import android.content.Context;
+import android.location.Location;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
@@ -12,6 +14,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationServices;
 import com.nos.ploy.R;
 import com.nos.ploy.api.base.RetrofitCallUtils;
 import com.nos.ploy.api.masterdata.model.LanguageAppLabelGson;
@@ -20,6 +25,8 @@ import com.nos.ploy.api.ployer.model.PloyerServicesGson;
 import com.nos.ploy.base.BaseFragment;
 import com.nos.ploy.cache.SharePreferenceUtils;
 import com.nos.ploy.flow.ployer.service.view.PloyerCategoryRecyclerAdapter;
+import com.nos.ploy.utils.GoogleApiAvailabilityUtils;
+import com.nos.ploy.utils.MyLocationUtils;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -33,13 +40,14 @@ import rx.functions.Action1;
  * Created by Saran on 6/1/2560.
  */
 
-public class PloyerServiceListFragment extends BaseFragment implements SearchView.OnQueryTextListener {
+public class PloyerServiceListFragment extends BaseFragment implements SearchView.OnQueryTextListener, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
     @BindView(R.id.swiperefreshlayout_swipe_recycler)
     SwipeRefreshLayout mSwipeRefreshLayout;
     @BindView(R.id.recyclerview_swipe_recycler)
     RecyclerView mRecyclerView;
     @BindView(R.id.empty_view)
     TextView emptyView;
+    private GoogleApiClient mGoogleApiClient;
 
     private PloyerApi mApi;
     private List<PloyerServicesGson.Data> mDatas = new ArrayList<>();
@@ -88,6 +96,10 @@ public class PloyerServiceListFragment extends BaseFragment implements SearchVie
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mApi = getRetrofit().create(PloyerApi.class);
+
+        if (GoogleApiAvailabilityUtils.checkPlayServices(getActivity())) {
+            mGoogleApiClient = new GoogleApiClient.Builder(getActivity(), this, this).addApi(LocationServices.API).build();
+        }
     }
 
     @Nullable
@@ -115,9 +127,26 @@ public class PloyerServiceListFragment extends BaseFragment implements SearchVie
     }
 
     private void refreshData(Context context) {
+
+
         if (null != context && isReadyForFragmentTransaction()) {
+            Location location = MyLocationUtils.getLastKnownLocation(getActivity(), mGoogleApiClient);
+
+            double latitude = MyLocationUtils.DEFAULT_LATLNG.latitude;
+            double longitude = MyLocationUtils.DEFAULT_LATLNG.longitude;
+
+            if (location != null) {
+                latitude = location.getLatitude();
+                longitude = location.getLongitude();
+            }
+
             showRefreshing();
-            RetrofitCallUtils.with(mApi.getServiceList(SharePreferenceUtils.getCurrentActiveAppLanguageCode(getContext())), mCallbackLoadData).enqueue(getContext());
+            RetrofitCallUtils.with(mApi.getServiceList(
+                    SharePreferenceUtils.getCurrentActiveAppLanguageCode(getContext()),
+                    latitude,
+                    longitude
+
+            ), mCallbackLoadData).enqueue(getContext());
         }
 
 
@@ -203,6 +232,21 @@ public class PloyerServiceListFragment extends BaseFragment implements SearchVie
 
     public FragmentInteractionListener getListener() {
         return listener;
+    }
+
+    @Override
+    public void onConnected(@Nullable Bundle bundle) {
+
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+
+    }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+
     }
 
     public static interface FragmentInteractionListener {
