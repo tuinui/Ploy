@@ -114,12 +114,12 @@ public class SharePreferenceUtils {
     }
 
     public static String getCurrentActiveAppLanguageCode(Context context) {
-        String languageCode = "en";
+        String languageCode = "fr";
         if (null == context) {
             return languageCode;
         }
 
-        languageCode = with(context, APP_SETTINGS).getString(KEY_CURRENT_ACTIVE_APP_LANGUAGE, "en");
+        languageCode = with(context, APP_SETTINGS).getString(KEY_CURRENT_ACTIVE_APP_LANGUAGE, "fr");
 
         return languageCode;
     }

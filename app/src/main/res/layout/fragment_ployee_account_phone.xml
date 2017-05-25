@@ -41,7 +41,7 @@
                 android:id="@+id/countrycodepicker_ployee_account_phone"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:defaultNameCode="US" />
+                app:defaultNameCode="FR" />
 
             <com.rengwuxian.materialedittext.MaterialEditText
                 android:id="@+id/edittext_ployee_account_phone_number"

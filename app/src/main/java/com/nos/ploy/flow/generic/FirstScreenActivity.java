@@ -53,7 +53,9 @@ public class FirstScreenActivity extends BaseActivity implements View.OnClickLis
         btnSetLang.setOnClickListener(this);
 
 
-        String language  = getLanguage();
+        String language = SharePreferenceUtils.getCurrentActiveAppLanguageCode(this);
+//
+//        String language  = getLanguage();
         language = language.substring(0,1).toUpperCase() + language.substring(1).toLowerCase();
 
         btnSetLang.setText(language);
