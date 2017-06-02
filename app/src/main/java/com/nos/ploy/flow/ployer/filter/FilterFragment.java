@@ -59,6 +59,10 @@ import rx.functions.Action1;
 
 public class FilterFragment extends BaseFragment implements View.OnClickListener {
 
+    private static final String KEY_SERVICE_DETAIL = "KEY_SERVICE_DETAIL";
+    private static final String KEY_SERVICE_DATA = "SERVICE_DATA";
+    private static final String KEY_POST_DATA = "POST_DATA";
+    private static final String KEY_TOTAL_COUNT = "TOTAL_COUNT";
     @BindView(R.id.textview_filter_language)
     TextView mTextViewLanguage;
     @BindView(R.id.toolbar_main)
@@ -103,7 +107,7 @@ public class FilterFragment extends BaseFragment implements View.OnClickListener
     TextView mTextViewPriceUnit;
     @BindView(R.id.txtPriceLabel)
     TextView txtPriceLabel;
-
+    private PostProviderFilterGson mPostData = new PostProviderFilterGson();
     private RangeBar.OnRangeBarChangeListener mRangeBarListener = new RangeBar.OnRangeBarChangeListener() {
         @Override
         public void onRangeChangeListener(RangeBar rangeBar, int leftPinIndex, int rightPinIndex, String leftPinValue, String rightPinValue) {
@@ -113,6 +117,25 @@ public class FilterFragment extends BaseFragment implements View.OnClickListener
             mPostData.setPriceMax(Long.valueOf(rightPinValue));
         }
     };
+    private MasterApi mMasterApi;
+    private List<TransportGsonVm> mTransportVms = new ArrayList<>();
+    private RetrofitCallUtils.RetrofitCallback<TransportGson> mCallbackTransport = new RetrofitCallUtils.RetrofitCallback<TransportGson>() {
+        @Override
+        public void onDataSuccess(TransportGson data) {
+            dismissLoading();
+            if (null != data && null != data.getData()) {
+                bindTransportData(data.getData());
+            }
+        }
+
+        @Override
+        public void onDataFailure(String failCause) {
+            dismissLoading();
+        }
+    };
+    private PloyerServicesGson.Data mData;
+    private PloyerApi mPloyerApi;
+    private OnFilterConfirmListener listener;
     private View.OnTouchListener mOnRangebarTouchListener = new View.OnTouchListener() {
         @Override
         public boolean onTouch(View v, MotionEvent event) {
@@ -123,8 +146,6 @@ public class FilterFragment extends BaseFragment implements View.OnClickListener
             return false;
         }
     };
-
-    private PostProviderFilterGson mPostData = new PostProviderFilterGson();
     private FilterRatingRecyclerAdapter mRatingAdapter = new FilterRatingRecyclerAdapter(new Action1<Long>() {
         @Override
         public void call(Long aLong) {
@@ -180,31 +201,6 @@ public class FilterFragment extends BaseFragment implements View.OnClickListener
             return RecyclerUtils.getSize(mTransportVms);
         }
     };
-
-    private RetrofitCallUtils.RetrofitCallback<TransportGson> mCallbackTransport = new RetrofitCallUtils.RetrofitCallback<TransportGson>() {
-        @Override
-        public void onDataSuccess(TransportGson data) {
-            dismissLoading();
-            if (null != data && null != data.getData()) {
-                bindTransportData(data.getData());
-            }
-        }
-
-        @Override
-        public void onDataFailure(String failCause) {
-            dismissLoading();
-        }
-    };
-
-
-    private MasterApi mMasterApi;
-    private List<TransportGsonVm> mTransportVms = new ArrayList<>();
-    private static final String KEY_SERVICE_DATA = "SERVICE_DATA";
-    private static final String KEY_POST_DATA = "POST_DATA";
-    private static final String KEY_TOTAL_COUNT = "TOTAL_COUNT";
-    private PloyerServicesGson.Data mData;
-    private PloyerApi mPloyerApi;
-    private OnFilterConfirmListener listener;
     private long mTotalCount;
     private PloyerServiceDetailGson.Data mServiceDetail;
     private String strProvidersLabel = "";
@@ -238,7 +234,13 @@ public class FilterFragment extends BaseFragment implements View.OnClickListener
                 mPostData.setServiceId(mData.getId());
             }
 
+            if (savedInstanceState != null && savedInstanceState.containsKey(KEY_SERVICE_DETAIL)) {
+                mServiceDetail = savedInstanceState.getParcelable(KEY_SERVICE_DETAIL);
+            }
+
         }
+
+
         mMasterApi = getRetrofit().create(MasterApi.class);
         mPloyerApi = getRetrofit().create(PloyerApi.class);
     }
@@ -264,6 +266,15 @@ public class FilterFragment extends BaseFragment implements View.OnClickListener
         View v = inflater.inflate(R.layout.fragment_filter, container, false);
         ButterKnife.bind(this, v);
         return v;
+    }
+
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        outState.putParcelable(KEY_SERVICE_DETAIL, mServiceDetail);
+
     }
 
     @Override
@@ -330,7 +341,6 @@ public class FilterFragment extends BaseFragment implements View.OnClickListener
         if (mTransportVms.isEmpty()) {
             requestTransportData();
         }
-
 
 
         if (mServiceDetail == null) {
@@ -655,7 +665,6 @@ public class FilterFragment extends BaseFragment implements View.OnClickListener
                 mPostData.setEquipment(equipment);
                 mPostData.setSubServices(subServiceLv2Ids);
                 bindData(mPostData);
-
                 attemptRequestPostFilter();
 
 
@@ -681,12 +690,12 @@ public class FilterFragment extends BaseFragment implements View.OnClickListener
         return filterAvailabilityFragment;
     }
 
-    public void setListener(OnFilterConfirmListener listener) {
-        this.listener = listener;
-    }
-
     public OnFilterConfirmListener getListener() {
         return listener;
+    }
+
+    public void setListener(OnFilterConfirmListener listener) {
+        this.listener = listener;
     }
 
     public void updateCountProviders(Long total) {

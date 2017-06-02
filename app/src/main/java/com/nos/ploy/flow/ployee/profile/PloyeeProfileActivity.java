@@ -96,6 +96,9 @@ public class PloyeeProfileActivity extends BaseActivity implements View.OnClickL
     Toolbar mToolbar;
     @BindView(R.id.textview_main_appbar_title)
     TextView mTextViewTitle;
+    @BindView(R.id.textview_main_appbar_subtitle)
+    TextView mTextViewSubtitle;
+
     @BindView(R.id.imageview_ployee_profile_static_maps)
     ImageView mImageViewStaticMaps;
     @BindString(R.string.Profile)
@@ -288,7 +291,11 @@ public class PloyeeProfileActivity extends BaseActivity implements View.OnClickL
         super.bindLanguage(data);
         mTransportRecyclerAdapter.setLanguage(data);
         PopupMenuUtils.setMenuTitle(mToolbar.getMenu(), R.id.menu_done_item_done, data.doneLabel);
-        mTextViewTitle.setText(data.profileScreenHeader);
+//        mTextViewTitle.setText(data.profileScreenHeader);
+        mTextViewSubtitle.setVisibility(View.VISIBLE);
+        mTextViewSubtitle.setText(data.profileSubtitleEditprofile);
+
+
         mButtonEmail.setText(data.profileScreenEmail);
         mEditTextAboutMe.setFloatingLabelText(data.profileScreenAboutMe);
         mEditTextAboutMe.setHint(data.profileScreenAboutMeHint);
@@ -531,6 +538,19 @@ public class PloyeeProfileActivity extends BaseActivity implements View.OnClickL
         if (mAllDataTransports.isEmpty()) {
             requestTransportData();
         }
+
+
+        AccountInfoLoader.getAccountGson(this, mUserId, new Action1<AccountGson.Data>() {
+            @Override
+            public void call(AccountGson.Data data) {
+
+                mTextViewTitle.setText(data.getFirstName() + " " + data.getLastName());
+
+
+            }
+        });
+
+
     }
 
     private void initToolbar() {

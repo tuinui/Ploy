@@ -351,9 +351,15 @@ public class LanguageAppLabelGson extends BaseResponse<LanguageAppLabelGson.Data
         @SerializedName("profile_screen_phone")
 
         public String profileScreenPhone;
-        @SerializedName("profile_screen_email")
 
+        @SerializedName("profile_screen_email")
         public String profileScreenEmail;
+
+        @SerializedName("profile_subtitle_editprofile")
+        public String profileSubtitleEditprofile = "Edit Profile";
+
+
+
         @SerializedName("filter_screen_rating")
 
         public String filterScreenRating;

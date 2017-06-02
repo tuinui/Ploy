@@ -132,7 +132,7 @@ public class FilterServicesFragment extends BaseFragment implements View.OnClick
         initRecyclerView();
         initView();
 
-        if (null != mServiceData) {
+        if (null != mServiceData && mServiceDetail.getSubServices() != null) {
             bindData(mServiceDetail.getSubServices());
         } else {
             dismiss();

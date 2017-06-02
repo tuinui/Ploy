@@ -465,6 +465,7 @@ public class PloyerPersonActivity extends BaseActivity implements SearchView.OnQ
             public void onFilterConfirm(PostProviderFilterGson data) {
                 mPostData = data;
 
+
                 Location location = MyLocationUtils.getLastKnownLocation(PloyerPersonActivity.this, mGoogleApiClient);
 
                 double latitude = MyLocationUtils.DEFAULT_LATLNG.latitude;

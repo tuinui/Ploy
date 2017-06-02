@@ -91,10 +91,20 @@ public class ProviderProfileActivity extends BaseActivity implements GoogleApiCl
     ViewPager mViewPagerSlider;
     @BindView(R.id.tablayout_profile_image_slider_indicator)
     TabLayout mTabLayoutSliderIndicator;
+
     @BindView(R.id.textview_member_profile_phone_button)
     TextView mButtonPhone;
+
     @BindView(R.id.textview_member_profile_email_button)
     TextView mButtonEmail;
+
+    @BindView(R.id.view_member_profile_phone_button)
+    View mViewPhone;
+
+    @BindView(R.id.view_member_profile_email_button)
+    View mViewEmail;
+
+
     @BindView(R.id.linearlayout_member_profile_phone_email_container)
     LinearLayout mLinearLayoutPhoneEmailContainer;
     @BindView(R.id.imageview_member_profile_static_maps)
@@ -451,14 +461,18 @@ public class ProviderProfileActivity extends BaseActivity implements GoogleApiCl
                 mLinearLayoutPhoneEmailContainer.setVisibility(View.VISIBLE);
                 if (shouldShowEmailButton) {
                     mButtonEmail.setVisibility(View.VISIBLE);
+                    mViewEmail.setVisibility(View.VISIBLE);
                 } else {
                     mButtonEmail.setVisibility(View.GONE);
+                    mViewEmail.setVisibility(View.GONE);
                 }
 
                 if (shouldShowPhoneButton) {
                     mButtonPhone.setVisibility(View.VISIBLE);
+                    mViewPhone.setVisibility(View.VISIBLE);
                 } else {
                     mButtonPhone.setVisibility(View.GONE);
+                    mViewPhone.setVisibility(View.GONE);
                 }
 
             }

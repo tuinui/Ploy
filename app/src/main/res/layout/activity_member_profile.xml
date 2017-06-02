@@ -46,38 +46,65 @@
                             android:minHeight="48dp"
                             android:theme="@style/AppTheme.AppBarOverlay">
 
-                            <TextView
-                                android:id="@+id/textview_member_profile_phone_button"
+
+                            <LinearLayout
+                                android:id="@+id/view_member_profile_phone_button"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
-                                android:background="?attr/selectableItemBackground"
-                                android:clickable="true"
-                                android:drawableLeft="@drawable/ic_phone_white_24dp"
                                 android:gravity="center"
-                                android:padding="16dp"
-                                android:text="@string/Phone"
-                                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                                android:textColor="@android:color/white" />
+                                android:orientation="horizontal">
+
+
+                                <ImageView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:src="@drawable/ic_phone_white_24dp" />
+
+                                <TextView
+                                    android:id="@+id/textview_member_profile_phone_button"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:background="?attr/selectableItemBackground"
+                                    android:clickable="true"
+                                    android:gravity="center"
+                                    android:padding="16dp"
+                                    android:text="@string/Phone"
+                                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                                    android:textColor="@android:color/white" />
+
+                            </LinearLayout>
 
                             <View
                                 android:layout_width="0.5dp"
                                 android:layout_height="match_parent"
                                 android:background="@color/gray_background_light" />
 
-                            <TextView
-                                android:id="@+id/textview_member_profile_email_button"
+                            <LinearLayout
+                                android:id="@+id/view_member_profile_email_button"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
-                                android:background="?attr/selectableItemBackground"
-                                android:clickable="true"
-                                android:drawableLeft="@drawable/ic_email_white_24dp"
                                 android:gravity="center"
-                                android:padding="16dp"
-                                android:text="@string/Email"
-                                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                                android:textColor="@android:color/white" />
+                                android:orientation="horizontal">
+
+                                <ImageView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:src="@drawable/ic_email_white_24dp" />
+
+                                <TextView
+                                    android:id="@+id/textview_member_profile_email_button"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:background="?attr/selectableItemBackground"
+                                    android:clickable="true"
+                                    android:gravity="center"
+                                    android:padding="16dp"
+                                    android:text="@string/Email"
+                                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                                    android:textColor="@android:color/white" />
+                            </LinearLayout>
 
                         </LinearLayout>
 
@@ -334,9 +361,9 @@
                     android:id="@+id/viewZoneTransport"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
                     android:layout_marginLeft="16dp"
                     android:layout_marginRight="16dp"
+                    android:layout_marginTop="16dp"
                     android:orientation="vertical">
 
                     <TextView
@@ -358,8 +385,7 @@
 
                 <FrameLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    >
+                    android:layout_height="wrap_content">
 
                     <android.support.v7.widget.RecyclerView
                         android:id="@+id/recyclerview_member_profile_availability"
@@ -377,17 +403,17 @@
                     android:id="@+id/recyclerview_member_profile_services"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"/>
+                    android:layout_marginTop="8dp" />
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="#F4F5F6"
                     android:layout_gravity="center"
-                    android:gravity="center"
                     android:layout_marginTop="8dp"
+                    android:background="#F4F5F6"
+                    android:gravity="center"
                     android:padding="@dimen/activity_horizontal_margin"
-                    android:text="End result"/>
+                    android:text="End result" />
 
             </LinearLayout>
 
@@ -395,7 +421,6 @@
         </android.support.v4.widget.NestedScrollView>
 
     </android.support.v4.widget.SwipeRefreshLayout>
-
 
 
 </LinearLayout>
