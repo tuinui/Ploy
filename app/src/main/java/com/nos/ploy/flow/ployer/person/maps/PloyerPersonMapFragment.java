@@ -30,6 +30,7 @@ import com.nos.ploy.api.ployer.PloyerApi;
 import com.nos.ploy.api.ployer.model.PloyerServicesGson;
 import com.nos.ploy.api.ployer.model.ProviderUserListGson;
 import com.nos.ploy.base.BaseFragment;
+import com.nos.ploy.flow.ployer.person.PloyerPersonActivity;
 import com.nos.ploy.flow.ployer.person.maps.viewmodel.PloyerPersonMapViewModel;
 import com.nos.ploy.flow.ployer.provider.ProviderProfileActivity;
 import com.nos.ploy.utils.DrawableUtils;
@@ -176,25 +177,41 @@ public class PloyerPersonMapFragment extends BaseFragment implements OnMapReadyC
                 LatLngBounds.Builder latlngBoundBuilder = new LatLngBounds.Builder();
                 boolean isInclude = false;
                 for (PloyerPersonMapViewModel data : mDatas) {
+
+
                     if (null != data.getData() && null != data.getMarkerOptions()) {
-                        Marker marker = mGoogleMap.addMarker(data.getMarkerOptions());
-                        marker.setTag(data.getData());
-                        latlngBoundBuilder.include(marker.getPosition());
-                        isInclude = true;
+                        if (data.getData().getLocationLat()  > 0 && data.getData().getLocationLng() > 0){
+
+                            Marker marker = mGoogleMap.addMarker(data.getMarkerOptions());
+                            marker.setTag(data.getData());
+                            latlngBoundBuilder.include(marker.getPosition());
+                            isInclude = true;
+                        }
+
+
                     }
                 }
                 if (isInclude) {
-                    mGoogleMap.animateCamera(CameraUpdateFactory.newLatLngBounds(latlngBoundBuilder.build(), 20));
+//                    mGoogleMap.animateCamera(CameraUpdateFactory.newLatLngBounds(latlngBoundBuilder.build(), 15));
                 }
             } else {
                 mGoogleMap.clear();
-                if (null != mGoogleMap.getMyLocation()) {
-                    Location location = mGoogleMap.getMyLocation();
-                    double lat = location.getLatitude();
-                    double lng = location.getLongitude();
-                    mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(lat, lng), 20));
-                }
+
             }
+
+
+            Location location = MyLocationUtils.getLastKnownLocation(getActivity(), mGoogleApiClient);
+
+            double latitude = MyLocationUtils.DEFAULT_LATLNG.latitude;
+            double longitude = MyLocationUtils.DEFAULT_LATLNG.longitude;
+
+            if (location != null) {
+                latitude = location.getLatitude();
+                longitude = location.getLongitude();
+            }
+
+            mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(latitude, longitude), 13));
+
 
 
         }
