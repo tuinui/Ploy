@@ -62,7 +62,7 @@ public class FilterServicesFragment extends BaseFragment implements View.OnClick
     private OnClickDoneListener listener;
 
     private PostProviderFilterGson mFilteredData = new PostProviderFilterGson();
-    private long mTotal;
+
     private String strProvidersLabel = "";
 
     public static FilterServicesFragment newInstance(PloyerServiceDetailGson.Data serviceDetail, PloyerServicesGson.Data data, long total, PostProviderFilterGson filterData, OnClickDoneListener listener) {
@@ -95,7 +95,7 @@ public class FilterServicesFragment extends BaseFragment implements View.OnClick
         mRadioButtonCertificate.setText(data.serviceScreenCertificateLabel);
         mRadioButtonEquipment.setText(data.serviceScreenEquipmentLabel);
         mButtonNoPref.setText(data.avaliabilityScreenNoPrefer);
-        mTextViewSubtitle.setText(mTotal + " " + data.providersLabel);
+        mTextViewSubtitle.setText(mTotalCount + " " + data.providersLabel);
 
         strProvidersLabel = data.providersLabel;
     }
@@ -105,7 +105,7 @@ public class FilterServicesFragment extends BaseFragment implements View.OnClick
         super.onCreate(savedInstanceState);
         if (null != getArguments()) {
             mServiceData = getArguments().getParcelable(KEY_SERVICE_DATA);
-            mTotal = getArguments().getLong(KEY_TOTAL_COUNT, 0);
+            mTotalCount = getArguments().getLong(KEY_TOTAL_COUNT, 0);
 
             mServiceDetail = getArguments().getParcelable(KEY_SERVICE_DETAIL);
 
@@ -200,6 +200,10 @@ public class FilterServicesFragment extends BaseFragment implements View.OnClick
         }
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+    }
 
     @Override
     public void onResume() {
@@ -210,6 +214,7 @@ public class FilterServicesFragment extends BaseFragment implements View.OnClick
 
         try {
             mTextViewSubtitle.setText(mTotalCount + " " + strProvidersLabel);
+
         } catch (Exception e) {
             e.printStackTrace();
         }

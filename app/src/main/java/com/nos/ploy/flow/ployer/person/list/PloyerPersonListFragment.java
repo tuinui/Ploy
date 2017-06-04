@@ -130,6 +130,12 @@ public class PloyerPersonListFragment extends BaseFragment implements SearchView
         }
     }
 
+
+    @Override
+    public void onResume() {
+        super.onResume();
+    }
+
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
