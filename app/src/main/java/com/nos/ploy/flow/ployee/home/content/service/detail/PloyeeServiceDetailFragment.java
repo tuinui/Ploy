@@ -343,8 +343,8 @@ public class PloyeeServiceDetailFragment extends BaseFragment implements PloyeeS
             showPopupAlertEditTextMenu(mEditTextPriceFrom.getContext(), String.valueOf(mEditTextPriceFrom.getHint()), String.valueOf(mEditTextPriceFrom.getText()), new Action1<String>() {
                 @Override
                 public void call(String s) {
-                    if (Long.valueOf(s) >= 1000) {
-                        setLeftPinValue(1000);
+                    if (Long.valueOf(s) >= 500) {
+                        setLeftPinValue(500);
                     } else {
                         setLeftPinValue(Long.parseLong(s));
                     }
@@ -355,8 +355,8 @@ public class PloyeeServiceDetailFragment extends BaseFragment implements PloyeeS
             showPopupAlertEditTextMenu(mEditTextPriceTo.getContext(), String.valueOf(mEditTextPriceTo.getHint()), String.valueOf(mEditTextPriceTo.getText()), new Action1<String>() {
                 @Override
                 public void call(String s) {
-                    if (Long.valueOf(s) >= 1000) {
-                        setRightPinValue(1000);
+                    if (Long.valueOf(s) >= 500) {
+                        setRightPinValue(500);
                     } else {
                         setRightPinValue(Long.parseLong(s));
                     }
@@ -431,13 +431,13 @@ public class PloyeeServiceDetailFragment extends BaseFragment implements PloyeeS
                 } else {
                     long data = Long.parseLong(str);
 
-                    if (data > 1000) {
+                    if (data > 500) {
 
-                        Toast.makeText(getActivity(), "Max value : " + 1000, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(), "Max value : " + 500, Toast.LENGTH_SHORT).show();
 
                         dialog.dismiss();
                         if (onConfirm != null) {
-                            onConfirm.call("1000");
+                            onConfirm.call("500");
                         }
 
                     } else {
@@ -508,8 +508,8 @@ public class PloyeeServiceDetailFragment extends BaseFragment implements PloyeeS
         if (null != mData && null != mData.getData()) {
             PloyerServiceDetailGson.Data data = mData.getData().cloneThis();
             data.setServiceNameOthers("");
-            data.setPriceMax(1000);
-            data.setPriceMin(0);
+            data.setPriceMax(500);
+            data.setPriceMin(5);
             data.setEquipment("");
             data.setCertificate("");
             data.setDescription("");
@@ -530,17 +530,24 @@ public class PloyeeServiceDetailFragment extends BaseFragment implements PloyeeS
     private void setLeftPinValue(long min) {
         mRangeBar.setOnRangeBarChangeListener(null);
         int minValueToSet;
-        if (min >= 1000) {
-            minValueToSet = 1000;
+        if (min >= 500) {
+            minValueToSet = 500;
         } else {
             minValueToSet = (int) min;
         }
+
+        if (minValueToSet < 5){
+            minValueToSet = 5;
+        }
+
         setText(mEditTextPriceFrom, String.valueOf(minValueToSet));
 
         if (minValueToSet > Integer.valueOf(mRangeBar.getRightPinValue())) {
             mRangeBar.setRangePinsByValue(Float.parseFloat(mRangeBar.getRightPinValue()), minValueToSet);
         } else {
+
             mRangeBar.setRangePinsByValue(minValueToSet, Float.parseFloat(mRangeBar.getRightPinValue()));
+
         }
         mRangeBar.setOnRangeBarChangeListener(mRangeBarListener);
     }
@@ -548,8 +555,8 @@ public class PloyeeServiceDetailFragment extends BaseFragment implements PloyeeS
     private void setRightPinValue(long max) {
         mRangeBar.setOnRangeBarChangeListener(null);
         int maxValueToSet;
-        if (max >= 1000) {
-            maxValueToSet = 1000;
+        if (max >= 500) {
+            maxValueToSet = 500;
         } else {
             maxValueToSet = (int) max;
         }

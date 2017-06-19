@@ -210,7 +210,7 @@ public class PloyerPersonMapFragment extends BaseFragment implements OnMapReadyC
                 longitude = location.getLongitude();
             }
 
-            mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(latitude, longitude), 13));
+            mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(latitude, longitude), 8));
 
 
 

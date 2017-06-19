@@ -471,11 +471,17 @@ public class FilterFragment extends BaseFragment implements View.OnClickListener
 
     private void setLeftPinValue(long min) {
         int minValueToSet;
-        if (min >= 1000) {
-            minValueToSet = 1000;
+        if (min >= 500) {
+            minValueToSet = 500;
         } else {
             minValueToSet = (int) min;
         }
+
+        if (minValueToSet < 5){
+            minValueToSet = 5;
+        }
+
+
         mRangeBar.setOnRangeBarChangeListener(null);
         mEditTextFrom.setText(String.valueOf(minValueToSet));
         if (minValueToSet > Integer.valueOf(mRangeBar.getRightPinValue())) {
@@ -489,8 +495,8 @@ public class FilterFragment extends BaseFragment implements View.OnClickListener
 
     private void setRightPinValue(long max) {
         int maxValueToSet;
-        if (max >= 1000) {
-            maxValueToSet = 1000;
+        if (max >= 500) {
+            maxValueToSet = 500;
         } else {
             maxValueToSet = (int) max;
         }
@@ -539,8 +545,8 @@ public class FilterFragment extends BaseFragment implements View.OnClickListener
                 @Override
                 public void call(String s) {
                     long value;
-                    if (Long.valueOf(s) >= 1000) {
-                        value = 1000;
+                    if (Long.valueOf(s) >= 500) {
+                        value = 500;
                     } else {
                         value = extractLong(s);
                     }
@@ -560,8 +566,8 @@ public class FilterFragment extends BaseFragment implements View.OnClickListener
                 @Override
                 public void call(String s) {
                     long value;
-                    if (Long.valueOf(s) >= 1000) {
-                        value = 1000;
+                    if (Long.valueOf(s) >= 500) {
+                        value = 500;
                     } else {
                         value = extractLong(s);
                     }
@@ -611,13 +617,13 @@ public class FilterFragment extends BaseFragment implements View.OnClickListener
                 } else {
                     long data = Long.parseLong(str);
 
-                    if (data > 1000) {
+                    if (data > 500) {
 
-                        Toast.makeText(getActivity(), "Max value : " + 1000, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(), "Max value : " + 500, Toast.LENGTH_SHORT).show();
 
                         dialog.dismiss();
                         if (onConfirm != null) {
-                            onConfirm.call("1000");
+                            onConfirm.call("500");
                         }
 
                     } else {

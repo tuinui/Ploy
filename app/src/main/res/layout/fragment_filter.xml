@@ -174,7 +174,7 @@
                             android:hint="@string/From"
                             android:inputType="number"
                             android:paddingRight="8dp"
-                            android:text="0" />
+                            android:text="5" />
 
 
                         <TextView
@@ -206,7 +206,7 @@
                             android:textColor="#737373"
                             android:minWidth="50dp"
                             android:paddingLeft="8dp"
-                            android:text="1000" />
+                            android:text="500" />
                     </LinearLayout>
 
                 </RelativeLayout>
@@ -216,9 +216,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
                     app:rangeBarPaddingBottom="8dp"
-                    app:tickEnd="1000"
+                    app:tickEnd="500"
                     app:tickInterval="5"
-                    app:tickStart="0" />
+                    app:tickStart="5" />
 
 
             </LinearLayout>
