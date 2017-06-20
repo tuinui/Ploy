@@ -75,7 +75,7 @@
         android:layout_height="wrap_content"
         android:inflatedId="@+id/panel_import_tablayout_main"
         android:layout="@layout/view_main_searchview"
-
+        android:visibility="gone"
          />
     <!--<include layout="@layout/view_main_searchview" />-->
 

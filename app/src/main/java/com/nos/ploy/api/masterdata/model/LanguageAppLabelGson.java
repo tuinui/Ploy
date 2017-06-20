@@ -486,6 +486,10 @@ public class LanguageAppLabelGson extends BaseResponse<LanguageAppLabelGson.Data
         @SerializedName("filter_screen_result_not_found")
         public String filtersscreenResultNotFound = "Data not found";
 
+        @SerializedName("please_describr_yourself")
+        public String pleaseDescribrYourself = "Please describe yourself and select contact method";
+
+
 
         @SerializedName("price_label")
         public String priceLabel = "Price";

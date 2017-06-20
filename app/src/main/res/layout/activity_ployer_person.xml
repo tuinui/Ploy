@@ -20,16 +20,15 @@
         <com.nos.ploy.custom.view.CustomViewPager
             android:id="@+id/viewpager_ployer_person"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="0dp"
             android:layout_weight="1" />
 
 
         <include
             layout="@layout/view_main_footer"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:visibility="gone"
-            android:layout_weight="0" />
+            android:layout_height="40dp"
+            android:visibility="gone"  />
 
     </LinearLayout>
 

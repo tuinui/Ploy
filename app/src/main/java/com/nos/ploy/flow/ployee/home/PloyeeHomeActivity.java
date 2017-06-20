@@ -253,6 +253,7 @@ public class PloyeeHomeActivity extends BaseActivity implements View.OnClickList
         mContentFragments.add(mAvailabilityFragment);
 
         mPagerAdapter = new CommonFragmentStatePagerAdapter(getSupportFragmentManager(), mContentFragments);
+
         mViewPager.setAdapter(mPagerAdapter);
         mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
@@ -262,6 +263,7 @@ public class PloyeeHomeActivity extends BaseActivity implements View.OnClickList
             public void onPageSelected(int position) {
                 if (position == 0){
                     mListFragment.refreshData();
+                    mListFragment.getProfile();
                 }
             }
 
@@ -269,7 +271,6 @@ public class PloyeeHomeActivity extends BaseActivity implements View.OnClickList
             public void onPageScrollStateChanged(int state) {}
         });
     }
-
 
     private void initFooter() {
         mImageViewFooterServiceList.setVisibility(View.VISIBLE);
@@ -281,6 +282,11 @@ public class PloyeeHomeActivity extends BaseActivity implements View.OnClickList
         mImageViewFooterAvailability.setOnClickListener(this);
         mImageViewFooterServiceList.setOnClickListener(this);
         mImageViewFooterServiceList.setActivated(true);
+    }
+
+    public void openAvialability(){
+        onClickBottomMenu(AVAILABLITY);
+
     }
 
     @Override

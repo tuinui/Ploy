@@ -272,8 +272,10 @@ public class PloyerHomeActivity extends BaseActivity implements SearchView.OnQue
     }
 
     private void initSearchView() {
+
         mSearchView = (SearchView) mStubSearchView.inflate().findViewById(R.id.searchview_main);
         mSearchView.setOnQueryTextListener(this);
+        mStubSearchView.setVisibility(View.GONE);
 
         AutoCompleteTextView search_text = (AutoCompleteTextView) mSearchView.findViewById(R.id.search_src_text);
         search_text.setTextColor(Color.WHITE);

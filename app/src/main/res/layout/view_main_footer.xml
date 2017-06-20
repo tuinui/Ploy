@@ -2,7 +2,7 @@
 <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="?attr/actionBarSize"
+    android:layout_height="wrap_content"
     xmlns:tools="http://schemas.android.com/tools"
     android:background="@color/white_cc_transparent"
     android:gravity="center_vertical"
@@ -10,37 +10,35 @@
 
     <LinearLayout
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="40dp"
         android:orientation="horizontal">
 
         <ImageView
             android:id="@+id/imageview_main_footer_logo1"
             android:layout_width="64dp"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_gravity="center_vertical|start|left"
-            android:layout_weight="0"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:clickable="true"
-            android:padding="16dp"
+            android:padding="4dp"
             android:scaleType="fitCenter"
             tools:src="@drawable/ic_geniz_logo_133dp" />
 
         <ImageView
             android:id="@+id/imageview_main_footer_logo2"
             android:layout_width="64dp"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_gravity="center_vertical|start|left"
-            android:layout_weight="0"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:clickable="true"
-            android:padding="16dp"
+            android:padding="8dp"
             android:scaleType="fitCenter"
             android:src="@drawable/ic_calendar_gray_50dp"
             android:visibility="gone" />
 
         <View
             android:layout_width="0dp"
-            android:layout_height="match_parent"
+            android:layout_height="1dp"
             android:layout_weight="1" />
 
         <ImageView
@@ -48,11 +46,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical|end|right"
-            android:layout_weight="0"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:clickable="true"
-            android:padding="16dp"
-            android:src="@drawable/ic_more_horiz_black_24dp" />
+            android:padding="8dp"
+            android:src="@drawable/profile_icon" />
     </LinearLayout>
 
 

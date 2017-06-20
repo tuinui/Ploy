@@ -7,12 +7,15 @@ import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.nos.ploy.R;
+import com.nos.ploy.api.account.AccountApi;
 import com.nos.ploy.api.account.model.MemberProfileGson;
+import com.nos.ploy.api.account.model.PloyeeProfileGson;
 import com.nos.ploy.api.base.RetrofitCallUtils;
 import com.nos.ploy.api.masterdata.MasterApi;
 import com.nos.ploy.api.ployee.PloyeeApi;
@@ -22,8 +25,12 @@ import com.nos.ploy.api.ployer.PloyerApi;
 import com.nos.ploy.api.ployer.model.PloyerServiceDetailGson;
 import com.nos.ploy.base.BaseFragment;
 import com.nos.ploy.cache.SharePreferenceUtils;
+import com.nos.ploy.flow.ployee.home.PloyeeHomeActivity;
 import com.nos.ploy.flow.ployee.home.content.service.detail.PloyeeServiceDetailFragment;
 import com.nos.ploy.flow.ployee.home.content.service.list.viewmodel.PloyeeServiceItemViewModel;
+import com.nos.ploy.flow.ployee.profile.PloyeeProfileActivity;
+import com.nos.ploy.utils.IntentUtils;
+import com.nos.ploy.utils.PopupMenuUtils;
 import com.nos.ploy.utils.RecyclerUtils;
 
 import java.util.ArrayList;
@@ -60,11 +67,37 @@ public class PloyeeServiceListFragment extends BaseFragment implements SearchVie
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-//                    if (isCanWork) {
+
+                    if (!isSetAvailability) {
+                        PopupMenuUtils.showConfirmationAlertMenu(getContext(), null, mLanguageData.providerAvailabilityNotSelect, mLanguageData.okLabel, mLanguageData.cancelLabel, new Action1<Boolean>() {
+                            @Override
+                            public void call(Boolean aBoolean) {
+
+                                if (aBoolean){
+                                    ((PloyeeHomeActivity)getActivity()).openAvialability();
+                                }
+                            }
+                        });
+
+                    }
+
+                    else if(!isSetProfile){
+
+
+                        PopupMenuUtils.showConfirmationAlertMenu(getContext(), null, mLanguageData.pleaseDescribrYourself, mLanguageData.okLabel, mLanguageData.cancelLabel, new Action1<Boolean>() {
+                            @Override
+                            public void call(Boolean aBoolean) {
+
+                                if (aBoolean){
+                                    IntentUtils.startActivity(getActivity(), PloyeeProfileActivity.class);
+                                }
+                            }
+                        });
+                    }
+
+                    else {
                         showFragment(PloyeeServiceDetailFragment.newInstance(mUserId, data.getId(), SharePreferenceUtils.getCurrentActiveAppLanguageCode(getContext()), data.getText()));
-//                    } else {
-//                        PopupMenuUtils.showConfirmationAlertMenu(getContext(), null, mLanguageData.providerAvailabilityNotSelect, mLanguageData.okLabel, null, null);
-//                    }
+                    }
                 }
             });
 
@@ -95,7 +128,8 @@ public class PloyeeServiceListFragment extends BaseFragment implements SearchVie
             refreshData();
         }
     };
-    private boolean isCanWork = true;
+    private boolean isSetAvailability = true;
+    private boolean isSetProfile = true;
 
     public static PloyeeServiceListFragment newInstance(Long userId) {
         Bundle args = new Bundle();
@@ -150,6 +184,37 @@ public class PloyeeServiceListFragment extends BaseFragment implements SearchVie
         if (mDatas.isEmpty()) {
             refreshData();
         }
+
+        getProfile();
+    }
+
+    public void getProfile() {
+
+        showLoading();
+
+        AccountApi mAccountApi = getRetrofit().create(AccountApi.class);
+
+        showRefreshing();
+        RetrofitCallUtils.with(mAccountApi.getProfileGson(mUserId), new RetrofitCallUtils.RetrofitCallback<PloyeeProfileGson>() {
+            @Override
+            public void onDataSuccess(PloyeeProfileGson data) {
+                dismissLoading();
+                dismissRefreshing();
+                if (null != data && null != data.getData()) {
+                    isSetProfile = !TextUtils.isEmpty(data.getData().getAboutMe()) && (data.getData().isContactEmail() || data.getData().isContactPhone());
+                }
+            }
+
+            @Override
+            public void onDataFailure(String failCause) {
+                dismissLoading();
+                dismissRefreshing();
+
+                getActivity().finish();
+
+            }
+        }).enqueueDontToast(getActivity());
+
     }
 
     private void initView() {
@@ -182,7 +247,7 @@ public class PloyeeServiceListFragment extends BaseFragment implements SearchVie
             public void onDataSuccess(PloyeeAvailiabilityGson data) {
                 dismissRefreshing();
                 if (null != data && null != data.getData()) {
-                    isCanWork = isCanWork(data.getData().getAvailabilityItems());
+                    isSetAvailability = isSetAvailability(data.getData().getAvailabilityItems());
                 }
             }
 
@@ -193,7 +258,7 @@ public class PloyeeServiceListFragment extends BaseFragment implements SearchVie
         }).enqueue(getContext());
     }
 
-    private boolean isCanWork(ArrayList<PloyeeAvailiabilityGson.Data.AvailabilityItem> items) {
+    private boolean isSetAvailability(ArrayList<PloyeeAvailiabilityGson.Data.AvailabilityItem> items) {
         boolean canWork = false;
         if (RecyclerUtils.getSize(items) > 0) {
             for (PloyeeAvailiabilityGson.Data.AvailabilityItem item : items) {
