@@ -126,6 +126,8 @@ public class ProviderUserListGson extends BaseResponse<ProviderUserListGson.Data
             private Double locationLng;
             @SerializedName("imagePath")
             private String imagePath;
+            @SerializedName("other")
+            private String other;
 
 
             @SerializedName("reviewPoint")
@@ -164,6 +166,8 @@ public class ProviderUserListGson extends BaseResponse<ProviderUserListGson.Data
                 }
 
             }
+
+
 
             public Long getUserId() {
                 return null == userId ? 0 : userId;
@@ -253,6 +257,9 @@ public class ProviderUserListGson extends BaseResponse<ProviderUserListGson.Data
                 return null == serviceCount ? 0 : serviceCount;
             }
 
+            public String getOther() {
+                return other;
+            }
 
             @Override
             public int describeContents() {

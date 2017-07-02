@@ -160,7 +160,7 @@
                                     android:inputType="number"
                                     android:minWidth="50dp"
                                     android:paddingLeft="8dp"
-                                    android:text="500" />
+                                    android:text="+500" />
                             </LinearLayout>
 
                         </RelativeLayout>

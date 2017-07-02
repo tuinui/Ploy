@@ -106,7 +106,15 @@ public class PloyeeServiceDetailFragment extends BaseFragment implements PloyeeS
         @Override
         public void onRangeChangeListener(RangeBar rangeBar, int leftPinIndex, int rightPinIndex, String leftPinValue, String rightPinValue) {
             isContentChanged = true;
+
+
+            if (rightPinValue.equals("500")){
+                rightPinValue = "+500";
+            }
+
             setText(mEditTextPriceFrom, leftPinValue);
+
+
             setText(mEditTextPriceTo, rightPinValue);
         }
     };
@@ -560,7 +568,14 @@ public class PloyeeServiceDetailFragment extends BaseFragment implements PloyeeS
         } else {
             maxValueToSet = (int) max;
         }
-        setText(mEditTextPriceTo, String.valueOf(maxValueToSet));
+
+        String strMaxPrice = String.valueOf(maxValueToSet);
+
+        if (strMaxPrice.equals("500")){
+            strMaxPrice = "+500";
+        }
+
+        setText(mEditTextPriceTo, strMaxPrice);
         mRangeBar.setRangePinsByValue(Float.parseFloat(mRangeBar.getLeftPinValue()), maxValueToSet);
         if (Integer.valueOf(mRangeBar.getLeftPinValue()) > maxValueToSet) {
             mRangeBar.setRangePinsByValue(maxValueToSet, Float.parseFloat(mRangeBar.getLeftPinValue()));

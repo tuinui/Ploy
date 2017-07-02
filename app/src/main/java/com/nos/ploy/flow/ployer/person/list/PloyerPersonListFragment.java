@@ -64,6 +64,14 @@ public class PloyerPersonListFragment extends BaseFragment implements SearchView
         public void onDataBind(PloyerPersonListRecyclerAdapter.ViewHolder holder, final ProviderUserListGson.Data.UserService data) {
             Glide.with(holder.imgPhoto.getContext()).load(data.getImagePath()).error(R.drawable.ic_circle_profile_120dp).into(holder.imgPhoto);
             holder.tvTitle.setText(data.getFullName());
+
+
+            if (TextUtils.isEmpty(data.getOther())){
+                holder.tvSubTitle.setText(mServiceData.getServiceName());
+            }else{
+                holder.tvSubTitle.setText(data.getOther());
+            }
+
             holder.tvDescription.setText(data.getDescription());
 
             holder.tvPrice.setText( "From " + mLanguageData.currencyLabel + " " +  data.getMinPrice()   + mServiceData.getPriceUnit());

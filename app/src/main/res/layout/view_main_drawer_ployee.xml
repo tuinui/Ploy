@@ -39,11 +39,37 @@
                 android:id="@+id/textview_main_drawer_username"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
+
                 android:layout_marginTop="8dp"
                 android:layout_weight="0"
                 tools:text="Adam Levine"
                 android:textAppearance="@style/TextAppearance.Widget.AppCompat.Toolbar.Title" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:layout_marginBottom="8dp"
+                android:orientation="horizontal">
+
+                <android.support.v7.widget.AppCompatTextView
+                    android:id="@+id/textview_main_drawer_editprofile"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="Edit Profile"
+                    android:textSize="10sp"
+                    android:textColor="@android:color/white" />
+
+                <ImageView
+                    android:layout_width="12dp"
+                    android:layout_height="12dp"
+                    android:layout_margin="4dp"
+                    android:src="@drawable/pen"/>
+
+
+
+            </LinearLayout>
 
         </android.support.design.internal.ForegroundLinearLayout>
 

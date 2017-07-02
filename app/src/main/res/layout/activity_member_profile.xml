@@ -383,6 +383,19 @@
                         android:layout_height="wrap_content" />
                 </LinearLayout>
 
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginTop="16dp"
+                    android:text="Availability"
+                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
+                    android:textColor="@color/colorPrimary"
+                    android:textStyle="bold" />
+
+
                 <FrameLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
@@ -398,6 +411,16 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent" />
                 </FrameLayout>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginTop="16dp"
+                    android:text="Services | propose"
+                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
+                    android:textColor="@color/colorPrimary"
+                    android:textStyle="bold" />
 
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/recyclerview_member_profile_services"

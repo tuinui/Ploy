@@ -89,8 +89,8 @@ public class PloyerPersonListRecyclerAdapter extends RecyclerView.Adapter<Ployer
         public TextView tvTitle;
         @BindView(R.id.textview_ployer_list_distance)
         public TextView tvDistance;
-        //        @BindView(R.id.textview_ployer_list_item_subtitle)
-//        public TextView tvSubTitle;
+                @BindView(R.id.textview_ployer_list_item_subtitle)
+        public TextView tvSubTitle;
         @BindView(R.id.textview_ployer_list_item_description)
         public TextView tvDescription;
         @BindView(R.id.textview_ployer_list_item_review_count)

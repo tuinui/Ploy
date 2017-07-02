@@ -111,10 +111,18 @@ public class FilterFragment extends BaseFragment implements View.OnClickListener
     private RangeBar.OnRangeBarChangeListener mRangeBarListener = new RangeBar.OnRangeBarChangeListener() {
         @Override
         public void onRangeChangeListener(RangeBar rangeBar, int leftPinIndex, int rightPinIndex, String leftPinValue, String rightPinValue) {
-            mEditTextFrom.setText(leftPinValue);
-            mEditTextTo.setText(rightPinValue);
+
+
             mPostData.setPriceMin(Long.valueOf(leftPinValue));
             mPostData.setPriceMax(Long.valueOf(rightPinValue));
+
+            if (rightPinValue.equals("500")){
+                rightPinValue = "+500";
+            }
+
+            mEditTextFrom.setText(leftPinValue);
+            mEditTextTo.setText(rightPinValue);
+
         }
     };
     private MasterApi mMasterApi;
