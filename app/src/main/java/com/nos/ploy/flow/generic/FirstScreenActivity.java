@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.Button;
 
 import com.akexorcist.localizationactivity.LocalizationActivity;
+import com.nos.ploy.MyApplication;
 import com.nos.ploy.R;
 import com.nos.ploy.api.masterdata.model.AppLanguageGson;
 import com.nos.ploy.api.masterdata.model.LanguageAppLabelGson;
@@ -67,7 +68,12 @@ public class FirstScreenActivity extends BaseActivity implements View.OnClickLis
         mButtonSearchJobs.setText(data.mainMenuOfferService);
         mButtonSearchServices.setText(data.mainMenuSearchService);
 
+
+
+
         String txtOkLabel = data.okLabel;
+
+
 
         String txtMsg = data.loginResetPasswordSuccess;
 

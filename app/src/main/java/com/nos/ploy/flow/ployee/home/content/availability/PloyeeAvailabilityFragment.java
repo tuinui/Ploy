@@ -13,6 +13,7 @@ import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.TextView;
 
+import com.nos.ploy.MyApplication;
 import com.nos.ploy.R;
 import com.nos.ploy.api.base.RetrofitCallUtils;
 import com.nos.ploy.api.masterdata.MasterApi;
@@ -238,7 +239,7 @@ public class PloyeeAvailabilityFragment extends BaseFragment implements View.OnC
             @Override
             public void onDataSuccess(PloyeeAvailiabilityGson data) {
                 dismissLoading();
-                showToast("Success");
+                showToast(MyApplication.getInstance().getLabelLanguage().labelSaved);
                 refreshData();
             }
 

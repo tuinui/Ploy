@@ -18,6 +18,7 @@ import android.widget.Toast;
 
 import com.akexorcist.localizationactivity.LocalizationActivity;
 import com.nos.ploy.DrawerController;
+import com.nos.ploy.MyApplication;
 import com.nos.ploy.R;
 import com.nos.ploy.api.base.RetrofitManager;
 import com.nos.ploy.api.masterdata.model.LanguageAppLabelGson;
@@ -46,6 +47,8 @@ public class BaseActivity extends LocalizationActivity {
     protected LanguageAppLabelGson.Data mLanguageData;
 
     protected void bindLanguage(LanguageAppLabelGson.Data data) {
+
+        MyApplication.getInstance().setLabelLanguage(data);
 
     }
 

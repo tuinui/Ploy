@@ -18,6 +18,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.BitmapImageViewTarget;
+import com.nos.ploy.MyApplication;
 import com.nos.ploy.R;
 import com.nos.ploy.api.account.AccountApi;
 import com.nos.ploy.api.account.model.PostDeleteProfileImageGson;
@@ -98,7 +99,7 @@ public class UploadPhotoFragment extends BaseFragment {
         @Override
         public void onDataSuccess(BaseResponse data) {
             dismissLoading();
-            showToast("Success");
+            showToast(MyApplication.getInstance().getLabelLanguage().labelSaved);
             mOnDataChangeListener.onDataChange();
             refreshData();
         }

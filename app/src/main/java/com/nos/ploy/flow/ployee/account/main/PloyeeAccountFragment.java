@@ -25,6 +25,7 @@ import com.facebook.FacebookException;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
+import com.nos.ploy.MyApplication;
 import com.nos.ploy.R;
 import com.nos.ploy.api.account.AccountApi;
 import com.nos.ploy.api.authentication.AuthenticationApi;
@@ -109,7 +110,7 @@ public class PloyeeAccountFragment extends BaseFragment implements View.OnClickL
         @Override
         public void onDataSuccess(BaseResponse data) {
             dismissLoading();
-            showToast("Success");
+            showToast(MyApplication.getInstance().getLabelLanguage().labelSaved);
             isDataChanged = false;
             PopupMenuUtils.clearMenu(mToolbar);
             refreshData();
@@ -126,7 +127,7 @@ public class PloyeeAccountFragment extends BaseFragment implements View.OnClickL
         @Override
         public void onDataSuccess(BaseResponse data) {
             dismissLoading();
-            showToast("Success");
+            showToast(MyApplication.getInstance().getLabelLanguage().labelSaved);
             isDataChanged = false;
 
             UserTokenManager.clearData(getActivity());

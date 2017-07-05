@@ -26,6 +26,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.google.android.gms.maps.model.LatLng;
+import com.nos.ploy.MyApplication;
 import com.nos.ploy.R;
 import com.nos.ploy.api.account.AccountApi;
 import com.nos.ploy.api.account.model.PloyeeProfileGson;
@@ -245,7 +246,7 @@ public class PloyeeProfileActivity extends BaseActivity implements View.OnClickL
         @Override
         public void onDataSuccess(BaseResponse data) {
             dismissLoading();
-            showToastLong("Success");
+            showToastLong(MyApplication.getInstance().getLabelLanguage().labelSaved);
             refreshData(PloyeeProfileActivity.this, mCallbackLoadData);
             setIsContentChanged(false);
 
@@ -574,7 +575,7 @@ public class PloyeeProfileActivity extends BaseActivity implements View.OnClickL
             @Override
             public void onDataSuccess(BaseResponse data) {
                 dismissLoading();
-                showToastLong("Success");
+                showToastLong(MyApplication.getInstance().getLabelLanguage().labelSaved);
                 refreshData(PloyeeProfileActivity.this, new RetrofitCallUtils.RetrofitCallback<PloyeeProfileGson>() {
                     @Override
                     public void onDataSuccess(PloyeeProfileGson data) {

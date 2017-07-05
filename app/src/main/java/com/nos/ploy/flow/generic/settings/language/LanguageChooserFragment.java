@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.CompoundButton;
 import android.widget.TextView;
 
+import com.nos.ploy.MyApplication;
 import com.nos.ploy.R;
 import com.nos.ploy.api.masterdata.MasterApi;
 import com.nos.ploy.api.masterdata.model.AppLanguageGson;
@@ -75,6 +76,7 @@ public class LanguageChooserFragment extends BaseFragment {
                         mSelectedLanguageData = vm.getData();
                         holder.radio.setChecked(true);
                         notifyItemRangeChanged(0, getItemCount());
+
                     }
                 });
             }

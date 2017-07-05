@@ -509,7 +509,16 @@ public class FilterFragment extends BaseFragment implements View.OnClickListener
             maxValueToSet = (int) max;
         }
         mRangeBar.setOnRangeBarChangeListener(null);
-        mEditTextTo.setText(String.valueOf(maxValueToSet));
+
+
+        String rightPinValue = String.valueOf(maxValueToSet);
+        if (rightPinValue.equals("500")){
+            rightPinValue = "+500";
+        }
+
+        mEditTextTo.setText(rightPinValue);
+
+
         mRangeBar.setRangePinsByValue(Float.parseFloat(mRangeBar.getLeftPinValue()), maxValueToSet);
         if (Integer.valueOf(mRangeBar.getLeftPinValue()) > maxValueToSet) {
             mRangeBar.setRangePinsByValue(maxValueToSet, Float.parseFloat(mRangeBar.getLeftPinValue()));

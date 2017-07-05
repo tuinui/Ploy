@@ -216,7 +216,7 @@
 //        @Override
 //        public void onDataSuccess(Object data) {
 //            dismissLoading();
-//            showToastLong("Success");
+//            showToastLong(MyApplication.getInstance().getLabelLanguage().labelSaved);
 //            refreshData(PloyeeProfileActivity_Deprecated.this);
 //
 //        }

@@ -493,5 +493,11 @@ public class LanguageAppLabelGson extends BaseResponse<LanguageAppLabelGson.Data
 
         @SerializedName("price_label")
         public String priceLabel = "Price";
+
+
+        @SerializedName("label_saved")
+        public String labelSaved = "Saved";
+
+
     }
 }

@@ -24,6 +24,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.appyvet.rangebar.RangeBar;
+import com.nos.ploy.MyApplication;
 import com.nos.ploy.R;
 import com.nos.ploy.api.base.RetrofitCallUtils;
 import com.nos.ploy.api.base.response.BaseResponse;
@@ -508,7 +509,7 @@ public class PloyeeServiceDetailFragment extends BaseFragment implements PloyeeS
     @Override
     public void saveServiceSuccess() {
         showLoadingDialog(false);
-        showToast("Success");
+        showToast(MyApplication.getInstance().getLabelLanguage().labelSaved);
         dismiss();
     }
 
