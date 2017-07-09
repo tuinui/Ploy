@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.nos.ploy.MyApplication;
 import com.nos.ploy.R;
 import com.nos.ploy.api.account.AccountApi;
 import com.nos.ploy.api.account.model.MemberProfileGson;
@@ -68,36 +69,13 @@ public class PloyeeServiceListFragment extends BaseFragment implements SearchVie
                 @Override
                 public void run() {
 
-                    if (!isSetAvailability) {
-                        PopupMenuUtils.showConfirmationAlertMenu(getContext(), null, mLanguageData.providerAvailabilityNotSelect, mLanguageData.okLabel, mLanguageData.cancelLabel, new Action1<Boolean>() {
-                            @Override
-                            public void call(Boolean aBoolean) {
 
-                                if (aBoolean){
-                                    ((PloyeeHomeActivity)getActivity()).openAvialability();
-                                }
-                            }
-                        });
-
-                    }
-
-                    else if(!isSetProfile){
+                    showFragment(PloyeeServiceDetailFragment.newInstance(mUserId, data.getId(), SharePreferenceUtils.getCurrentActiveAppLanguageCode(getContext()), data.getText()));
 
 
-                        PopupMenuUtils.showConfirmationAlertMenu(getContext(), null, mLanguageData.pleaseDescribrYourself, mLanguageData.okLabel, mLanguageData.cancelLabel, new Action1<Boolean>() {
-                            @Override
-                            public void call(Boolean aBoolean) {
+//
 
-                                if (aBoolean){
-                                    IntentUtils.startActivity(getActivity(), PloyeeProfileActivity.class);
-                                }
-                            }
-                        });
-                    }
 
-                    else {
-                        showFragment(PloyeeServiceDetailFragment.newInstance(mUserId, data.getId(), SharePreferenceUtils.getCurrentActiveAppLanguageCode(getContext()), data.getText()));
-                    }
                 }
             });
 
@@ -181,11 +159,11 @@ public class PloyeeServiceListFragment extends BaseFragment implements SearchVie
     @Override
     public void onResume() {
         super.onResume();
-        if (mDatas.isEmpty()) {
-            refreshData();
-        }
 
-        getProfile();
+        refreshData();
+
+
+
     }
 
     public void getProfile() {
@@ -203,6 +181,44 @@ public class PloyeeServiceListFragment extends BaseFragment implements SearchVie
                 if (null != data && null != data.getData()) {
                     isSetProfile = !TextUtils.isEmpty(data.getData().getAboutMe()) && (data.getData().isContactEmail() || data.getData().isContactPhone());
                 }
+
+
+
+                if (MyApplication.getInstance().isShowEditProfile == 1){
+
+                    MyApplication.getInstance().isShowEditProfile = 2;
+
+                    if (!isSetAvailability) {
+                        PopupMenuUtils.showConfirmationAlertMenu(getContext(), null, mLanguageData.providerAvailabilityNotSelect, mLanguageData.okLabel, mLanguageData.cancelLabel, new Action1<Boolean>() {
+                            @Override
+                            public void call(Boolean aBoolean) {
+
+                                if (aBoolean){
+                                    ((PloyeeHomeActivity)getActivity()).openAvialability();
+                                }
+                            }
+                        });
+
+                    }
+
+                    else if(!isSetProfile){
+
+
+                        PopupMenuUtils.showConfirmationAlertMenu(getContext(), null, mLanguageData.pleaseDescribrYourself, mLanguageData.okLabel, mLanguageData.cancelLabel, new Action1<Boolean>() {
+                            @Override
+                            public void call(Boolean aBoolean) {
+
+                                if (aBoolean){
+                                    IntentUtils.startActivity(getActivity(), PloyeeProfileActivity.class);
+                                }
+                            }
+                        });
+                    }
+                }
+
+
+
+
             }
 
             @Override
@@ -227,10 +243,18 @@ public class PloyeeServiceListFragment extends BaseFragment implements SearchVie
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
+
+                if (mDatas.size() > 0 && MyApplication.getInstance().isShowEditProfile == 0){
+
+                    MyApplication.getInstance().isShowEditProfile = 1;
+
+                }
+
                 mAdapter.replaceData(mDatas);
             }
         });
 
+        requestAvailability();
     }
 
     private List<PloyeeServiceItemViewModel> toVm(List<PloyeeServiceListGson.PloyeeServiceItemGson> datas) {
@@ -248,7 +272,13 @@ public class PloyeeServiceListFragment extends BaseFragment implements SearchVie
                 dismissRefreshing();
                 if (null != data && null != data.getData()) {
                     isSetAvailability = isSetAvailability(data.getData().getAvailabilityItems());
+
+
+
+
                 }
+
+                getProfile();
             }
 
             @Override

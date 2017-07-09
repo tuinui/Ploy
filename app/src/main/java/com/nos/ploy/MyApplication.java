@@ -22,6 +22,8 @@ public class MyApplication extends MultiDexApplication {
     static Context context;
     private LanguageAppLabelGson.Data labelLanguage;
 
+    public int isShowEditProfile = 0;
+
     public static synchronized MyApplication getInstance() {
         return mInstance;
     }
