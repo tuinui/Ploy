@@ -259,6 +259,7 @@ public class PloyeeProfileActivity extends BaseActivity implements View.OnClickL
     };
     private PostUpdateProfileGson mOriginalPostData;
     private boolean isFirstLoaded;
+    private String servicesLabel = "Save";
 
 
     private void bindData(PloyeeProfileGson.Data data) {
@@ -290,6 +291,8 @@ public class PloyeeProfileActivity extends BaseActivity implements View.OnClickL
     @Override
     protected void bindLanguage(LanguageAppLabelGson.Data data) {
         super.bindLanguage(data);
+
+        servicesLabel = data.servicesLabel;
         mTransportRecyclerAdapter.setLanguage(data);
         PopupMenuUtils.setMenuTitle(mToolbar.getMenu(), R.id.menu_done_item_done, data.doneLabel);
 //        mTextViewTitle.setText(data.profileScreenHeader);
@@ -742,6 +745,7 @@ public class PloyeeProfileActivity extends BaseActivity implements View.OnClickL
     private void setIsContentChanged(boolean isContentChanged) {
         this.isContentChanged = isContentChanged;
         if (isContentChanged) {
+
             PopupMenuUtils.clearAndInflateMenu(mToolbar, R.menu.menu_done, new Toolbar.OnMenuItemClickListener() {
                 @Override
                 public boolean onMenuItemClick(MenuItem item) {
@@ -752,6 +756,8 @@ public class PloyeeProfileActivity extends BaseActivity implements View.OnClickL
                     return false;
                 }
             });
+            MenuItem menu = mToolbar.getMenu().findItem(R.id.menu_done_item_done);
+            menu.setTitle(servicesLabel);
         } else {
             PopupMenuUtils.clearMenu(mToolbar);
         }

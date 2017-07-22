@@ -20,7 +20,7 @@
             android:layout_gravity="center_vertical|start|left"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:clickable="true"
-            android:padding="4dp"
+            android:padding="8dp"
             android:scaleType="fitCenter"
             tools:src="@drawable/ic_geniz_logo_133dp" />
 

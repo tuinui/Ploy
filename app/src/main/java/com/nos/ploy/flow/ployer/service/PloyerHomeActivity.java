@@ -76,8 +76,18 @@ public class PloyerHomeActivity extends BaseActivity implements SearchView.OnQue
     ImageView mImageViewProfile;
     @BindView(R.id.textview_main_drawer_username)
     TextView mTextViewUsername;
+
+
+    @BindView(R.id.textview_main_drawer_editprofile)
+    TextView mTextViewMainDrawerEditProfile;
+
     @BindView(R.id.imageview_main_drawer_switch_icon)
     ImageView mImageViewSwitchIcon;
+
+
+    @BindView(R.id.viewEditProfile)
+    View viewEditProfile;
+
     private SearchView mSearchView;
 
     private Action1<List<ProfileImageGson.Data>> mOnLoadProfileFinish = new Action1<List<ProfileImageGson.Data>>() {
@@ -213,12 +223,21 @@ public class PloyerHomeActivity extends BaseActivity implements SearchView.OnQue
             mTextViewSwitchToPloyee.setText(data.sidemenuLoginLogout);
         }
 
+
+        mTextViewMainDrawerEditProfile.setText(data.profileSubtitleEditprofile);
     }
 
     @Override
     public void onResume() {
         super.onResume();
         invalidateSideBar();
+
+        if (UserTokenManager.isLogin(this)) {
+            viewEditProfile.setVisibility(View.VISIBLE);
+        }else{
+            viewEditProfile.setVisibility(View.INVISIBLE);
+        }
+
     }
 
     private void invalidateSideBar() {
