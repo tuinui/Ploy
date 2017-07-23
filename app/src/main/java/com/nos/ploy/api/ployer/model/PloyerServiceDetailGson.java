@@ -244,16 +244,16 @@ public class PloyerServiceDetailGson extends BaseResponse<PloyerServiceDetailGso
                     this.checked = checked;
                 }
 
-                public Long getSubServiceLv2Id() {
-                    return subServiceLv2Id;
+                public long getSubServiceLv2Id() {
+                    return null != subServiceLv2Id ? subServiceLv2Id : -404;
                 }
 
                 public void setSubServiceLv2Id(Long subServiceLv2Id) {
                     this.subServiceLv2Id = subServiceLv2Id;
                 }
 
-                public Long getSubServiceLv1Id() {
-                    return subServiceLv1Id;
+                public long getSubServiceLv1Id() {
+                    return null != subServiceLv1Id ? subServiceLv1Id : -404;
                 }
 
                 public void setSubServiceLv1Id(Long subServiceLv1Id) {

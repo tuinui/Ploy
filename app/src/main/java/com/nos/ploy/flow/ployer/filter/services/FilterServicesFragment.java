@@ -114,7 +114,7 @@ public class FilterServicesFragment extends BaseFragment implements View.OnClick
                 mFilteredData.setCertificate(filterData.isCertificate());
                 mFilteredData.setEquipment(filterData.isEquipment());
                 if (filterData.getSubServices() != null) {
-                    mFilteredData.setSubServices(new ArrayList<Long>(filterData.getSubServices()));
+                    mFilteredData.setSubServices(new ArrayList<>(filterData.getSubServices()));
                 }
 
             }
@@ -132,7 +132,7 @@ public class FilterServicesFragment extends BaseFragment implements View.OnClick
         initRecyclerView();
         initView();
 
-        if (null != mServiceData && mServiceDetail.getSubServices() != null) {
+        if (null != mServiceData && null != mServiceDetail && mServiceDetail.getSubServices() != null) {
             bindData(mServiceDetail.getSubServices());
         } else {
             dismiss();
@@ -236,7 +236,7 @@ public class FilterServicesFragment extends BaseFragment implements View.OnClick
                         for (PloyerServiceDetailGson.Data.SubService.SubServiceLv2 subServiceLv2 : subService.getSubServiceLV2()) {
                             if (null != subServiceLv2) {
                                 for (Long checkedService : mFilteredData.getSubServices()) {
-                                    if (subServiceLv2.getSubServiceLv2Id() == checkedService) {
+                                    if (null != checkedService && subServiceLv2.getSubServiceLv2Id() == checkedService) {
                                         subServiceLv2.setChecked(true);
                                         break;
                                     }

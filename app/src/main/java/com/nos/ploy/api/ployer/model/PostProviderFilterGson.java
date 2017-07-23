@@ -49,7 +49,7 @@ public class PostProviderFilterGson implements Parcelable {
     @SerializedName("contactPhone")
     private boolean contactPhone;
     @SerializedName("review")
-    private Long review;
+    private Long review = 0L;
     @SerializedName("priceMin")
     private long priceMin;
     @SerializedName("priceMax")
