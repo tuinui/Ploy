@@ -110,10 +110,13 @@ public class MyLocationUtils {
                 Address returnedAddress = addresses.get(0);
                 StringBuilder strReturnedAddress = new StringBuilder("");
 
-                for (int i = 0; i < returnedAddress.getMaxAddressLineIndex(); i++) {
-                    String addresLineI = returnedAddress.getAddressLine(i);
-                    if (!TextUtils.isEmpty(addresLineI)) {
-                        strReturnedAddress.append(addresLineI).append("\n");
+                if (returnedAddress.getMaxAddressLineIndex() > 0){
+
+                    for (int i = 1; i < returnedAddress.getMaxAddressLineIndex(); i++) {
+                        String addresLineI = returnedAddress.getAddressLine(i);
+                        if (!TextUtils.isEmpty(addresLineI)) {
+                            strReturnedAddress.append(addresLineI).append("\n");
+                        }
                     }
                 }
                 strAdd = strReturnedAddress.toString();

@@ -92,6 +92,12 @@ public class PloyeeHomeActivity extends BaseActivity implements View.OnClickList
     Drawable mDrawableAvailabilityGray;
     @BindDrawable(R.drawable.selector_drawable_business_gray_blue)
     Drawable mDrawableServiceListGray;
+
+    @BindView(R.id.textview_main_drawer_editprofile)
+    TextView mTextViewMainDrawerEditProfile;
+
+
+
     @BindString(R.string.Ployee)
     String LPloyee;
     @BindString(R.string.Availability)
@@ -118,7 +124,11 @@ public class PloyeeHomeActivity extends BaseActivity implements View.OnClickList
                 runOnUiThread(new Action1<Context>() {
                     @Override
                     public void call(Context context) {
-                        Glide.with(context).load(data.getImagePath()).into(mImageViewProfile);
+                        Glide.with(context)
+                                .load(data.getImagePath())
+                                .placeholder(R.drawable.ic_circle_profile_120dp)
+                                .error(R.drawable.ic_circle_profile_120dp)
+                                .into(mImageViewProfile);
                     }
 
                 });
@@ -229,6 +239,9 @@ public class PloyeeHomeActivity extends BaseActivity implements View.OnClickList
         mSearchView.setQueryHint(data.providerScreenSearch);
         mTextViewSwitchToPloyer.setText(data.mainMenuSearchService);
         mTextViewTitle.setText(data.providerScreenHeader);
+
+        mTextViewMainDrawerEditProfile.setText(data.profileSubtitleEditprofile);
+
     }
 
     private void initView() {

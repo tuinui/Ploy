@@ -139,6 +139,9 @@ public class PloyerPersonActivity extends BaseActivity implements SearchView.OnQ
     ForegroundLinearLayout mForeGroundLinearLayoutSwitchToContainer;
     @BindView(R.id.imageview_main_drawer_switch_icon)
     ImageView mImageViewSwitchIcon;
+    @BindView(R.id.textview_main_drawer_editprofile)
+    TextView mTextViewMainDrawerEditProfile;
+
     public static final String KEY_SERVICE_DATA = "SERVICE_DATA";
     private SearchView mSearchView;
     private CommonFragmentStatePagerAdapter mPagerAdapter;
@@ -170,7 +173,11 @@ public class PloyerPersonActivity extends BaseActivity implements SearchView.OnQ
                 runOnUiThread(new Action1<Context>() {
                     @Override
                     public void call(Context context) {
-                        Glide.with(context).load(data.getImagePath()).into(mImageViewProfile);
+                        Glide.with(context)
+                                .load(data.getImagePath())
+                                .placeholder(R.drawable.ic_circle_profile_120dp)
+                                .error(R.drawable.ic_circle_profile_120dp)
+                                .into(mImageViewProfile);
                     }
                 });
             }
@@ -330,6 +337,11 @@ public class PloyerPersonActivity extends BaseActivity implements SearchView.OnQ
         } else {
             mTextViewSwitchToPloyee.setText(data.sidemenuLoginLogout);
         }
+
+
+
+        mTextViewMainDrawerEditProfile.setText(data.profileSubtitleEditprofile);
+
     }
 
     @Override
