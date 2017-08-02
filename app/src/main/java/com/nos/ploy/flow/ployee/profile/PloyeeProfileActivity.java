@@ -259,7 +259,7 @@ public class PloyeeProfileActivity extends BaseActivity implements View.OnClickL
     };
     private PostUpdateProfileGson mOriginalPostData;
     private boolean isFirstLoaded;
-    private String servicesLabel = "Save";
+    private String doneLabel = "Save";
 
 
     private void bindData(PloyeeProfileGson.Data data) {
@@ -292,7 +292,7 @@ public class PloyeeProfileActivity extends BaseActivity implements View.OnClickL
     protected void bindLanguage(LanguageAppLabelGson.Data data) {
         super.bindLanguage(data);
 
-        servicesLabel = data.servicesLabel;
+        doneLabel = data.doneLabel;
         mTransportRecyclerAdapter.setLanguage(data);
         PopupMenuUtils.setMenuTitle(mToolbar.getMenu(), R.id.menu_done_item_done, data.doneLabel);
 //        mTextViewTitle.setText(data.profileScreenHeader);
@@ -757,7 +757,7 @@ public class PloyeeProfileActivity extends BaseActivity implements View.OnClickL
                 }
             });
             MenuItem menu = mToolbar.getMenu().findItem(R.id.menu_done_item_done);
-            menu.setTitle(servicesLabel);
+            menu.setTitle(doneLabel);
         } else {
             PopupMenuUtils.clearMenu(mToolbar);
         }
