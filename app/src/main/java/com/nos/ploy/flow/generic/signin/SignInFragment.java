@@ -219,7 +219,8 @@ public class SignInFragment extends BaseFragment implements View.OnClickListener
             public void onDataSuccess(UserTokenGson data) {
                 dismissLoading();
                 UserTokenManager.saveToken(context, data.getData());
-                showIntroductionFragment();
+//                showIntroductionFragment();
+                goToPloyeeHome();
             }
 
             @Override
