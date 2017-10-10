@@ -139,6 +139,8 @@ public class PloyeeServiceListFragment extends BaseFragment implements SearchVie
         mService = getRetrofit().create(PloyeeApi.class);
         mApi = getRetrofit().create(PloyerApi.class);
         mAdapter = new PloyeeHomeRecyclerAdapter(mActionOnClickServiceItem);
+
+
     }
 
     @Nullable
@@ -156,10 +158,13 @@ public class PloyeeServiceListFragment extends BaseFragment implements SearchVie
         initView();
     }
 
+
+
     @Override
     public void onResume() {
         super.onResume();
 
+        MyApplication.getInstance().isShowEditProfile = 1;
         refreshData();
 
 
@@ -189,7 +194,7 @@ public class PloyeeServiceListFragment extends BaseFragment implements SearchVie
                     MyApplication.getInstance().isShowEditProfile = 2;
 
                     if (!isSetAvailability) {
-                        PopupMenuUtils.showConfirmationAlertMenu(getContext(), null, mLanguageData.providerAvailabilityNotSelect, mLanguageData.okLabel, mLanguageData.cancelLabel, new Action1<Boolean>() {
+                        PopupMenuUtils.showConfirmationAlertMenu(getContext(), null, mLanguageData.providerAvailabilityNotSelect, mLanguageData.providerGotoAvailability, mLanguageData.providerSkipAvailability, new Action1<Boolean>() {
                             @Override
                             public void call(Boolean aBoolean) {
 
@@ -204,7 +209,17 @@ public class PloyeeServiceListFragment extends BaseFragment implements SearchVie
                     else if(!isSetProfile){
 
 
-                        PopupMenuUtils.showConfirmationAlertMenu(getContext(), null, mLanguageData.pleaseDescribrYourself, mLanguageData.okLabel, mLanguageData.cancelLabel, new Action1<Boolean>() {
+                        PopupMenuUtils.showConfirmationAlertMenu(getContext(), null, mLanguageData.pleaseDescribrYourself, mLanguageData.providerGotoProfileSetting, mLanguageData.providerSkipDescription, new Action1<Boolean>() {
+                            @Override
+                            public void call(Boolean aBoolean) {
+
+                                if (aBoolean){
+                                    IntentUtils.startActivity(getActivity(), PloyeeProfileActivity.class);
+                                }
+                            }
+                        });
+                    } else if(data.getData().getLocation() == null || data.getData().getLocation().getLat() == 0 || data.getData().getLocation().getLng() == 0){
+                        PopupMenuUtils.showConfirmationAlertMenu(getContext(), null, mLanguageData.pleaseInsertLocation, mLanguageData.providerGotoProfileSetting, mLanguageData.providerSkipDescription, new Action1<Boolean>() {
                             @Override
                             public void call(Boolean aBoolean) {
 
@@ -214,6 +229,8 @@ public class PloyeeServiceListFragment extends BaseFragment implements SearchVie
                             }
                         });
                     }
+
+
                 }
 
 
@@ -346,7 +363,8 @@ public class PloyeeServiceListFragment extends BaseFragment implements SearchVie
                         mSwipeRefreshLayout.setRefreshing(false);
                     }
                 }).enqueue(getContext());
-                requestAvailability();
+
+//                requestAvailability();
 
 
             }

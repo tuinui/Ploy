@@ -471,6 +471,23 @@ public class LanguageAppLabelGson extends BaseResponse<LanguageAppLabelGson.Data
         @SerializedName("please_describr_yourself")
         public String pleaseDescribrYourself = "Please describe yourself and select contact method";
 
+        @SerializedName("please_insert_location")
+        public String pleaseInsertLocation = "Please Insert location";
+
+        @SerializedName("provider_skip_description")
+        public String providerSkipDescription = "Skip";
+
+
+        @SerializedName("provider_goto_profile_setting")
+        public String providerGotoProfileSetting = "Set profile";
+
+        @SerializedName("provider_goto_availability")
+        public String providerGotoAvailability = "Set availability";
+
+        @SerializedName("provider_skip_availability")
+        public String providerSkipAvailability = "Skip";
+
+
 
 
         @SerializedName("price_label")
