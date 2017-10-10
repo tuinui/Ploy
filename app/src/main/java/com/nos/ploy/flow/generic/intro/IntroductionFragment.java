@@ -68,7 +68,7 @@ public class IntroductionFragment extends BaseFragment implements View.OnClickLi
             mShowClose = getArguments().getBoolean(KEY_SHOW_CLOSE,true);
         }
         if (mContentFragments.isEmpty()) {
-            for (int i = 0; i < 3; i++) {
+            for (int i = 1; i <= 6; i++) {
                 mContentFragments.add(IntroductionItemFragment.newInstance(i));
             }
         }

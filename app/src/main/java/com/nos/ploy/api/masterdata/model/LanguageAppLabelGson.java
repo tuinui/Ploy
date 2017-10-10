@@ -407,7 +407,7 @@ public class LanguageAppLabelGson extends BaseResponse<LanguageAppLabelGson.Data
         public String ployerHomeSearchProvider;
         @SerializedName("providers_label")
 
-        public String providersLabel;
+        public String providersLabel = "providersLabel";
         @SerializedName("services_label")
 
         public String servicesLabel;
@@ -422,24 +422,6 @@ public class LanguageAppLabelGson extends BaseResponse<LanguageAppLabelGson.Data
 
         @SerializedName("introduction_screen_header")
         public String introductionScreenHeader;
-
-        @SerializedName("introduction_screen_title1")
-        public String introductionScreenTitle1;
-
-        @SerializedName("introduction_screen_title2")
-        public String introductionScreenTitle2;
-
-        @SerializedName("introduction_screen_title3")
-        public String introductionScreenTitle3;
-
-        @SerializedName("introduction_screen_descript1")
-        public String introductionScreenDescript1;
-
-        @SerializedName("introduction_screen_descript2")
-        public String introductionScreenDescript2;
-
-        @SerializedName("introduction_screen_descript3")
-        public String introductionScreenDescript3;
 
         @SerializedName("account_screen_obligatory")
         public String accountScreenObligatory;
@@ -497,6 +479,44 @@ public class LanguageAppLabelGson extends BaseResponse<LanguageAppLabelGson.Data
 
         @SerializedName("label_saved")
         public String labelSaved = "Saved";
+
+
+        @SerializedName("introduction_screen_descript1")
+        public String introductionScreenDescript1 = "introduction_screen_descript1";
+
+        @SerializedName("introduction_screen_descript2")
+        public String introductionScreenDescript2 = "introduction_screen_descript2";
+
+        @SerializedName("introduction_screen_descript3")
+        public String introductionScreenDescript3 = "introduction_screen_descript3";
+
+        @SerializedName("introduction_screen_descript4")
+        public String introductionScreenDescript4 = "introduction_screen_descript4";
+
+        @SerializedName("introduction_screen_descript5")
+        public String introductionScreenDescript5 = "introduction_screen_descript5";
+
+        @SerializedName("introduction_screen_descript6")
+        public String introductionScreenDescript6 = "introduction_screen_descript6";
+
+
+        @SerializedName("introduction_screen_title1")
+        public String introductionScreenTitle1 = "introduction_screen_title1";
+
+        @SerializedName("introduction_screen_title2")
+        public String introductionScreenTitle2 = "introduction_screen_title1";
+
+        @SerializedName("introduction_screen_title3")
+        public String introductionScreenTitle3 = "introduction_screen_title1";
+
+        @SerializedName("introduction_screen_title4")
+        public String introductionScreenTitle4 = "introduction_screen_title1";
+
+        @SerializedName("introduction_screen_title5")
+        public String introductionScreenTitle5 = "introduction_screen_title1";
+
+        @SerializedName("introduction_screen_title6")
+        public String introductionScreenTitle6 = "introduction_screen_title1";
 
 
     }

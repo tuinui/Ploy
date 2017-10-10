@@ -127,7 +127,7 @@ public class SignInSignupActivity extends BaseActivity implements View.OnClickLi
                             public void onDataSuccess(UserTokenGson data) {
                                 dismissLoading();
                                 UserTokenManager.saveToken(context, data.getData());
-//                                showIntroductionFragment();
+                                showIntroductionFragment();
                                 goToPloyeeHome();
                             }
 
