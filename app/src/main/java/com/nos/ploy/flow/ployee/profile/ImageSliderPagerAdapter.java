@@ -13,6 +13,7 @@ import com.bumptech.glide.Glide;
 import com.nos.ploy.R;
 import com.nos.ploy.api.account.model.ProfileImageGson;
 import com.nos.ploy.utils.RecyclerUtils;
+import com.nos.ploy.utils.URLHelper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -71,7 +72,7 @@ public class ImageSliderPagerAdapter extends PagerAdapter {
         if (RecyclerUtils.isAvailableData(mDatas, position)) {
             ProfileImageGson.Data data = mDatas.get(position);
             if (!TextUtils.isEmpty(data.getImagePath())) {
-                Glide.with(imageView.getContext()).load(data.getImagePath()).fallback(R.drawable.ic_circle_profile_120dp).error(R.drawable.ic_circle_profile_120dp).placeholder(R.drawable.ic_circle_profile_120dp).into(imageView);
+                Glide.with(imageView.getContext()).load(URLHelper.changURLEndpoint(data.getImagePath())).fallback(R.drawable.ic_circle_profile_120dp).error(R.drawable.ic_circle_profile_120dp).placeholder(R.drawable.ic_circle_profile_120dp).into(imageView);
             }
 
         }

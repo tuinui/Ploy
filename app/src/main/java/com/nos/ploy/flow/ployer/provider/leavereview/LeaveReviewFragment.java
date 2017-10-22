@@ -21,6 +21,7 @@ import com.nos.ploy.api.ployer.model.ReviewGson;
 import com.nos.ploy.api.ployer.model.SaveReviewResponseGson;
 import com.nos.ploy.base.BaseFragment;
 import com.nos.ploy.cache.UserTokenManager;
+import com.nos.ploy.utils.URLHelper;
 import com.rengwuxian.materialedittext.MaterialEditText;
 
 import butterknife.BindView;
@@ -142,7 +143,7 @@ public class LeaveReviewFragment extends BaseFragment implements View.OnClickLis
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    Glide.with(mImageViewProfileImage.getContext()).load(mUserServiceData.getImagePath()).error(R.drawable.ic_circle_profile_120dp).into(mImageViewProfileImage);
+                    Glide.with(mImageViewProfileImage.getContext()).load(URLHelper.changURLEndpoint(mUserServiceData.getImagePath())).error(R.drawable.ic_circle_profile_120dp).into(mImageViewProfileImage);
                 }
             });
 

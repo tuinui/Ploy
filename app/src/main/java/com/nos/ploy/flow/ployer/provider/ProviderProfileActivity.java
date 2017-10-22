@@ -56,6 +56,7 @@ import com.nos.ploy.utils.IntentUtils;
 import com.nos.ploy.utils.MyLocationUtils;
 import com.nos.ploy.utils.RatingBarUtils;
 import com.nos.ploy.utils.RecyclerUtils;
+import com.nos.ploy.utils.URLHelper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -506,7 +507,7 @@ public class ProviderProfileActivity extends BaseActivity implements GoogleApiCl
                 runOnUiThread(new Action1<Context>() {
                     @Override
                     public void call(Context context) {
-                        Glide.with(context).load(MyLocationUtils.getStaticMapsUrl(latLng)).into(mImageViewStaticMaps);
+                        Glide.with(context).load(URLHelper.changURLEndpoint(MyLocationUtils.getStaticMapsUrl(latLng))).into(mImageViewStaticMaps);
                     }
 
                 });
@@ -517,7 +518,7 @@ public class ProviderProfileActivity extends BaseActivity implements GoogleApiCl
                 runOnUiThread(new Action1<Context>() {
                     @Override
                     public void call(Context context) {
-                        Glide.with(context).load(MyLocationUtils.getStaticMapsUrl(new LatLng(0, 0))).into(mImageViewStaticMaps);
+                        Glide.with(context).load(URLHelper.changURLEndpoint(MyLocationUtils.getStaticMapsUrl(new LatLng(0, 0)))).into(mImageViewStaticMaps);
                     }
 
                 });

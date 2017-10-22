@@ -34,6 +34,7 @@ import com.nos.ploy.utils.ImagePickerUtils;
 import com.nos.ploy.utils.MyFileUtils;
 import com.nos.ploy.utils.PopupMenuUtils;
 import com.nos.ploy.utils.RecyclerUtils;
+import com.nos.ploy.utils.URLHelper;
 
 import net.yazeed44.imagepicker.model.ImageEntry;
 
@@ -132,7 +133,7 @@ public class UploadPhotoFragment extends BaseFragment {
                                     @Override
                                     public void run() {
                                         isContentChanged = true;
-                                        Glide.with(v.getContext()).load(imageEntry.path).asBitmap().into(new BitmapImageViewTarget(holder.imgUpload) {
+                                        Glide.with(v.getContext()).load(URLHelper.changURLEndpoint(imageEntry.path)).asBitmap().into(new BitmapImageViewTarget(holder.imgUpload) {
                                             @Override
                                             public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
                                                 super.onResourceReady(resource, glideAnimation);
@@ -156,7 +157,7 @@ public class UploadPhotoFragment extends BaseFragment {
                 }
             };
             if (RecyclerUtils.isAvailableData(mDatas, position) && !TextUtils.isEmpty(mDatas.get(position).getImagePath())) {
-                Glide.with(holder.imgUpload.getContext()).load(mDatas.get(position).getImagePath()).into(holder.imgUpload);
+                Glide.with(holder.imgUpload.getContext()).load(URLHelper.changURLEndpoint(mDatas.get(position).getImagePath())).into(holder.imgUpload);
                 holder.imgUpload.setOnClickListener(onclick);
                 holder.imgUpload.setLongClickable(true);
                 holder.imgUpload.setOnLongClickListener(new View.OnLongClickListener() {

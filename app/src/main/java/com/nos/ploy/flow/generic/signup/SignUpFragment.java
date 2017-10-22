@@ -35,6 +35,7 @@ import com.nos.ploy.flow.generic.htmltext.HtmlTextFragment;
 import com.nos.ploy.utils.ImagePickerUtils;
 import com.nos.ploy.utils.LanguageTextUtils;
 import com.nos.ploy.utils.MyFileUtils;
+import com.nos.ploy.utils.URLHelper;
 import com.rengwuxian.materialedittext.MaterialEditText;
 
 import net.yazeed44.imagepicker.model.ImageEntry;
@@ -330,7 +331,7 @@ public class SignUpFragment extends BaseFragment implements View.OnClickListener
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            Glide.with(context).load(imageEntry.path).asBitmap().into(new BitmapImageViewTarget(mImageViewProfile) {
+                            Glide.with(context).load(URLHelper.changURLEndpoint(imageEntry.path)).asBitmap().into(new BitmapImageViewTarget(mImageViewProfile) {
                                 @Override
                                 public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
                                     super.onResourceReady(resource, glideAnimation);

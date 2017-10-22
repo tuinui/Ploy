@@ -50,6 +50,7 @@ import com.nos.ploy.utils.IntentUtils;
 import com.nos.ploy.utils.MyLocationUtils;
 import com.nos.ploy.utils.PopupMenuUtils;
 import com.nos.ploy.utils.RecyclerUtils;
+import com.nos.ploy.utils.URLHelper;
 import com.rengwuxian.materialedittext.MaterialEditText;
 
 import java.util.ArrayList;
@@ -472,10 +473,10 @@ public class PloyeeProfileActivity extends BaseActivity implements View.OnClickL
 //                    mTextViewAddress.setText(address);
 //                }
                 if (null != mOriginalData && null != mOriginalData.getLocation() && mOriginalData.getLocation().neverPinLocationBefore()) {
-                    Glide.with(context).load(MyLocationUtils.getParisStaticMaps()).into(mImageViewStaticMaps);
+                    Glide.with(context).load(URLHelper.changURLEndpoint(MyLocationUtils.getParisStaticMaps())).into(mImageViewStaticMaps);
                     mTextViewAddress.setText(mLanguageData.profileScreenLocation);
                 } else {
-                    Glide.with(context).load(MyLocationUtils.getStaticMapsUrl(latLng)).into(mImageViewStaticMaps);
+                    Glide.with(context).load(URLHelper.changURLEndpoint(MyLocationUtils.getStaticMapsUrl(latLng))).into(mImageViewStaticMaps);
                     mTextViewAddress.setText(address);
                 }
 
@@ -810,7 +811,7 @@ public class PloyeeProfileActivity extends BaseActivity implements View.OnClickL
                                 setIsContentChanged(true);
                                 mCurrentLatLng = new LatLng(location.getLatitude(), location.getLongitude());
                                 String address = MyLocationUtils.getCompleteAddressString(PloyeeProfileActivity.this, mCurrentLatLng.latitude, mCurrentLatLng.longitude);
-                                Glide.with(PloyeeProfileActivity.this).load(MyLocationUtils.getStaticMapsUrl(mCurrentLatLng)).into(mImageViewStaticMaps);
+                                Glide.with(PloyeeProfileActivity.this).load(URLHelper.changURLEndpoint(MyLocationUtils.getStaticMapsUrl(mCurrentLatLng))).into(mImageViewStaticMaps);
                                 mTextViewAddress.setText(address);
                             }
                         });

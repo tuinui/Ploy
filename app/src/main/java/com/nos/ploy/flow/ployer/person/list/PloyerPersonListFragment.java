@@ -26,6 +26,7 @@ import com.nos.ploy.flow.ployer.provider.ProviderProfileActivity;
 import com.nos.ploy.utils.IntentUtils;
 import com.nos.ploy.utils.MyLocationUtils;
 import com.nos.ploy.utils.RatingBarUtils;
+import com.nos.ploy.utils.URLHelper;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -62,7 +63,7 @@ public class PloyerPersonListFragment extends BaseFragment implements SearchView
     private PloyerPersonListRecyclerAdapter.OnDataBindListener mOnDataBindListener = new PloyerPersonListRecyclerAdapter.OnDataBindListener() {
         @Override
         public void onDataBind(PloyerPersonListRecyclerAdapter.ViewHolder holder, final ProviderUserListGson.Data.UserService data) {
-            Glide.with(holder.imgPhoto.getContext()).load(data.getImagePath()).error(R.drawable.ic_circle_profile_120dp).into(holder.imgPhoto);
+            Glide.with(holder.imgPhoto.getContext()).load(URLHelper.changURLEndpoint(data.getImagePath())).error(R.drawable.ic_circle_profile_120dp).into(holder.imgPhoto);
             holder.tvTitle.setText(data.getFullName());
 
 

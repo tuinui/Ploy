@@ -37,6 +37,7 @@ import com.nos.ploy.flow.ployee.profile.PloyeeProfileActivity;
 import com.nos.ploy.flow.ployer.person.PloyerPersonActivity;
 import com.nos.ploy.utils.FragmentTransactionUtils;
 import com.nos.ploy.utils.IntentUtils;
+import com.nos.ploy.utils.URLHelper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -98,7 +99,7 @@ public class PloyerHomeActivity extends BaseActivity implements SearchView.OnQue
                 runOnUiThread(new Action1<Context>() {
                     @Override
                     public void call(Context context) {
-                        Glide.with(context).load(data.getImagePath()).into(mImageViewProfile);
+                        Glide.with(context).load(URLHelper.changURLEndpoint(data.getImagePath())).into(mImageViewProfile);
                     }
 
                 });

@@ -64,6 +64,7 @@ import com.nos.ploy.utils.IntentUtils;
 import com.nos.ploy.utils.MyLocationUtils;
 import com.nos.ploy.utils.PopupMenuUtils;
 import com.nos.ploy.utils.RecyclerUtils;
+import com.nos.ploy.utils.URLHelper;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -174,7 +175,7 @@ public class PloyerPersonActivity extends BaseActivity implements SearchView.OnQ
                     @Override
                     public void call(Context context) {
                         Glide.with(context)
-                                .load(data.getImagePath())
+                                .load(URLHelper.changURLEndpoint(data.getImagePath()))
                                 .placeholder(R.drawable.ic_circle_profile_120dp)
                                 .error(R.drawable.ic_circle_profile_120dp)
                                 .into(mImageViewProfile);

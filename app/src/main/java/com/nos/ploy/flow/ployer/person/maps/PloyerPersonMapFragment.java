@@ -39,6 +39,7 @@ import com.nos.ploy.utils.IntentUtils;
 import com.nos.ploy.utils.MyLocationUtils;
 import com.nos.ploy.utils.RatingBarUtils;
 import com.nos.ploy.utils.RecyclerUtils;
+import com.nos.ploy.utils.URLHelper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -237,7 +238,7 @@ public class PloyerPersonMapFragment extends BaseFragment implements OnMapReadyC
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    Glide.with(mImageViewProfilePhoto.getContext()).load(data.getImagePath()).error(R.drawable.ic_ployer_item_placeholder).into(mImageViewProfilePhoto);
+                    Glide.with(mImageViewProfilePhoto.getContext()).load(URLHelper.changURLEndpoint(data.getImagePath())).error(R.drawable.ic_ployer_item_placeholder).into(mImageViewProfilePhoto);
                 }
             });
 

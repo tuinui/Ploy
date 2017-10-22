@@ -14,6 +14,7 @@ import com.nos.ploy.api.masterdata.model.LanguageAppLabelGson;
 import com.nos.ploy.api.ployer.model.PloyerServicesGson;
 import com.nos.ploy.flow.generic.PloyerServicesCategoryFilter;
 import com.nos.ploy.utils.RecyclerUtils;
+import com.nos.ploy.utils.URLHelper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -95,7 +96,9 @@ public class PloyerCategoryRecyclerAdapter extends RecyclerView.Adapter<PloyerCa
                     }
                 }
             });
-            Glide.with(holder.imgServiceImage.getContext()).load(data.getImgUrl()).placeholder(holder.mDrawableGenizPlaceHolder).error(holder.mDrawableGenizPlaceHolder).fallback(holder.mDrawableGenizPlaceHolder).into(holder.imgServiceImage);
+
+
+            Glide.with(holder.imgServiceImage.getContext()).load(URLHelper.changURLEndpoint(data.getImgUrl())).placeholder(holder.mDrawableGenizPlaceHolder).error(holder.mDrawableGenizPlaceHolder).fallback(holder.mDrawableGenizPlaceHolder).into(holder.imgServiceImage);
             holder.tvTitle.setText(data.getServiceName());
             holder.tvSubtitle.setText(data.getPloyeeCount() + " " + language.providersLabel);
         }

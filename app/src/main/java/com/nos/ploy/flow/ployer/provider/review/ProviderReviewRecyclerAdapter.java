@@ -17,6 +17,7 @@ import com.nos.ploy.flow.ployer.provider.ProviderProfileActivity;
 import com.nos.ploy.utils.DateParseUtils;
 import com.nos.ploy.utils.IntentUtils;
 import com.nos.ploy.utils.RecyclerUtils;
+import com.nos.ploy.utils.URLHelper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -56,7 +57,7 @@ public class ProviderReviewRecyclerAdapter extends RecyclerView.Adapter<Provider
         if (RecyclerUtils.isAvailableData(mDatas, position)) {
             final ReviewGson.Data.ReviewData data = mDatas.get(position);
             if (null != data.getUserProfileImage()) {
-                Glide.with(holder.imgProfile.getContext()).load(data.getUserProfileImage().getImagePath()).error(R.drawable.ic_circle_profile_120dp).into(holder.imgProfile);
+                Glide.with(holder.imgProfile.getContext()).load(URLHelper.changURLEndpoint(data.getUserProfileImage().getImagePath())).error(R.drawable.ic_circle_profile_120dp).into(holder.imgProfile);
             }else{
                 holder.imgProfile.setImageResource(R.drawable.ic_circle_profile_120dp);
             }
