@@ -10,6 +10,7 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
 
     <application
         android:name=".MyApplication"
@@ -71,7 +72,7 @@
             android:screenOrientation="portrait" />
         <meta-data
             android:name="io.fabric.ApiKey"
-            android:value="9adced910d30f6ce3185b3905e04102084f705c8" />
+            android:value="e08cf40ade59429ace08fe51a26c7facde28a50c" />
     </application>
 
 </manifest>

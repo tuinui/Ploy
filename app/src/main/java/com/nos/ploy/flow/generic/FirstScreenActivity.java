@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.Button;
 
 import com.akexorcist.localizationactivity.LocalizationActivity;
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.nos.ploy.MyApplication;
 import com.nos.ploy.R;
 import com.nos.ploy.api.masterdata.model.AppLanguageGson;
@@ -43,12 +44,17 @@ public class FirstScreenActivity extends BaseActivity implements View.OnClickLis
     @BindView(R.id.btnSetLang)
     Button btnSetLang;
 
+    private FirebaseAnalytics mFirebaseAnalytics;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_first_screen);
         ButterKnife.bind(this);
+
+
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
+
         mButtonSearchJobs.setOnClickListener(this);
         mButtonSearchServices.setOnClickListener(this);
         btnSetLang.setOnClickListener(this);

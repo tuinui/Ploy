@@ -17,6 +17,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.akexorcist.localizationactivity.LocalizationActivity;
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.nos.ploy.DrawerController;
 import com.nos.ploy.MyApplication;
 import com.nos.ploy.R;

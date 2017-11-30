@@ -45,8 +45,9 @@ public class MyApplication extends MultiDexApplication {
         AppEventsLogger.activateApp(this);
         if(!BuildConfig.DEBUG){
             Thread.setDefaultUncaughtExceptionHandler(new UncaughtExceptionHandler(this));
-            Fabric.with(this, new Crashlytics());
+
         }
+        Fabric.with(this, new Crashlytics());
         LanguageAppLabelManager.forceRefreshLanguageLabel(this, null);
     }
 
