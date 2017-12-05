@@ -3,6 +3,7 @@ package com.nos.ploy.base;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
@@ -10,6 +11,7 @@ import android.support.annotation.StyleRes;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatDialog;
 import android.support.v7.app.AppCompatDialogFragment;
 import android.support.v7.widget.Toolbar;
@@ -435,4 +437,9 @@ public abstract class BaseFragment extends AppCompatDialogFragment {
             return 0;
         }
     }
+
+    public void showDialogAlertLocation() {
+        ((BaseActivity)getActivity()).showDialogAlertLocation();
+    }
+
 }

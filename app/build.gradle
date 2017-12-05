@@ -13,34 +13,44 @@ apply plugin: 'io.fabric'
 
 
 android {
+
+    signingConfigs {
+        release {
+            keyAlias "noskeystore"
+            keyPassword "nos1234"
+            storeFile file('key/noskeystore.jks')
+            storePassword "nos1234"
+            v2SigningEnabled false
+        }
+    }
+
+
     compileSdkVersion 26
     buildToolsVersion '26.0.2'
     defaultConfig {
         applicationId "com.nos.ploy"
         minSdkVersion 19
         targetSdkVersion 26
-        versionCode 1036
-        versionName "1.0.36"
+        versionCode 1038
+        versionName "1.0.38"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
+        signingConfig signingConfigs.release
     }
 
     buildTypes {
         release {
             minifyEnabled false
-
+            signingConfig signingConfigs.release
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
-    }
-    signingConfigs {
-        release {
-            keyAlias "noskeystore"
-            keyPassword "nos1234"
-            storeFile file('../key/noskeystore.jks')
-            storePassword "nos1234"
-            v2SigningEnabled false
+
+        debug {
+            signingConfig signingConfigs.release
+            minifyEnabled false
         }
     }
+
 
 }
 
@@ -101,9 +111,10 @@ dependencies {
 
     compile 'com.google.android.gms:play-services-maps:11.6.0'
     compile 'com.google.android.gms:play-services-location:11.6.0'
-    compile('com.crashlytics.sdk.android:crashlytics:2.6.5@aar') {
+    compile('com.crashlytics.sdk.android:crashlytics:2.7.1@aar') {
         transitive = true;
     }
+
 }
 
 apply plugin: 'com.google.gms.google-services'

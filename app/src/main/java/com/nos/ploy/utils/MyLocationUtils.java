@@ -1,11 +1,14 @@
 package com.nos.ploy.utils;
 
+import android.Manifest;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Criteria;
 import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
+import android.support.v4.app.ActivityCompat;
 import android.text.TextUtils;
 
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -110,7 +113,7 @@ public class MyLocationUtils {
                 Address returnedAddress = addresses.get(0);
                 StringBuilder strReturnedAddress = new StringBuilder("");
 
-                if (returnedAddress.getMaxAddressLineIndex() > 0){
+                if (returnedAddress.getMaxAddressLineIndex() > 0) {
 
                     for (int i = 1; i < returnedAddress.getMaxAddressLineIndex(); i++) {
                         String addresLineI = returnedAddress.getAddressLine(i);
@@ -171,6 +174,16 @@ public class MyLocationUtils {
     }
 
     public static Location getLastKnownLocation(Context context, GoogleApiClient googleApiClient, boolean checkGpsEnable) {
+
+        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            Location location = new Location(LocationManager.PASSIVE_PROVIDER);
+            location.setLatitude(DEFAULT_LATLNG.latitude);
+            location.setLongitude(DEFAULT_LATLNG.longitude);
+
+            return location;
+        }
+
+
         if (googleApiClient != null && googleApiClient.isConnected() && LocationServices.FusedLocationApi.getLocationAvailability(googleApiClient).isLocationAvailable()) {
             if (null != LocationServices.FusedLocationApi.getLastLocation(googleApiClient)) {
                 CURRENT_LOCATION = LocationServices.FusedLocationApi.getLastLocation(googleApiClient);

@@ -3,12 +3,17 @@ package com.nos.ploy.base;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.annotation.IdRes;
 import android.support.annotation.StringRes;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.View;
@@ -17,7 +22,6 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.akexorcist.localizationactivity.LocalizationActivity;
-import com.google.firebase.analytics.FirebaseAnalytics;
 import com.nos.ploy.DrawerController;
 import com.nos.ploy.MyApplication;
 import com.nos.ploy.R;
@@ -41,16 +45,24 @@ import rx.functions.Action1;
 public class BaseActivity extends LocalizationActivity {
 
     protected Long mUserId;
+    protected LanguageAppLabelGson.Data mLanguageData;
+    String alert_location_title = "Location not available";
+    String alert_location_message = "Goto Setting > Apps > Permissions > Location.";
+    String cancel_label = "Cancel";
+    String setting_label = "Settings";
     private boolean isActivityDestroyed = false;
     private ProgressDialog mProgressDialog;
     private SwipeRefreshLayout mRefreshLayout;
     private boolean isRefreshing;
-    protected LanguageAppLabelGson.Data mLanguageData;
 
     protected void bindLanguage(LanguageAppLabelGson.Data data) {
 
         MyApplication.getInstance().setLabelLanguage(data);
 
+        alert_location_title = data.alertLocationTitle;
+        alert_location_message = data.alertLocationMessage;
+        cancel_label = data.cancelLabel;
+        setting_label = data.settingLabel;
     }
 
     @Override
@@ -132,7 +144,7 @@ public class BaseActivity extends LocalizationActivity {
     }
 
 
-    protected boolean isRefreshing(){
+    protected boolean isRefreshing() {
         return isRefreshing;
     }
 
@@ -369,12 +381,12 @@ public class BaseActivity extends LocalizationActivity {
         }
     }
 
-    protected void runOnUiThread(final Action1<Context> action){
-        if(isReady()){
+    protected void runOnUiThread(final Action1<Context> action) {
+        if (isReady()) {
             super.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    if(null != action){
+                    if (null != action) {
                         action.call(BaseActivity.this);
                     }
                 }
@@ -393,4 +405,42 @@ public class BaseActivity extends LocalizationActivity {
             return 0;
         }
     }
+
+    public void showDialogAlertLocation() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder
+                .setTitle(alert_location_title)
+                .setMessage(alert_location_message)
+                .setNegativeButton(cancel_label, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                })
+                .setPositiveButton(setting_label, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+
+                        dialog.dismiss();
+                        finish();
+                        startInstalledAppDetailsActivity();
+
+                    }
+                });
+
+        builder.create().show();
+    }
+
+    public void startInstalledAppDetailsActivity() {
+
+        Intent i = new Intent();
+        i.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+        i.addCategory(Intent.CATEGORY_DEFAULT);
+        i.setData(Uri.parse("package:" + getPackageName()));
+        i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        i.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+        i.addFlags(Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
+        startActivity(i);
+        finish();
+    }
+
 }

@@ -4,6 +4,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.provider.Settings;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.IdRes;
@@ -28,7 +29,9 @@ import android.widget.FrameLayout;
 import android.widget.ListAdapter;
 import android.widget.TextView;
 
+import com.nos.ploy.MyApplication;
 import com.nos.ploy.R;
+import com.nos.ploy.api.masterdata.model.LanguageAppLabelGson;
 import com.nos.ploy.base.BaseActivity;
 import com.rengwuxian.materialedittext.MaterialEditText;
 
@@ -314,13 +317,33 @@ public class PopupMenuUtils {
     public static void showDialogLocationSettings(final Context context, final Action1<Void> onDenied) {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        builder.setMessage("Location not available");
-        builder.setPositiveButton("Settings", new DialogInterface.OnClickListener() {
+
+        LanguageAppLabelGson.Data data = MyApplication.getInstance().getLabelLanguage();
+
+        builder.setTitle(data.alertLocationTitle);
+        builder.setMessage(data.alertLocationMessage);
+        builder.setNegativeButton(data.cancelLabel, new DialogInterface.OnClickListener() {
+
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        builder.setPositiveButton(data.settingLabel, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface paramDialogInterface, int paramInt) {
-                // TODO Auto-generated method stub
+
                 paramDialogInterface.dismiss();
-                Intent myIntent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+
+                Intent myIntent = new Intent();
+
+                myIntent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                myIntent.addCategory(Intent.CATEGORY_DEFAULT);
+                myIntent.setData(Uri.parse("package:" + context.getPackageName()));
+                myIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                myIntent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+                myIntent.addFlags(Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
+
                 context.startActivity(myIntent);
                 //get gps
             }

@@ -29,6 +29,7 @@ import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.internal.Utils;
 import rx.functions.Action1;
 
 /**
@@ -73,6 +74,8 @@ public class FirstScreenActivity extends BaseActivity implements View.OnClickLis
         super.bindLanguage(data);
         mButtonSearchJobs.setText(data.mainMenuOfferService);
         mButtonSearchServices.setText(data.mainMenuSearchService);
+
+
 
 
 

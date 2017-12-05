@@ -1,9 +1,12 @@
 package com.nos.ploy.flow.ployer.person.maps;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetBehavior;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.SearchView;
@@ -146,7 +149,11 @@ public class PloyerPersonMapFragment extends BaseFragment implements OnMapReadyC
         mGoogleMap = googleMap;
         if (null != mGoogleMap) {
             mGoogleMap.setOnMarkerClickListener(this);
-            mGoogleMap.setMyLocationEnabled(true);
+            if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                showDialogAlertLocation();
+            }else{
+                mGoogleMap.setMyLocationEnabled(true);
+            }
             mGoogleMap.setPadding(0, 0, 0, dp24);
         }
         bindDataToMap();

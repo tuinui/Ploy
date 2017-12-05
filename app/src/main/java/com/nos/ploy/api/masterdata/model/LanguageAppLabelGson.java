@@ -535,6 +535,13 @@ public class LanguageAppLabelGson extends BaseResponse<LanguageAppLabelGson.Data
         @SerializedName("introduction_screen_title6")
         public String introductionScreenTitle6 = "introduction_screen_title1";
 
+        @SerializedName("alert_location_title")
+        public String alertLocationTitle = "Location not available";
 
+        @SerializedName("alert_location_message")
+        public String alertLocationMessage = "goto Setting > Apps > Permissions > Location.";
+
+        @SerializedName("setting_label")
+        public String settingLabel = "Settings";
     }
 }
