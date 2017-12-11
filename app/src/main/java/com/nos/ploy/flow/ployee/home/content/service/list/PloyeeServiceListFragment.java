@@ -243,7 +243,51 @@ public class PloyeeServiceListFragment extends BaseFragment implements SearchVie
                 dismissLoading();
                 dismissRefreshing();
 
-                getActivity().finish();
+                if (MyApplication.getInstance().isShowEditProfile == 1){
+
+                    MyApplication.getInstance().isShowEditProfile = 2;
+
+                    if (!isSetAvailability) {
+                        PopupMenuUtils.showConfirmationAlertMenu(getContext(), null, mLanguageData.providerAvailabilityNotSelect, mLanguageData.providerGotoAvailability, mLanguageData.providerSkipAvailability, new Action1<Boolean>() {
+                            @Override
+                            public void call(Boolean aBoolean) {
+
+                                if (aBoolean){
+                                    ((PloyeeHomeActivity)getActivity()).openAvialability();
+                                }
+                            }
+                        });
+
+                    }
+
+                    else if(!isSetProfile){
+
+
+                        PopupMenuUtils.showConfirmationAlertMenu(getContext(), null, mLanguageData.pleaseDescribrYourself, mLanguageData.providerGotoProfileSetting, mLanguageData.providerSkipDescription, new Action1<Boolean>() {
+                            @Override
+                            public void call(Boolean aBoolean) {
+
+                                if (aBoolean){
+                                    IntentUtils.startActivity(getActivity(), PloyeeProfileActivity.class);
+                                }
+                            }
+                        });
+                    }else{
+                        PopupMenuUtils.showConfirmationAlertMenu(getContext(), null, mLanguageData.pleaseInsertLocation, mLanguageData.providerGotoProfileSetting, mLanguageData.providerSkipDescription, new Action1<Boolean>() {
+                            @Override
+                            public void call(Boolean aBoolean) {
+
+                                if (aBoolean){
+                                    IntentUtils.startActivity(getActivity(), PloyeeProfileActivity.class);
+                                }
+                            }
+                        });
+                    }
+
+
+                }
+
+//                getActivity().finish();
 
             }
         }).enqueueDontToast(getActivity());

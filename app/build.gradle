@@ -31,8 +31,8 @@ android {
         applicationId "com.nos.ploy"
         minSdkVersion 19
         targetSdkVersion 26
-        versionCode 1038
-        versionName "1.0.38"
+        versionCode 1039
+        versionName "1.0.39"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
         signingConfig signingConfigs.release
@@ -64,7 +64,7 @@ repositories {
 
 dependencies {
 
-    implementation 'com.google.firebase:firebase-core:11.6.0'
+    implementation 'com.google.firebase:firebase-core:11.6.2'
     compile fileTree(include: ['*.jar'], dir: 'libs')
 
     //    support library
@@ -106,12 +106,12 @@ dependencies {
     compile 'io.reactivex:rxjava:1.1.8'
     compile 'io.reactivex:rxandroid:1.2.1'
     compile 'com.google.code.gson:gson:2.8.0'
-    compile 'com.android.support:multidex:+'
+    compile 'com.android.support:multidex:1.0.2'
     compile 'io.nlopez.smartlocation:library:3.3.1'
 
-    compile 'com.google.android.gms:play-services-maps:11.6.0'
-    compile 'com.google.android.gms:play-services-location:11.6.0'
-    compile('com.crashlytics.sdk.android:crashlytics:2.7.1@aar') {
+    compile 'com.google.android.gms:play-services-maps:11.6.2'
+    compile 'com.google.android.gms:play-services-location:11.6.2'
+    compile('com.crashlytics.sdk.android:crashlytics:2.8.0@aar') {
         transitive = true;
     }
 
