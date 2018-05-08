@@ -26,13 +26,13 @@ android {
 
 
     compileSdkVersion 26
-    buildToolsVersion '26.0.2'
+    buildToolsVersion '26.0.3'
     defaultConfig {
         applicationId "com.nos.ploy"
         minSdkVersion 19
         targetSdkVersion 26
-        versionCode 1039
-        versionName "1.0.39"
+        versionCode 1040
+        versionName "1.0.40"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
         signingConfig signingConfigs.release

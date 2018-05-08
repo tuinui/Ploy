@@ -156,6 +156,14 @@ public class ProviderProfileActivity extends BaseActivity implements GoogleApiCl
     TextView mTextViewRatingPoint;
     @BindView(R.id.textview_member_profile_rate_count)
     TextView mTextViewRatingCount;
+
+    @BindView(R.id.txtMemberProfileAvailability)
+    TextView txtMemberProfileAvailability;
+
+
+    @BindView(R.id.txtMemberProfileServicesPropose)
+    TextView txtMemberProfileServicesPropose;
+
     private boolean mIsPreviewMode;
     private boolean isFirstTimeLoaded;
     private boolean isFirstTimeExpandedIfMatchServiceData = false;
@@ -253,7 +261,9 @@ public class ProviderProfileActivity extends BaseActivity implements GoogleApiCl
         mServiceAdapter.setLanguage(data);
         mAvailabilityAdapter.setLanguage(data);
         mButtonEmail.setText(data.profileScreenEmail);
+        txtMemberProfileAvailability.setText(data.avaliabilityScreenHeader);
         mTextViewAboutMeHeader.setText(data.profileScreenAboutMe);
+        txtMemberProfileServicesPropose.setText(data.profileScreenServicesPropose);
         mTextViewLanguagesHeader.setText(data.profileScreenLanguage);
         mTextViewEducationHeader.setText(data.profileScreenEducation);
         mTextViewWorkHeader.setText(data.profileScreenWork);

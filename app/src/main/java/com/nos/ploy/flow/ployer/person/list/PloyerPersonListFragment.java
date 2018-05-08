@@ -75,7 +75,7 @@ public class PloyerPersonListFragment extends BaseFragment implements SearchView
 
             holder.tvDescription.setText(data.getDescription());
 
-            holder.tvPrice.setText( "From " + mLanguageData.currencyLabel + " " +  data.getMinPrice()   + mServiceData.getPriceUnit());
+            holder.tvPrice.setText( labelFrom + " " + mLanguageData.currencyLabel + " " +  data.getMinPrice()   + mServiceData.getPriceUnit());
 
 
             holder.tvReviewCount.setText("" + data.getReviewCount());
@@ -106,6 +106,7 @@ public class PloyerPersonListFragment extends BaseFragment implements SearchView
     private GoogleApiClient mGoogleApiClient;
     private List<ProviderUserListGson.Data.UserService> mDatas = new ArrayList<>();
     private OnFragmentInteractionListener listener;
+    private String labelFrom = "From";
 
 
     public static PloyerPersonListFragment newInstance(PloyerServicesGson.Data data, GoogleApiClient googleApiClient, OnFragmentInteractionListener listener) {
@@ -161,6 +162,7 @@ public class PloyerPersonListFragment extends BaseFragment implements SearchView
         super.bindLanguage(data);
 
         emptyView.setText(data.filtersscreenResultNotFound);
+        labelFrom = data.labelFrom;
 
     }
 

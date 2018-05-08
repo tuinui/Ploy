@@ -252,7 +252,7 @@ public class PloyerPersonMapFragment extends BaseFragment implements OnMapReadyC
             mTextViewSheetTitle.setText(data.getFullName());
             mTExtViewSheetSubTitle.setText(mServiceData.getServiceName());
             mTextViewDescription.setText(data.getDescription());
-            mTextViewPrice.setText("From " + mLanguageData.currencyLabel + " " + data.getMinPrice() + mServiceData.getPriceUnit());
+            mTextViewPrice.setText(mLanguageData.labelFrom + " " + mLanguageData.currencyLabel + " " + data.getMinPrice() + mServiceData.getPriceUnit());
             mTextViewReviewCount.setText("" + data.getReviewCount());
             mTextViewRating.setText(data.getReviewPoint() + "/5");
             mRatingBarRate.setRating(RatingBarUtils.getRatingbarRoundingNumber(data.getReviewPoint()));

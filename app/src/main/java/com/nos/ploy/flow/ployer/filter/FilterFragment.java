@@ -290,7 +290,7 @@ public class FilterFragment extends BaseFragment implements View.OnClickListener
         super.bindLanguage(data);
         mTransportAdapter.setLanguage(data);
         mTextViewServices.setText(data.servicesLabel);
-        mTextViewAvailability.setText(data.avaliabilityScreenHeader);
+        mTextViewAvailability.setText(data.filterAvaliabilityScreenHeader);
         mTextViewLanguage.setText(data.profileScreenLanguage);
         mButtonEmail.setText(data.profileScreenShowEmail);
         mButtonPhone.setText(data.profileScreenShowPhone);

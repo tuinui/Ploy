@@ -115,6 +115,11 @@ public class LanguageAppLabelGson extends BaseResponse<LanguageAppLabelGson.Data
         @SerializedName("avaliability_screen_header")
 
         public String avaliabilityScreenHeader;
+
+        @SerializedName("filter_avaliability_screen_header")
+        public String filterAvaliabilityScreenHeader = "Disponibilités du prestataire";
+
+
         @SerializedName("avaliability_screen_no_prefer")
 
         public String avaliabilityScreenNoPrefer;
@@ -543,5 +548,13 @@ public class LanguageAppLabelGson extends BaseResponse<LanguageAppLabelGson.Data
 
         @SerializedName("setting_label")
         public String settingLabel = "Settings";
+
+        @SerializedName("profile_screen_services_propose")
+        public String profileScreenServicesPropose = "Services proposés par le prestataire";
+
+        @SerializedName("label_from")
+        public String labelFrom = "From";
+
+
     }
 }
